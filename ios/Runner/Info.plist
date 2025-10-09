@@ -45,5 +45,20 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	
+	<!-- Deep Link / Custom URL Scheme for OAuth -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.pavra.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.pavra.app</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
