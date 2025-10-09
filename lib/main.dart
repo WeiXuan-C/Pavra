@@ -4,9 +4,13 @@ import 'package:sizer/sizer.dart';
 
 import '../core/app_export.dart';
 import '../widgets/custom_error_widget.dart';
+import 'core/supabase/supabase_client.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 🚨 CRITICAL: Initialize Supabase - DO NOT REMOVE
+  await SupabaseService.initialize();
 
   bool hasShownError = false;
 
