@@ -24,21 +24,23 @@ class RealtimeService {
     PostgresChangeFilter? filter,
   }) {
     final channelName = 'table:$table';
-    
+
     // Remove existing channel if any
     if (_channels.containsKey(channelName)) {
       unsubscribe(channelName);
     }
 
     final channel = supabase.channel(channelName);
-    
-    channel.onPostgresChanges(
-      event: event,
-      schema: schema,
-      table: table,
-      filter: filter,
-      callback: callback,
-    ).subscribe();
+
+    channel
+        .onPostgresChanges(
+          event: event,
+          schema: schema,
+          table: table,
+          filter: filter,
+          callback: callback,
+        )
+        .subscribe();
 
     _channels[channelName] = channel;
     return channel;
@@ -105,13 +107,12 @@ class RealtimeService {
         .onPresenceSync(onSync)
         .onPresenceJoin(onJoin)
         .onPresenceLeave(onLeave)
-        .subscribe(
-      (status, error) async {
-        if (status == 'SUBSCRIBED' && initialPresence != null) {
-          await channel.track(initialPresence);
-        }
-      },
-    );
+        .subscribe((status, error) async {
+          if (status == RealtimeSubscribeStatus.subscribed &&
+              initialPresence != null) {
+            await channel.track(initialPresence);
+          }
+        });
 
     _channels[channelName] = channel;
     return channel;
@@ -130,10 +131,9 @@ class RealtimeService {
 
     final channel = supabase.channel(channelName);
 
-    channel.onBroadcast(
-      event: event,
-      callback: (payload) => callback(payload),
-    ).subscribe();
+    channel
+        .onBroadcast(event: event, callback: (payload) => callback(payload))
+        .subscribe();
 
     _channels[channelName] = channel;
     return channel;
