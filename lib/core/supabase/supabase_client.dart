@@ -1,14 +1,15 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'supabase_constants.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../constants/supabase_constants.dart';
 
 /// Global Supabase client instance
-/// 
+///
 /// This provides direct access to:
 /// - Authentication: supabase.auth
 /// - Storage: supabase.storage
 /// - Realtime: supabase.realtime
 /// - Database: supabase.from('table_name')
-/// 
+///
 /// Or use the specialized services:
 /// - AuthService() for authentication operations
 /// - StorageService() for file storage operations
@@ -25,7 +26,7 @@ class SupabaseService {
 
   /// Initialize Supabase with authentication, storage, and realtime
   /// Call this in main() before runApp()
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// void main() async {
@@ -35,21 +36,22 @@ class SupabaseService {
   /// }
   /// ```
   static Future<void> initialize() async {
+    // Load environment variables first
+    await dotenv.load(fileName: ".env");
+    
     await Supabase.initialize(
       url: SupabaseConstants.supabaseUrl,
       anonKey: SupabaseConstants.supabaseAnonKey,
       authOptions: const FlutterAuthClientOptions(
         authFlowType: AuthFlowType.pkce,
         autoRefreshToken: true,
-        // detectSessionInUri: true, // Enable for deep linking with OAuth
+        detectSessionInUri: true, // Enable for deep linking with OAuth
       ),
       realtimeClientOptions: const RealtimeClientOptions(
         logLevel: RealtimeLogLevel.info,
         // eventsPerSecond: 2, // Throttle events if needed
       ),
-      storageOptions: const StorageClientOptions(
-        retryAttempts: 3,
-      ),
+      storageOptions: const StorageClientOptions(retryAttempts: 3),
     );
   }
 

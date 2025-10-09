@@ -38,3 +38,6 @@ This document outlines the development rules and functional requirements for the
 - Write **clean, modular, and reusable code**.
 - Avoid hardcoding values; use **constants or configuration files**.
 - Test features thoroughly before merging into the main branch.
+
+7. skeleton
+8. SEO in future

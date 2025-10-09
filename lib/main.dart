@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../core/app_export.dart';
 import '../widgets/custom_error_widget.dart';
 import 'core/supabase/supabase_client.dart';
+import 'core/providers/auth_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +35,14 @@ void main() async {
   Future.wait([
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
   ]).then((value) {
-    runApp(MyApp());
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ],
+        child: MyApp(),
+      ),
+    );
   });
 }
 
@@ -42,28 +51,63 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Sizer(
-      builder: (context, orientation, screenType) {
-        return MaterialApp(
-          title: 'pavra',
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: ThemeMode.light,
-          // 🚨 CRITICAL: NEVER REMOVE OR MODIFY
-          builder: (context, child) {
-            return MediaQuery(
-              data: MediaQuery.of(
-                context,
-              ).copyWith(textScaler: TextScaler.linear(1.0)),
-              child: child!,
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, child) {
+        return Sizer(
+          builder: (context, orientation, screenType) {
+            return MaterialApp(
+              title: 'pavra',
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: authProvider.themeMode,
+              // 🚨 CRITICAL: NEVER REMOVE OR MODIFY
+              builder: (context, child) {
+                return MediaQuery(
+                  data: MediaQuery.of(
+                    context,
+                  ).copyWith(textScaler: TextScaler.linear(1.0)),
+                  child: child!,
+                );
+              },
+              // 🚨 END CRITICAL SECTION
+              debugShowCheckedModeBanner: false,
+              routes: AppRoutes.routes,
+              home: _getHomeScreen(authProvider),
             );
           },
-          // 🚨 END CRITICAL SECTION
-          debugShowCheckedModeBanner: false,
-          routes: AppRoutes.routes,
-          initialRoute: AppRoutes.initial,
         );
       },
     );
+  }
+
+  /// Determine home screen based on authentication state
+  Widget _getHomeScreen(AuthProvider authProvider) {
+    if (authProvider.isAuthenticated) {
+      // User is logged in - show home screen
+      return const _AuthenticatedApp();
+    } else {
+      // User is not logged in - show authentication screen
+      return const _UnauthenticatedApp();
+    }
+  }
+}
+
+/// Authenticated App Wrapper
+class _AuthenticatedApp extends StatelessWidget {
+  const _AuthenticatedApp();
+
+  @override
+  Widget build(BuildContext context) {
+    return AppRoutes.routes[AppRoutes.home]!(context);
+  }
+}
+
+/// Unauthenticated App Wrapper
+class _UnauthenticatedApp extends StatelessWidget {
+  const _UnauthenticatedApp();
+
+  @override
+  Widget build(BuildContext context) {
+    return AppRoutes.routes[AppRoutes.authentication]!(context);
   }
 }
