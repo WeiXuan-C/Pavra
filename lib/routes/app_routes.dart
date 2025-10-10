@@ -12,7 +12,6 @@ class AppRoutes {
   static const String home = '/home';
   
   // App routes
-  static const String initial = '/';
   static const String reportSubmission = '/report-submission-screen';
   static const String safetyAlerts = '/safety-alerts-screen';
   static const String mapView = '/map-view-screen';
@@ -21,7 +20,6 @@ class AppRoutes {
   static Map<String, WidgetBuilder> routes = {
     authentication: (context) => const AuthenticationScreen(),
     home: (context) => const HomeScreen(),
-    initial: (context) => const CameraDetectionScreen(),
     reportSubmission: (context) => const ReportSubmissionScreen(),
     safetyAlerts: (context) => const SafetyAlertsScreen(),
     mapView: (context) => const MapViewScreen(),

@@ -24,7 +24,7 @@ class CustomErrorWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SvgPicture.asset(
-                  'assets/images/sad_face.svg',
+                  'assets/images/sad-face.jpg',
                   height: 42,
                   width: 42,
                 ),
@@ -55,7 +55,12 @@ class CustomErrorWidget extends StatelessWidget {
                     if (canBeBack) {
                       Navigator.of(context).pop();
                     } else {
-                      Navigator.pushNamed(context, AppRoutes.initial);
+                      // Navigate to home screen and clear navigation stack
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        AppRoutes.home,
+                        (route) => false,
+                      );
                     }
                   },
                   icon: const Icon(

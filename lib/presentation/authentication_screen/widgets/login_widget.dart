@@ -46,13 +46,15 @@ class _LoginWidgetState extends State<LoginWidget> {
   Future<void> _sendOtp() async {
     if (!_formKey.currentState!.validate()) return;
 
+    if (!mounted) return;
     setState(() => _isProcessing = true);
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final email = _emailController.text.trim();
 
-    final success = await authProvider.sendOtp(email);
+    final success = await authProvider.sendOtp(email, context: context);
 
+    if (!mounted) return;
     setState(() => _isProcessing = false);
 
     if (success && mounted) {
@@ -75,11 +77,13 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   /// Handle social login
   Future<void> _handleSocialLogin(OAuthProvider provider) async {
+    if (!mounted) return;
     setState(() => _isProcessing = true);
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final success = await authProvider.socialSignIn(provider);
 
+    if (!mounted) return;
     setState(() => _isProcessing = false);
 
     if (!success && mounted) {

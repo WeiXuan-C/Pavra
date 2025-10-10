@@ -1,8 +1,10 @@
 import 'dart:developer' as developer;
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'supabase_client.dart';
 import '../constants/supabase_constants.dart';
+import '../services/hcaptcha_service.dart';
 
 /// Authentication Service
 /// Handles all authentication-related operations including:
@@ -93,19 +95,30 @@ class AuthService {
   // ========== PASSWORDLESS EMAIL OTP ==========
 
   /// Send email OTP for passwordless authentication
-  /// Supports optional captchaToken for hCaptcha protection
   ///
-  /// After calling this, user receives a 6-digit code via email
-  /// Use [verifyEmailOtp] to complete the login
+  /// This method will automatically handle hCaptcha verification
+  /// before sending the OTP to the provided email.
+  ///
+  /// Throws an exception if hCaptcha verification fails
   Future<void> sendEmailOtp({
+    required BuildContext context,
     required String email,
-    String? captchaToken,
   }) async {
-    await supabase.auth.signInWithOtp(
-      email: email,
-      emailRedirectTo: null, // We use OTP, not magic link
-      captchaToken: captchaToken,
-    );
+    try {
+      // Get hCaptcha token
+      final hcaptchaService = HCaptchaService();
+      final captchaToken = await hcaptchaService.verify(context);
+
+      // Send OTP with hCaptcha token
+      await supabase.auth.signInWithOtp(
+        email: email,
+        emailRedirectTo: null, // We use OTP, not magic link
+        captchaToken: captchaToken,
+      );
+    } catch (e) {
+      developer.log('Failed to send OTP: $e', name: 'AuthService');
+      rethrow;
+    }
   }
 
   /// Verify email OTP and complete authentication

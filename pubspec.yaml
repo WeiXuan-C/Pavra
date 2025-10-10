@@ -56,6 +56,7 @@ dependencies:
   supabase_flutter: ^2.10.3
   provider: ^6.1.2
   url_launcher: ^6.3.1
+  hcaptcha: ^0.0.2
 
 dev_dependencies:
   flutter_test:
@@ -80,8 +81,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - .env
+  assets:
+    - .env
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

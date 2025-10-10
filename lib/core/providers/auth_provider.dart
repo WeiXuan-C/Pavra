@@ -94,12 +94,15 @@ class AuthProvider with ChangeNotifier {
   // ========== AUTHENTICATION METHODS ==========
 
   /// Send OTP to email for passwordless authentication
-  Future<bool> sendOtp(String email, {String? captchaToken}) async {
+  /// Handles hCaptcha verification automatically
+  /// 
+  /// [context] The BuildContext needed for hCaptcha verification
+  Future<bool> sendOtp(String email, {required BuildContext context}) async {
     _setLoading(true);
     _clearError();
 
     try {
-      await _authService.sendEmailOtp(email: email, captchaToken: captchaToken);
+      await _authService.sendEmailOtp(context: context, email: email);
       _setLoading(false);
       return true;
     } catch (e) {

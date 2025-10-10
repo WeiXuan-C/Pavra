@@ -88,25 +88,50 @@ class _OtpWidgetState extends State<OtpWidget> {
     }
   }
 
-  /// Resend OTP
+  /// Resend OTP with hCaptcha verification
   Future<void> _resendOtp() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final success = await authProvider.sendOtp(widget.email);
 
-    if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('New OTP sent to ${widget.email}'),
-          backgroundColor: Colors.green,
-        ),
+    setState(() => _isProcessing = true);
+
+    try {
+      final success = await authProvider.sendOtp(
+        widget.email,
+        context: context,
       );
-    } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(authProvider.errorMessage ?? 'Failed to resend OTP'),
-          backgroundColor: Colors.red,
-        ),
-      );
+
+      if (mounted) {
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('New OTP sent to ${widget.email}'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                authProvider.errorMessage ?? 'Failed to resend OTP',
+              ),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to verify CAPTCHA. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isProcessing = false);
+      }
     }
   }
 
