@@ -2,6 +2,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/providers/auth_provider.dart';
 
 /// Login Widget
@@ -28,8 +29,9 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   /// Validate email format
   String? _validateEmail(String? value) {
+    final l10n = AppLocalizations.of(context);
     if (value == null || value.isEmpty) {
-      return 'Please enter your email';
+      return l10n.auth_emailHint;
     }
 
     final emailRegex = RegExp(
@@ -37,7 +39,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     );
 
     if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email';
+      return l10n.auth_invalidEmail;
     }
 
     return null;
@@ -85,9 +87,10 @@ class _LoginWidgetState extends State<LoginWidget> {
       if (!mounted) return;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
+        final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('OTP sent to $email'),
+            content: Text(l10n.auth_otpSent),
             backgroundColor: Colors.green,
           ),
         );
@@ -101,9 +104,10 @@ class _LoginWidgetState extends State<LoginWidget> {
       if (!mounted) return;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
+        final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(authProvider.errorMessage ?? 'Failed to send OTP'),
+            content: Text(authProvider.errorMessage ?? l10n.auth_otpFailed),
             backgroundColor: Colors.red,
           ),
         );
@@ -127,9 +131,10 @@ class _LoginWidgetState extends State<LoginWidget> {
       if (!mounted) return;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
+        final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(authProvider.errorMessage ?? 'Social login failed'),
+            content: Text(authProvider.errorMessage ?? l10n.auth_verifyFailed),
             backgroundColor: Colors.red,
           ),
         );
@@ -139,6 +144,8 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Form(
@@ -159,7 +166,7 @@ class _LoginWidgetState extends State<LoginWidget> {
 
             // Title
             Text(
-              'Welcome to Pavra',
+              l10n.auth_welcomeTitle,
               style: Theme.of(
                 context,
               ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -170,7 +177,7 @@ class _LoginWidgetState extends State<LoginWidget> {
 
             // Subtitle
             Text(
-              'Sign in to continue',
+              l10n.auth_welcomeSubtitle,
               style: Theme.of(
                 context,
               ).textTheme.bodyLarge?.copyWith(color: Colors.grey),
@@ -186,8 +193,8 @@ class _LoginWidgetState extends State<LoginWidget> {
               textInputAction: TextInputAction.done,
               enabled: !_isProcessing,
               decoration: InputDecoration(
-                labelText: 'Email',
-                hintText: 'Enter your email',
+                labelText: l10n.auth_emailLabel,
+                hintText: l10n.auth_emailHint,
                 prefixIcon: const Icon(Icons.email_outlined),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -218,7 +225,10 @@ class _LoginWidgetState extends State<LoginWidget> {
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     )
-                  : const Text('Send OTP', style: TextStyle(fontSize: 16)),
+                  : Text(
+                      l10n.auth_sendOtp,
+                      style: const TextStyle(fontSize: 16),
+                    ),
             ),
 
             const SizedBox(height: 32),
@@ -229,7 +239,10 @@ class _LoginWidgetState extends State<LoginWidget> {
                 Expanded(child: Divider(color: Colors.grey[300])),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('OR', style: TextStyle(color: Colors.grey[600])),
+                  child: Text(
+                    l10n.auth_orContinueWith,
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
                 ),
                 Expanded(child: Divider(color: Colors.grey[300])),
               ],
@@ -240,7 +253,7 @@ class _LoginWidgetState extends State<LoginWidget> {
             // Social Login Buttons
             _SocialLoginButton(
               icon: Icons.g_mobiledata,
-              label: 'Continue with Google',
+              label: l10n.auth_signInWithGoogle,
               color: Colors.red,
               onPressed: _isProcessing
                   ? null
@@ -251,8 +264,8 @@ class _LoginWidgetState extends State<LoginWidget> {
 
             _SocialLoginButton(
               icon: Icons.code,
-              label: 'Continue with GitHub',
-              color: Colors.black,
+              label: l10n.auth_signInWithGithub,
+              color: Colors.green,
               onPressed: _isProcessing
                   ? null
                   : () => _handleSocialLogin(OAuthProvider.github),
@@ -262,8 +275,8 @@ class _LoginWidgetState extends State<LoginWidget> {
 
             _SocialLoginButton(
               icon: Icons.discord,
-              label: 'Continue with Discord',
-              color: Colors.indigo,
+              label: l10n.auth_signInWithDiscord,
+              color: Colors.blue,
               onPressed: _isProcessing
                   ? null
                   : () => _handleSocialLogin(OAuthProvider.discord),

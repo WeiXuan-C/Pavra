@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../l10n/app_localizations.dart';
 
 class LocationInfoWidget extends StatelessWidget {
   final String streetAddress;
@@ -21,6 +22,7 @@ class LocationInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
@@ -43,7 +45,7 @@ class LocationInfoWidget extends StatelessWidget {
               SizedBox(width: 2.w),
               Expanded(
                 child: Text(
-                  'Location Details',
+                  l10n.report_locationDetails,
                   style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -88,7 +90,7 @@ class LocationInfoWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Address',
+                      l10n.report_address,
                       style: AppTheme.lightTheme.textTheme.labelMedium
                           ?.copyWith(
                             color: AppTheme.lightTheme.colorScheme.onSurface

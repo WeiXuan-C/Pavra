@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../l10n/app_localizations.dart';
 
 class SeveritySliderWidget extends StatelessWidget {
   final double severity;
@@ -15,6 +16,7 @@ class SeveritySliderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
@@ -36,7 +38,7 @@ class SeveritySliderWidget extends StatelessWidget {
               ),
               SizedBox(width: 2.w),
               Text(
-                'Severity Level',
+                l10n.report_severityLevel,
                 style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -47,7 +49,7 @@ class SeveritySliderWidget extends StatelessWidget {
           SizedBox(height: 1.h),
 
           Text(
-            'Rate the severity of the road issue',
+            l10n.report_rateSeverity,
             style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
               color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
                 alpha: 0.6,

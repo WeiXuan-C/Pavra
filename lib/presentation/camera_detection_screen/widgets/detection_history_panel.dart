@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../l10n/app_localizations.dart';
 
 class DetectionHistoryPanel extends StatelessWidget {
   final List<Map<String, dynamic>> recentDetections;
@@ -17,6 +18,8 @@ class DetectionHistoryPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    
     return Container(
       width: 80.w,
       height: double.infinity,
@@ -44,7 +47,7 @@ class DetectionHistoryPanel extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    'Recent Detections',
+                    l10n.camera_recentDetections,
                     style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                       color: AppTheme.lightTheme.colorScheme.onPrimary,
                       fontWeight: FontWeight.w600,
@@ -71,10 +74,10 @@ class DetectionHistoryPanel extends StatelessWidget {
             ),
           ),
 
-          // Detection List
+          // Content
           Expanded(
             child: recentDetections.isEmpty
-                ? _buildEmptyState()
+                ? _buildEmptyState(l10n)
                 : ListView.separated(
                     padding: EdgeInsets.all(4.w),
                     itemCount: recentDetections.length,
@@ -90,7 +93,7 @@ class DetectionHistoryPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -104,7 +107,7 @@ class DetectionHistoryPanel extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           Text(
-            'No Detections Yet',
+            l10n.camera_noDetectionsYet,
             style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
               color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
                 alpha: 0.7,
@@ -113,7 +116,7 @@ class DetectionHistoryPanel extends StatelessWidget {
           ),
           SizedBox(height: 1.h),
           Text(
-            'Start scanning to detect road issues',
+            l10n.camera_startScanning,
             style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
               color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
                 alpha: 0.5,

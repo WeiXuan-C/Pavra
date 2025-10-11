@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../l10n/app_localizations.dart';
 
 class StatusBarWidget extends StatelessWidget {
   final bool isGpsActive;
@@ -19,6 +20,8 @@ class StatusBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
@@ -36,7 +39,7 @@ class StatusBarWidget extends StatelessWidget {
       child: Row(
         children: [
           // GPS Status
-          Expanded(flex: 2, child: _buildGpsStatus()),
+          Expanded(flex: 2, child: _buildGpsStatus(l10n)),
 
           // Divider
           Container(
@@ -46,13 +49,13 @@ class StatusBarWidget extends StatelessWidget {
           ),
 
           // Detection Toggle
-          Expanded(flex: 2, child: _buildDetectionToggle()),
+          Expanded(flex: 2, child: _buildDetectionToggle(l10n)),
         ],
       ),
     );
   }
 
-  Widget _buildGpsStatus() {
+  Widget _buildGpsStatus(AppLocalizations l10n) {
     return Row(
       children: [
         CustomIconWidget(
@@ -68,7 +71,7 @@ class StatusBarWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'GPS Status',
+                l10n.camera_gpsStatus,
                 style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
                   color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
                     alpha: 0.7,
@@ -76,7 +79,7 @@ class StatusBarWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                isGpsActive ? gpsAccuracy : 'Disabled',
+                isGpsActive ? gpsAccuracy : l10n.camera_disabled,
                 style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
                   color: AppTheme.lightTheme.colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
@@ -89,7 +92,7 @@ class StatusBarWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildDetectionToggle() {
+  Widget _buildDetectionToggle(AppLocalizations l10n) {
     return GestureDetector(
       onTap: onDetectionToggle,
       child: Row(
@@ -109,7 +112,7 @@ class StatusBarWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'AI Detection',
+                  l10n.camera_aiDetection,
                   style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
                     color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
                       alpha: 0.7,
@@ -117,7 +120,7 @@ class StatusBarWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  isDetectionActive ? 'Active' : 'Inactive',
+                  isDetectionActive ? l10n.camera_active : l10n.camera_inactive,
                   style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
                     color: AppTheme.lightTheme.colorScheme.onSurface,
                     fontWeight: FontWeight.w600,

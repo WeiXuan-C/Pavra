@@ -19,9 +19,6 @@ class AuthProvider with ChangeNotifier {
   String? _errorMessage;
   StreamSubscription<AuthState>? _authSubscription;
 
-  // Theme and locale state
-  ThemeMode _themeMode = ThemeMode.system;
-  Locale _locale = const Locale('en');
 
   // Getters
   User? get user => _user;
@@ -30,8 +27,6 @@ class AuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading;            // Used by UI components
   bool get isAuthenticated => _user != null;
   String? get errorMessage => _errorMessage;
-  ThemeMode get themeMode => _themeMode;
-  Locale get locale => _locale;
 
   AuthProvider() {
     _initialize();
@@ -223,20 +218,6 @@ class AuthProvider with ChangeNotifier {
       _setLoading(false);
       return false;
     }
-  }
-
-  // ========== THEME & LOCALE METHODS ==========
-
-  /// Set theme mode
-  void setThemeMode(ThemeMode mode) {
-    _themeMode = mode;
-    notifyListeners();
-  }
-
-  /// Set locale
-  void setLocale(Locale locale) {
-    _locale = locale;
-    notifyListeners();
   }
 
   // ========== HELPER METHODS ==========

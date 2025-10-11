@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../l10n/app_localizations.dart';
 
 class CameraPreviewWidget extends StatelessWidget {
   final CameraController? cameraController;
@@ -20,6 +21,8 @@ class CameraPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    
     if (cameraController == null || !cameraController!.value.isInitialized) {
       return Container(
         width: double.infinity,
@@ -34,7 +37,7 @@ class CameraPreviewWidget extends StatelessWidget {
               ),
               SizedBox(height: 2.h),
               Text(
-                'Initializing Camera...',
+                l10n.camera_initializingCamera,
                 style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                   color: AppTheme.lightTheme.colorScheme.onSurface,
                 ),
@@ -57,7 +60,7 @@ class CameraPreviewWidget extends StatelessWidget {
           ),
 
           // Detection Overlay
-          if (isDetectionActive) _buildDetectionOverlay(),
+          if (isDetectionActive) _buildDetectionOverlay(l10n),
 
           // Crosshair
           _buildCrosshair(),
@@ -69,7 +72,7 @@ class CameraPreviewWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildDetectionOverlay() {
+  Widget _buildDetectionOverlay(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -101,7 +104,7 @@ class CameraPreviewWidget extends StatelessWidget {
               ),
               SizedBox(width: 1.w),
               Text(
-                'AI Detection Active',
+                l10n.camera_aiDetectionActive,
                 style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
                   color: AppTheme.lightTheme.colorScheme.onSecondary,
                   fontWeight: FontWeight.w600,

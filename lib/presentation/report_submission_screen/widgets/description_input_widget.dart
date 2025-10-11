@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../l10n/app_localizations.dart';
 
 class DescriptionInputWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -17,6 +18,7 @@ class DescriptionInputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
@@ -38,14 +40,14 @@ class DescriptionInputWidget extends StatelessWidget {
               ),
               SizedBox(width: 2.w),
               Text(
-                'Additional Details',
+                l10n.report_description,
                 style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
               const Spacer(),
               Text(
-                'Optional',
+                l10n.common_cancel,
                 style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
                   color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
                     alpha: 0.6,
@@ -58,7 +60,7 @@ class DescriptionInputWidget extends StatelessWidget {
           SizedBox(height: 1.h),
 
           Text(
-            'Provide additional context about the road issue',
+            l10n.report_descriptionHint,
             style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
               color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
                 alpha: 0.6,
@@ -98,7 +100,7 @@ class DescriptionInputWidget extends StatelessWidget {
           if (suggestions.isNotEmpty) ...[
             SizedBox(height: 2.h),
             Text(
-              'Quick suggestions:',
+              l10n.report_description,
               style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
                 color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
                   alpha: 0.8,

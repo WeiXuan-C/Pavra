@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../l10n/app_localizations.dart';
 
 class IssueTypeSelectorWidget extends StatelessWidget {
   final List<Map<String, dynamic>> detectedIssues;
@@ -17,6 +18,7 @@ class IssueTypeSelectorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
@@ -38,7 +40,7 @@ class IssueTypeSelectorWidget extends StatelessWidget {
               ),
               SizedBox(width: 2.w),
               Text(
-                'Issue Types',
+                l10n.report_issueType,
                 style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -49,7 +51,7 @@ class IssueTypeSelectorWidget extends StatelessWidget {
           SizedBox(height: 1.h),
 
           Text(
-            'Select the issues you want to report',
+            l10n.report_selectIssueType,
             style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
               color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
                 alpha: 0.6,

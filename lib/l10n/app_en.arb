@@ -1,0 +1,720 @@
+{
+  "@@locale": "en",
+  
+  "appName": "Pavra",
+  "@appName": {
+    "description": "Application name"
+  },
+  "appTitle": "Pavra",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  
+  "common_ok": "OK",
+  "@common_ok": {
+    "description": "Common button text for OK"
+  },
+  "common_cancel": "Cancel",
+  "@common_cancel": {
+    "description": "Common button text for Cancel"
+  },
+  "common_confirm": "Confirm",
+  "@common_confirm": {
+    "description": "Common button text for Confirm"
+  },
+  "common_save": "Save",
+  "@common_save": {
+    "description": "Common button text for Save"
+  },
+  "common_delete": "Delete",
+  "@common_delete": {
+    "description": "Common button text for Delete"
+  },
+  "common_edit": "Edit",
+  "@common_edit": {
+    "description": "Common button text for Edit"
+  },
+  "common_close": "Close",
+  "@common_close": {
+    "description": "Common button text for Close"
+  },
+  "common_loading": "Loading...",
+  "@common_loading": {
+    "description": "Loading status message"
+  },
+  "common_error": "Error",
+  "@common_error": {
+    "description": "Common error label"
+  },
+  "common_success": "Success",
+  "@common_success": {
+    "description": "Common success message"
+  },
+  "common_retry": "Retry",
+  "@common_retry": {
+    "description": "Common button text for Retry"
+  },
+  "common_back": "Back",
+  "@common_back": {
+    "description": "Common button text for Back"
+  },
+  "common_next": "Next",
+  "@common_next": {
+    "description": "Common button text for Next"
+  },
+  "common_submit": "Submit",
+  "@common_submit": {
+    "description": "Common button text for Submit"
+  },
+  
+  "auth_welcomeTitle": "Welcome to Pavra",
+  "@auth_welcomeTitle": {
+    "description": "Welcome screen title"
+  },
+  "auth_welcomeSubtitle": "Report and track infrastructure issues in your community",
+  "@auth_welcomeSubtitle": {
+    "description": "Welcome screen subtitle"
+  },
+  "auth_emailLabel": "Email Address",
+  "@auth_emailLabel": {
+    "description": "Email input field label"
+  },
+  "auth_emailHint": "Enter your email",
+  "@auth_emailHint": {
+    "description": "Email input field hint text"
+  },
+  "auth_sendOtp": "Send Verification Code",
+  "@auth_sendOtp": {
+    "description": "Button to send OTP verification code"
+  },
+  "auth_otpTitle": "Enter Verification Code",
+  "@auth_otpTitle": {
+    "description": "OTP entry screen title"
+  },
+  "auth_otpSubtitle": "Please enter the 6-digit code sent to",
+  "@auth_otpSubtitle": {
+    "description": "OTP entry screen subtitle"
+  },
+  "auth_otpHint": "Enter 6-digit code",
+  "@auth_otpHint": {
+    "description": "OTP input field hint text"
+  },
+  "auth_verify": "Verify",
+  "@auth_verify": {
+    "description": "Button to verify OTP code"
+  },
+  "auth_resendCode": "Resend Code",
+  "@auth_resendCode": {
+    "description": "Button to resend verification code"
+  },
+  "auth_invalidEmail": "Please enter a valid email",
+  "@auth_invalidEmail": {
+    "description": "Error message for invalid email"
+  },
+  "auth_invalidOtp": "Please enter a valid 6-digit code",
+  "@auth_invalidOtp": {
+    "description": "Error message for invalid OTP"
+  },
+  "auth_otpSent": "Verification code sent successfully",
+  "@auth_otpSent": {
+    "description": "Success message when OTP is sent"
+  },
+  "auth_otpFailed": "Failed to send verification code",
+  "@auth_otpFailed": {
+    "description": "Error message when OTP sending fails"
+  },
+  "auth_verifyFailed": "Verification failed",
+  "@auth_verifyFailed": {
+    "description": "Error message when verification fails"
+  },
+  "auth_signInWithGoogle": "Sign in with Google",
+  "@auth_signInWithGoogle": {
+    "description": "Button to sign in with Google"
+  },
+  "auth_signInWithGithub": "Sign in with Github",
+  "@auth_signInWithGithub": {
+    "description": "Button to sign in with Github"
+  },
+  "auth_signInWithFacebook": "Sign in with Facebook",
+  "@auth_signInWithFacebook": {
+    "description": "Button to sign in with Facebook"
+  },
+  "auth_signInWithDiscord": "Sign in with Discord",
+  "@auth_signInWithDiscord": {
+    "description": "Button to sign in with Discord"
+  },
+  "auth_orContinueWith": "Or continue with",
+  "@auth_orContinueWith": {
+    "description": "Text separator for alternative sign in methods"
+  },
+  
+  "home_title": "Home",
+  "@home_title": {
+    "description": "Home screen title"
+  },
+  "home_noUserLoggedIn": "No user logged in",
+  "@home_noUserLoggedIn": {
+    "description": "Message when no user is logged in"
+  },
+  "home_accountInfo": "Account Information",
+  "@home_accountInfo": {
+    "description": "Account information section title"
+  },
+  "home_email": "Email",
+  "@home_email": {
+    "description": "Email label"
+  },
+  "home_lastUpdated": "Last Updated",
+  "@home_lastUpdated": {
+    "description": "Last updated timestamp label"
+  },
+  "home_appearance": "Appearance",
+  "@home_appearance": {
+    "description": "Appearance settings section title"
+  },
+  "home_themeMode": "Theme Mode",
+  "@home_themeMode": {
+    "description": "Theme mode setting label"
+  },
+  "home_language": "Language",
+  "@home_language": {
+    "description": "Language setting label"
+  },
+  "home_themeSystem": "System",
+  "@home_themeSystem": {
+    "description": "System theme option"
+  },
+  "home_themeLight": "Light",
+  "@home_themeLight": {
+    "description": "Light theme option"
+  },
+  "home_themeDark": "Dark",
+  "@home_themeDark": {
+    "description": "Dark theme option"
+  },
+  "home_logout": "Logout",
+  "@home_logout": {
+    "description": "Logout button text"
+  },
+  "home_confirmLogout": "Confirm Logout",
+  "@home_confirmLogout": {
+    "description": "Logout confirmation dialog title"
+  },
+  "home_confirmLogoutMessage": "Are you sure you want to logout?",
+  "@home_confirmLogoutMessage": {
+    "description": "Logout confirmation dialog message"
+  },
+  "home_user": "User",
+  "@home_user": {
+    "description": "User label"
+  },
+  "home_noEmail": "No email",
+  "@home_noEmail": {
+    "description": "Message when user has no email"
+  },
+  "home_userId": "ID",
+  "@home_userId": {
+    "description": "User ID label"
+  },
+  "home_settings": "Settings",
+  "@home_settings": {
+    "description": "Settings menu item"
+  },
+  
+  "camera_title": "Camera Detection",
+  "@camera_title": {
+    "description": "Camera detection screen title"
+  },
+  "camera_startDetection": "Start Detection",
+  "@camera_startDetection": {
+    "description": "Button to start detection"
+  },
+  "camera_stopDetection": "Stop Detection",
+  "@camera_stopDetection": {
+    "description": "Button to stop detection"
+  },
+  "camera_captureImage": "Capture Image",
+  "@camera_captureImage": {
+    "description": "Button to capture image"
+  },
+  "camera_switchCamera": "Switch Camera",
+  "@camera_switchCamera": {
+    "description": "Button to switch between cameras"
+  },
+  "camera_detectionHistory": "Detection History",
+  "@camera_detectionHistory": {
+    "description": "Detection history section title"
+  },
+  "camera_detectionMetrics": "Detection Metrics",
+  "@camera_detectionMetrics": {
+    "description": "Detection metrics section title"
+  },
+  "camera_confidence": "Confidence",
+  "@camera_confidence": {
+    "description": "Detection confidence label"
+  },
+  "camera_detecting": "Detecting...",
+  "@camera_detecting": {
+    "description": "Status message during detection"
+  },
+  "camera_noDetection": "No detections yet",
+  "@camera_noDetection": {
+    "description": "Message when no detections are available"
+  },
+  "camera_gpsStatus": "GPS Status",
+  "@camera_gpsStatus": {
+    "description": "GPS status label"
+  },
+  "camera_aiDetection": "AI Detection",
+  "@camera_aiDetection": {
+    "description": "AI detection feature label"
+  },
+  "camera_disabled": "Disabled",
+  "@camera_disabled": {
+    "description": "Disabled status"
+  },
+  "camera_active": "Active",
+  "@camera_active": {
+    "description": "Active status"
+  },
+  "camera_inactive": "Inactive",
+  "@camera_inactive": {
+    "description": "Inactive status"
+  },
+  "camera_initializingCamera": "Initializing Camera...",
+  "@camera_initializingCamera": {
+    "description": "Camera initialization status message"
+  },
+  "camera_aiDetectionActive": "AI Detection Active",
+  "@camera_aiDetectionActive": {
+    "description": "Message when AI detection is active"
+  },
+  "camera_detectionAnalytics": "Detection Analytics",
+  "@camera_detectionAnalytics": {
+    "description": "Detection analytics section title"
+  },
+  "camera_noDataAvailable": "No detection data available",
+  "@camera_noDataAvailable": {
+    "description": "Message when no detection data is available"
+  },
+  "camera_detectionDistribution": "Detection Distribution",
+  "@camera_detectionDistribution": {
+    "description": "Detection distribution chart label"
+  },
+  "camera_confidenceMetrics": "Confidence Metrics",
+  "@camera_confidenceMetrics": {
+    "description": "Confidence metrics section label"
+  },
+  "camera_recentActivity": "Recent Activity",
+  "@camera_recentActivity": {
+    "description": "Recent activity section title"
+  },
+  "camera_detected": "detected",
+  "@camera_detected": {
+    "description": "Word 'detected' used in detection messages"
+  },
+  "camera_recentDetections": "Recent Detections",
+  "@camera_recentDetections": {
+    "description": "Recent detections section title"
+  },
+  "camera_noDetectionsYet": "No Detections Yet",
+  "@camera_noDetectionsYet": {
+    "description": "Message when no detections have been made"
+  },
+  "camera_startScanning": "Start scanning to detect road issues",
+  "@camera_startScanning": {
+    "description": "Prompt to start scanning for road issues"
+  },
+  "camera_flash": "Flash",
+  "@camera_flash": {
+    "description": "Camera flash control label"
+  },
+  "camera_burstMode": "Burst Mode",
+  "@camera_burstMode": {
+    "description": "Burst mode camera feature label"
+  },
+  "camera_gallery": "Gallery",
+  "@camera_gallery": {
+    "description": "Gallery button label"
+  },
+  "camera_captured": "captured",
+  "@camera_captured": {
+    "description": "Word 'captured' used in capture messages"
+  },
+  "camera_errorPermissionDenied": "Camera permission denied",
+  "@camera_errorPermissionDenied": {
+    "description": "Error message when camera permission is denied"
+  },
+  "camera_errorCameraFailed": "Failed to initialize camera",
+  "@camera_errorCameraFailed": {
+    "description": "Error message when camera initialization fails"
+  },
+  "camera_totalDetections": "Total Detections",
+  "@camera_totalDetections": {
+    "description": "Total detections count label"
+  },
+  "camera_potholes": "Potholes",
+  "@camera_potholes": {
+    "description": "Potholes detection type label"
+  },
+  "camera_cracks": "Cracks",
+  "@camera_cracks": {
+    "description": "Cracks detection type label"
+  },
+  "camera_obstacles": "Obstacles",
+  "@camera_obstacles": {
+    "description": "Label for obstacles detected by the camera"
+  },
+  "camera_average": "Average",
+  "@camera_average": {
+    "description": "Average confidence metric label"
+  },
+  "camera_highest": "Highest",
+  "@camera_highest": {
+    "description": "Highest confidence metric label"
+  },
+  "camera_lowest": "Lowest",
+  "@camera_lowest": {
+    "description": "Lowest confidence metric label"
+  },
+  "camera_justNow": "Just now",
+  "@camera_justNow": {
+    "description": "Timestamp for very recent detections"
+  },
+  "camera_photoCaptured": "Photo captured successfully",
+  "@camera_photoCaptured": {
+    "description": "Success message when photo is captured"
+  },
+  "camera_imageProcessed": "Image processed successfully",
+  "@camera_imageProcessed": {
+    "description": "Success message when image is processed"
+  },
+  "camera_burstModeActivated": "Burst mode activated",
+  "@camera_burstModeActivated": {
+    "description": "Message when burst mode is activated"
+  },
+  "camera_burstModeDeactivated": "Burst mode deactivated",
+  "@camera_burstModeDeactivated": {
+    "description": "Message when burst mode is deactivated"
+  },
+  "camera_detectionDetails": "Detection Details",
+  "@camera_detectionDetails": {
+    "description": "Detection details dialog title"
+  },
+  "camera_type": "Type",
+  "@camera_type": {
+    "description": "Detection type label"
+  },
+  "camera_location": "Location",
+  "@camera_location": {
+    "description": "Detection location label"
+  },
+  "camera_time": "Time",
+  "@camera_time": {
+    "description": "Detection time label"
+  },
+  "camera_close": "Close",
+  "@camera_close": {
+    "description": "Close button text"
+  },
+  "camera_submitReport": "Submit Report",
+  "@camera_submitReport": {
+    "description": "Submit report button text"
+  },
+  
+  "map_title": "Map View",
+  "@map_title": {
+    "description": "Map view screen title"
+  },
+  "map_searchHint": "Search location...",
+  "@map_searchHint": {
+    "description": "Search input hint text"
+  },
+  "map_filterTitle": "Filter Issues",
+  "@map_filterTitle": {
+    "description": "Filter dialog title"
+  },
+  "map_nearbyIssues": "Nearby Issues",
+  "@map_nearbyIssues": {
+    "description": "Nearby issues section title"
+  },
+  "map_issueDetails": "Issue Details",
+  "@map_issueDetails": {
+    "description": "Issue details dialog title"
+  },
+  "map_reportedBy": "Reported by",
+  "@map_reportedBy": {
+    "description": "Reporter label"
+  },
+  "map_severity": "Severity",
+  "@map_severity": {
+    "description": "Severity level label"
+  },
+  "map_status": "Status",
+  "@map_status": {
+    "description": "Status label"
+  },
+  "map_distance": "Distance",
+  "@map_distance": {
+    "description": "Distance label"
+  },
+  "map_viewDetails": "View Details",
+  "@map_viewDetails": {
+    "description": "View details button text"
+  },
+  "map_noIssuesFound": "No issues found nearby",
+  "@map_noIssuesFound": {
+    "description": "Message when no issues are found"
+  },
+  "map_adjustLocation": "Try adjusting your location or zoom level",
+  "@map_adjustLocation": {
+    "description": "Hint to adjust location"
+  },
+  "map_found": "found",
+  "@map_found": {
+    "description": "Word 'found' in count messages"
+  },
+  "map_suggestions": "Suggestions",
+  "@map_suggestions": {
+    "description": "Search suggestions section title"
+  },
+  "map_recentSearches": "Recent Searches",
+  "@map_recentSearches": {
+    "description": "Recent searches section title"
+  },
+  "map_issueTypes": "Issue Types",
+  "@map_issueTypes": {
+    "description": "Issue types filter section"
+  },
+  "map_severityLevels": "Severity Levels",
+  "@map_severityLevels": {
+    "description": "Severity levels filter section"
+  },
+  "map_clearAll": "Clear All",
+  "@map_clearAll": {
+    "description": "Clear all filters button"
+  },
+  "map_applyFilters": "Apply Filters",
+  "@map_applyFilters": {
+    "description": "Apply filters button"
+  },
+  "map_description": "Description",
+  "@map_description": {
+    "description": "Description label"
+  },
+  "map_directions": "Directions",
+  "@map_directions": {
+    "description": "Directions button text"
+  },
+  "map_reportSimilar": "Report Similar",
+  "@map_reportSimilar": {
+    "description": "Report similar issue button"
+  },
+  "map_reportIssuePrompt": "Create a new road safety report at this location?",
+  "@map_reportIssuePrompt": {
+    "description": "Prompt to create report"
+  },
+  "map_reported": "Reported",
+  "@map_reported": {
+    "description": "Reported status"
+  },
+  "map_away": "away",
+  "@map_away": {
+    "description": "Distance away suffix"
+  },
+  
+  "report_title": "Report Issue",
+  "@report_title": {
+    "description": "Report issue screen title"
+  },
+  "report_issueType": "Issue Type",
+  "@report_issueType": {
+    "description": "Issue type field label"
+  },
+  "report_selectIssueType": "Select Issue Type",
+  "@report_selectIssueType": {
+    "description": "Issue type selection prompt"
+  },
+  "report_pothole": "Pothole",
+  "@report_pothole": {
+    "description": "Pothole issue type option"
+  },
+  "report_crack": "Crack",
+  "@report_crack": {
+    "description": "Crack issue type option"
+  },
+  "report_flooding": "Flooding",
+  "@report_flooding": {
+    "description": "Flooding issue type option"
+  },
+  "report_lighting": "Lighting",
+  "@report_lighting": {
+    "description": "Lighting issue type option"
+  },
+  "report_other": "Other",
+  "@report_other": {
+    "description": "Other issue type option"
+  },
+  "report_description": "Description",
+  "@report_description": {
+    "description": "Description field label"
+  },
+  "report_descriptionHint": "Describe the issue in detail...",
+  "@report_descriptionHint": {
+    "description": "Description field hint text"
+  },
+  "report_photos": "Photos",
+  "@report_photos": {
+    "description": "Photos section label"
+  },
+  "report_addPhoto": "Add Photo",
+  "@report_addPhoto": {
+    "description": "Add photo button text"
+  },
+  "report_location": "Location",
+  "@report_location": {
+    "description": "Location field label"
+  },
+  "report_useCurrentLocation": "Use Current Location",
+  "@report_useCurrentLocation": {
+    "description": "Button to use current location"
+  },
+  "report_severityLevel": "Severity Level",
+  "@report_severityLevel": {
+    "description": "Severity level field label"
+  },
+  "report_low": "Low",
+  "@report_low": {
+    "description": "Low severity option"
+  },
+  "report_medium": "Medium",
+  "@report_medium": {
+    "description": "Medium severity option"
+  },
+  "report_high": "High",
+  "@report_high": {
+    "description": "High severity option"
+  },
+  "report_submitReport": "Submit Report",
+  "@report_submitReport": {
+    "description": "Submit report button text"
+  },
+  "report_submitting": "Submitting...",
+  "@report_submitting": {
+    "description": "Submitting status message"
+  },
+  "report_success": "Report submitted successfully",
+  "@report_success": {
+    "description": "Success message after report submission"
+  },
+  "report_failed": "Failed to submit report",
+  "@report_failed": {
+    "description": "Error message when report submission fails"
+  },
+  "report_locationInfo": "Location Information",
+  "@report_locationInfo": {
+    "description": "Location information section title"
+  },
+  "report_latitude": "Latitude",
+  "@report_latitude": {
+    "description": "Latitude label"
+  },
+  "report_longitude": "Longitude",
+  "@report_longitude": {
+    "description": "Longitude label"
+  },
+  "report_saveDraft": "Save as Draft",
+  "@report_saveDraft": {
+    "description": "Save as draft button"
+  },
+  "report_submittingReport": "Submitting Report...",
+  "@report_submittingReport": {
+    "description": "Submitting report status"
+  },
+  "report_selectIssueTypeWarning": "Please select at least one issue type to submit the report",
+  "@report_selectIssueTypeWarning": {
+    "description": "Warning to select issue type"
+  },
+  "report_uploadingReport": "Uploading report...",
+  "@report_uploadingReport": {
+    "description": "Uploading report status"
+  },
+  "report_syncingCloud": "Syncing with cloud servers...",
+  "@report_syncingCloud": {
+    "description": "Syncing with cloud message"
+  },
+  "report_rateSeverity": "Rate the severity of the road issue",
+  "@report_rateSeverity": {
+    "description": "Severity rating instruction"
+  },
+  "report_additionalPhotos": "Additional Photos",
+  "@report_additionalPhotos": {
+    "description": "Additional photos section title"
+  },
+  "report_addPhotoHint": "Add multiple angles or close-up shots of the issue",
+  "@report_addPhotoHint": {
+    "description": "Hint for adding photos"
+  },
+  "report_photosLeft": "left",
+  "@report_photosLeft": {
+    "description": "Photos left suffix"
+  },
+  "report_noAdditionalPhotos": "No additional photos",
+  "@report_noAdditionalPhotos": {
+    "description": "No photos message"
+  },
+  "report_tapToAddPhotos": "Tap to add photos",
+  "@report_tapToAddPhotos": {
+    "description": "Tap to add photos prompt"
+  },
+  "report_locationDetails": "Location Details",
+  "@report_locationDetails": {
+    "description": "Location details section title"
+  },
+  "report_address": "Address",
+  "@report_address": {
+    "description": "Address label"
+  },
+  "report_gpsAccuracy": "GPS Accuracy",
+  "@report_gpsAccuracy": {
+    "description": "GPS accuracy label"
+  },
+  
+  "alerts_title": "Safety Alerts",
+  "@alerts_title": {
+    "description": "Safety alerts screen title"
+  },
+  "alerts_enableAlerts": "Enable Alerts",
+  "@alerts_enableAlerts": {
+    "description": "Enable alerts toggle label"
+  },
+  "alerts_alertRadius": "Alert Radius",
+  "@alerts_alertRadius": {
+    "description": "Alert radius setting label"
+  },
+  "alerts_routeMonitoring": "Route Monitoring",
+  "@alerts_routeMonitoring": {
+    "description": "Route monitoring feature label"
+  },
+  "alerts_noAlerts": "No safety alerts nearby",
+  "@alerts_noAlerts": {
+    "description": "Message when no alerts are nearby"
+  },
+  "alerts_viewOnMap": "View on Map",
+  "@alerts_viewOnMap": {
+    "description": "View on map button text"
+  },
+  "alerts_distance": "Distance",
+  "@alerts_distance": {
+    "description": "Distance label"
+  },
+  
+  "language_english": "English",
+  "@language_english": {
+    "description": "English language option"
+  },
+  "language_chinese": "中文",
+  "@language_chinese": {
+    "description": "Chinese language option"
+  }
+}

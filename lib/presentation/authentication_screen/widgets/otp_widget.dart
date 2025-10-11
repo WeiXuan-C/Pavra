@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/providers/auth_provider.dart';
 
 /// OTP Widget
@@ -49,11 +50,12 @@ class _OtpWidgetState extends State<OtpWidget> {
   Future<void> _verifyOtp() async {
     if (_otpCode.length != 6) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please enter complete 6-digit code'),
+          SnackBar(
+            content: Text(l10n.auth_invalidOtp),
             backgroundColor: Colors.orange,
           ),
         );
@@ -73,11 +75,12 @@ class _OtpWidgetState extends State<OtpWidget> {
 
     if (success) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Successfully logged in!'),
+          SnackBar(
+            content: Text(l10n.common_success),
             backgroundColor: Colors.green,
           ),
         );
@@ -85,11 +88,12 @@ class _OtpWidgetState extends State<OtpWidget> {
       widget.onVerified();
     } else {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Invalid OTP code'),
+            content: Text(l10n.auth_invalidOtp),
             backgroundColor: Colors.red,
           ),
         );
@@ -118,20 +122,21 @@ class _OtpWidgetState extends State<OtpWidget> {
 
       // Critical: Check mounted immediately after async call
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('New OTP sent to ${widget.email}'),
+              content: Text(l10n.auth_otpSent),
               backgroundColor: Colors.green,
             ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to resend OTP'),
+              content: Text(l10n.auth_otpFailed),
               backgroundColor: Colors.red,
             ),
           );
@@ -139,11 +144,12 @@ class _OtpWidgetState extends State<OtpWidget> {
       });
     } catch (e) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to verify CAPTCHA. Please try again.'),
+          SnackBar(
+            content: Text(l10n.auth_verifyFailed),
             backgroundColor: Colors.red,
           ),
         );
@@ -157,6 +163,8 @@ class _OtpWidgetState extends State<OtpWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -186,7 +194,7 @@ class _OtpWidgetState extends State<OtpWidget> {
 
           // Title
           Text(
-            'Verify Your Email',
+            l10n.auth_otpTitle,
             style: Theme.of(
               context,
             ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -197,7 +205,7 @@ class _OtpWidgetState extends State<OtpWidget> {
 
           // Subtitle
           Text(
-            'We sent a 6-digit code to',
+            l10n.auth_otpSubtitle,
             style: Theme.of(
               context,
             ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
@@ -284,7 +292,7 @@ class _OtpWidgetState extends State<OtpWidget> {
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
-                : const Text('Verify', style: TextStyle(fontSize: 16)),
+                : Text(l10n.auth_verify, style: const TextStyle(fontSize: 16)),
           ),
 
           const SizedBox(height: 24),
@@ -293,7 +301,7 @@ class _OtpWidgetState extends State<OtpWidget> {
           Center(
             child: TextButton(
               onPressed: _isProcessing ? null : _resendOtp,
-              child: const Text("Didn't receive code? Resend"),
+              child: Text(l10n.auth_resendCode),
             ),
           ),
 

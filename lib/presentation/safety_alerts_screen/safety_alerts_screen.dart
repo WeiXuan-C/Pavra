@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../core/app_export.dart';
+import '../../l10n/app_localizations.dart';
 import './widgets/alert_card_widget.dart';
 import './widgets/alert_toggle_widget.dart';
 import './widgets/mini_map_widget.dart';
@@ -438,11 +439,12 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          'Safety Alerts',
+          l10n.alerts_title,
           style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w600,
             color: AppTheme.lightTheme.colorScheme.onPrimary,

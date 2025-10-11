@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../l10n/app_localizations.dart';
 
 class SubmissionActionsWidget extends StatelessWidget {
   final bool isFormValid;
@@ -21,6 +22,7 @@ class SubmissionActionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
@@ -41,7 +43,7 @@ class SubmissionActionsWidget extends StatelessWidget {
           children: [
             // Upload progress indicator
             if (isSubmitting) ...[
-              _buildUploadProgress(),
+              _buildUploadProgress(l10n),
               SizedBox(height: 2.h),
             ],
 
@@ -79,7 +81,7 @@ class SubmissionActionsWidget extends StatelessWidget {
                           ),
                           SizedBox(width: 3.w),
                           Text(
-                            'Submitting Report...',
+                            l10n.report_submittingReport,
                             style: AppTheme.lightTheme.textTheme.titleMedium
                                 ?.copyWith(
                                   color: Colors.white,
@@ -98,7 +100,7 @@ class SubmissionActionsWidget extends StatelessWidget {
                           ),
                           SizedBox(width: 2.w),
                           Text(
-                            'Submit Report',
+                            l10n.report_submitReport,
                             style: AppTheme.lightTheme.textTheme.titleMedium
                                 ?.copyWith(
                                   color: Colors.white,
@@ -142,7 +144,7 @@ class SubmissionActionsWidget extends StatelessWidget {
                     ),
                     SizedBox(width: 2.w),
                     Text(
-                      'Save as Draft',
+                      l10n.report_saveDraft,
                       style: AppTheme.lightTheme.textTheme.titleSmall?.copyWith(
                         color: AppTheme.lightTheme.primaryColor.withValues(
                           alpha: isSubmitting ? 0.3 : 1.0,
@@ -183,7 +185,7 @@ class SubmissionActionsWidget extends StatelessWidget {
                     SizedBox(width: 2.w),
                     Expanded(
                       child: Text(
-                        'Please select at least one issue type to submit the report',
+                        l10n.report_selectIssueTypeWarning,
                         style: AppTheme.lightTheme.textTheme.labelMedium
                             ?.copyWith(
                               color: AppTheme.lightTheme.colorScheme.error,
@@ -200,14 +202,14 @@ class SubmissionActionsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildUploadProgress() {
+  Widget _buildUploadProgress(AppLocalizations l10n) {
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Uploading report...',
+              l10n.report_uploadingReport,
               style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
                 color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
                   alpha: 0.8,
@@ -244,7 +246,7 @@ class SubmissionActionsWidget extends StatelessWidget {
             ),
             SizedBox(width: 1.w),
             Text(
-              'Syncing with cloud servers...',
+              l10n.report_syncingCloud,
               style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
                 color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
                   alpha: 0.6,

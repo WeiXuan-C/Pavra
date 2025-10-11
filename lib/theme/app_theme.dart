@@ -6,13 +6,13 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   AppTheme._();
 
-  // Safety Authority Palette - Primary colors
+  // Pavra Brand Palette - Primary colors
   static const Color primaryLight = Color(
-    0xFF1565C0,
-  ); // Deep blue for authority and trust
+    0xFFF2D336,
+  ); // Logo yellow for brand consistency
   static const Color primaryVariantLight = Color(
-    0xFF0D47A1,
-  ); // Darker blue variant
+    0xFFD4B82E,
+  ); // Darker yellow variant
   static const Color secondaryLight = Color(
     0xFFFF6F00,
   ); // Safety orange for alerts
@@ -22,11 +22,11 @@ class AppTheme {
 
   // Surface and background colors
   static const Color backgroundLight = Color(
-    0xFFFFFFFF,
-  ); // Pure white for card surfaces
+    0xFFFDFFE0,
+  ); // Light cream background
   static const Color surfaceLight = Color(
-    0xFFFAFAFA,
-  ); // Clean background supporting content hierarchy
+    0xFFFDFFE0,
+  ); // Light cream background for consistency
   static const Color errorLight = Color(0xFFD32F2F); // Standard error red
   static const Color warningLight = Color(
     0xFFF57C00,
@@ -34,7 +34,7 @@ class AppTheme {
   static const Color successLight = Color(0xFF388E3C); // Confirmation green
 
   // On-color variants for light theme
-  static const Color onPrimaryLight = Color(0xFFFFFFFF);
+  static const Color onPrimaryLight = Color(0xFF202020);
   static const Color onSecondaryLight = Color(0xFFFFFFFF);
   static const Color onBackgroundLight = Color(
     0xFF212121,
@@ -44,21 +44,21 @@ class AppTheme {
 
   // Dark theme colors
   static const Color primaryDark = Color(
-    0xFF90CAF9,
-  ); // Lighter blue for dark mode
-  static const Color primaryVariantDark = Color(0xFF1565C0);
+    0xFFF2D336,
+  ); // Logo yellow for brand consistency
+  static const Color primaryVariantDark = Color(0xFFD4B82E);
   static const Color secondaryDark = Color(
     0xFFFFB74D,
   ); // Softer orange for dark mode
   static const Color secondaryVariantDark = Color(0xFFFF6F00);
-  static const Color backgroundDark = Color(0xFF121212);
-  static const Color surfaceDark = Color(0xFF1E1E1E);
+  static const Color backgroundDark = Color(0xFF202020);
+  static const Color surfaceDark = Color(0xFF202020);
   static const Color errorDark = Color(0xFFEF5350);
   static const Color warningDark = Color(0xFFFFB74D);
   static const Color successDark = Color(0xFF66BB6A);
 
   // On-color variants for dark theme
-  static const Color onPrimaryDark = Color(0xFF000000);
+  static const Color onPrimaryDark = Color(0xFF202020);
   static const Color onSecondaryDark = Color(0xFF000000);
   static const Color onBackgroundDark = Color(0xFFFFFFFF);
   static const Color onSurfaceDark = Color(0xFFFFFFFF);
@@ -66,9 +66,9 @@ class AppTheme {
 
   // Card and dialog colors
   static const Color cardLight = Color(0xFFFFFFFF);
-  static const Color cardDark = Color(0xFF2D2D2D);
+  static const Color cardDark = Color(0xFF2A2A2A);
   static const Color dialogLight = Color(0xFFFFFFFF);
-  static const Color dialogDark = Color(0xFF2D2D2D);
+  static const Color dialogDark = Color(0xFF2A2A2A);
 
   // Shadow colors - Minimal Material 3 elevation system
   static const Color shadowLight = Color(

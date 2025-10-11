@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-
+import '../../../l10n/app_localizations.dart';
 import '../../../core/app_export.dart';
 
 class CameraControlsWidget extends StatelessWidget {
@@ -25,6 +25,8 @@ class CameraControlsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
@@ -150,7 +152,7 @@ class CameraControlsWidget extends StatelessWidget {
             // Instructions
             Text(
               isBurstMode
-                  ? 'Burst mode active • Tap to capture • Long press to exit'
+                  ? '${l10n.camera_burstMode} • Tap to capture • Long press to exit'
                   : 'Tap to capture • Long press for burst mode',
               style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
                 color: AppTheme.lightTheme.colorScheme.onSurface.withValues(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../theme/app_theme.dart';
 
 class MapFilterBottomSheet extends StatefulWidget {
@@ -29,6 +30,7 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
@@ -54,40 +56,43 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
 
           // Title
           Text(
-            'Filter Road Issues',
+            l10n.map_filterTitle,
             style: AppTheme.lightTheme.textTheme.titleLarge,
           ),
           SizedBox(height: 3.h),
 
           // Issue Types Section
-          Text('Issue Types', style: AppTheme.lightTheme.textTheme.titleMedium),
+          Text(l10n.map_issueTypes, style: AppTheme.lightTheme.textTheme.titleMedium),
           SizedBox(height: 1.h),
 
-          _buildFilterTile('Potholes', 'potholes'),
-          _buildFilterTile('Cracks', 'cracks'),
-          _buildFilterTile('Obstacles', 'obstacles'),
+          _buildFilterTile(l10n.camera_potholes, 'potholes'),
+          _buildFilterTile(l10n.camera_cracks, 'cracks'),
+          _buildFilterTile(l10n.camera_obstacles, 'obstacles'),
           _buildFilterTile('Poor Lighting', 'lighting'),
 
           SizedBox(height: 2.h),
 
           // Severity Levels Section
           Text(
-            'Severity Levels',
+            l10n.map_severityLevels,
             style: AppTheme.lightTheme.textTheme.titleMedium,
           ),
           SizedBox(height: 1.h),
 
-          _buildFilterTile('Critical', 'critical'),
-          _buildFilterTile('Moderate', 'moderate'),
-          _buildFilterTile('Minor', 'minor'),
+          _buildFilterTile(l10n.report_high, 'high'),
+          _buildFilterTile(l10n.report_medium, 'medium'),
+          _buildFilterTile(l10n.report_low, 'low'),
 
           SizedBox(height: 2.h),
 
           // Status Section
-          Text('Status', style: AppTheme.lightTheme.textTheme.titleMedium),
+          Text(
+            l10n.map_status,
+            style: AppTheme.lightTheme.textTheme.titleMedium,
+          ),
           SizedBox(height: 1.h),
 
-          _buildFilterTile('Reported', 'reported'),
+          _buildFilterTile(l10n.map_reported, 'reported'),
           _buildFilterTile('In Progress', 'in_progress'),
           _buildFilterTile('Resolved', 'resolved'),
 
@@ -103,7 +108,7 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
                       _filters.updateAll((key, value) => false);
                     });
                   },
-                  child: Text('Clear All'),
+                  child: Text(l10n.map_clearAll),
                 ),
               ),
               SizedBox(width: 3.w),
@@ -113,7 +118,7 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
                     widget.onFiltersChanged(_filters);
                     Navigator.pop(context);
                   },
-                  child: Text('Apply Filters'),
+                  child: Text(l10n.map_applyFilters),
                 ),
               ),
             ],

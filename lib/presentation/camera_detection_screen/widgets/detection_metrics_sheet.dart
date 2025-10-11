@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../l10n/app_localizations.dart';
 
 class DetectionMetricsSheet extends StatelessWidget {
   final List<Map<String, dynamic>> detectionHistory;
@@ -18,6 +19,8 @@ class DetectionMetricsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       height: 70.h,
       decoration: BoxDecoration(
@@ -44,7 +47,7 @@ class DetectionMetricsSheet extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    'Detection Analytics',
+                    l10n.camera_detectionAnalytics,
                     style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -80,22 +83,22 @@ class DetectionMetricsSheet extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Stats Cards
-                  _buildStatsCards(),
+                  _buildStatsCards(l10n),
 
                   SizedBox(height: 3.h),
 
                   // Detection Chart
-                  _buildDetectionChart(),
+                  _buildDetectionChart(l10n),
 
                   SizedBox(height: 3.h),
 
                   // Confidence Metrics
-                  _buildConfidenceMetrics(),
+                  _buildConfidenceMetrics(l10n),
 
                   SizedBox(height: 3.h),
 
                   // Recent Activity
-                  _buildRecentActivity(),
+                  _buildRecentActivity(l10n),
 
                   SizedBox(height: 2.h),
                 ],
@@ -107,7 +110,7 @@ class DetectionMetricsSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsCards() {
+  Widget _buildStatsCards(AppLocalizations l10n) {
     final totalDetections = detectionStats.values.fold(
       0,
       (sum, count) => sum + count,
@@ -117,7 +120,7 @@ class DetectionMetricsSheet extends StatelessWidget {
       children: [
         Expanded(
           child: _buildStatCard(
-            'Total Detections',
+            l10n.camera_totalDetections,
             totalDetections.toString(),
             Icons.search,
             AppTheme.lightTheme.colorScheme.primary,
@@ -126,7 +129,7 @@ class DetectionMetricsSheet extends StatelessWidget {
         SizedBox(width: 3.w),
         Expanded(
           child: _buildStatCard(
-            'Potholes',
+            l10n.camera_potholes,
             (detectionStats['pothole'] ?? 0).toString(),
             Icons.warning,
             AppTheme.lightTheme.colorScheme.error,
@@ -135,7 +138,7 @@ class DetectionMetricsSheet extends StatelessWidget {
         SizedBox(width: 3.w),
         Expanded(
           child: _buildStatCard(
-            'Cracks',
+            l10n.camera_cracks,
             (detectionStats['crack'] ?? 0).toString(),
             Icons.linear_scale,
             AppTheme.lightTheme.colorScheme.tertiary,
@@ -183,16 +186,16 @@ class DetectionMetricsSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildDetectionChart() {
+  Widget _buildDetectionChart(AppLocalizations l10n) {
     if (detectionStats.isEmpty) {
       return SizedBox(
         height: 30.h,
         child: Center(
           child: Text(
-            'No detection data available',
+            l10n.camera_noDataAvailable,
             style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
               color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                alpha: 0.5,
+                alpha: 0.6,
               ),
             ),
           ),
@@ -204,7 +207,7 @@ class DetectionMetricsSheet extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Detection Distribution',
+          l10n.camera_detectionDistribution,
           style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w600,
           ),
@@ -249,7 +252,7 @@ class DetectionMetricsSheet extends StatelessWidget {
     }).toList();
   }
 
-  Widget _buildConfidenceMetrics() {
+  Widget _buildConfidenceMetrics(AppLocalizations l10n) {
     if (detectionHistory.isEmpty) {
       return SizedBox.shrink();
     }
@@ -267,7 +270,7 @@ class DetectionMetricsSheet extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Confidence Metrics',
+          l10n.camera_confidenceMetrics,
           style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w600,
           ),
@@ -277,19 +280,19 @@ class DetectionMetricsSheet extends StatelessWidget {
           children: [
             Expanded(
               child: _buildMetricItem(
-                'Average',
+                l10n.camera_average,
                 '${(avgConfidence * 100).toInt()}%',
               ),
             ),
             Expanded(
               child: _buildMetricItem(
-                'Highest',
+                l10n.camera_highest,
                 '${(maxConfidence * 100).toInt()}%',
               ),
             ),
             Expanded(
               child: _buildMetricItem(
-                'Lowest',
+                l10n.camera_lowest,
                 '${(minConfidence * 100).toInt()}%',
               ),
             ),
@@ -330,7 +333,7 @@ class DetectionMetricsSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildRecentActivity() {
+  Widget _buildRecentActivity(AppLocalizations l10n) {
     final recentDetections = detectionHistory.take(3).toList();
 
     if (recentDetections.isEmpty) {
@@ -341,18 +344,23 @@ class DetectionMetricsSheet extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Recent Activity',
+          l10n.camera_recentActivity,
           style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w600,
           ),
         ),
         SizedBox(height: 2.h),
-        ...recentDetections.map((detection) => _buildActivityItem(detection)),
+        ...recentDetections.map(
+          (detection) => _buildActivityItem(detection, l10n),
+        ),
       ],
     );
   }
 
-  Widget _buildActivityItem(Map<String, dynamic> detection) {
+  Widget _buildActivityItem(
+    Map<String, dynamic> detection,
+    AppLocalizations l10n,
+  ) {
     final String type = detection['type'] as String;
     final double confidence = detection['confidence'] as double;
     final DateTime timestamp = detection['timestamp'] as DateTime;
@@ -388,7 +396,7 @@ class DetectionMetricsSheet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${type.toUpperCase()} detected',
+                  '${type.toUpperCase()} ${l10n.camera_detected}',
                   style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),

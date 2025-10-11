@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../l10n/app_localizations.dart';
 import '../../core/providers/auth_provider.dart';
+import '../../core/providers/locale_provider.dart';
+import '../../core/providers/theme_provider.dart';
 
 /// Home Screen
 /// Main screen shown after successful authentication
@@ -12,9 +15,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pavra'),
+        title: Text(l10n.appName),
         elevation: 0,
         actions: [
           IconButton(
@@ -25,13 +30,13 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<AuthProvider>(
-        builder: (context, authProvider, child) {
+      body: Consumer3<AuthProvider, LocaleProvider, ThemeProvider>(
+        builder: (context, authProvider, localeProvider, themeProvider, child) {
           final user = authProvider.user;
           final profile = authProvider.userProfile;
 
           if (user == null) {
-            return const Center(child: Text('No user logged in'));
+            return Center(child: Text(l10n.home_noUserLoggedIn));
           }
 
           return SingleChildScrollView(
@@ -71,7 +76,7 @@ class HomeScreen extends StatelessWidget {
 
                         // Username
                         Text(
-                          profile?.username ?? 'User',
+                          profile?.username ?? l10n.home_user,
                           style: Theme.of(context).textTheme.headlineSmall
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
@@ -80,7 +85,7 @@ class HomeScreen extends StatelessWidget {
 
                         // Email
                         Text(
-                          user.email ?? 'No email',
+                          user.email ?? l10n.home_noEmail,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: Colors.grey[600]),
                         ),
@@ -98,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            'ID: ${user.id.substring(0, 8)}...',
+                            '${l10n.home_userId}: ${user.id.substring(0, 8)}...',
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(fontFamily: 'monospace'),
                           ),
@@ -122,20 +127,20 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Account Information',
+                          l10n.home_accountInfo,
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 16),
                         _InfoRow(
                           icon: Icons.email_outlined,
-                          label: 'Email',
+                          label: l10n.home_email,
                           value: user.email ?? 'N/A',
                         ),
                         const Divider(height: 24),
                         _InfoRow(
                           icon: Icons.update,
-                          label: 'Last Updated',
+                          label: l10n.home_lastUpdated,
                           value: _formatDate(profile?.updatedAt),
                         ),
                       ],
@@ -157,37 +162,67 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Appearance',
+                          l10n.home_appearance,
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 16),
+                        // Theme Mode
                         Row(
                           children: [
                             const Icon(Icons.brightness_6_outlined),
                             const SizedBox(width: 12),
-                            const Text('Theme Mode'),
+                            Text(l10n.home_themeMode),
                             const Spacer(),
                             DropdownButton<ThemeMode>(
-                              value: authProvider.themeMode,
+                              value: themeProvider.themeMode,
                               underline: const SizedBox(),
                               onChanged: (ThemeMode? mode) {
                                 if (mode != null) {
-                                  authProvider.setThemeMode(mode);
+                                  themeProvider.setThemeMode(mode);
                                 }
                               },
-                              items: const [
+                              items: [
                                 DropdownMenuItem(
                                   value: ThemeMode.system,
-                                  child: Text('System'),
+                                  child: Text(l10n.home_themeSystem),
                                 ),
                                 DropdownMenuItem(
                                   value: ThemeMode.light,
-                                  child: Text('Light'),
+                                  child: Text(l10n.home_themeLight),
                                 ),
                                 DropdownMenuItem(
                                   value: ThemeMode.dark,
-                                  child: Text('Dark'),
+                                  child: Text(l10n.home_themeDark),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const Divider(height: 24),
+                        // Language
+                        Row(
+                          children: [
+                            const Icon(Icons.language_outlined),
+                            const SizedBox(width: 12),
+                            Text(l10n.home_language),
+                            const Spacer(),
+                            DropdownButton<Locale>(
+                              value: localeProvider.locale,
+                              underline: const SizedBox(),
+                              onChanged: (Locale? locale) {
+                                if (locale != null) {
+                                  localeProvider.setLocale(locale);
+                                }
+                              },
+                              items: [
+                                DropdownMenuItem(
+                                  value: const Locale('en'),
+                                  child: Text(l10n.language_english),
+                                ),
+                                DropdownMenuItem(
+                                  value: const Locale('zh'),
+                                  child: Text(l10n.language_chinese),
                                 ),
                               ],
                             ),
@@ -212,7 +247,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   icon: const Icon(Icons.logout),
-                  label: const Text('Logout', style: TextStyle(fontSize: 16)),
+                  label: Text(l10n.home_logout, style: const TextStyle(fontSize: 16)),
                 ),
 
                 const SizedBox(height: 24),
@@ -229,20 +264,21 @@ class HomeScreen extends StatelessWidget {
     BuildContext context,
     AuthProvider authProvider,
   ) async {
+    final l10n = AppLocalizations.of(context);
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirm Logout'),
-        content: const Text('Are you sure you want to logout?'),
+        title: Text(l10n.home_confirmLogout),
+        content: Text(l10n.home_confirmLogoutMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.common_cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Logout'),
+            child: Text(l10n.home_logout),
           ),
         ],
       ),

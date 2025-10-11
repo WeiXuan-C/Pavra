@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../core/app_export.dart';
+import '../../l10n/app_localizations.dart';
 import './widgets/description_input_widget.dart';
 import './widgets/image_preview_widget.dart';
 import './widgets/issue_type_selector_widget.dart';
@@ -408,6 +409,7 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: _handlePopInvoked,
@@ -415,7 +417,7 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
         backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
         appBar: AppBar(
           title: Text(
-            'Submit Report',
+            l10n.report_title,
             style: AppTheme.lightTheme.appBarTheme.titleTextStyle,
           ),
           backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,

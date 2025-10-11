@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../l10n/app_localizations.dart';
 
 class PhotoGalleryWidget extends StatelessWidget {
   final List<String> imageUrls;
@@ -19,6 +20,7 @@ class PhotoGalleryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
@@ -40,7 +42,7 @@ class PhotoGalleryWidget extends StatelessWidget {
               ),
               SizedBox(width: 2.w),
               Text(
-                'Additional Photos',
+                l10n.report_additionalPhotos,
                 style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -60,7 +62,7 @@ class PhotoGalleryWidget extends StatelessWidget {
           SizedBox(height: 1.h),
 
           Text(
-            'Add multiple angles or close-up shots of the issue',
+            l10n.report_addPhotoHint,
             style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
               color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
                 alpha: 0.6,
@@ -71,24 +73,23 @@ class PhotoGalleryWidget extends StatelessWidget {
           SizedBox(height: 2.h),
 
           // Photo grid
-          if (imageUrls.isNotEmpty || imageUrls.length < maxPhotos)
+          if (imageUrls.isEmpty)
+            _buildEmptyState(l10n)
+          else
             SizedBox(
               height: 25.h,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount:
-                    imageUrls.length + (imageUrls.length < maxPhotos ? 1 : 0),
+                itemCount: imageUrls.length +
+                    (imageUrls.length < maxPhotos ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (index == imageUrls.length) {
-                    // Add photo button
-                    return _buildAddPhotoButton();
+                    return _buildAddPhotoCard(l10n);
                   }
                   return _buildPhotoThumbnail(imageUrls[index], index);
                 },
               ),
-            )
-          else
-            _buildEmptyState(),
+            ),
         ],
       ),
     );
@@ -101,7 +102,6 @@ class PhotoGalleryWidget extends StatelessWidget {
       margin: EdgeInsets.only(right: 2.w),
       child: Stack(
         children: [
-          // Image
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: CustomImageWidget(
@@ -111,8 +111,6 @@ class PhotoGalleryWidget extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-
-          // Remove button
           Positioned(
             top: 1.w,
             right: 1.w,
@@ -121,26 +119,17 @@ class PhotoGalleryWidget extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(1.w),
                 decoration: BoxDecoration(
-                  color: AppTheme.lightTheme.colorScheme.error,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  color: Colors.black.withValues(alpha: 0.7),
+                  shape: BoxShape.circle,
                 ),
                 child: CustomIconWidget(
                   iconName: 'close',
                   color: Colors.white,
-                  size: 14,
+                  size: 16,
                 ),
               ),
             ),
           ),
-
-          // Image number
           Positioned(
             bottom: 1.w,
             left: 1.w,
@@ -164,13 +153,12 @@ class PhotoGalleryWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildAddPhotoButton() {
+  Widget _buildAddPhotoCard(AppLocalizations l10n) {
     return GestureDetector(
       onTap: onAddPhoto,
       child: Container(
         width: 30.w,
         height: 25.h,
-        margin: EdgeInsets.only(right: 2.w),
         decoration: BoxDecoration(
           color: AppTheme.lightTheme.primaryColor.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
@@ -190,7 +178,7 @@ class PhotoGalleryWidget extends StatelessWidget {
             ),
             SizedBox(height: 1.h),
             Text(
-              'Add Photo',
+              l10n.report_addPhoto,
               style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
                 color: AppTheme.lightTheme.primaryColor,
                 fontWeight: FontWeight.w600,
@@ -198,7 +186,7 @@ class PhotoGalleryWidget extends StatelessWidget {
             ),
             SizedBox(height: 0.5.h),
             Text(
-              '${maxPhotos - imageUrls.length} left',
+              '${maxPhotos - imageUrls.length} ${l10n.report_photosLeft}',
               style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
                 color: AppTheme.lightTheme.primaryColor.withValues(alpha: 0.7),
               ),
@@ -209,7 +197,7 @@ class PhotoGalleryWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       height: 20.h,
@@ -230,7 +218,7 @@ class PhotoGalleryWidget extends StatelessWidget {
           ),
           SizedBox(height: 1.h),
           Text(
-            'No additional photos',
+            l10n.report_noAdditionalPhotos,
             style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
               color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
                 alpha: 0.6,
@@ -241,7 +229,7 @@ class PhotoGalleryWidget extends StatelessWidget {
           GestureDetector(
             onTap: onAddPhoto,
             child: Text(
-              'Tap to add photos',
+              l10n.report_tapToAddPhotos,
               style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
                 color: AppTheme.lightTheme.primaryColor,
                 fontWeight: FontWeight.w500,

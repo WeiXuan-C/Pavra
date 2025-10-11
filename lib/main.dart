@@ -3,11 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
 import '../core/app_export.dart';
 import '../widgets/custom_error_widget.dart';
 import 'core/supabase/supabase_client.dart';
 import 'core/providers/auth_provider.dart';
+import 'core/providers/locale_provider.dart';
+import 'core/providers/theme_provider.dart';
 import 'core/middleware/route_guard.dart';
+import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,6 +82,8 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
       child: MyApp(),
     ),
@@ -89,15 +95,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(
-      builder: (context, authProvider, child) {
+    return Consumer3<AuthProvider, LocaleProvider, ThemeProvider>(
+      builder: (context, authProvider, localeProvider, themeProvider, child) {
         return Sizer(
           builder: (context, orientation, screenType) {
             return MaterialApp(
               title: 'pavra',
               theme: AppTheme.lightTheme,
               darkTheme: AppTheme.darkTheme,
-              themeMode: authProvider.themeMode,
+              themeMode: themeProvider.themeMode,
+              // Localization support
+              locale: localeProvider.locale,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('en'),
+                Locale('zh'),
+              ],
               // 🚨 CRITICAL: NEVER REMOVE OR MODIFY
               builder: (context, child) {
                 return MediaQuery(

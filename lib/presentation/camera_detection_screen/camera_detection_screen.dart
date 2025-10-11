@@ -10,6 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../l10n/app_localizations.dart';
 import './widgets/camera_controls_widget.dart';
 import './widgets/camera_preview_widget.dart';
 import './widgets/detection_history_panel.dart';
@@ -321,9 +322,10 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
         });
 
         if (mounted) {
+          final l10n = AppLocalizations.of(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Image processed successfully'),
+              content: Text(l10n.camera_imageProcessed),
               backgroundColor: AppTheme.lightTheme.colorScheme.secondary,
             ),
           );
@@ -372,10 +374,11 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
 
     HapticFeedback.mediumImpact();
 
+    final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          _isBurstMode ? 'Burst mode activated' : 'Burst mode deactivated',
+          _isBurstMode ? l10n.camera_burstModeActivated : l10n.camera_burstModeDeactivated,
         ),
         duration: Duration(seconds: 1),
       ),
@@ -388,31 +391,32 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
   }
 
   void _onDetectionTap(Map<String, dynamic> detection) {
+    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Detection Details'),
+        title: Text(l10n.camera_detectionDetails),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Type: ${detection['type']}'),
-            Text('Confidence: ${(detection['confidence'] * 100).toInt()}%'),
-            Text('Location: ${detection['location']}'),
-            Text('Time: ${detection['timestamp']}'),
+            Text('${l10n.camera_type}: ${detection['type']}'),
+            Text('${l10n.camera_confidence}: ${(detection['confidence'] * 100).toInt()}%'),
+            Text('${l10n.camera_location}: ${detection['location']}'),
+            Text('${l10n.camera_time}: ${detection['timestamp']}'),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('Close'),
+            child: Text(l10n.camera_close),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.pushNamed(context, '/report-submission-screen');
             },
-            child: Text('Submit Report'),
+            child: Text(l10n.camera_submitReport),
           ),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../l10n/app_localizations.dart';
 
 class NearbyIssuesBottomSheet extends StatelessWidget {
   final List<Map<String, dynamic>> nearbyIssues;
@@ -15,6 +16,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return DraggableScrollableSheet(
       initialChildSize: 0.3,
       minChildSize: 0.1,
@@ -51,7 +53,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      'Nearby Issues',
+                      l10n.map_nearbyIssues,
                       style: AppTheme.lightTheme.textTheme.titleLarge,
                     ),
                     Spacer(),
@@ -66,7 +68,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                         borderRadius: BorderRadius.circular(2.w),
                       ),
                       child: Text(
-                        '${nearbyIssues.length} found',
+                        '${nearbyIssues.length} ${l10n.map_found}',
                         style: AppTheme.lightTheme.textTheme.labelMedium
                             ?.copyWith(
                               color: AppTheme.lightTheme.colorScheme.primary,
@@ -82,7 +84,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
               // Issues list
               Expanded(
                 child: nearbyIssues.isEmpty
-                    ? _buildEmptyState()
+                    ? _buildEmptyState(l10n)
                     : ListView.separated(
                         controller: scrollController,
                         padding: EdgeInsets.symmetric(horizontal: 4.w),
@@ -91,7 +93,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                             SizedBox(height: 2.h),
                         itemBuilder: (context, index) {
                           final issue = nearbyIssues[index];
-                          return _buildIssueCard(issue);
+                          return _buildIssueCard(issue, l10n);
                         },
                       ),
               ),
@@ -102,7 +104,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -114,14 +116,14 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           Text(
-            'No issues found nearby',
+            l10n.map_noIssuesFound,
             style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
               color: AppTheme.lightTheme.textTheme.bodySmall?.color,
             ),
           ),
           SizedBox(height: 1.h),
           Text(
-            'Try adjusting your location or zoom level',
+            l10n.map_adjustLocation,
             style: AppTheme.lightTheme.textTheme.bodySmall,
             textAlign: TextAlign.center,
           ),
@@ -130,7 +132,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildIssueCard(Map<String, dynamic> issue) {
+  Widget _buildIssueCard(Map<String, dynamic> issue, AppLocalizations l10n) {
     return GestureDetector(
       onTap: () => onIssueSelected(issue),
       child: Container(
@@ -221,7 +223,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                       SizedBox(width: 1.w),
                       Expanded(
                         child: Text(
-                          '${issue['distance']}m away',
+                          '${issue['distance']}m ${l10n.map_away}',
                           style: AppTheme.lightTheme.textTheme.bodySmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

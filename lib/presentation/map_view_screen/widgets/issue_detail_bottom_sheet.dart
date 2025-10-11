@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../l10n/app_localizations.dart';
 
 class IssueDetailBottomSheet extends StatelessWidget {
   final Map<String, dynamic> issue;
@@ -10,6 +11,7 @@ class IssueDetailBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
@@ -141,7 +143,7 @@ class IssueDetailBottomSheet extends StatelessWidget {
           if (issue['description'] != null) ...[
             SizedBox(height: 3.h),
             Text(
-              'Description',
+              l10n.map_description,
               style: AppTheme.lightTheme.textTheme.titleMedium,
             ),
             SizedBox(height: 1.h),
@@ -167,7 +169,7 @@ class IssueDetailBottomSheet extends StatelessWidget {
                     color: AppTheme.lightTheme.colorScheme.primary,
                     size: 18,
                   ),
-                  label: Text('Directions'),
+                  label: Text(l10n.map_directions),
                 ),
               ),
               SizedBox(width: 3.w),
@@ -182,7 +184,7 @@ class IssueDetailBottomSheet extends StatelessWidget {
                     color: Colors.white,
                     size: 18,
                   ),
-                  label: Text('Report Similar'),
+                  label: Text(l10n.map_reportSimilar),
                 ),
               ),
             ],

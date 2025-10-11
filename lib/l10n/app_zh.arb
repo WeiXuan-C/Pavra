@@ -1,0 +1,720 @@
+{
+  "@@locale": "zh",
+  
+  "appName": "Pavra",
+  "@appName": {
+    "description": "应用名称"
+  },
+  "appTitle": "Pavra",
+  "@appTitle": {
+    "description": "应用标题"
+  },
+  
+  "common_ok": "确定",
+  "@common_ok": {
+    "description": "确定按钮文本"
+  },
+  "common_cancel": "取消",
+  "@common_cancel": {
+    "description": "取消按钮文本"
+  },
+  "common_confirm": "确认",
+  "@common_confirm": {
+    "description": "确认按钮文本"
+  },
+  "common_save": "保存",
+  "@common_save": {
+    "description": "保存按钮文本"
+  },
+  "common_delete": "删除",
+  "@common_delete": {
+    "description": "删除按钮文本"
+  },
+  "common_edit": "编辑",
+  "@common_edit": {
+    "description": "编辑按钮文本"
+  },
+  "common_close": "关闭",
+  "@common_close": {
+    "description": "关闭按钮文本"
+  },
+  "common_loading": "加载中...",
+  "@common_loading": {
+    "description": "加载状态消息"
+  },
+  "common_error": "错误",
+  "@common_error": {
+    "description": "通用错误标签"
+  },
+  "common_success": "成功",
+  "@common_success": {
+    "description": "通用成功消息"
+  },
+  "common_retry": "重试",
+  "@common_retry": {
+    "description": "重试按钮文本"
+  },
+  "common_back": "返回",
+  "@common_back": {
+    "description": "返回按钮文本"
+  },
+  "common_next": "下一步",
+  "@common_next": {
+    "description": "下一步按钮文本"
+  },
+  "common_submit": "提交",
+  "@common_submit": {
+    "description": "提交按钮文本"
+  },
+  
+  "auth_welcomeTitle": "欢迎使用 Pavra",
+  "@auth_welcomeTitle": {
+    "description": "欢迎屏幕标题"
+  },
+  "auth_welcomeSubtitle": "报告和追踪您社区的基础设施问题",
+  "@auth_welcomeSubtitle": {
+    "description": "欢迎屏幕副标题"
+  },
+  "auth_emailLabel": "电子邮箱",
+  "@auth_emailLabel": {
+    "description": "邮箱输入字段标签"
+  },
+  "auth_emailHint": "请输入您的邮箱",
+  "@auth_emailHint": {
+    "description": "邮箱输入字段提示文本"
+  },
+  "auth_sendOtp": "发送验证码",
+  "@auth_sendOtp": {
+    "description": "发送OTP验证码按钮"
+  },
+  "auth_otpTitle": "输入验证码",
+  "@auth_otpTitle": {
+    "description": "OTP输入屏幕标题"
+  },
+  "auth_otpSubtitle": "请输入发送到以下邮箱的6位验证码",
+  "@auth_otpSubtitle": {
+    "description": "OTP输入屏幕副标题"
+  },
+  "auth_otpHint": "输入6位验证码",
+  "@auth_otpHint": {
+    "description": "OTP输入字段提示文本"
+  },
+  "auth_verify": "验证",
+  "@auth_verify": {
+    "description": "验证OTP码按钮"
+  },
+  "auth_resendCode": "重新发送",
+  "@auth_resendCode": {
+    "description": "重新发送验证码按钮"
+  },
+  "auth_invalidEmail": "请输入有效的邮箱地址",
+  "@auth_invalidEmail": {
+    "description": "无效邮箱错误消息"
+  },
+  "auth_invalidOtp": "请输入有效的6位验证码",
+  "@auth_invalidOtp": {
+    "description": "无效OTP错误消息"
+  },
+  "auth_otpSent": "验证码发送成功",
+  "@auth_otpSent": {
+    "description": "OTP发送成功消息"
+  },
+  "auth_otpFailed": "验证码发送失败",
+  "@auth_otpFailed": {
+    "description": "OTP发送失败错误消息"
+  },
+  "auth_verifyFailed": "验证失败",
+  "@auth_verifyFailed": {
+    "description": "验证失败错误消息"
+  },
+  "auth_signInWithGoogle": "使用 Google 登录",
+  "@auth_signInWithGoogle": {
+    "description": "使用Google登录按钮"
+  },
+  "auth_signInWithGithub": "使用 Github 登录",
+  "@auth_signInWithGithub": {
+    "description": "使用Github登录按钮"
+  },
+  "auth_signInWithFacebook": "使用 Facebook 登录",
+  "@auth_signInWithFacebook": {
+    "description": "使用Facebook登录按钮"
+  },
+  "auth_signInWithDiscord": "使用 Discord 登录",
+  "@auth_signInWithDiscord": {
+    "description": "使用Discord登录按钮"
+  },
+  "auth_orContinueWith": "或者使用以下方式继续",
+  "@auth_orContinueWith": {
+    "description": "替代登录方式分隔文本"
+  },
+  
+  "home_title": "主页",
+  "@home_title": {
+    "description": "主页屏幕标题"
+  },
+  "home_noUserLoggedIn": "没有用户登录",
+  "@home_noUserLoggedIn": {
+    "description": "无用户登录时的消息"
+  },
+  "home_accountInfo": "账户信息",
+  "@home_accountInfo": {
+    "description": "账户信息部分标题"
+  },
+  "home_email": "邮箱",
+  "@home_email": {
+    "description": "邮箱标签"
+  },
+  "home_lastUpdated": "最后更新",
+  "@home_lastUpdated": {
+    "description": "最后更新时间戳标签"
+  },
+  "home_appearance": "外观",
+  "@home_appearance": {
+    "description": "外观设置部分标题"
+  },
+  "home_themeMode": "主题模式",
+  "@home_themeMode": {
+    "description": "主题模式设置标签"
+  },
+  "home_language": "语言",
+  "@home_language": {
+    "description": "语言设置标签"
+  },
+  "home_themeSystem": "跟随系统",
+  "@home_themeSystem": {
+    "description": "系统主题选项"
+  },
+  "home_themeLight": "浅色",
+  "@home_themeLight": {
+    "description": "浅色主题选项"
+  },
+  "home_themeDark": "深色",
+  "@home_themeDark": {
+    "description": "深色主题选项"
+  },
+  "home_logout": "退出登录",
+  "@home_logout": {
+    "description": "退出登录按钮文本"
+  },
+  "home_confirmLogout": "确认退出",
+  "@home_confirmLogout": {
+    "description": "退出登录确认对话框标题"
+  },
+  "home_confirmLogoutMessage": "您确定要退出登录吗？",
+  "@home_confirmLogoutMessage": {
+    "description": "退出登录确认对话框消息"
+  },
+  "home_user": "用户",
+  "@home_user": {
+    "description": "用户标签"
+  },
+  "home_noEmail": "没有邮箱",
+  "@home_noEmail": {
+    "description": "用户无邮箱时的消息"
+  },
+  "home_userId": "用户ID",
+  "@home_userId": {
+    "description": "用户ID标签"
+  },
+  "home_settings": "设置",
+  "@home_settings": {
+    "description": "设置菜单项"
+  },
+  
+  "camera_title": "摄像头检测",
+  "@camera_title": {
+    "description": "相机检测屏幕标题"
+  },
+  "camera_startDetection": "开始检测",
+  "@camera_startDetection": {
+    "description": "开始检测按钮"
+  },
+  "camera_stopDetection": "停止检测",
+  "@camera_stopDetection": {
+    "description": "停止检测按钮"
+  },
+  "camera_captureImage": "拍摄照片",
+  "@camera_captureImage": {
+    "description": "拍摄图像按钮"
+  },
+  "camera_switchCamera": "切换摄像头",
+  "@camera_switchCamera": {
+    "description": "切换摄像头按钮"
+  },
+  "camera_detectionHistory": "检测历史",
+  "@camera_detectionHistory": {
+    "description": "检测历史部分标题"
+  },
+  "camera_detectionMetrics": "检测指标",
+  "@camera_detectionMetrics": {
+    "description": "检测指标部分标题"
+  },
+  "camera_confidence": "置信度",
+  "@camera_confidence": {
+    "description": "检测置信度标签"
+  },
+  "camera_detecting": "检测中...",
+  "@camera_detecting": {
+    "description": "检测期间的状态消息"
+  },
+  "camera_noDetection": "暂无检测结果",
+  "@camera_noDetection": {
+    "description": "无检测结果时的消息"
+  },
+  "camera_gpsStatus": "GPS状态",
+  "@camera_gpsStatus": {
+    "description": "GPS状态标签"
+  },
+  "camera_aiDetection": "AI检测",
+  "@camera_aiDetection": {
+    "description": "AI检测功能标签"
+  },
+  "camera_disabled": "已禁用",
+  "@camera_disabled": {
+    "description": "已禁用状态"
+  },
+  "camera_active": "活跃",
+  "@camera_active": {
+    "description": "活跃状态"
+  },
+  "camera_inactive": "未激活",
+  "@camera_inactive": {
+    "description": "未激活状态"
+  },
+  "camera_initializingCamera": "正在初始化摄像头...",
+  "@camera_initializingCamera": {
+    "description": "相机初始化状态消息"
+  },
+  "camera_aiDetectionActive": "AI检测已激活",
+  "@camera_aiDetectionActive": {
+    "description": "AI检测激活时的消息"
+  },
+  "camera_detectionAnalytics": "检测分析",
+  "@camera_detectionAnalytics": {
+    "description": "检测分析部分标题"
+  },
+  "camera_noDataAvailable": "暂无检测数据",
+  "@camera_noDataAvailable": {
+    "description": "无检测数据时的消息"
+  },
+  "camera_detectionDistribution": "检测分布",
+  "@camera_detectionDistribution": {
+    "description": "检测分布图表标签"
+  },
+  "camera_confidenceMetrics": "置信度指标",
+  "@camera_confidenceMetrics": {
+    "description": "置信度指标部分标签"
+  },
+  "camera_recentActivity": "最近活动",
+  "@camera_recentActivity": {
+    "description": "最近活动部分标题"
+  },
+  "camera_detected": "已检测",
+  "@camera_detected": {
+    "description": "检测消息中使用的词语'已检测'"
+  },
+  "camera_recentDetections": "最近检测",
+  "@camera_recentDetections": {
+    "description": "最近检测部分标题"
+  },
+  "camera_noDetectionsYet": "暂无检测",
+  "@camera_noDetectionsYet": {
+    "description": "未进行检测时的消息"
+  },
+  "camera_startScanning": "开始扫描以检测道路问题",
+  "@camera_startScanning": {
+    "description": "开始扫描道路问题的提示"
+  },
+  "camera_flash": "闪光灯",
+  "@camera_flash": {
+    "description": "相机闪光灯控制标签"
+  },
+  "camera_burstMode": "连拍模式",
+  "@camera_burstMode": {
+    "description": "连拍模式相机功能标签"
+  },
+  "camera_gallery": "相册",
+  "@camera_gallery": {
+    "description": "相册按钮标签"
+  },
+  "camera_captured": "已拍摄",
+  "@camera_captured": {
+    "description": "拍摄消息中使用的词语'已拍摄'"
+  },
+  "camera_errorPermissionDenied": "相机权限被拒绝",
+  "@camera_errorPermissionDenied": {
+    "description": "相机权限被拒绝错误消息"
+  },
+  "camera_errorCameraFailed": "相机初始化失败",
+  "@camera_errorCameraFailed": {
+    "description": "相机初始化失败错误消息"
+  },
+  "camera_totalDetections": "总检测数",
+  "@camera_totalDetections": {
+    "description": "总检测数标签"
+  },
+  "camera_potholes": "坑洞",
+  "@camera_potholes": {
+    "description": "坑洞检测类型标签"
+  },
+  "camera_cracks": "裂缝",
+  "@camera_cracks": {
+    "description": "裂缝检测类型标签"
+  },
+  "camera_obstacles": "障碍物",
+  "@camera_obstacles": {
+    "description": "相机检测到的障碍物标签"
+  },
+  "camera_average": "平均",
+  "@camera_average": {
+    "description": "平均置信度指标标签"
+  },
+  "camera_highest": "最高",
+  "@camera_highest": {
+    "description": "最高置信度指标标签"
+  },
+  "camera_lowest": "最低",
+  "@camera_lowest": {
+    "description": "最低置信度指标标签"
+  },
+  "camera_justNow": "刚刚",
+  "@camera_justNow": {
+    "description": "最近检测的时间戳"
+  },
+  "camera_photoCaptured": "照片已成功拍摄",
+  "@camera_photoCaptured": {
+    "description": "照片拍摄成功消息"
+  },
+  "camera_imageProcessed": "图像已成功处理",
+  "@camera_imageProcessed": {
+    "description": "图像处理成功消息"
+  },
+  "camera_burstModeActivated": "连拍模式已激活",
+  "@camera_burstModeActivated": {
+    "description": "连拍模式激活时的消息"
+  },
+  "camera_burstModeDeactivated": "连拍模式已关闭",
+  "@camera_burstModeDeactivated": {
+    "description": "连拍模式关闭时的消息"
+  },
+  "camera_detectionDetails": "检测详情",
+  "@camera_detectionDetails": {
+    "description": "检测详情对话框标题"
+  },
+  "camera_type": "类型",
+  "@camera_type": {
+    "description": "检测类型标签"
+  },
+  "camera_location": "位置",
+  "@camera_location": {
+    "description": "检测位置标签"
+  },
+  "camera_time": "时间",
+  "@camera_time": {
+    "description": "检测时间标签"
+  },
+  "camera_close": "关闭",
+  "@camera_close": {
+    "description": "关闭按钮文本"
+  },
+  "camera_submitReport": "提交报告",
+  "@camera_submitReport": {
+    "description": "提交报告按钮文本"
+  },
+  
+  "map_title": "地图视图",
+  "@map_title": {
+    "description": "地图视图屏幕标题"
+  },
+  "map_searchHint": "搜索位置...",
+  "@map_searchHint": {
+    "description": "搜索输入提示文本"
+  },
+  "map_filterTitle": "筛选问题",
+  "@map_filterTitle": {
+    "description": "筛选对话框标题"
+  },
+  "map_nearbyIssues": "附近问题",
+  "@map_nearbyIssues": {
+    "description": "附近问题部分标题"
+  },
+  "map_issueDetails": "问题详情",
+  "@map_issueDetails": {
+    "description": "问题详情对话框标题"
+  },
+  "map_reportedBy": "报告人",
+  "@map_reportedBy": {
+    "description": "报告人标签"
+  },
+  "map_severity": "严重程度",
+  "@map_severity": {
+    "description": "严重程度标签"
+  },
+  "map_status": "状态",
+  "@map_status": {
+    "description": "状态标签"
+  },
+  "map_distance": "距离",
+  "@map_distance": {
+    "description": "距离标签"
+  },
+  "map_viewDetails": "查看详情",
+  "@map_viewDetails": {
+    "description": "查看详情按钮文本"
+  },
+  "map_noIssuesFound": "附近没有发现问题",
+  "@map_noIssuesFound": {
+    "description": "未找到问题时的消息"
+  },
+  "map_adjustLocation": "尝试调整您的位置或缩放级别",
+  "@map_adjustLocation": {
+    "description": "调整位置的提示"
+  },
+  "map_found": "个",
+  "@map_found": {
+    "description": "计数消息中使用的量词"
+  },
+  "map_suggestions": "建议",
+  "@map_suggestions": {
+    "description": "搜索建议部分标题"
+  },
+  "map_recentSearches": "最近搜索",
+  "@map_recentSearches": {
+    "description": "最近搜索部分标题"
+  },
+  "map_issueTypes": "问题类型",
+  "@map_issueTypes": {
+    "description": "问题类型筛选部分"
+  },
+  "map_severityLevels": "严重程度",
+  "@map_severityLevels": {
+    "description": "严重程度筛选部分"
+  },
+  "map_clearAll": "清除全部",
+  "@map_clearAll": {
+    "description": "清除所有筛选按钮"
+  },
+  "map_applyFilters": "应用筛选",
+  "@map_applyFilters": {
+    "description": "应用筛选按钮"
+  },
+  "map_description": "描述",
+  "@map_description": {
+    "description": "描述标签"
+  },
+  "map_directions": "导航",
+  "@map_directions": {
+    "description": "导航按钮文本"
+  },
+  "map_reportSimilar": "报告类似问题",
+  "@map_reportSimilar": {
+    "description": "报告类似问题按钮"
+  },
+  "map_reportIssuePrompt": "在此位置创建新的道路安全报告？",
+  "@map_reportIssuePrompt": {
+    "description": "创建报告的提示"
+  },
+  "map_reported": "已报告",
+  "@map_reported": {
+    "description": "已报告状态"
+  },
+  "map_away": "外",
+  "@map_away": {
+    "description": "距离后缀"
+  },
+  
+  "report_title": "报告问题",
+  "@report_title": {
+    "description": "报告问题屏幕标题"
+  },
+  "report_issueType": "问题类型",
+  "@report_issueType": {
+    "description": "问题类型字段标签"
+  },
+  "report_selectIssueType": "选择问题类型",
+  "@report_selectIssueType": {
+    "description": "问题类型选择提示"
+  },
+  "report_pothole": "坑洞",
+  "@report_pothole": {
+    "description": "坑洞问题类型选项"
+  },
+  "report_crack": "裂缝",
+  "@report_crack": {
+    "description": "裂缝问题类型选项"
+  },
+  "report_flooding": "积水",
+  "@report_flooding": {
+    "description": "积水问题类型选项"
+  },
+  "report_lighting": "照明",
+  "@report_lighting": {
+    "description": "照明问题类型选项"
+  },
+  "report_other": "其他",
+  "@report_other": {
+    "description": "其他问题类型选项"
+  },
+  "report_description": "描述",
+  "@report_description": {
+    "description": "描述字段标签"
+  },
+  "report_descriptionHint": "详细描述问题...",
+  "@report_descriptionHint": {
+    "description": "描述字段提示文本"
+  },
+  "report_photos": "照片",
+  "@report_photos": {
+    "description": "照片部分标签"
+  },
+  "report_addPhoto": "添加照片",
+  "@report_addPhoto": {
+    "description": "添加照片按钮文本"
+  },
+  "report_location": "位置",
+  "@report_location": {
+    "description": "位置字段标签"
+  },
+  "report_useCurrentLocation": "使用当前位置",
+  "@report_useCurrentLocation": {
+    "description": "使用当前位置按钮"
+  },
+  "report_severityLevel": "严重程度",
+  "@report_severityLevel": {
+    "description": "严重程度字段标签"
+  },
+  "report_low": "低",
+  "@report_low": {
+    "description": "低严重程度选项"
+  },
+  "report_medium": "中",
+  "@report_medium": {
+    "description": "中等严重程度选项"
+  },
+  "report_high": "高",
+  "@report_high": {
+    "description": "高严重程度选项"
+  },
+  "report_submitReport": "提交报告",
+  "@report_submitReport": {
+    "description": "提交报告按钮文本"
+  },
+  "report_submitting": "提交中...",
+  "@report_submitting": {
+    "description": "提交中状态消息"
+  },
+  "report_success": "报告提交成功",
+  "@report_success": {
+    "description": "报告提交成功消息"
+  },
+  "report_failed": "报告提交失败",
+  "@report_failed": {
+    "description": "报告提交失败错误消息"
+  },
+  "report_locationInfo": "位置信息",
+  "@report_locationInfo": {
+    "description": "位置信息部分标题"
+  },
+  "report_latitude": "纬度",
+  "@report_latitude": {
+    "description": "纬度标签"
+  },
+  "report_longitude": "经度",
+  "@report_longitude": {
+    "description": "经度标签"
+  },
+  "report_saveDraft": "保存草稿",
+  "@report_saveDraft": {
+    "description": "保存草稿按钮"
+  },
+  "report_submittingReport": "正在提交报告...",
+  "@report_submittingReport": {
+    "description": "提交报告状态"
+  },
+  "report_selectIssueTypeWarning": "请至少选择一种问题类型以提交报告",
+  "@report_selectIssueTypeWarning": {
+    "description": "选择问题类型警告"
+  },
+  "report_uploadingReport": "正在上传报告...",
+  "@report_uploadingReport": {
+    "description": "上传报告状态"
+  },
+  "report_syncingCloud": "正在与云服务器同步...",
+  "@report_syncingCloud": {
+    "description": "云同步消息"
+  },
+  "report_rateSeverity": "评估道路问题的严重程度",
+  "@report_rateSeverity": {
+    "description": "严重程度评级说明"
+  },
+  "report_additionalPhotos": "附加照片",
+  "@report_additionalPhotos": {
+    "description": "附加照片部分标题"
+  },
+  "report_addPhotoHint": "添加问题的多个角度或特写镜头",
+  "@report_addPhotoHint": {
+    "description": "添加照片提示"
+  },
+  "report_photosLeft": "剩余",
+  "@report_photosLeft": {
+    "description": "照片剩余后缀"
+  },
+  "report_noAdditionalPhotos": "没有附加照片",
+  "@report_noAdditionalPhotos": {
+    "description": "无照片消息"
+  },
+  "report_tapToAddPhotos": "点击添加照片",
+  "@report_tapToAddPhotos": {
+    "description": "点击添加照片提示"
+  },
+  "report_locationDetails": "位置详情",
+  "@report_locationDetails": {
+    "description": "位置详情部分标题"
+  },
+  "report_address": "地址",
+  "@report_address": {
+    "description": "地址标签"
+  },
+  "report_gpsAccuracy": "GPS精度",
+  "@report_gpsAccuracy": {
+    "description": "GPS精度标签"
+  },
+  
+  "alerts_title": "安全警报",
+  "@alerts_title": {
+    "description": "安全警报屏幕标题"
+  },
+  "alerts_enableAlerts": "启用警报",
+  "@alerts_enableAlerts": {
+    "description": "启用警报切换标签"
+  },
+  "alerts_alertRadius": "警报半径",
+  "@alerts_alertRadius": {
+    "description": "警报半径设置标签"
+  },
+  "alerts_routeMonitoring": "路线监控",
+  "@alerts_routeMonitoring": {
+    "description": "路线监控功能标签"
+  },
+  "alerts_noAlerts": "附近没有安全警报",
+  "@alerts_noAlerts": {
+    "description": "附近无警报时的消息"
+  },
+  "alerts_viewOnMap": "在地图上查看",
+  "@alerts_viewOnMap": {
+    "description": "在地图上查看按钮文本"
+  },
+  "alerts_distance": "距离",
+  "@alerts_distance": {
+    "description": "距离标签"
+  },
+  
+  "language_english": "English",
+  "@language_english": {
+    "description": "英语语言选项"
+  },
+  "language_chinese": "中文",
+  "@language_chinese": {
+    "description": "中文语言选项"
+  }
+}

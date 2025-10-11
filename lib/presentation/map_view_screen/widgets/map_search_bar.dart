@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../l10n/app_localizations.dart';
 
 class MapSearchBar extends StatefulWidget {
   final Function(String) onSearch;
@@ -84,6 +85,7 @@ class _MapSearchBarState extends State<MapSearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       children: [
         Container(
@@ -190,7 +192,7 @@ class _MapSearchBarState extends State<MapSearchBar> {
                   Padding(
                     padding: EdgeInsets.all(3.w),
                     child: Text(
-                      'Suggestions',
+                      l10n.map_suggestions,
                       style: AppTheme.lightTheme.textTheme.titleSmall,
                     ),
                   ),
@@ -204,7 +206,7 @@ class _MapSearchBarState extends State<MapSearchBar> {
                   Padding(
                     padding: EdgeInsets.all(3.w),
                     child: Text(
-                      'Recent Searches',
+                      l10n.map_recentSearches,
                       style: AppTheme.lightTheme.textTheme.titleSmall,
                     ),
                   ),
