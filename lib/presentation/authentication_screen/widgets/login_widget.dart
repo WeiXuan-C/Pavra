@@ -46,7 +46,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   /// Send OTP to email
   Future<void> _sendOtp() async {
     developer.log('=== LoginWidget: _sendOtp called ===', name: 'LoginWidget');
-    
+
     if (!_formKey.currentState!.validate()) {
       developer.log('Form validation failed', name: 'LoginWidget');
       return;
@@ -56,7 +56,7 @@ class _LoginWidgetState extends State<LoginWidget> {
       developer.log('Widget not mounted, aborting', name: 'LoginWidget');
       return;
     }
-    
+
     setState(() => _isProcessing = true);
     developer.log('UI state: _isProcessing = true', name: 'LoginWidget');
 
@@ -69,10 +69,13 @@ class _LoginWidgetState extends State<LoginWidget> {
 
     // Critical: Check mounted immediately after async call
     if (!mounted) {
-      developer.log('Widget unmounted after sendOtp, aborting', name: 'LoginWidget');
+      developer.log(
+        'Widget unmounted after sendOtp, aborting',
+        name: 'LoginWidget',
+      );
       return;
     }
-    
+
     setState(() => _isProcessing = false);
     developer.log('UI state: _isProcessing = false', name: 'LoginWidget');
 
@@ -91,7 +94,10 @@ class _LoginWidgetState extends State<LoginWidget> {
       });
       widget.onOtpSent(email);
     } else {
-      developer.log('❌ Failed to send OTP: ${authProvider.errorMessage}', name: 'LoginWidget');
+      developer.log(
+        '❌ Failed to send OTP: ${authProvider.errorMessage}',
+        name: 'LoginWidget',
+      );
       if (!mounted) return;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -143,10 +149,10 @@ class _LoginWidgetState extends State<LoginWidget> {
             const SizedBox(height: 60),
 
             // App Icon/Logo
-            Icon(
-              Icons.lock_outline,
-              size: 80,
-              color: Theme.of(context).primaryColor,
+            Image.asset(
+              'assets/images/logo-only-with-transparent-bg.png',
+              width: 80,
+              height: 80,
             ),
 
             const SizedBox(height: 24),

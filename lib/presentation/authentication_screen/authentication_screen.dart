@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../core/providers/auth_provider.dart';
 import 'widgets/login_widget.dart';
 import 'widgets/otp_widget.dart';
 
@@ -45,29 +43,19 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Consumer<AuthProvider>(
-          builder: (context, authProvider, child) {
-            // Show loading indicator if processing
-            if (authProvider.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            // Show appropriate widget based on state
-            return AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: _showOtpWidget
-                  ? OtpWidget(
-                      key: const ValueKey('otp'),
-                      email: _email,
-                      onVerified: _onOtpVerified,
-                      onBack: _onBackToLogin,
-                    )
-                  : LoginWidget(
-                      key: const ValueKey('login'),
-                      onOtpSent: _onOtpSent,
-                    ),
-            );
-          },
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: _showOtpWidget
+              ? OtpWidget(
+                  key: const ValueKey('otp'),
+                  email: _email,
+                  onVerified: _onOtpVerified,
+                  onBack: _onBackToLogin,
+                )
+              : LoginWidget(
+                  key: const ValueKey('login'),
+                  onOtpSent: _onOtpSent,
+                ),
         ),
       ),
     );
