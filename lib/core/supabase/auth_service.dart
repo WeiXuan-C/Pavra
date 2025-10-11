@@ -4,17 +4,22 @@ import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'supabase_client.dart';
 import '../constants/supabase_constants.dart';
+import '../../data/repositories/user_repository.dart';
+import '../models/user_model.dart';
 
 /// Authentication Service
 /// Handles all authentication-related operations including:
 /// - Passwordless Email OTP
 /// - Social OAuth (Google, GitHub, Facebook, Discord)
-/// - Profile management
+/// - Profile management (使用 UserRepository)
 class AuthService {
   // Singleton pattern
   static final AuthService _instance = AuthService._internal();
   factory AuthService() => _instance;
   AuthService._internal();
+
+  // User Repository for profile operations
+  final _userRepository = UserRepository();
 
   // Quick access to auth client
   GoTrueClient get auth => supabase.auth;
@@ -97,15 +102,16 @@ class AuthService {
   ///
   /// For mobile platforms, sets emailRedirectTo for deep linking support.
   /// For web platforms, emailRedirectTo is null as it's not needed.
-  Future<void> sendEmailOtp({
-    required String email,
-  }) async {
+  Future<void> sendEmailOtp({required String email}) async {
     try {
       developer.log('=== Starting OTP Send Process ===', name: 'AuthService');
       developer.log('Email: $email', name: 'AuthService');
-      developer.log('Platform: ${Platform.operatingSystem}', name: 'AuthService');
+      developer.log(
+        'Platform: ${Platform.operatingSystem}',
+        name: 'AuthService',
+      );
       developer.log('Is Web: $kIsWeb', name: 'AuthService');
-      
+
       // Determine redirect URL based on platform
       // For web: null (OTP only, no redirect needed)
       // For mobile: use custom URL scheme for deep linking
@@ -113,7 +119,10 @@ class AuthService {
       if (!kIsWeb) {
         if (Platform.isAndroid) {
           redirectTo = SupabaseConstants.redirectUriAndroid;
-          developer.log('Using Android redirect: $redirectTo', name: 'AuthService');
+          developer.log(
+            'Using Android redirect: $redirectTo',
+            name: 'AuthService',
+          );
         } else if (Platform.isIOS) {
           redirectTo = SupabaseConstants.redirectUriIos;
           developer.log('Using iOS redirect: $redirectTo', name: 'AuthService');
@@ -123,23 +132,40 @@ class AuthService {
       }
 
       // Check Supabase configuration
-      developer.log('Supabase URL configured: ${SupabaseConstants.supabaseUrl.isNotEmpty}', name: 'AuthService');
-      developer.log('Supabase Key configured: ${SupabaseConstants.supabaseAnonKey.isNotEmpty}', name: 'AuthService');
-      
+      developer.log(
+        'Supabase URL configured: ${SupabaseConstants.supabaseUrl.isNotEmpty}',
+        name: 'AuthService',
+      );
+      developer.log(
+        'Supabase Key configured: ${SupabaseConstants.supabaseAnonKey.isNotEmpty}',
+        name: 'AuthService',
+      );
+
       // Send OTP
-      developer.log('Calling supabase.auth.signInWithOtp...', name: 'AuthService');
+      developer.log(
+        'Calling supabase.auth.signInWithOtp...',
+        name: 'AuthService',
+      );
       await supabase.auth.signInWithOtp(
         email: email,
         emailRedirectTo: redirectTo,
       );
-      
+
       developer.log('✅ OTP sent successfully!', name: 'AuthService');
     } catch (e, stackTrace) {
-      developer.log('❌ Failed to send OTP: $e', name: 'AuthService', error: e, stackTrace: stackTrace);
+      developer.log(
+        '❌ Failed to send OTP: $e',
+        name: 'AuthService',
+        error: e,
+        stackTrace: stackTrace,
+      );
       developer.log('Error type: ${e.runtimeType}', name: 'AuthService');
       if (e is AuthException) {
         developer.log('Auth error message: ${e.message}', name: 'AuthService');
-        developer.log('Auth error status: ${e.statusCode}', name: 'AuthService');
+        developer.log(
+          'Auth error status: ${e.statusCode}',
+          name: 'AuthService',
+        );
       }
       rethrow;
     }
@@ -214,21 +240,16 @@ class AuthService {
   Future<void> createProfileIfNotExists(User user) async {
     try {
       // Check if profile already exists
-      final response = await supabase
-          .from('profiles')
-          .select()
-          .eq('id', user.id)
-          .maybeSingle();
+      final exists = await _userRepository.profileExists(user.id);
 
-      if (response == null) {
+      if (!exists) {
         // Profile doesn't exist, create it
-        await supabase.from('profiles').insert({
-          'id': user.id,
-          'username':
-              user.email?.split('@')[0] ?? 'user_${user.id.substring(0, 8)}',
-          'avatar_url': user.userMetadata?['avatar_url'],
-          'bio': null,
-        });
+        await _userRepository.createProfile(
+          userId: user.id,
+          username: user.email?.split('@')[0] ?? 'user_${user.id.substring(0, 8)}',
+          email: user.email,
+          avatarUrl: user.userMetadata?['avatar_url'] as String?,
+        );
       }
     } catch (e) {
       // Log error but don't throw - profile creation should not block authentication
@@ -241,14 +262,10 @@ class AuthService {
   }
 
   /// Get user profile from profiles table
-  Future<Map<String, dynamic>?> getUserProfile(String userId) async {
+  /// Returns UserProfile model
+  Future<UserProfile?> getUserProfile(String userId) async {
     try {
-      final response = await supabase
-          .from('profiles')
-          .select()
-          .eq('id', userId)
-          .maybeSingle();
-      return response;
+      return await _userRepository.getProfileById(userId);
     } catch (e) {
       developer.log(
         'Error fetching profile: $e',
@@ -260,19 +277,35 @@ class AuthService {
   }
 
   /// Update user profile in profiles table
-  Future<void> updateUserProfile({
+  /// Returns updated UserProfile model
+  Future<UserProfile?> updateUserProfile({
     required String userId,
     String? username,
     String? avatarUrl,
-    String? bio,
+    String? email,
+    String? language,
+    String? themeMode,
+    bool? notificationsEnabled,
+    String? deviceToken,
   }) async {
-    final updates = <String, dynamic>{};
-    if (username != null) updates['username'] = username;
-    if (avatarUrl != null) updates['avatar_url'] = avatarUrl;
-    if (bio != null) updates['bio'] = bio;
-
-    if (updates.isNotEmpty) {
-      await supabase.from('profiles').update(updates).eq('id', userId);
+    try {
+      return await _userRepository.updateProfile(
+        userId: userId,
+        username: username,
+        avatarUrl: avatarUrl,
+        email: email,
+        language: language,
+        themeMode: themeMode,
+        notificationsEnabled: notificationsEnabled,
+        deviceToken: deviceToken,
+      );
+    } catch (e) {
+      developer.log(
+        'Error updating profile: $e',
+        name: 'AuthService',
+        error: e,
+      );
+      return null;
     }
   }
 }

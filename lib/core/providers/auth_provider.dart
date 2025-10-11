@@ -83,10 +83,7 @@ class AuthProvider with ChangeNotifier {
     if (_user == null) return;
 
     try {
-      final profileData = await _authService.getUserProfile(_user!.id);
-      if (profileData != null) {
-        _userProfile = UserProfile.fromJson(profileData);
-      }
+      _userProfile = await _authService.getUserProfile(_user!.id);
     } catch (e) {
       _errorMessage = 'Error loading user profile: $e';
     }
@@ -195,7 +192,6 @@ class AuthProvider with ChangeNotifier {
   Future<bool> updateProfile({
     String? username,
     String? avatarUrl,
-    String? bio,
   }) async {
     if (_user == null) return false;
 
@@ -207,7 +203,6 @@ class AuthProvider with ChangeNotifier {
         userId: _user!.id,
         username: username,
         avatarUrl: avatarUrl,
-        bio: bio,
       );
 
       // Reload profile

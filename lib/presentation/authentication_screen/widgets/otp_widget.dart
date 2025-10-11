@@ -89,7 +89,7 @@ class _OtpWidgetState extends State<OtpWidget> {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(authProvider.errorMessage ?? 'Invalid OTP code'),
+            content: Text('Invalid OTP code'),
             backgroundColor: Colors.red,
           ),
         );
@@ -108,7 +108,7 @@ class _OtpWidgetState extends State<OtpWidget> {
   /// Resend OTP
   Future<void> _resendOtp() async {
     if (!mounted) return;
-    
+
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     setState(() => _isProcessing = true);
@@ -118,7 +118,7 @@ class _OtpWidgetState extends State<OtpWidget> {
 
       // Critical: Check mounted immediately after async call
       if (!mounted) return;
-      
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         if (success) {
@@ -131,9 +131,7 @@ class _OtpWidgetState extends State<OtpWidget> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(
-                authProvider.errorMessage ?? 'Failed to resend OTP',
-              ),
+              content: Text('Failed to resend OTP'),
               backgroundColor: Colors.red,
             ),
           );
