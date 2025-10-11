@@ -14,7 +14,8 @@ class AuthProvider with ChangeNotifier {
   // State variables
   User? _user;
   UserProfile? _userProfile;
-  bool _isLoading = false;
+  bool _isInitializing = true;  // For app initialization
+  bool _isLoading = false;       // For operations (sendOtp, verifyOtp, etc.)
   String? _errorMessage;
   StreamSubscription<AuthState>? _authSubscription;
 
@@ -25,7 +26,8 @@ class AuthProvider with ChangeNotifier {
   // Getters
   User? get user => _user;
   UserProfile? get userProfile => _userProfile;
-  bool get isLoading => _isLoading;
+  bool get isInitializing => _isInitializing;  // Used by RouteGuard
+  bool get isLoading => _isLoading;            // Used by UI components
   bool get isAuthenticated => _user != null;
   String? get errorMessage => _errorMessage;
   ThemeMode get themeMode => _themeMode;
@@ -36,12 +38,15 @@ class AuthProvider with ChangeNotifier {
   }
 
   /// Initialize auth state and listen to auth changes
-  void _initialize() {
+  Future<void> _initialize() async {
+    _isInitializing = true;
+    notifyListeners();
+
     // Get current user if exists
     _user = _authService.currentUser;
 
     if (_user != null) {
-      _loadUserProfile();
+      await _loadUserProfile();
     }
 
     // Subscribe to auth state changes
@@ -54,6 +59,10 @@ class AuthProvider with ChangeNotifier {
         notifyListeners();
       },
     );
+
+    // Initialization complete
+    _isInitializing = false;
+    notifyListeners();
   }
 
   /// Handle authentication state changes

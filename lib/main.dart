@@ -7,6 +7,7 @@ import '../core/app_export.dart';
 import '../widgets/custom_error_widget.dart';
 import 'core/supabase/supabase_client.dart';
 import 'core/providers/auth_provider.dart';
+import 'core/middleware/route_guard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -109,42 +110,12 @@ class MyApp extends StatelessWidget {
               // 🚨 END CRITICAL SECTION
               debugShowCheckedModeBanner: false,
               routes: AppRoutes.routes,
-              home: _getHomeScreen(authProvider),
+              // Use RouteGuard for authentication-based routing
+              home: const RouteGuard(),
             );
           },
         );
       },
     );
-  }
-
-  /// Determine home screen based on authentication state
-  Widget _getHomeScreen(AuthProvider authProvider) {
-    if (authProvider.isAuthenticated) {
-      // User is logged in - show home screen
-      return const _AuthenticatedApp();
-    } else {
-      // User is not logged in - show authentication screen
-      return const _UnauthenticatedApp();
-    }
-  }
-}
-
-/// Authenticated App Wrapper
-class _AuthenticatedApp extends StatelessWidget {
-  const _AuthenticatedApp();
-
-  @override
-  Widget build(BuildContext context) {
-    return AppRoutes.routes[AppRoutes.home]!(context);
-  }
-}
-
-/// Unauthenticated App Wrapper
-class _UnauthenticatedApp extends StatelessWidget {
-  const _UnauthenticatedApp();
-
-  @override
-  Widget build(BuildContext context) {
-    return AppRoutes.routes[AppRoutes.authentication]!(context);
   }
 }
