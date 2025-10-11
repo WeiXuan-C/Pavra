@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -44,34 +45,63 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   /// Send OTP to email
   Future<void> _sendOtp() async {
-    if (!_formKey.currentState!.validate()) return;
+    developer.log('=== LoginWidget: _sendOtp called ===', name: 'LoginWidget');
+    
+    if (!_formKey.currentState!.validate()) {
+      developer.log('Form validation failed', name: 'LoginWidget');
+      return;
+    }
 
-    if (!mounted) return;
+    if (!mounted) {
+      developer.log('Widget not mounted, aborting', name: 'LoginWidget');
+      return;
+    }
+    
     setState(() => _isProcessing = true);
+    developer.log('UI state: _isProcessing = true', name: 'LoginWidget');
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final email = _emailController.text.trim();
+    developer.log('Email input: $email', name: 'LoginWidget');
+    developer.log('Calling authProvider.sendOtp...', name: 'LoginWidget');
 
-    final success = await authProvider.sendOtp(email, context: context);
+    final success = await authProvider.sendOtp(email);
 
-    if (!mounted) return;
+    // Critical: Check mounted immediately after async call
+    if (!mounted) {
+      developer.log('Widget unmounted after sendOtp, aborting', name: 'LoginWidget');
+      return;
+    }
+    
     setState(() => _isProcessing = false);
+    developer.log('UI state: _isProcessing = false', name: 'LoginWidget');
 
-    if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('OTP sent to $email'),
-          backgroundColor: Colors.green,
-        ),
-      );
+    // Use post-frame callback to safely show snackbars
+    if (success) {
+      developer.log('✅ OTP sent successfully!', name: 'LoginWidget');
+      if (!mounted) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('OTP sent to $email'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      });
       widget.onOtpSent(email);
-    } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(authProvider.errorMessage ?? 'Failed to send OTP'),
-          backgroundColor: Colors.red,
-        ),
-      );
+    } else {
+      developer.log('❌ Failed to send OTP: ${authProvider.errorMessage}', name: 'LoginWidget');
+      if (!mounted) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authProvider.errorMessage ?? 'Failed to send OTP'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      });
     }
   }
 
@@ -83,16 +113,21 @@ class _LoginWidgetState extends State<LoginWidget> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final success = await authProvider.socialSignIn(provider);
 
+    // Critical: Check mounted immediately after async call
     if (!mounted) return;
     setState(() => _isProcessing = false);
 
-    if (!success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(authProvider.errorMessage ?? 'Social login failed'),
-          backgroundColor: Colors.red,
-        ),
-      );
+    if (!success) {
+      if (!mounted) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authProvider.errorMessage ?? 'Social login failed'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      });
     }
   }
 
@@ -215,17 +250,6 @@ class _LoginWidgetState extends State<LoginWidget> {
               onPressed: _isProcessing
                   ? null
                   : () => _handleSocialLogin(OAuthProvider.github),
-            ),
-
-            const SizedBox(height: 12),
-
-            _SocialLoginButton(
-              icon: Icons.facebook,
-              label: 'Continue with Facebook',
-              color: Colors.blue[700]!,
-              onPressed: _isProcessing
-                  ? null
-                  : () => _handleSocialLogin(OAuthProvider.facebook),
             ),
 
             const SizedBox(height: 12),

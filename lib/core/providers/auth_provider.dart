@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../supabase/auth_service.dart';
@@ -94,19 +95,23 @@ class AuthProvider with ChangeNotifier {
   // ========== AUTHENTICATION METHODS ==========
 
   /// Send OTP to email for passwordless authentication
-  /// Handles hCaptcha verification automatically
-  /// 
-  /// [context] The BuildContext needed for hCaptcha verification
-  Future<bool> sendOtp(String email, {required BuildContext context}) async {
+  Future<bool> sendOtp(String email) async {
+    developer.log('=== AuthProvider: sendOtp called ===', name: 'AuthProvider');
+    developer.log('Email: $email', name: 'AuthProvider');
+    
     _setLoading(true);
     _clearError();
 
     try {
-      await _authService.sendEmailOtp(context: context, email: email);
+      developer.log('Calling AuthService.sendEmailOtp...', name: 'AuthProvider');
+      await _authService.sendEmailOtp(email: email);
+      developer.log('✅ AuthProvider: OTP sent successfully', name: 'AuthProvider');
       _setLoading(false);
       return true;
-    } catch (e) {
-      _setError('Failed to send OTP: ${e.toString()}');
+    } catch (e, stackTrace) {
+      final errorMsg = 'Failed to send OTP: ${e.toString()}';
+      developer.log('❌ AuthProvider: $errorMsg', name: 'AuthProvider', error: e, stackTrace: stackTrace);
+      _setError(errorMsg);
       _setLoading(false);
       return false;
     }

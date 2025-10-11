@@ -1,10 +1,9 @@
 import 'dart:developer' as developer;
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'supabase_client.dart';
 import '../constants/supabase_constants.dart';
-import '../services/hcaptcha_service.dart';
 
 /// Authentication Service
 /// Handles all authentication-related operations including:
@@ -96,27 +95,52 @@ class AuthService {
 
   /// Send email OTP for passwordless authentication
   ///
-  /// This method will automatically handle hCaptcha verification
-  /// before sending the OTP to the provided email.
-  ///
-  /// Throws an exception if hCaptcha verification fails
+  /// For mobile platforms, sets emailRedirectTo for deep linking support.
+  /// For web platforms, emailRedirectTo is null as it's not needed.
   Future<void> sendEmailOtp({
-    required BuildContext context,
     required String email,
   }) async {
     try {
-      // Get hCaptcha token
-      final hcaptchaService = HCaptchaService();
-      final captchaToken = await hcaptchaService.verify(context);
+      developer.log('=== Starting OTP Send Process ===', name: 'AuthService');
+      developer.log('Email: $email', name: 'AuthService');
+      developer.log('Platform: ${Platform.operatingSystem}', name: 'AuthService');
+      developer.log('Is Web: $kIsWeb', name: 'AuthService');
+      
+      // Determine redirect URL based on platform
+      // For web: null (OTP only, no redirect needed)
+      // For mobile: use custom URL scheme for deep linking
+      String? redirectTo;
+      if (!kIsWeb) {
+        if (Platform.isAndroid) {
+          redirectTo = SupabaseConstants.redirectUriAndroid;
+          developer.log('Using Android redirect: $redirectTo', name: 'AuthService');
+        } else if (Platform.isIOS) {
+          redirectTo = SupabaseConstants.redirectUriIos;
+          developer.log('Using iOS redirect: $redirectTo', name: 'AuthService');
+        }
+      } else {
+        developer.log('Web platform - no redirect needed', name: 'AuthService');
+      }
 
-      // Send OTP with hCaptcha token
+      // Check Supabase configuration
+      developer.log('Supabase URL configured: ${SupabaseConstants.supabaseUrl.isNotEmpty}', name: 'AuthService');
+      developer.log('Supabase Key configured: ${SupabaseConstants.supabaseAnonKey.isNotEmpty}', name: 'AuthService');
+      
+      // Send OTP
+      developer.log('Calling supabase.auth.signInWithOtp...', name: 'AuthService');
       await supabase.auth.signInWithOtp(
         email: email,
-        emailRedirectTo: null, // We use OTP, not magic link
-        captchaToken: captchaToken,
+        emailRedirectTo: redirectTo,
       );
-    } catch (e) {
-      developer.log('Failed to send OTP: $e', name: 'AuthService');
+      
+      developer.log('✅ OTP sent successfully!', name: 'AuthService');
+    } catch (e, stackTrace) {
+      developer.log('❌ Failed to send OTP: $e', name: 'AuthService', error: e, stackTrace: stackTrace);
+      developer.log('Error type: ${e.runtimeType}', name: 'AuthService');
+      if (e is AuthException) {
+        developer.log('Auth error message: ${e.message}', name: 'AuthService');
+        developer.log('Auth error status: ${e.statusCode}', name: 'AuthService');
+      }
       rethrow;
     }
   }

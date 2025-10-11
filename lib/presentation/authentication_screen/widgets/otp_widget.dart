@@ -48,59 +48,79 @@ class _OtpWidgetState extends State<OtpWidget> {
   /// Verify OTP code
   Future<void> _verifyOtp() async {
     if (_otpCode.length != 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter complete 6-digit code'),
-          backgroundColor: Colors.orange,
-        ),
-      );
+      if (!mounted) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please enter complete 6-digit code'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      });
       return;
     }
 
+    if (!mounted) return;
     setState(() => _isProcessing = true);
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final success = await authProvider.verifyOtp(widget.email, _otpCode);
 
+    // Critical: Check mounted immediately after async call
+    if (!mounted) return;
     setState(() => _isProcessing = false);
 
-    if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Successfully logged in!'),
-          backgroundColor: Colors.green,
-        ),
-      );
+    if (success) {
+      if (!mounted) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Successfully logged in!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      });
       widget.onVerified();
-    } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(authProvider.errorMessage ?? 'Invalid OTP code'),
-          backgroundColor: Colors.red,
-        ),
-      );
+    } else {
+      if (!mounted) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authProvider.errorMessage ?? 'Invalid OTP code'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      });
 
       // Clear OTP fields on error
       for (var controller in _controllers) {
         controller.clear();
       }
-      _focusNodes[0].requestFocus();
+      if (_focusNodes[0].canRequestFocus) {
+        _focusNodes[0].requestFocus();
+      }
     }
   }
 
-  /// Resend OTP with hCaptcha verification
+  /// Resend OTP
   Future<void> _resendOtp() async {
+    if (!mounted) return;
+    
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     setState(() => _isProcessing = true);
 
     try {
-      final success = await authProvider.sendOtp(
-        widget.email,
-        context: context,
-      );
+      final success = await authProvider.sendOtp(widget.email);
 
-      if (mounted) {
+      // Critical: Check mounted immediately after async call
+      if (!mounted) return;
+      
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -118,16 +138,18 @@ class _OtpWidgetState extends State<OtpWidget> {
             ),
           );
         }
-      }
+      });
     } catch (e) {
-      if (mounted) {
+      if (!mounted) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Failed to verify CAPTCHA. Please try again.'),
             backgroundColor: Colors.red,
           ),
         );
-      }
+      });
     } finally {
       if (mounted) {
         setState(() => _isProcessing = false);
