@@ -4,8 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../core/app_export.dart';
 import '../../l10n/app_localizations.dart';
+import '../layouts/header_layout.dart';
 import './widgets/description_input_widget.dart';
 import './widgets/image_preview_widget.dart';
 import './widgets/issue_type_selector_widget.dart';
@@ -109,6 +109,7 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
     return _capturedImageUrl != null && _selectedIssues.isNotEmpty;
   }
 
+  /// Retake the main photo using camera
   Future<void> _retakePhoto() async {
     try {
       final XFile? image = await _imagePicker.pickImage(
@@ -123,29 +124,33 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
         });
 
         HapticFeedback.lightImpact();
+        if (!mounted) return;
         Fluttertoast.showToast(
-          msg: "Photo updated successfully",
+          msg: AppLocalizations.of(context).report_photoUpdated,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );
       }
     } catch (e) {
+      if (!mounted) return;
       Fluttertoast.showToast(
-        msg: "Failed to capture photo",
+        msg: AppLocalizations.of(context).report_photoCaptureFailed,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
       );
     }
   }
 
+  /// Refresh location data
   Future<void> _refreshLocation() async {
     HapticFeedback.lightImpact();
 
     // Simulate location refresh
     await Future.delayed(const Duration(seconds: 1));
 
+    if (!mounted) return;
     Fluttertoast.showToast(
-      msg: "Location updated",
+      msg: AppLocalizations.of(context).report_locationUpdated,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
     );
@@ -171,10 +176,11 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
     HapticFeedback.selectionClick();
   }
 
+  /// Add additional photo from camera
   Future<void> _addPhoto() async {
     if (_additionalPhotos.length >= 5) {
       Fluttertoast.showToast(
-        msg: "Maximum 5 additional photos allowed",
+        msg: AppLocalizations.of(context).report_maxPhotos,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
       );
@@ -194,21 +200,24 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
         });
 
         HapticFeedback.lightImpact();
+        if (!mounted) return;
         Fluttertoast.showToast(
-          msg: "Photo added successfully",
+          msg: AppLocalizations.of(context).report_photoAdded,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );
       }
     } catch (e) {
+      if (!mounted) return;
       Fluttertoast.showToast(
-        msg: "Failed to add photo",
+        msg: AppLocalizations.of(context).report_photoAddFailed,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
       );
     }
   }
 
+  /// Remove photo from additional photos list
   void _removePhoto(int index) {
     setState(() {
       _additionalPhotos.removeAt(index);
@@ -216,12 +225,13 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
 
     HapticFeedback.lightImpact();
     Fluttertoast.showToast(
-      msg: "Photo removed",
+      msg: AppLocalizations.of(context).report_photoRemoved,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
     );
   }
 
+  /// Submit the report to the server
   Future<void> _submitReport() async {
     if (!_isFormValid) return;
 
@@ -234,6 +244,7 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
       // Simulate upload progress
       for (int i = 0; i <= 100; i += 10) {
         await Future.delayed(const Duration(milliseconds: 200));
+        if (!mounted) return;
         setState(() {
           _uploadProgress = i / 100;
         });
@@ -246,22 +257,30 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
       HapticFeedback.heavyImpact();
 
       // Show success dialog
+      if (!mounted) return;
       _showSuccessDialog(reportId);
     } catch (e) {
+      if (!mounted) return;
       Fluttertoast.showToast(
-        msg: "Failed to submit report. Please try again.",
+        msg: AppLocalizations.of(context).report_submitFailed,
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
       );
     } finally {
-      setState(() {
-        _isSubmitting = false;
-        _uploadProgress = 0.0;
-      });
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+          _uploadProgress = 0.0;
+        });
+      }
     }
   }
 
+  /// Show success dialog after report submission
   void _showSuccessDialog(String reportId) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -272,15 +291,17 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
           ),
           title: Row(
             children: [
-              CustomIconWidget(
-                iconName: 'check_circle',
-                color: const Color(0xFF4CAF50),
+              Icon(
+                Icons.check_circle,
+                color: theme.brightness == Brightness.light
+                    ? const Color(0xFF388E3C)  // Success green from theme
+                    : const Color(0xFF66BB6A),
                 size: 28,
               ),
               SizedBox(width: 2.w),
               Text(
-                'Report Submitted',
-                style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
+                l10n.report_reportSubmitted,
+                style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -291,34 +312,31 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Your road safety report has been successfully submitted to the authorities.',
-                style: AppTheme.lightTheme.textTheme.bodyMedium,
+                l10n.report_reportSubmittedMessage,
+                style: theme.textTheme.bodyMedium,
               ),
               SizedBox(height: 2.h),
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(3.w),
                 decoration: BoxDecoration(
-                  color: AppTheme.lightTheme.primaryColor.withValues(
-                    alpha: 0.1,
-                  ),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Report ID: $reportId',
-                      style: AppTheme.dataTextStyle(
-                        isLight: true,
-                        fontSize: 14.sp,
+                      '${l10n.report_reportId}: $reportId',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontFamily: 'monospace',
                       ),
                     ),
                     SizedBox(height: 1.h),
                     Text(
-                      'Estimated Response: 2-3 business days',
-                      style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                        color: AppTheme.lightTheme.primaryColor,
+                      l10n.report_estimatedResponse,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -333,19 +351,14 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
                 Navigator.of(context).pop();
                 Navigator.pushNamed(context, '/map-view-screen');
               },
-              child: Text(
-                'View on Map',
-                style: AppTheme.lightTheme.textTheme.labelLarge?.copyWith(
-                  color: AppTheme.lightTheme.primaryColor,
-                ),
-              ),
+              child: Text(l10n.report_viewOnMap),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
-              child: const Text('Done'),
+              child: Text(l10n.report_done),
             ),
           ],
         );
@@ -353,14 +366,16 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
     );
   }
 
+  /// Save current report as draft
   Future<void> _saveDraft() async {
     HapticFeedback.lightImpact();
 
     // Simulate saving draft
     await Future.delayed(const Duration(milliseconds: 500));
 
+    if (!mounted) return;
     Fluttertoast.showToast(
-      msg: "Draft saved successfully",
+      msg: AppLocalizations.of(context).report_draftSaved,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
     );
@@ -373,29 +388,31 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
 
     if (_descriptionController.text.isNotEmpty || _selectedIssues.isNotEmpty) {
       final navigator = Navigator.of(context);
-      final bool shouldPop = await showDialog(
+      final bool shouldPop =
+          await showDialog(
             context: context,
-            builder: (dialogContext) => AlertDialog(
-              title: const Text('Unsaved Changes'),
-              content: const Text(
-                'You have unsaved changes. Do you want to save as draft before leaving?',
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(dialogContext).pop(true),
-                  child: const Text('Discard'),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    Navigator.of(dialogContext).pop(false);
-                    await _saveDraft();
-                    if (!mounted) return;
-                    navigator.pop();
-                  },
-                  child: const Text('Save Draft'),
-                ),
-              ],
-            ),
+            builder: (dialogContext) {
+              final l10n = AppLocalizations.of(context);
+              return AlertDialog(
+                title: Text(l10n.report_unsavedChanges),
+                content: Text(l10n.report_unsavedChangesMessage),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(dialogContext).pop(true),
+                    child: Text(l10n.report_discard),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      Navigator.of(dialogContext).pop(false);
+                      await _saveDraft();
+                      if (!mounted) return;
+                      navigator.pop();
+                    },
+                    child: Text(l10n.report_saveDraft),
+                  ),
+                ],
+              );
+            },
           ) ??
           false;
 
@@ -414,35 +431,20 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
       canPop: false,
       onPopInvokedWithResult: _handlePopInvoked,
       child: Scaffold(
-        backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
-        appBar: AppBar(
-          title: Text(
-            l10n.report_title,
-            style: AppTheme.lightTheme.appBarTheme.titleTextStyle,
-          ),
-          backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
-          foregroundColor: AppTheme.lightTheme.appBarTheme.foregroundColor,
-          elevation: AppTheme.lightTheme.appBarTheme.elevation,
+        appBar: HeaderLayout(
+          title: l10n.report_title,
           leading: IconButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            icon: CustomIconWidget(
-              iconName: 'arrow_back',
-              color: AppTheme.lightTheme.appBarTheme.foregroundColor!,
-              size: 24,
-            ),
+            icon: Icon(Icons.arrow_back, size: 24),
           ),
           actions: [
             IconButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/safety-alerts-screen');
               },
-              icon: CustomIconWidget(
-                iconName: 'notifications',
-                color: AppTheme.lightTheme.appBarTheme.foregroundColor!,
-                size: 24,
-              ),
+              icon: Icon(Icons.notifications, size: 24),
             ),
           ],
         ),

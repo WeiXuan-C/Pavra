@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../core/app_export.dart';
 import '../../l10n/app_localizations.dart';
+import '../layouts/header_layout.dart';
 import './widgets/alert_card_widget.dart';
 import './widgets/alert_toggle_widget.dart';
 import './widgets/mini_map_widget.dart';
@@ -146,13 +146,7 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Safety alerts updated',
-            style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-              color: Colors.white,
-            ),
-          ),
-          backgroundColor: AppTheme.lightTheme.colorScheme.primary,
+          content: Text(AppLocalizations.of(context).alerts_updated),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
@@ -177,18 +171,11 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          'Alert marked as acknowledged',
-          style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: AppTheme.lightTheme.colorScheme.primary,
+        content: Text(AppLocalizations.of(context).alerts_acknowledged),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         action: SnackBarAction(
-          label: 'UNDO',
-          textColor: Colors.white,
+          label: AppLocalizations.of(context).alerts_undo,
           onPressed: () {
             // In a real app, restore the dismissed alert
           },
@@ -204,220 +191,8 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
   }
 
   void _showNotificationSettings() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => _buildNotificationSettingsSheet(),
-    );
-  }
-
-  Widget _buildNotificationSettingsSheet() {
-    return Container(
-      height: 60.h,
-      decoration: BoxDecoration(
-        color: AppTheme.lightTheme.cardColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 1.h),
-            width: 10.w,
-            height: 0.5.h,
-            decoration: BoxDecoration(
-              color: AppTheme.lightTheme.dividerColor,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(4.w),
-            child: Row(
-              children: [
-                Text(
-                  'Notification Settings',
-                  style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const Spacer(),
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: CustomIconWidget(
-                    iconName: 'close',
-                    color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                      alpha: 0.6,
-                    ),
-                    size: 6.w,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 4.w),
-              child: Column(
-                children: [
-                  _buildSettingsTile(
-                    'Sound Alerts',
-                    'Play notification sounds for critical alerts',
-                    'volume_up',
-                    true,
-                    (value) {},
-                  ),
-                  _buildSettingsTile(
-                    'Vibration',
-                    'Vibrate device for high priority alerts',
-                    'vibration',
-                    true,
-                    (value) {},
-                  ),
-                  _buildSettingsTile(
-                    'Do Not Disturb',
-                    'Respect system do not disturb settings',
-                    'do_not_disturb',
-                    false,
-                    (value) {},
-                  ),
-                  SizedBox(height: 2.h),
-                  Container(
-                    padding: EdgeInsets.all(4.w),
-                    decoration: BoxDecoration(
-                      color: AppTheme.lightTheme.colorScheme.primary.withValues(
-                        alpha: 0.1,
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: AppTheme.lightTheme.colorScheme.primary
-                            .withValues(alpha: 0.2),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            CustomIconWidget(
-                              iconName: 'schedule',
-                              color: AppTheme.lightTheme.colorScheme.primary,
-                              size: 5.w,
-                            ),
-                            SizedBox(width: 2.w),
-                            Text(
-                              'Quiet Hours',
-                              style: AppTheme.lightTheme.textTheme.titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 1.h),
-                        Text(
-                          'Only critical safety alerts will be shown during quiet hours',
-                          style: AppTheme.lightTheme.textTheme.bodyMedium
-                              ?.copyWith(
-                                color: AppTheme.lightTheme.colorScheme.onSurface
-                                    .withValues(alpha: 0.7),
-                              ),
-                        ),
-                        SizedBox(height: 2.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: OutlinedButton(
-                                onPressed: () {},
-                                child: Text('10:00 PM'),
-                              ),
-                            ),
-                            SizedBox(width: 2.w),
-                            Text('to'),
-                            SizedBox(width: 2.w),
-                            Expanded(
-                              child: OutlinedButton(
-                                onPressed: () {},
-                                child: Text('7:00 AM'),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSettingsTile(
-    String title,
-    String subtitle,
-    String iconName,
-    bool value,
-    ValueChanged<bool> onChanged,
-  ) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 2.h),
-      padding: EdgeInsets.all(4.w),
-      decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.lightTheme.dividerColor),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(2.w),
-            decoration: BoxDecoration(
-              color: value
-                  ? AppTheme.lightTheme.colorScheme.primary.withValues(
-                      alpha: 0.1,
-                    )
-                  : AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                      alpha: 0.1,
-                    ),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: CustomIconWidget(
-              iconName: iconName,
-              color: value
-                  ? AppTheme.lightTheme.colorScheme.primary
-                  : AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                      alpha: 0.5,
-                    ),
-              size: 5.w,
-            ),
-          ),
-          SizedBox(width: 3.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppTheme.lightTheme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 0.5.h),
-                Text(
-                  subtitle,
-                  style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                    color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                      alpha: 0.6,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Switch(value: value, onChanged: onChanged),
-        ],
-      ),
-    );
+    // Navigate to settings screen
+    Navigator.pushNamed(context, '/settings');
   }
 
   List<Map<String, dynamic>> get _filteredAlerts {
@@ -440,40 +215,23 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Text(
-          l10n.alerts_title,
-          style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: AppTheme.lightTheme.colorScheme.onPrimary,
-          ),
-        ),
-        backgroundColor: AppTheme.lightTheme.colorScheme.primary,
-        foregroundColor: AppTheme.lightTheme.colorScheme.onPrimary,
-        elevation: 0,
+      appBar: HeaderLayout(
+        title: l10n.alerts_title,
         actions: [
           IconButton(
             onPressed: _showNotificationSettings,
-            icon: CustomIconWidget(
-              iconName: 'settings',
-              color: AppTheme.lightTheme.colorScheme.onPrimary,
-              size: 6.w,
-            ),
+            icon: Icon(Icons.settings, size: 24),
           ),
         ],
         bottom: TabBar(
           controller: _tabController,
-          labelColor: AppTheme.lightTheme.colorScheme.onPrimary,
-          unselectedLabelColor: AppTheme.lightTheme.colorScheme.onPrimary
-              .withValues(alpha: 0.7),
-          indicatorColor: AppTheme.lightTheme.colorScheme.onPrimary,
-          indicatorWeight: 3,
-          tabs: const [
-            Tab(text: 'Active Alerts'),
-            Tab(text: 'Settings'),
-            Tab(text: 'Routes'),
+          tabs: [
+            Tab(text: l10n.alerts_activeAlerts),
+            Tab(text: l10n.alerts_settings),
+            Tab(text: l10n.alerts_routes),
           ],
         ),
       ),
@@ -483,7 +241,6 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
           // Active Alerts Tab
           RefreshIndicator(
             onRefresh: _refreshAlerts,
-            color: AppTheme.lightTheme.colorScheme.primary,
             child: _filteredAlerts.isEmpty
                 ? _buildEmptyAlertsState()
                 : ListView.builder(
@@ -509,34 +266,34 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
                   child: Text(
-                    'Alert Types',
-                    style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
+                    l10n.alerts_alertTypes,
+                    style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
                 AlertToggleWidget(
-                  title: 'Road Damage',
+                  title: l10n.alerts_roadDamage,
                   iconName: 'construction',
                   isEnabled: _roadDamageEnabled,
                   onChanged: (value) =>
                       setState(() => _roadDamageEnabled = value),
                 ),
                 AlertToggleWidget(
-                  title: 'Construction Zones',
+                  title: l10n.alerts_constructionZones,
                   iconName: 'engineering',
                   isEnabled: _constructionEnabled,
                   onChanged: (value) =>
                       setState(() => _constructionEnabled = value),
                 ),
                 AlertToggleWidget(
-                  title: 'Weather Hazards',
+                  title: l10n.alerts_weatherHazards,
                   iconName: 'cloud',
                   isEnabled: _weatherEnabled,
                   onChanged: (value) => setState(() => _weatherEnabled = value),
                 ),
                 AlertToggleWidget(
-                  title: 'Traffic Incidents',
+                  title: l10n.alerts_trafficIncidents,
                   iconName: 'traffic',
                   isEnabled: _trafficEnabled,
                   onChanged: (value) => setState(() => _trafficEnabled = value),
@@ -545,8 +302,8 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
                   child: Text(
-                    'Location Settings',
-                    style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
+                    l10n.alerts_locationSettings,
+                    style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -559,8 +316,8 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
                   child: Text(
-                    'Coverage Preview',
-                    style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
+                    l10n.alerts_coveragePreview,
+                    style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -581,27 +338,18 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
                   child: Row(
                     children: [
                       Text(
-                        'Saved Routes',
-                        style: AppTheme.lightTheme.textTheme.titleLarge
-                            ?.copyWith(fontWeight: FontWeight.w600),
+                        l10n.alerts_savedRoutes,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       const Spacer(),
                       TextButton.icon(
                         onPressed: () {
                           // Navigate to add route screen
                         },
-                        icon: CustomIconWidget(
-                          iconName: 'add',
-                          color: AppTheme.lightTheme.colorScheme.primary,
-                          size: 5.w,
-                        ),
-                        label: Text(
-                          'Add Route',
-                          style: AppTheme.lightTheme.textTheme.labelLarge
-                              ?.copyWith(
-                                color: AppTheme.lightTheme.colorScheme.primary,
-                              ),
-                        ),
+                        icon: Icon(Icons.add, size: 20),
+                        label: Text(l10n.alerts_addRoute),
                       ),
                     ],
                   ),
@@ -615,14 +363,10 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
                   margin: EdgeInsets.symmetric(horizontal: 4.w),
                   padding: EdgeInsets.all(4.w),
                   decoration: BoxDecoration(
-                    color: AppTheme.lightTheme.colorScheme.primary.withValues(
-                      alpha: 0.1,
-                    ),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: AppTheme.lightTheme.colorScheme.primary.withValues(
-                        alpha: 0.2,
-                      ),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
                     ),
                   ),
                   child: Column(
@@ -630,31 +374,29 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
                     children: [
                       Row(
                         children: [
-                          CustomIconWidget(
-                            iconName: 'info',
-                            color: AppTheme.lightTheme.colorScheme.primary,
-                            size: 5.w,
+                          Icon(
+                            Icons.info_outline,
+                            color: theme.colorScheme.primary,
+                            size: 20,
                           ),
                           SizedBox(width: 2.w),
                           Text(
-                            'Route Monitoring',
-                            style: AppTheme.lightTheme.textTheme.titleMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color:
-                                      AppTheme.lightTheme.colorScheme.primary,
-                                ),
+                            l10n.alerts_routeMonitoring,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: theme.colorScheme.primary,
+                            ),
                           ),
                         ],
                       ),
                       SizedBox(height: 1.h),
                       Text(
-                        'Enable monitoring for your frequent routes to receive proactive alerts about road conditions, construction, and incidents along your path.',
-                        style: AppTheme.lightTheme.textTheme.bodyMedium
-                            ?.copyWith(
-                              color: AppTheme.lightTheme.colorScheme.onSurface
-                                  .withValues(alpha: 0.8),
-                            ),
+                        l10n.alerts_routeMonitoringInfo,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.8,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -664,96 +406,13 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: AppTheme.lightTheme.cardColor,
-        selectedItemColor: AppTheme.lightTheme.colorScheme.primary,
-        unselectedItemColor: AppTheme.lightTheme.colorScheme.onSurface
-            .withValues(alpha: 0.6),
-        currentIndex: 3,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              Navigator.pushNamed(context, '/camera-detection-screen');
-              break;
-            case 1:
-              Navigator.pushNamed(context, '/report-submission-screen');
-              break;
-            case 2:
-              Navigator.pushNamed(context, '/map-view-screen');
-              break;
-            case 3:
-              // Current screen - Safety Alerts
-              break;
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: CustomIconWidget(
-              iconName: 'camera_alt',
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                alpha: 0.6,
-              ),
-              size: 6.w,
-            ),
-            activeIcon: CustomIconWidget(
-              iconName: 'camera_alt',
-              color: AppTheme.lightTheme.colorScheme.primary,
-              size: 6.w,
-            ),
-            label: 'Camera',
-          ),
-          BottomNavigationBarItem(
-            icon: CustomIconWidget(
-              iconName: 'report',
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                alpha: 0.6,
-              ),
-              size: 6.w,
-            ),
-            activeIcon: CustomIconWidget(
-              iconName: 'report',
-              color: AppTheme.lightTheme.colorScheme.primary,
-              size: 6.w,
-            ),
-            label: 'Report',
-          ),
-          BottomNavigationBarItem(
-            icon: CustomIconWidget(
-              iconName: 'map',
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                alpha: 0.6,
-              ),
-              size: 6.w,
-            ),
-            activeIcon: CustomIconWidget(
-              iconName: 'map',
-              color: AppTheme.lightTheme.colorScheme.primary,
-              size: 6.w,
-            ),
-            label: 'Map',
-          ),
-          BottomNavigationBarItem(
-            icon: CustomIconWidget(
-              iconName: 'notifications',
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                alpha: 0.6,
-              ),
-              size: 6.w,
-            ),
-            activeIcon: CustomIconWidget(
-              iconName: 'notifications',
-              color: AppTheme.lightTheme.colorScheme.primary,
-              size: 6.w,
-            ),
-            label: 'Alerts',
-          ),
-        ],
-      ),
     );
   }
 
   Widget _buildEmptyAlertsState() {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
     return Center(
       child: Padding(
         padding: EdgeInsets.all(8.w),
@@ -763,32 +422,28 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
             Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: AppTheme.lightTheme.colorScheme.primary.withValues(
-                  alpha: 0.1,
-                ),
+                color: theme.colorScheme.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: CustomIconWidget(
-                iconName: 'shield',
-                color: AppTheme.lightTheme.colorScheme.primary,
-                size: 15.w,
+              child: Icon(
+                Icons.shield_outlined,
+                color: theme.colorScheme.primary,
+                size: 60,
               ),
             ),
             SizedBox(height: 4.h),
             Text(
-              'All Clear!',
-              style: AppTheme.lightTheme.textTheme.headlineMedium?.copyWith(
+              l10n.alerts_allClear,
+              style: theme.textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: AppTheme.lightTheme.colorScheme.primary,
+                color: theme.colorScheme.primary,
               ),
             ),
             SizedBox(height: 2.h),
             Text(
-              'No safety alerts in your area right now. We\'ll notify you immediately if any road hazards are reported nearby.',
-              style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
-                color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                  alpha: 0.7,
-                ),
+              l10n.alerts_noAlertsMessage,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -797,21 +452,16 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
               onPressed: _refreshAlerts,
               icon: _isRefreshing
                   ? SizedBox(
-                      width: 4.w,
-                      height: 4.w,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          AppTheme.lightTheme.colorScheme.onPrimary,
-                        ),
-                      ),
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : CustomIconWidget(
-                      iconName: 'refresh',
-                      color: AppTheme.lightTheme.colorScheme.onPrimary,
-                      size: 5.w,
-                    ),
-              label: Text(_isRefreshing ? 'Checking...' : 'Check for Updates'),
+                  : Icon(Icons.refresh, size: 20),
+              label: Text(
+                _isRefreshing
+                    ? l10n.alerts_checking
+                    : l10n.alerts_checkForUpdates,
+              ),
             ),
           ],
         ),

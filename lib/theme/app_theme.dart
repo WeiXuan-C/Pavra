@@ -319,10 +319,10 @@ class AppTheme {
 
     // Tab bar theme for navigation
     tabBarTheme: TabBarThemeData(
-      labelColor: primaryLight,
-      unselectedLabelColor: textSecondaryLight,
-      indicatorColor: primaryLight,
-      indicatorSize: TabBarIndicatorSize.label,
+      labelColor: onPrimaryLight,  // Dark text on yellow AppBar
+      unselectedLabelColor: onPrimaryLight.withValues(alpha: 0.6),
+      indicatorColor: onPrimaryLight,
+      indicatorSize: TabBarIndicatorSize.tab,
       labelStyle: GoogleFonts.inter(
         fontSize: 14,
         fontWeight: FontWeight.w600,
@@ -574,10 +574,10 @@ class AppTheme {
       trackHeight: 4.0,
     ),
     tabBarTheme: TabBarThemeData(
-      labelColor: primaryDark,
-      unselectedLabelColor: textSecondaryDark,
-      indicatorColor: primaryDark,
-      indicatorSize: TabBarIndicatorSize.label,
+      labelColor: onSurfaceDark,  // White text on dark AppBar
+      unselectedLabelColor: onSurfaceDark.withValues(alpha: 0.6),
+      indicatorColor: primaryDark,  // Yellow indicator
+      indicatorSize: TabBarIndicatorSize.tab,
       labelStyle: GoogleFonts.inter(
         fontSize: 14,
         fontWeight: FontWeight.w600,

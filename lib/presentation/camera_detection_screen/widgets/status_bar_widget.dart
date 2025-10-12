@@ -21,16 +21,17 @@ class StatusBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface.withValues(alpha: 0.95),
+        color: theme.colorScheme.surface.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.lightTheme.colorScheme.shadow,
+            color: theme.colorScheme.shadow,
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -39,30 +40,31 @@ class StatusBarWidget extends StatelessWidget {
       child: Row(
         children: [
           // GPS Status
-          Expanded(flex: 2, child: _buildGpsStatus(l10n)),
+          Expanded(flex: 2, child: _buildGpsStatus(context, l10n)),
 
           // Divider
           Container(
             width: 1,
             height: 4.h,
-            color: AppTheme.lightTheme.dividerColor,
+            color: theme.dividerColor,
           ),
 
           // Detection Toggle
-          Expanded(flex: 2, child: _buildDetectionToggle(l10n)),
+          Expanded(flex: 2, child: _buildDetectionToggle(context, l10n)),
         ],
       ),
     );
   }
 
-  Widget _buildGpsStatus(AppLocalizations l10n) {
+  Widget _buildGpsStatus(BuildContext context, AppLocalizations l10n) {
+    final theme = Theme.of(context);
     return Row(
       children: [
         CustomIconWidget(
           iconName: isGpsActive ? 'gps_fixed' : 'gps_off',
           color: isGpsActive
-              ? AppTheme.lightTheme.colorScheme.secondary
-              : AppTheme.lightTheme.colorScheme.error,
+              ? theme.colorScheme.secondary
+              : theme.colorScheme.error,
           size: 20,
         ),
         SizedBox(width: 2.w),
@@ -72,16 +74,16 @@ class StatusBarWidget extends StatelessWidget {
             children: [
               Text(
                 l10n.camera_gpsStatus,
-                style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
-                  color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(
                     alpha: 0.7,
                   ),
                 ),
               ),
               Text(
                 isGpsActive ? gpsAccuracy : l10n.camera_disabled,
-                style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
-                  color: AppTheme.lightTheme.colorScheme.onSurface,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -92,7 +94,8 @@ class StatusBarWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildDetectionToggle(AppLocalizations l10n) {
+  Widget _buildDetectionToggle(BuildContext context, AppLocalizations l10n) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: onDetectionToggle,
       child: Row(
@@ -100,8 +103,8 @@ class StatusBarWidget extends StatelessWidget {
           CustomIconWidget(
             iconName: isDetectionActive ? 'smart_toy' : 'smart_toy_outlined',
             color: isDetectionActive
-                ? AppTheme.lightTheme.colorScheme.primary
-                : AppTheme.lightTheme.colorScheme.onSurface.withValues(
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurface.withValues(
                     alpha: 0.5,
                   ),
             size: 20,
@@ -113,16 +116,16 @@ class StatusBarWidget extends StatelessWidget {
               children: [
                 Text(
                   l10n.camera_aiDetection,
-                  style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
-                    color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(
                       alpha: 0.7,
                     ),
                   ),
                 ),
                 Text(
                   isDetectionActive ? l10n.camera_active : l10n.camera_inactive,
-                  style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
-                    color: AppTheme.lightTheme.colorScheme.onSurface,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -132,9 +135,6 @@ class StatusBarWidget extends StatelessWidget {
           Switch(
             value: isDetectionActive,
             onChanged: (_) => onDetectionToggle(),
-            activeThumbColor: AppTheme.lightTheme.colorScheme.primary,
-            inactiveThumbColor: AppTheme.lightTheme.colorScheme.onSurface
-                .withValues(alpha: 0.5),
           ),
         ],
       ),

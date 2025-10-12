@@ -538,6 +538,177 @@ class AppLocalizationsEn extends AppLocalizations {
   String get alerts_distance => 'Distance';
 
   @override
+  String get alerts_activeAlerts => 'Active Alerts';
+
+  @override
+  String get alerts_settings => 'Settings';
+
+  @override
+  String get alerts_routes => 'Routes';
+
+  @override
+  String get alerts_alertTypes => 'Alert Types';
+
+  @override
+  String get alerts_roadDamage => 'Road Damage';
+
+  @override
+  String get alerts_constructionZones => 'Construction Zones';
+
+  @override
+  String get alerts_weatherHazards => 'Weather Hazards';
+
+  @override
+  String get alerts_trafficIncidents => 'Traffic Incidents';
+
+  @override
+  String get alerts_locationSettings => 'Location Settings';
+
+  @override
+  String get alerts_coveragePreview => 'Coverage Preview';
+
+  @override
+  String get alerts_savedRoutes => 'Saved Routes';
+
+  @override
+  String get alerts_addRoute => 'Add Route';
+
+  @override
+  String get alerts_allClear => 'All Clear!';
+
+  @override
+  String get alerts_noAlertsMessage =>
+      'No safety alerts in your area right now. We\'ll notify you immediately if any road hazards are reported nearby.';
+
+  @override
+  String get alerts_checkForUpdates => 'Check for Updates';
+
+  @override
+  String get alerts_checking => 'Checking...';
+
+  @override
+  String get alerts_updated => 'Safety alerts updated';
+
+  @override
+  String get alerts_acknowledged => 'Alert marked as acknowledged';
+
+  @override
+  String get alerts_undo => 'UNDO';
+
+  @override
+  String get alerts_notificationSettings => 'Notification Settings';
+
+  @override
+  String get alerts_soundAlerts => 'Sound Alerts';
+
+  @override
+  String get alerts_soundAlertsDesc =>
+      'Play notification sounds for critical alerts';
+
+  @override
+  String get alerts_vibration => 'Vibration';
+
+  @override
+  String get alerts_vibrationDesc => 'Vibrate device for high priority alerts';
+
+  @override
+  String get alerts_doNotDisturb => 'Do Not Disturb';
+
+  @override
+  String get alerts_doNotDisturbDesc =>
+      'Respect system do not disturb settings';
+
+  @override
+  String get alerts_quietHours => 'Quiet Hours';
+
+  @override
+  String get alerts_quietHoursDesc =>
+      'Only critical safety alerts will be shown during quiet hours';
+
+  @override
+  String get alerts_routeMonitoringInfo =>
+      'Enable monitoring for your frequent routes to receive proactive alerts about road conditions, construction, and incidents along your path.';
+
+  @override
+  String get alerts_critical => 'Critical';
+
+  @override
+  String get report_reportSubmitted => 'Report Submitted';
+
+  @override
+  String get report_reportSubmittedMessage =>
+      'Your road safety report has been successfully submitted to the authorities.';
+
+  @override
+  String get report_reportId => 'Report ID';
+
+  @override
+  String get report_estimatedResponse =>
+      'Estimated Response: 2-3 business days';
+
+  @override
+  String get report_viewOnMap => 'View on Map';
+
+  @override
+  String get report_done => 'Done';
+
+  @override
+  String get report_unsavedChanges => 'Unsaved Changes';
+
+  @override
+  String get report_unsavedChangesMessage =>
+      'You have unsaved changes. Do you want to save as draft before leaving?';
+
+  @override
+  String get report_discard => 'Discard';
+
+  @override
+  String get report_photoUpdated => 'Photo updated successfully';
+
+  @override
+  String get report_photoCaptureFailed => 'Failed to capture photo';
+
+  @override
+  String get report_locationUpdated => 'Location updated';
+
+  @override
+  String get report_photoAdded => 'Photo added successfully';
+
+  @override
+  String get report_photoRemoved => 'Photo removed';
+
+  @override
+  String get report_maxPhotos => 'Maximum 5 additional photos allowed';
+
+  @override
+  String get report_photoAddFailed => 'Failed to add photo';
+
+  @override
+  String get report_draftSaved => 'Draft saved successfully';
+
+  @override
+  String get report_submitFailed =>
+      'Failed to submit report. Please try again.';
+
+  @override
+  String get report_obstacle => 'Obstacle';
+
+  @override
+  String get nav_camera => 'Camera';
+
+  @override
+  String get nav_map => 'Map';
+
+  @override
+  String get nav_report => 'Report';
+
+  @override
+  String get nav_alerts => 'Alerts';
+
+  @override
+  String get nav_profile => 'Profile';
+
+  @override
   String get language_english => 'English';
 
   @override

@@ -50,8 +50,6 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
 
   // UI related
   bool _isHistoryPanelOpen = false;
-  int _currentTabIndex = 0;
-  TabController? _tabController;
 
   // Animation controllers
   AnimationController? _pulseController;
@@ -67,7 +65,6 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
   }
 
   void _initializeControllers() {
-    _tabController = TabController(length: 4, vsync: this);
     _pulseController = AnimationController(
       duration: Duration(seconds: 2),
       vsync: this,
@@ -284,7 +281,6 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Photo captured successfully'),
-            backgroundColor: AppTheme.lightTheme.colorScheme.secondary,
             duration: Duration(seconds: 2),
           ),
         );
@@ -326,7 +322,6 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(l10n.camera_imageProcessed),
-              backgroundColor: AppTheme.lightTheme.colorScheme.secondary,
             ),
           );
         }
@@ -427,90 +422,17 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
   void dispose() {
     _cameraController?.dispose();
     _detectionTimer?.cancel();
-    _tabController?.dispose();
     _pulseController?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
-            // Tab Bar
-            Container(
-              color: AppTheme.lightTheme.colorScheme.surface,
-              child: TabBar(
-                controller: _tabController,
-                onTap: (index) {
-                  setState(() {
-                    _currentTabIndex = index;
-                  });
-
-                  // Navigate to other screens
-                  switch (index) {
-                    case 1:
-                      Navigator.pushNamed(context, '/map-view-screen');
-                      break;
-                    case 2:
-                      Navigator.pushNamed(context, '/report-submission-screen');
-                      break;
-                    case 3:
-                      Navigator.pushNamed(context, '/safety-alerts-screen');
-                      break;
-                  }
-                },
-                tabs: [
-                  Tab(
-                    icon: CustomIconWidget(
-                      iconName: 'camera_alt',
-                      color: _currentTabIndex == 0
-                          ? AppTheme.lightTheme.colorScheme.primary
-                          : AppTheme.lightTheme.colorScheme.onSurface
-                                .withValues(alpha: 0.6),
-                      size: 24,
-                    ),
-                    text: 'Camera',
-                  ),
-                  Tab(
-                    icon: CustomIconWidget(
-                      iconName: 'map',
-                      color: _currentTabIndex == 1
-                          ? AppTheme.lightTheme.colorScheme.primary
-                          : AppTheme.lightTheme.colorScheme.onSurface
-                                .withValues(alpha: 0.6),
-                      size: 24,
-                    ),
-                    text: 'Map',
-                  ),
-                  Tab(
-                    icon: CustomIconWidget(
-                      iconName: 'report',
-                      color: _currentTabIndex == 2
-                          ? AppTheme.lightTheme.colorScheme.primary
-                          : AppTheme.lightTheme.colorScheme.onSurface
-                                .withValues(alpha: 0.6),
-                      size: 24,
-                    ),
-                    text: 'Reports',
-                  ),
-                  Tab(
-                    icon: CustomIconWidget(
-                      iconName: 'person',
-                      color: _currentTabIndex == 3
-                          ? AppTheme.lightTheme.colorScheme.primary
-                          : AppTheme.lightTheme.colorScheme.onSurface
-                                .withValues(alpha: 0.6),
-                      size: 24,
-                    ),
-                    text: 'Profile',
-                  ),
-                ],
-              ),
-            ),
-
             // Main Content
             Expanded(
               child: Stack(
@@ -574,12 +496,11 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
                             child: Container(
                               padding: EdgeInsets.all(3.w),
                               decoration: BoxDecoration(
-                                color: AppTheme.lightTheme.colorScheme.primary,
+                                color: theme.colorScheme.primary,
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color:
-                                        AppTheme.lightTheme.colorScheme.shadow,
+                                    color: theme.colorScheme.shadow,
                                     blurRadius: 8,
                                     offset: Offset(0, 4),
                                   ),
@@ -589,10 +510,7 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
                                 children: [
                                   CustomIconWidget(
                                     iconName: 'history',
-                                    color: AppTheme
-                                        .lightTheme
-                                        .colorScheme
-                                        .onPrimary,
+                                    color: theme.colorScheme.onPrimary,
                                     size: 24,
                                   ),
                                   if (_recentDetections.isNotEmpty)
@@ -603,24 +521,17 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
                                         width: 5.w,
                                         height: 5.w,
                                         decoration: BoxDecoration(
-                                          color: AppTheme
-                                              .lightTheme
-                                              .colorScheme
-                                              .error,
+                                          color: theme.colorScheme.error,
                                           shape: BoxShape.circle,
                                         ),
                                         child: Center(
                                           child: Text(
                                             '${_recentDetections.length > 9 ? '9+' : _recentDetections.length}',
-                                            style: AppTheme
-                                                .lightTheme
-                                                .textTheme
-                                                .labelSmall
-                                                ?.copyWith(
-                                                  color: Colors.white,
-                                                  fontSize: 8.sp,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                            style: theme.textTheme.labelSmall?.copyWith(
+                                              color: theme.colorScheme.onError,
+                                              fontSize: 8.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -656,11 +567,11 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
                       child: Container(
                         padding: EdgeInsets.all(3.w),
                         decoration: BoxDecoration(
-                          color: AppTheme.lightTheme.colorScheme.secondary,
+                          color: theme.colorScheme.secondary,
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: AppTheme.lightTheme.colorScheme.shadow,
+                              color: theme.colorScheme.shadow,
                               blurRadius: 8,
                               offset: Offset(0, 4),
                             ),
@@ -668,7 +579,7 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
                         ),
                         child: CustomIconWidget(
                           iconName: 'analytics',
-                          color: AppTheme.lightTheme.colorScheme.onSecondary,
+                          color: theme.colorScheme.onSecondary,
                           size: 24,
                         ),
                       ),

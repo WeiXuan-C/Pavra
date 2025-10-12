@@ -127,7 +127,7 @@ class MyApp extends StatelessWidget {
               },
               // 🚨 END CRITICAL SECTION
               debugShowCheckedModeBanner: false,
-              routes: AppRoutes.routes,
+              routes: AppRouter.routes,
               // Use RouteGuard for authentication-based routing
               home: const RouteGuard(),
             );

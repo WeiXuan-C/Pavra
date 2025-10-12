@@ -20,11 +20,12 @@ class DetectionMetricsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
 
     return Container(
       height: 70.h,
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
@@ -35,7 +36,7 @@ class DetectionMetricsSheet extends StatelessWidget {
             height: 0.5.h,
             margin: EdgeInsets.only(top: 1.h),
             decoration: BoxDecoration(
-              color: AppTheme.lightTheme.dividerColor,
+              color: theme.dividerColor,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -48,7 +49,7 @@ class DetectionMetricsSheet extends StatelessWidget {
                 Expanded(
                   child: Text(
                     l10n.camera_detectionAnalytics,
-                    style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
+                    style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -59,14 +60,14 @@ class DetectionMetricsSheet extends StatelessWidget {
                     padding: EdgeInsets.all(2.w),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppTheme.lightTheme.colorScheme.surface,
+                      color: theme.colorScheme.surface,
                       border: Border.all(
-                        color: AppTheme.lightTheme.dividerColor,
+                        color: theme.dividerColor,
                       ),
                     ),
                     child: CustomIconWidget(
                       iconName: 'close',
-                      color: AppTheme.lightTheme.colorScheme.onSurface,
+                      color: theme.colorScheme.onSurface,
                       size: 20,
                     ),
                   ),
@@ -83,22 +84,22 @@ class DetectionMetricsSheet extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Stats Cards
-                  _buildStatsCards(l10n),
+                  _buildStatsCards(context, l10n),
 
                   SizedBox(height: 3.h),
 
                   // Detection Chart
-                  _buildDetectionChart(l10n),
+                  _buildDetectionChart(context, l10n),
 
                   SizedBox(height: 3.h),
 
                   // Confidence Metrics
-                  _buildConfidenceMetrics(l10n),
+                  _buildConfidenceMetrics(context, l10n),
 
                   SizedBox(height: 3.h),
 
                   // Recent Activity
-                  _buildRecentActivity(l10n),
+                  _buildRecentActivity(context, l10n),
 
                   SizedBox(height: 2.h),
                 ],
@@ -110,7 +111,8 @@ class DetectionMetricsSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsCards(AppLocalizations l10n) {
+  Widget _buildStatsCards(BuildContext context, AppLocalizations l10n) {
+    final theme = Theme.of(context);
     final totalDetections = detectionStats.values.fold(
       0,
       (sum, count) => sum + count,
@@ -120,28 +122,31 @@ class DetectionMetricsSheet extends StatelessWidget {
       children: [
         Expanded(
           child: _buildStatCard(
+            context,
             l10n.camera_totalDetections,
             totalDetections.toString(),
             Icons.search,
-            AppTheme.lightTheme.colorScheme.primary,
+            theme.colorScheme.primary,
           ),
         ),
         SizedBox(width: 3.w),
         Expanded(
           child: _buildStatCard(
+            context,
             l10n.camera_potholes,
             (detectionStats['pothole'] ?? 0).toString(),
             Icons.warning,
-            AppTheme.lightTheme.colorScheme.error,
+            theme.colorScheme.error,
           ),
         ),
         SizedBox(width: 3.w),
         Expanded(
           child: _buildStatCard(
+            context,
             l10n.camera_cracks,
             (detectionStats['crack'] ?? 0).toString(),
             Icons.linear_scale,
-            AppTheme.lightTheme.colorScheme.tertiary,
+            theme.colorScheme.tertiary,
           ),
         ),
       ],
@@ -149,11 +154,13 @@ class DetectionMetricsSheet extends StatelessWidget {
   }
 
   Widget _buildStatCard(
+    BuildContext context,
     String title,
     String value,
     IconData icon,
     Color color,
   ) {
+    final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.all(3.w),
       decoration: BoxDecoration(
@@ -167,15 +174,15 @@ class DetectionMetricsSheet extends StatelessWidget {
           SizedBox(height: 1.h),
           Text(
             value,
-            style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
+            style: theme.textTheme.headlineSmall?.copyWith(
               color: color,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             title,
-            style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(
                 alpha: 0.7,
               ),
             ),
@@ -186,15 +193,16 @@ class DetectionMetricsSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildDetectionChart(AppLocalizations l10n) {
+  Widget _buildDetectionChart(BuildContext context, AppLocalizations l10n) {
+    final theme = Theme.of(context);
     if (detectionStats.isEmpty) {
       return SizedBox(
         height: 30.h,
         child: Center(
           child: Text(
             l10n.camera_noDataAvailable,
-            style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(
                 alpha: 0.6,
               ),
             ),
@@ -208,7 +216,7 @@ class DetectionMetricsSheet extends StatelessWidget {
       children: [
         Text(
           l10n.camera_detectionDistribution,
-          style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+          style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -217,7 +225,7 @@ class DetectionMetricsSheet extends StatelessWidget {
           height: 30.h,
           child: PieChart(
             PieChartData(
-              sections: _buildPieChartSections(),
+              sections: _buildPieChartSections(context),
               centerSpaceRadius: 15.w,
               sectionsSpace: 2,
             ),
@@ -227,14 +235,15 @@ class DetectionMetricsSheet extends StatelessWidget {
     );
   }
 
-  List<PieChartSectionData> _buildPieChartSections() {
+  List<PieChartSectionData> _buildPieChartSections(BuildContext context) {
+    final theme = Theme.of(context);
     final total = detectionStats.values.fold(0, (sum, count) => sum + count);
     if (total == 0) return [];
 
     final colors = {
-      'pothole': AppTheme.lightTheme.colorScheme.error,
-      'crack': AppTheme.lightTheme.colorScheme.tertiary,
-      'obstacle': AppTheme.lightTheme.colorScheme.secondary,
+      'pothole': theme.colorScheme.error,
+      'crack': theme.colorScheme.tertiary,
+      'obstacle': theme.colorScheme.secondary,
     };
 
     return detectionStats.entries.map((entry) {
@@ -242,17 +251,18 @@ class DetectionMetricsSheet extends StatelessWidget {
       return PieChartSectionData(
         value: entry.value.toDouble(),
         title: '${percentage.toInt()}%',
-        color: colors[entry.key] ?? AppTheme.lightTheme.colorScheme.primary,
+        color: colors[entry.key] ?? theme.colorScheme.primary,
         radius: 12.w,
-        titleStyle: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
-          color: Colors.white,
+        titleStyle: theme.textTheme.labelMedium?.copyWith(
+          color: theme.colorScheme.onError,
           fontWeight: FontWeight.bold,
         ),
       );
     }).toList();
   }
 
-  Widget _buildConfidenceMetrics(AppLocalizations l10n) {
+  Widget _buildConfidenceMetrics(BuildContext context, AppLocalizations l10n) {
+    final theme = Theme.of(context);
     if (detectionHistory.isEmpty) {
       return SizedBox.shrink();
     }
@@ -271,7 +281,7 @@ class DetectionMetricsSheet extends StatelessWidget {
       children: [
         Text(
           l10n.camera_confidenceMetrics,
-          style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+          style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -280,18 +290,21 @@ class DetectionMetricsSheet extends StatelessWidget {
           children: [
             Expanded(
               child: _buildMetricItem(
+                context,
                 l10n.camera_average,
                 '${(avgConfidence * 100).toInt()}%',
               ),
             ),
             Expanded(
               child: _buildMetricItem(
+                context,
                 l10n.camera_highest,
                 '${(maxConfidence * 100).toInt()}%',
               ),
             ),
             Expanded(
               child: _buildMetricItem(
+                context,
                 l10n.camera_lowest,
                 '${(minConfidence * 100).toInt()}%',
               ),
@@ -302,28 +315,29 @@ class DetectionMetricsSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildMetricItem(String label, String value) {
+  Widget _buildMetricItem(BuildContext context, String label, String value) {
+    final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.all(3.w),
       margin: EdgeInsets.symmetric(horizontal: 1.w),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppTheme.lightTheme.dividerColor),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: Column(
         children: [
           Text(
             value,
-            style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.primary,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.primary,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             label,
-            style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(
                 alpha: 0.7,
               ),
             ),
@@ -333,7 +347,8 @@ class DetectionMetricsSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildRecentActivity(AppLocalizations l10n) {
+  Widget _buildRecentActivity(BuildContext context, AppLocalizations l10n) {
+    final theme = Theme.of(context);
     final recentDetections = detectionHistory.take(3).toList();
 
     if (recentDetections.isEmpty) {
@@ -345,22 +360,24 @@ class DetectionMetricsSheet extends StatelessWidget {
       children: [
         Text(
           l10n.camera_recentActivity,
-          style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+          style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w600,
           ),
         ),
         SizedBox(height: 2.h),
         ...recentDetections.map(
-          (detection) => _buildActivityItem(detection, l10n),
+          (detection) => _buildActivityItem(context, detection, l10n),
         ),
       ],
     );
   }
 
   Widget _buildActivityItem(
+    BuildContext context,
     Map<String, dynamic> detection,
     AppLocalizations l10n,
   ) {
+    final theme = Theme.of(context);
     final String type = detection['type'] as String;
     final double confidence = detection['confidence'] as double;
     final DateTime timestamp = detection['timestamp'] as DateTime;
@@ -369,9 +386,9 @@ class DetectionMetricsSheet extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 2.h),
       padding: EdgeInsets.all(3.w),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppTheme.lightTheme.dividerColor),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: Row(
         children: [
@@ -380,12 +397,12 @@ class DetectionMetricsSheet extends StatelessWidget {
             height: 10.w,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: _getTypeColor(type).withValues(alpha: 0.2),
+              color: _getTypeColor(context, type).withValues(alpha: 0.2),
             ),
             child: Center(
               child: CustomIconWidget(
                 iconName: _getTypeIcon(type),
-                color: _getTypeColor(type),
+                color: _getTypeColor(context, type),
                 size: 20,
               ),
             ),
@@ -397,14 +414,14 @@ class DetectionMetricsSheet extends StatelessWidget {
               children: [
                 Text(
                   '${type.toUpperCase()} ${l10n.camera_detected}',
-                  style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
+                  style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
                   '${(confidence * 100).toInt()}% confidence • ${_formatTime(timestamp)}',
-                  style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                    color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(
                       alpha: 0.7,
                     ),
                   ),
@@ -417,16 +434,17 @@ class DetectionMetricsSheet extends StatelessWidget {
     );
   }
 
-  Color _getTypeColor(String type) {
+  Color _getTypeColor(BuildContext context, String type) {
+    final theme = Theme.of(context);
     switch (type.toLowerCase()) {
       case 'pothole':
-        return AppTheme.lightTheme.colorScheme.error;
+        return theme.colorScheme.error;
       case 'crack':
-        return AppTheme.lightTheme.colorScheme.tertiary;
+        return theme.colorScheme.tertiary;
       case 'obstacle':
-        return AppTheme.lightTheme.colorScheme.secondary;
+        return theme.colorScheme.secondary;
       default:
-        return AppTheme.lightTheme.colorScheme.primary;
+        return theme.colorScheme.primary;
     }
   }
 

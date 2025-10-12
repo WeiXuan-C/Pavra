@@ -12,10 +12,11 @@ class IssueDetailBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(5.w)),
       ),
       child: Column(
@@ -29,7 +30,7 @@ class IssueDetailBottomSheet extends StatelessWidget {
               height: 0.5.h,
               margin: EdgeInsets.only(bottom: 3.h),
               decoration: BoxDecoration(
-                color: AppTheme.lightTheme.dividerColor,
+                color: theme.dividerColor,
                 borderRadius: BorderRadius.circular(2.w),
               ),
             ),
@@ -43,7 +44,7 @@ class IssueDetailBottomSheet extends StatelessWidget {
               margin: EdgeInsets.only(bottom: 3.h),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(3.w),
-                color: AppTheme.lightTheme.colorScheme.surface,
+                color: theme.colorScheme.surface,
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(3.w),
@@ -62,7 +63,7 @@ class IssueDetailBottomSheet extends StatelessWidget {
               Expanded(
                 child: Text(
                   issue['type'] as String? ?? 'Road Issue',
-                  style: AppTheme.lightTheme.textTheme.titleLarge,
+                  style: theme.textTheme.titleLarge,
                 ),
               ),
               Container(
@@ -75,7 +76,7 @@ class IssueDetailBottomSheet extends StatelessWidget {
                 ),
                 child: Text(
                   (issue['severity'] as String? ?? 'minor').toUpperCase(),
-                  style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
+                  style: theme.textTheme.labelSmall?.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
@@ -91,14 +92,14 @@ class IssueDetailBottomSheet extends StatelessWidget {
             children: [
               CustomIconWidget(
                 iconName: 'location_on',
-                color: AppTheme.lightTheme.colorScheme.primary,
+                color: theme.colorScheme.primary,
                 size: 20,
               ),
               SizedBox(width: 2.w),
               Expanded(
                 child: Text(
                   issue['address'] as String? ?? 'Location not available',
-                  style: AppTheme.lightTheme.textTheme.bodyMedium,
+                  style: theme.textTheme.bodyMedium,
                 ),
               ),
             ],
@@ -111,13 +112,13 @@ class IssueDetailBottomSheet extends StatelessWidget {
             children: [
               CustomIconWidget(
                 iconName: 'access_time',
-                color: AppTheme.lightTheme.colorScheme.primary,
+                color: theme.colorScheme.primary,
                 size: 20,
               ),
               SizedBox(width: 2.w),
               Text(
                 'Reported ${_formatDate(issue['reportedAt'] as DateTime? ?? DateTime.now())}',
-                style: AppTheme.lightTheme.textTheme.bodyMedium,
+                style: theme.textTheme.bodyMedium,
               ),
             ],
           ),
@@ -129,27 +130,24 @@ class IssueDetailBottomSheet extends StatelessWidget {
             children: [
               CustomIconWidget(
                 iconName: 'info',
-                color: AppTheme.lightTheme.colorScheme.primary,
+                color: theme.colorScheme.primary,
                 size: 20,
               ),
               SizedBox(width: 2.w),
               Text(
                 'Status: ${issue['status'] as String? ?? 'Reported'}',
-                style: AppTheme.lightTheme.textTheme.bodyMedium,
+                style: theme.textTheme.bodyMedium,
               ),
             ],
           ),
 
           if (issue['description'] != null) ...[
             SizedBox(height: 3.h),
-            Text(
-              l10n.map_description,
-              style: AppTheme.lightTheme.textTheme.titleMedium,
-            ),
+            Text(l10n.map_description, style: theme.textTheme.titleMedium),
             SizedBox(height: 1.h),
             Text(
               issue['description'] as String,
-              style: AppTheme.lightTheme.textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium,
             ),
           ],
 
@@ -166,7 +164,7 @@ class IssueDetailBottomSheet extends StatelessWidget {
                   },
                   icon: CustomIconWidget(
                     iconName: 'directions',
-                    color: AppTheme.lightTheme.colorScheme.primary,
+                    color: theme.colorScheme.primary,
                     size: 18,
                   ),
                   label: Text(l10n.map_directions),

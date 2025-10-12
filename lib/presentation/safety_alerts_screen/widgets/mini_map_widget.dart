@@ -10,13 +10,14 @@ class MiniMapWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
       height: 25.h,
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.cardColor,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.lightTheme.dividerColor, width: 1),
+        border: Border.all(color: theme.dividerColor, width: 1),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
@@ -27,22 +28,22 @@ class MiniMapWidget extends StatelessWidget {
               width: double.infinity,
               height: double.infinity,
               decoration: BoxDecoration(
-                color: AppTheme.lightTheme.colorScheme.primary.withValues(
+                color: theme.colorScheme.primary.withValues(
                   alpha: 0.05,
                 ),
               ),
-              child: CustomPaint(painter: _GridPainter()),
+              child: CustomPaint(painter: _GridPainter(theme.colorScheme.onSurface)),
             ),
             // Center location marker
             Center(
               child: Container(
                 padding: EdgeInsets.all(2.w),
                 decoration: BoxDecoration(
-                  color: AppTheme.lightTheme.colorScheme.primary,
+                  color: theme.colorScheme.primary,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppTheme.lightTheme.colorScheme.primary.withValues(
+                      color: theme.colorScheme.primary.withValues(
                         alpha: 0.3,
                       ),
                       blurRadius: 8,
@@ -52,7 +53,7 @@ class MiniMapWidget extends StatelessWidget {
                 ),
                 child: CustomIconWidget(
                   iconName: 'my_location',
-                  color: Colors.white,
+                  color: theme.colorScheme.onPrimary,
                   size: 4.w,
                 ),
               ),
@@ -65,12 +66,12 @@ class MiniMapWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppTheme.lightTheme.colorScheme.primary.withValues(
+                    color: theme.colorScheme.primary.withValues(
                       alpha: 0.5,
                     ),
                     width: 2,
                   ),
-                  color: AppTheme.lightTheme.colorScheme.primary.withValues(
+                  color: theme.colorScheme.primary.withValues(
                     alpha: 0.1,
                   ),
                 ),
@@ -83,11 +84,11 @@ class MiniMapWidget extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(1.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFD32F2F),
+                  color: theme.colorScheme.error,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFD32F2F).withValues(alpha: 0.3),
+                      color: theme.colorScheme.error.withValues(alpha: 0.3),
                       blurRadius: 4,
                       spreadRadius: 1,
                     ),
@@ -95,7 +96,7 @@ class MiniMapWidget extends StatelessWidget {
                 ),
                 child: CustomIconWidget(
                   iconName: 'warning',
-                  color: Colors.white,
+                  color: theme.colorScheme.onError,
                   size: 3.w,
                 ),
               ),
@@ -106,11 +107,11 @@ class MiniMapWidget extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(1.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFF6F00),
+                  color: theme.colorScheme.secondary,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFFF6F00).withValues(alpha: 0.3),
+                      color: theme.colorScheme.secondary.withValues(alpha: 0.3),
                       blurRadius: 4,
                       spreadRadius: 1,
                     ),
@@ -118,7 +119,7 @@ class MiniMapWidget extends StatelessWidget {
                 ),
                 child: CustomIconWidget(
                   iconName: 'construction',
-                  color: Colors.white,
+                  color: theme.colorScheme.onSecondary,
                   size: 3.w,
                 ),
               ),
@@ -132,11 +133,11 @@ class MiniMapWidget extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(1.5.w),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: theme.colorScheme.surface,
                       borderRadius: BorderRadius.circular(6),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
+                          color: theme.colorScheme.shadow,
                           blurRadius: 4,
                           offset: const Offset(0, 2),
                         ),
@@ -144,8 +145,7 @@ class MiniMapWidget extends StatelessWidget {
                     ),
                     child: CustomIconWidget(
                       iconName: 'zoom_in',
-                      color: AppTheme.lightTheme.colorScheme.onSurface
-                          .withValues(alpha: 0.7),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                       size: 4.w,
                     ),
                   ),
@@ -153,11 +153,11 @@ class MiniMapWidget extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(1.5.w),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: theme.colorScheme.surface,
                       borderRadius: BorderRadius.circular(6),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
+                          color: theme.colorScheme.shadow,
                           blurRadius: 4,
                           offset: const Offset(0, 2),
                         ),
@@ -165,8 +165,7 @@ class MiniMapWidget extends StatelessWidget {
                     ),
                     child: CustomIconWidget(
                       iconName: 'zoom_out',
-                      color: AppTheme.lightTheme.colorScheme.onSurface
-                          .withValues(alpha: 0.7),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                       size: 4.w,
                     ),
                   ),
@@ -180,11 +179,11 @@ class MiniMapWidget extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.9),
+                  color: theme.colorScheme.surface.withValues(alpha: 0.9),
                   borderRadius: BorderRadius.circular(6),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
+                      color: theme.colorScheme.shadow,
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -192,7 +191,7 @@ class MiniMapWidget extends StatelessWidget {
                 ),
                 child: Text(
                   '${radius.toInt()} mile radius',
-                  style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
+                  style: theme.textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -206,10 +205,14 @@ class MiniMapWidget extends StatelessWidget {
 }
 
 class _GridPainter extends CustomPainter {
+  final Color gridColor;
+
+  _GridPainter(Color baseColor) : gridColor = baseColor.withValues(alpha: 0.1);
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey.withValues(alpha: 0.2)
+      ..color = gridColor
       ..strokeWidth = 1;
 
     const gridSize = 20.0;

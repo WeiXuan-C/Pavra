@@ -1148,6 +1148,330 @@ abstract class AppLocalizations {
   /// **'Distance'**
   String get alerts_distance;
 
+  /// Active alerts tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Active Alerts'**
+  String get alerts_activeAlerts;
+
+  /// Settings tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get alerts_settings;
+
+  /// Routes tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Routes'**
+  String get alerts_routes;
+
+  /// Alert types section title
+  ///
+  /// In en, this message translates to:
+  /// **'Alert Types'**
+  String get alerts_alertTypes;
+
+  /// Road damage alert type
+  ///
+  /// In en, this message translates to:
+  /// **'Road Damage'**
+  String get alerts_roadDamage;
+
+  /// Construction zones alert type
+  ///
+  /// In en, this message translates to:
+  /// **'Construction Zones'**
+  String get alerts_constructionZones;
+
+  /// Weather hazards alert type
+  ///
+  /// In en, this message translates to:
+  /// **'Weather Hazards'**
+  String get alerts_weatherHazards;
+
+  /// Traffic incidents alert type
+  ///
+  /// In en, this message translates to:
+  /// **'Traffic Incidents'**
+  String get alerts_trafficIncidents;
+
+  /// Location settings section title
+  ///
+  /// In en, this message translates to:
+  /// **'Location Settings'**
+  String get alerts_locationSettings;
+
+  /// Coverage preview section title
+  ///
+  /// In en, this message translates to:
+  /// **'Coverage Preview'**
+  String get alerts_coveragePreview;
+
+  /// Saved routes section title
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Routes'**
+  String get alerts_savedRoutes;
+
+  /// Add route button text
+  ///
+  /// In en, this message translates to:
+  /// **'Add Route'**
+  String get alerts_addRoute;
+
+  /// All clear message
+  ///
+  /// In en, this message translates to:
+  /// **'All Clear!'**
+  String get alerts_allClear;
+
+  /// No alerts detailed message
+  ///
+  /// In en, this message translates to:
+  /// **'No safety alerts in your area right now. We\'ll notify you immediately if any road hazards are reported nearby.'**
+  String get alerts_noAlertsMessage;
+
+  /// Check for updates button
+  ///
+  /// In en, this message translates to:
+  /// **'Check for Updates'**
+  String get alerts_checkForUpdates;
+
+  /// Checking status
+  ///
+  /// In en, this message translates to:
+  /// **'Checking...'**
+  String get alerts_checking;
+
+  /// Alerts updated message
+  ///
+  /// In en, this message translates to:
+  /// **'Safety alerts updated'**
+  String get alerts_updated;
+
+  /// Alert acknowledged message
+  ///
+  /// In en, this message translates to:
+  /// **'Alert marked as acknowledged'**
+  String get alerts_acknowledged;
+
+  /// Undo action text
+  ///
+  /// In en, this message translates to:
+  /// **'UNDO'**
+  String get alerts_undo;
+
+  /// Notification settings title
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Settings'**
+  String get alerts_notificationSettings;
+
+  /// Sound alerts setting
+  ///
+  /// In en, this message translates to:
+  /// **'Sound Alerts'**
+  String get alerts_soundAlerts;
+
+  /// Sound alerts description
+  ///
+  /// In en, this message translates to:
+  /// **'Play notification sounds for critical alerts'**
+  String get alerts_soundAlertsDesc;
+
+  /// Vibration setting
+  ///
+  /// In en, this message translates to:
+  /// **'Vibration'**
+  String get alerts_vibration;
+
+  /// Vibration description
+  ///
+  /// In en, this message translates to:
+  /// **'Vibrate device for high priority alerts'**
+  String get alerts_vibrationDesc;
+
+  /// Do not disturb setting
+  ///
+  /// In en, this message translates to:
+  /// **'Do Not Disturb'**
+  String get alerts_doNotDisturb;
+
+  /// Do not disturb description
+  ///
+  /// In en, this message translates to:
+  /// **'Respect system do not disturb settings'**
+  String get alerts_doNotDisturbDesc;
+
+  /// Quiet hours setting
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet Hours'**
+  String get alerts_quietHours;
+
+  /// Quiet hours description
+  ///
+  /// In en, this message translates to:
+  /// **'Only critical safety alerts will be shown during quiet hours'**
+  String get alerts_quietHoursDesc;
+
+  /// Route monitoring information
+  ///
+  /// In en, this message translates to:
+  /// **'Enable monitoring for your frequent routes to receive proactive alerts about road conditions, construction, and incidents along your path.'**
+  String get alerts_routeMonitoringInfo;
+
+  /// Critical severity level
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get alerts_critical;
+
+  /// Report submitted dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Report Submitted'**
+  String get report_reportSubmitted;
+
+  /// Report submitted success message
+  ///
+  /// In en, this message translates to:
+  /// **'Your road safety report has been successfully submitted to the authorities.'**
+  String get report_reportSubmittedMessage;
+
+  /// Report ID label
+  ///
+  /// In en, this message translates to:
+  /// **'Report ID'**
+  String get report_reportId;
+
+  /// Estimated response time
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Response: 2-3 business days'**
+  String get report_estimatedResponse;
+
+  /// View on map button
+  ///
+  /// In en, this message translates to:
+  /// **'View on Map'**
+  String get report_viewOnMap;
+
+  /// Done button
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get report_done;
+
+  /// Unsaved changes dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Unsaved Changes'**
+  String get report_unsavedChanges;
+
+  /// Unsaved changes message
+  ///
+  /// In en, this message translates to:
+  /// **'You have unsaved changes. Do you want to save as draft before leaving?'**
+  String get report_unsavedChangesMessage;
+
+  /// Discard button
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get report_discard;
+
+  /// Photo updated message
+  ///
+  /// In en, this message translates to:
+  /// **'Photo updated successfully'**
+  String get report_photoUpdated;
+
+  /// Photo capture failed message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to capture photo'**
+  String get report_photoCaptureFailed;
+
+  /// Location updated message
+  ///
+  /// In en, this message translates to:
+  /// **'Location updated'**
+  String get report_locationUpdated;
+
+  /// Photo added message
+  ///
+  /// In en, this message translates to:
+  /// **'Photo added successfully'**
+  String get report_photoAdded;
+
+  /// Photo removed message
+  ///
+  /// In en, this message translates to:
+  /// **'Photo removed'**
+  String get report_photoRemoved;
+
+  /// Maximum photos warning
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 5 additional photos allowed'**
+  String get report_maxPhotos;
+
+  /// Photo add failed message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add photo'**
+  String get report_photoAddFailed;
+
+  /// Draft saved message
+  ///
+  /// In en, this message translates to:
+  /// **'Draft saved successfully'**
+  String get report_draftSaved;
+
+  /// Submit failed message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit report. Please try again.'**
+  String get report_submitFailed;
+
+  /// Obstacle issue type
+  ///
+  /// In en, this message translates to:
+  /// **'Obstacle'**
+  String get report_obstacle;
+
+  /// Navigation bar label for camera screen
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get nav_camera;
+
+  /// Navigation bar label for map screen
+  ///
+  /// In en, this message translates to:
+  /// **'Map'**
+  String get nav_map;
+
+  /// Navigation bar label for report screen
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get nav_report;
+
+  /// Navigation bar label for alerts screen
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get nav_alerts;
+
+  /// Navigation bar label for profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get nav_profile;
+
   /// English language option
   ///
   /// In en, this message translates to:

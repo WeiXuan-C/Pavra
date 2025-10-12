@@ -17,6 +17,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     return DraggableScrollableSheet(
       initialChildSize: 0.3,
       minChildSize: 0.1,
@@ -24,7 +25,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
       builder: (context, scrollController) {
         return Container(
           decoration: BoxDecoration(
-            color: AppTheme.lightTheme.colorScheme.surface,
+            color: theme.colorScheme.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(5.w)),
             boxShadow: [
               BoxShadow(
@@ -42,7 +43,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                 height: 0.5.h,
                 margin: EdgeInsets.symmetric(vertical: 2.h),
                 decoration: BoxDecoration(
-                  color: AppTheme.lightTheme.dividerColor,
+                  color: theme.dividerColor,
                   borderRadius: BorderRadius.circular(2.w),
                 ),
               ),
@@ -54,7 +55,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                   children: [
                     Text(
                       l10n.map_nearbyIssues,
-                      style: AppTheme.lightTheme.textTheme.titleLarge,
+                      style: theme.textTheme.titleLarge,
                     ),
                     Spacer(),
                     Container(
@@ -63,15 +64,15 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                         vertical: 0.5.h,
                       ),
                       decoration: BoxDecoration(
-                        color: AppTheme.lightTheme.colorScheme.primary
+                        color: theme.colorScheme.primary
                             .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(2.w),
                       ),
                       child: Text(
                         '${nearbyIssues.length} ${l10n.map_found}',
-                        style: AppTheme.lightTheme.textTheme.labelMedium
+                        style: theme.textTheme.labelMedium
                             ?.copyWith(
-                              color: AppTheme.lightTheme.colorScheme.primary,
+                              color: theme.colorScheme.primary,
                             ),
                       ),
                     ),
@@ -84,7 +85,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
               // Issues list
               Expanded(
                 child: nearbyIssues.isEmpty
-                    ? _buildEmptyState(l10n)
+                    ? _buildEmptyState(context, l10n)
                     : ListView.separated(
                         controller: scrollController,
                         padding: EdgeInsets.symmetric(horizontal: 4.w),
@@ -93,7 +94,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                             SizedBox(height: 2.h),
                         itemBuilder: (context, index) {
                           final issue = nearbyIssues[index];
-                          return _buildIssueCard(issue, l10n);
+                          return _buildIssueCard(context, issue, l10n);
                         },
                       ),
               ),
@@ -104,27 +105,28 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState(AppLocalizations l10n) {
+  Widget _buildEmptyState(BuildContext context, AppLocalizations l10n) {
+    final theme = Theme.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CustomIconWidget(
             iconName: 'location_off',
-            color: AppTheme.lightTheme.dividerColor,
+            color: theme.dividerColor,
             size: 48,
           ),
           SizedBox(height: 2.h),
           Text(
             l10n.map_noIssuesFound,
-            style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-              color: AppTheme.lightTheme.textTheme.bodySmall?.color,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.textTheme.bodySmall?.color,
             ),
           ),
           SizedBox(height: 1.h),
           Text(
             l10n.map_adjustLocation,
-            style: AppTheme.lightTheme.textTheme.bodySmall,
+            style: theme.textTheme.bodySmall,
             textAlign: TextAlign.center,
           ),
         ],
@@ -132,15 +134,16 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildIssueCard(Map<String, dynamic> issue, AppLocalizations l10n) {
+  Widget _buildIssueCard(BuildContext context, Map<String, dynamic> issue, AppLocalizations l10n) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () => onIssueSelected(issue),
       child: Container(
         padding: EdgeInsets.all(3.w),
         decoration: BoxDecoration(
-          color: AppTheme.lightTheme.cardColor,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(3.w),
-          border: Border.all(color: AppTheme.lightTheme.dividerColor, width: 1),
+          border: Border.all(color: theme.dividerColor, width: 1),
         ),
         child: Row(
           children: [
@@ -150,7 +153,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
               height: 15.w,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(2.w),
-                color: AppTheme.lightTheme.colorScheme.surface,
+                color: theme.colorScheme.surface,
               ),
               child: issue['imageUrl'] != null
                   ? ClipRRect(
@@ -167,7 +170,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                         iconName: _getIssueIcon(
                           issue['type'] as String? ?? 'pothole',
                         ),
-                        color: AppTheme.lightTheme.colorScheme.primary,
+                        color: theme.colorScheme.primary,
                         size: 24,
                       ),
                     ),
@@ -185,7 +188,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                       Expanded(
                         child: Text(
                           issue['type'] as String? ?? 'Road Issue',
-                          style: AppTheme.lightTheme.textTheme.titleMedium,
+                          style: theme.textTheme.titleMedium,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -197,6 +200,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: _getSeverityColor(
+                            context,
                             issue['severity'] as String? ?? 'minor',
                           ),
                           borderRadius: BorderRadius.circular(1.w),
@@ -204,7 +208,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                         child: Text(
                           (issue['severity'] as String? ?? 'minor')
                               .toUpperCase(),
-                          style: AppTheme.lightTheme.textTheme.labelSmall
+                          style: theme.textTheme.labelSmall
                               ?.copyWith(color: Colors.white, fontSize: 8.sp),
                         ),
                       ),
@@ -216,7 +220,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                       CustomIconWidget(
                         iconName: 'location_on',
                         color:
-                            AppTheme.lightTheme.textTheme.bodySmall?.color ??
+                            theme.textTheme.bodySmall?.color ??
                             Colors.grey,
                         size: 14,
                       ),
@@ -224,7 +228,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                       Expanded(
                         child: Text(
                           '${issue['distance']}m ${l10n.map_away}',
-                          style: AppTheme.lightTheme.textTheme.bodySmall,
+                          style: theme.textTheme.bodySmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -236,7 +240,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                     _formatDate(
                       issue['reportedAt'] as DateTime? ?? DateTime.now(),
                     ),
-                    style: AppTheme.lightTheme.textTheme.bodySmall,
+                    style: theme.textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -245,7 +249,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
             // Navigation arrow
             CustomIconWidget(
               iconName: 'chevron_right',
-              color: AppTheme.lightTheme.dividerColor,
+              color: theme.dividerColor,
               size: 20,
             ),
           ],
@@ -269,16 +273,17 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
     }
   }
 
-  Color _getSeverityColor(String severity) {
+  Color _getSeverityColor(BuildContext context, String severity) {
+    final theme = Theme.of(context);
     switch (severity.toLowerCase()) {
       case 'critical':
-        return AppTheme.lightTheme.colorScheme.error;
+        return theme.colorScheme.error;
       case 'moderate':
         return Colors.orange;
       case 'minor':
         return Colors.amber;
       default:
-        return AppTheme.lightTheme.colorScheme.primary;
+        return theme.colorScheme.primary;
     }
   }
 

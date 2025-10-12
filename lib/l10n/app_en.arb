@@ -708,6 +708,223 @@
   "@alerts_distance": {
     "description": "Distance label"
   },
+  "alerts_activeAlerts": "Active Alerts",
+  "@alerts_activeAlerts": {
+    "description": "Active alerts tab label"
+  },
+  "alerts_settings": "Settings",
+  "@alerts_settings": {
+    "description": "Settings tab label"
+  },
+  "alerts_routes": "Routes",
+  "@alerts_routes": {
+    "description": "Routes tab label"
+  },
+  "alerts_alertTypes": "Alert Types",
+  "@alerts_alertTypes": {
+    "description": "Alert types section title"
+  },
+  "alerts_roadDamage": "Road Damage",
+  "@alerts_roadDamage": {
+    "description": "Road damage alert type"
+  },
+  "alerts_constructionZones": "Construction Zones",
+  "@alerts_constructionZones": {
+    "description": "Construction zones alert type"
+  },
+  "alerts_weatherHazards": "Weather Hazards",
+  "@alerts_weatherHazards": {
+    "description": "Weather hazards alert type"
+  },
+  "alerts_trafficIncidents": "Traffic Incidents",
+  "@alerts_trafficIncidents": {
+    "description": "Traffic incidents alert type"
+  },
+  "alerts_locationSettings": "Location Settings",
+  "@alerts_locationSettings": {
+    "description": "Location settings section title"
+  },
+  "alerts_coveragePreview": "Coverage Preview",
+  "@alerts_coveragePreview": {
+    "description": "Coverage preview section title"
+  },
+  "alerts_savedRoutes": "Saved Routes",
+  "@alerts_savedRoutes": {
+    "description": "Saved routes section title"
+  },
+  "alerts_addRoute": "Add Route",
+  "@alerts_addRoute": {
+    "description": "Add route button text"
+  },
+  "alerts_allClear": "All Clear!",
+  "@alerts_allClear": {
+    "description": "All clear message"
+  },
+  "alerts_noAlertsMessage": "No safety alerts in your area right now. We'll notify you immediately if any road hazards are reported nearby.",
+  "@alerts_noAlertsMessage": {
+    "description": "No alerts detailed message"
+  },
+  "alerts_checkForUpdates": "Check for Updates",
+  "@alerts_checkForUpdates": {
+    "description": "Check for updates button"
+  },
+  "alerts_checking": "Checking...",
+  "@alerts_checking": {
+    "description": "Checking status"
+  },
+  "alerts_updated": "Safety alerts updated",
+  "@alerts_updated": {
+    "description": "Alerts updated message"
+  },
+  "alerts_acknowledged": "Alert marked as acknowledged",
+  "@alerts_acknowledged": {
+    "description": "Alert acknowledged message"
+  },
+  "alerts_undo": "UNDO",
+  "@alerts_undo": {
+    "description": "Undo action text"
+  },
+  "alerts_notificationSettings": "Notification Settings",
+  "@alerts_notificationSettings": {
+    "description": "Notification settings title"
+  },
+  "alerts_soundAlerts": "Sound Alerts",
+  "@alerts_soundAlerts": {
+    "description": "Sound alerts setting"
+  },
+  "alerts_soundAlertsDesc": "Play notification sounds for critical alerts",
+  "@alerts_soundAlertsDesc": {
+    "description": "Sound alerts description"
+  },
+  "alerts_vibration": "Vibration",
+  "@alerts_vibration": {
+    "description": "Vibration setting"
+  },
+  "alerts_vibrationDesc": "Vibrate device for high priority alerts",
+  "@alerts_vibrationDesc": {
+    "description": "Vibration description"
+  },
+  "alerts_doNotDisturb": "Do Not Disturb",
+  "@alerts_doNotDisturb": {
+    "description": "Do not disturb setting"
+  },
+  "alerts_doNotDisturbDesc": "Respect system do not disturb settings",
+  "@alerts_doNotDisturbDesc": {
+    "description": "Do not disturb description"
+  },
+  "alerts_quietHours": "Quiet Hours",
+  "@alerts_quietHours": {
+    "description": "Quiet hours setting"
+  },
+  "alerts_quietHoursDesc": "Only critical safety alerts will be shown during quiet hours",
+  "@alerts_quietHoursDesc": {
+    "description": "Quiet hours description"
+  },
+  "alerts_routeMonitoringInfo": "Enable monitoring for your frequent routes to receive proactive alerts about road conditions, construction, and incidents along your path.",
+  "@alerts_routeMonitoringInfo": {
+    "description": "Route monitoring information"
+  },
+  "alerts_critical": "Critical",
+  "@alerts_critical": {
+    "description": "Critical severity level"
+  },
+  "report_reportSubmitted": "Report Submitted",
+  "@report_reportSubmitted": {
+    "description": "Report submitted dialog title"
+  },
+  "report_reportSubmittedMessage": "Your road safety report has been successfully submitted to the authorities.",
+  "@report_reportSubmittedMessage": {
+    "description": "Report submitted success message"
+  },
+  "report_reportId": "Report ID",
+  "@report_reportId": {
+    "description": "Report ID label"
+  },
+  "report_estimatedResponse": "Estimated Response: 2-3 business days",
+  "@report_estimatedResponse": {
+    "description": "Estimated response time"
+  },
+  "report_viewOnMap": "View on Map",
+  "@report_viewOnMap": {
+    "description": "View on map button"
+  },
+  "report_done": "Done",
+  "@report_done": {
+    "description": "Done button"
+  },
+  "report_unsavedChanges": "Unsaved Changes",
+  "@report_unsavedChanges": {
+    "description": "Unsaved changes dialog title"
+  },
+  "report_unsavedChangesMessage": "You have unsaved changes. Do you want to save as draft before leaving?",
+  "@report_unsavedChangesMessage": {
+    "description": "Unsaved changes message"
+  },
+  "report_discard": "Discard",
+  "@report_discard": {
+    "description": "Discard button"
+  },
+  "report_photoUpdated": "Photo updated successfully",
+  "@report_photoUpdated": {
+    "description": "Photo updated message"
+  },
+  "report_photoCaptureFailed": "Failed to capture photo",
+  "@report_photoCaptureFailed": {
+    "description": "Photo capture failed message"
+  },
+  "report_locationUpdated": "Location updated",
+  "@report_locationUpdated": {
+    "description": "Location updated message"
+  },
+  "report_photoAdded": "Photo added successfully",
+  "@report_photoAdded": {
+    "description": "Photo added message"
+  },
+  "report_photoRemoved": "Photo removed",
+  "@report_photoRemoved": {
+    "description": "Photo removed message"
+  },
+  "report_maxPhotos": "Maximum 5 additional photos allowed",
+  "@report_maxPhotos": {
+    "description": "Maximum photos warning"
+  },
+  "report_photoAddFailed": "Failed to add photo",
+  "@report_photoAddFailed": {
+    "description": "Photo add failed message"
+  },
+  "report_draftSaved": "Draft saved successfully",
+  "@report_draftSaved": {
+    "description": "Draft saved message"
+  },
+  "report_submitFailed": "Failed to submit report. Please try again.",
+  "@report_submitFailed": {
+    "description": "Submit failed message"
+  },
+  "report_obstacle": "Obstacle",
+  "@report_obstacle": {
+    "description": "Obstacle issue type"
+  },
+  
+  "nav_camera": "Camera",
+  "@nav_camera": {
+    "description": "Navigation bar label for camera screen"
+  },
+  "nav_map": "Map",
+  "@nav_map": {
+    "description": "Navigation bar label for map screen"
+  },
+  "nav_report": "Report",
+  "@nav_report": {
+    "description": "Navigation bar label for report screen"
+  },
+  "nav_alerts": "Alerts",
+  "@nav_alerts": {
+    "description": "Navigation bar label for alerts screen"
+  },
+  "nav_profile": "Profile",
+  "@nav_profile": {
+    "description": "Navigation bar label for profile screen"
+  },
   
   "language_english": "English",
   "@language_english": {

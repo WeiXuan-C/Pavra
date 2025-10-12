@@ -86,16 +86,17 @@ class _MapSearchBarState extends State<MapSearchBar> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     return Column(
       children: [
         Container(
           margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           decoration: BoxDecoration(
-            color: AppTheme.lightTheme.cardColor,
+            color: theme.cardColor,
             borderRadius: BorderRadius.circular(3.w),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: theme.colorScheme.shadow,
                 blurRadius: 8,
                 offset: Offset(0, 2),
               ),
@@ -120,9 +121,7 @@ class _MapSearchBarState extends State<MapSearchBar> {
                       padding: EdgeInsets.all(3.w),
                       child: CustomIconWidget(
                         iconName: 'search',
-                        color:
-                            AppTheme.lightTheme.textTheme.bodySmall?.color ??
-                            Colors.grey,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         size: 20,
                       ),
                     ),
@@ -136,13 +135,7 @@ class _MapSearchBarState extends State<MapSearchBar> {
                               padding: EdgeInsets.all(3.w),
                               child: CustomIconWidget(
                                 iconName: 'clear',
-                                color:
-                                    AppTheme
-                                        .lightTheme
-                                        .textTheme
-                                        .bodySmall
-                                        ?.color ??
-                                    Colors.grey,
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                 size: 20,
                               ),
                             ),
@@ -161,7 +154,7 @@ class _MapSearchBarState extends State<MapSearchBar> {
                   onPressed: widget.onFilterTap,
                   icon: CustomIconWidget(
                     iconName: 'tune',
-                    color: AppTheme.lightTheme.colorScheme.primary,
+                    color: theme.colorScheme.primary,
                     size: 24,
                   ),
                 ),
@@ -175,11 +168,11 @@ class _MapSearchBarState extends State<MapSearchBar> {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 4.w),
             decoration: BoxDecoration(
-              color: AppTheme.lightTheme.cardColor,
+              color: theme.cardColor,
               borderRadius: BorderRadius.circular(3.w),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
+                  color: theme.colorScheme.shadow,
                   blurRadius: 8,
                   offset: Offset(0, 2),
                 ),
@@ -193,12 +186,12 @@ class _MapSearchBarState extends State<MapSearchBar> {
                     padding: EdgeInsets.all(3.w),
                     child: Text(
                       l10n.map_suggestions,
-                      style: AppTheme.lightTheme.textTheme.titleSmall,
+                      style: theme.textTheme.titleSmall,
                     ),
                   ),
                   ..._searchSuggestions.map(
                     (suggestion) =>
-                        _buildSuggestionTile(suggestion, 'location_on'),
+                        _buildSuggestionTile(context, suggestion, 'location_on'),
                   ),
                 ],
                 if (_searchSuggestions.isEmpty &&
@@ -207,11 +200,11 @@ class _MapSearchBarState extends State<MapSearchBar> {
                     padding: EdgeInsets.all(3.w),
                     child: Text(
                       l10n.map_recentSearches,
-                      style: AppTheme.lightTheme.textTheme.titleSmall,
+                      style: theme.textTheme.titleSmall,
                     ),
                   ),
                   ..._recentSearches.map(
-                    (search) => _buildSuggestionTile(search, 'history'),
+                    (search) => _buildSuggestionTile(context, search, 'history'),
                   ),
                 ],
               ],
@@ -221,14 +214,15 @@ class _MapSearchBarState extends State<MapSearchBar> {
     );
   }
 
-  Widget _buildSuggestionTile(String text, String iconName) {
+  Widget _buildSuggestionTile(BuildContext context, String text, String iconName) {
+    final theme = Theme.of(context);
     return ListTile(
       leading: CustomIconWidget(
         iconName: iconName,
-        color: AppTheme.lightTheme.textTheme.bodySmall?.color ?? Colors.grey,
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
         size: 20,
       ),
-      title: Text(text, style: AppTheme.lightTheme.textTheme.bodyMedium),
+      title: Text(text, style: theme.textTheme.bodyMedium),
       onTap: () => _selectSuggestion(text),
       dense: true,
     );

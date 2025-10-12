@@ -708,6 +708,223 @@
   "@alerts_distance": {
     "description": "距离标签"
   },
+  "alerts_activeAlerts": "活跃警报",
+  "@alerts_activeAlerts": {
+    "description": "活跃警报标签"
+  },
+  "alerts_settings": "设置",
+  "@alerts_settings": {
+    "description": "设置标签"
+  },
+  "alerts_routes": "路线",
+  "@alerts_routes": {
+    "description": "路线标签"
+  },
+  "alerts_alertTypes": "警报类型",
+  "@alerts_alertTypes": {
+    "description": "警报类型部分标题"
+  },
+  "alerts_roadDamage": "路面损坏",
+  "@alerts_roadDamage": {
+    "description": "路面损坏警报类型"
+  },
+  "alerts_constructionZones": "施工区域",
+  "@alerts_constructionZones": {
+    "description": "施工区域警报类型"
+  },
+  "alerts_weatherHazards": "天气危险",
+  "@alerts_weatherHazards": {
+    "description": "天气危险警报类型"
+  },
+  "alerts_trafficIncidents": "交通事故",
+  "@alerts_trafficIncidents": {
+    "description": "交通事故警报类型"
+  },
+  "alerts_locationSettings": "位置设置",
+  "@alerts_locationSettings": {
+    "description": "位置设置部分标题"
+  },
+  "alerts_coveragePreview": "覆盖范围预览",
+  "@alerts_coveragePreview": {
+    "description": "覆盖范围预览部分标题"
+  },
+  "alerts_savedRoutes": "已保存的路线",
+  "@alerts_savedRoutes": {
+    "description": "已保存的路线部分标题"
+  },
+  "alerts_addRoute": "添加路线",
+  "@alerts_addRoute": {
+    "description": "添加路线按钮文本"
+  },
+  "alerts_allClear": "一切正常！",
+  "@alerts_allClear": {
+    "description": "一切正常消息"
+  },
+  "alerts_noAlertsMessage": "您所在区域目前没有安全警报。如果附近报告任何道路危险，我们将立即通知您。",
+  "@alerts_noAlertsMessage": {
+    "description": "无警报详细消息"
+  },
+  "alerts_checkForUpdates": "检查更新",
+  "@alerts_checkForUpdates": {
+    "description": "检查更新按钮"
+  },
+  "alerts_checking": "检查中...",
+  "@alerts_checking": {
+    "description": "检查状态"
+  },
+  "alerts_updated": "安全警报已更新",
+  "@alerts_updated": {
+    "description": "警报已更新消息"
+  },
+  "alerts_acknowledged": "警报已标记为已确认",
+  "@alerts_acknowledged": {
+    "description": "警报已确认消息"
+  },
+  "alerts_undo": "撤销",
+  "@alerts_undo": {
+    "description": "撤销操作文本"
+  },
+  "alerts_notificationSettings": "通知设置",
+  "@alerts_notificationSettings": {
+    "description": "通知设置标题"
+  },
+  "alerts_soundAlerts": "声音警报",
+  "@alerts_soundAlerts": {
+    "description": "声音警报设置"
+  },
+  "alerts_soundAlertsDesc": "为严重警报播放通知声音",
+  "@alerts_soundAlertsDesc": {
+    "description": "声音警报描述"
+  },
+  "alerts_vibration": "振动",
+  "@alerts_vibration": {
+    "description": "振动设置"
+  },
+  "alerts_vibrationDesc": "为高优先级警报振动设备",
+  "@alerts_vibrationDesc": {
+    "description": "振动描述"
+  },
+  "alerts_doNotDisturb": "勿扰模式",
+  "@alerts_doNotDisturb": {
+    "description": "勿扰模式设置"
+  },
+  "alerts_doNotDisturbDesc": "遵守系统勿扰设置",
+  "@alerts_doNotDisturbDesc": {
+    "description": "勿扰模式描述"
+  },
+  "alerts_quietHours": "免打扰时段",
+  "@alerts_quietHours": {
+    "description": "免打扰时段设置"
+  },
+  "alerts_quietHoursDesc": "在免打扰时段内仅显示严重安全警报",
+  "@alerts_quietHoursDesc": {
+    "description": "免打扰时段描述"
+  },
+  "alerts_routeMonitoringInfo": "为您常用的路线启用监控，以接收有关路况、施工和事故的主动警报。",
+  "@alerts_routeMonitoringInfo": {
+    "description": "路线监控信息"
+  },
+  "alerts_critical": "严重",
+  "@alerts_critical": {
+    "description": "严重程度级别"
+  },
+  "report_reportSubmitted": "报告已提交",
+  "@report_reportSubmitted": {
+    "description": "报告已提交对话框标题"
+  },
+  "report_reportSubmittedMessage": "您的道路安全报告已成功提交给有关部门。",
+  "@report_reportSubmittedMessage": {
+    "description": "报告提交成功消息"
+  },
+  "report_reportId": "报告ID",
+  "@report_reportId": {
+    "description": "报告ID标签"
+  },
+  "report_estimatedResponse": "预计响应时间：2-3个工作日",
+  "@report_estimatedResponse": {
+    "description": "预计响应时间"
+  },
+  "report_viewOnMap": "在地图上查看",
+  "@report_viewOnMap": {
+    "description": "在地图上查看按钮"
+  },
+  "report_done": "完成",
+  "@report_done": {
+    "description": "完成按钮"
+  },
+  "report_unsavedChanges": "未保存的更改",
+  "@report_unsavedChanges": {
+    "description": "未保存的更改对话框标题"
+  },
+  "report_unsavedChangesMessage": "您有未保存的更改。是否要在离开前保存草稿？",
+  "@report_unsavedChangesMessage": {
+    "description": "未保存的更改消息"
+  },
+  "report_discard": "丢弃",
+  "@report_discard": {
+    "description": "丢弃按钮"
+  },
+  "report_photoUpdated": "照片更新成功",
+  "@report_photoUpdated": {
+    "description": "照片更新消息"
+  },
+  "report_photoCaptureFailed": "拍摄照片失败",
+  "@report_photoCaptureFailed": {
+    "description": "照片拍摄失败消息"
+  },
+  "report_locationUpdated": "位置已更新",
+  "@report_locationUpdated": {
+    "description": "位置已更新消息"
+  },
+  "report_photoAdded": "照片添加成功",
+  "@report_photoAdded": {
+    "description": "照片添加消息"
+  },
+  "report_photoRemoved": "照片已移除",
+  "@report_photoRemoved": {
+    "description": "照片移除消息"
+  },
+  "report_maxPhotos": "最多允许添加5张附加照片",
+  "@report_maxPhotos": {
+    "description": "最大照片数警告"
+  },
+  "report_photoAddFailed": "添加照片失败",
+  "@report_photoAddFailed": {
+    "description": "照片添加失败消息"
+  },
+  "report_draftSaved": "草稿保存成功",
+  "@report_draftSaved": {
+    "description": "草稿保存消息"
+  },
+  "report_submitFailed": "提交报告失败。请重试。",
+  "@report_submitFailed": {
+    "description": "提交失败消息"
+  },
+  "report_obstacle": "障碍物",
+  "@report_obstacle": {
+    "description": "障碍物问题类型"
+  },
+  
+  "nav_camera": "相机",
+  "@nav_camera": {
+    "description": "导航栏相机屏幕标签"
+  },
+  "nav_map": "地图",
+  "@nav_map": {
+    "description": "导航栏地图屏幕标签"
+  },
+  "nav_report": "报告",
+  "@nav_report": {
+    "description": "导航栏报告屏幕标签"
+  },
+  "nav_alerts": "警报",
+  "@nav_alerts": {
+    "description": "导航栏警报屏幕标签"
+  },
+  "nav_profile": "我的",
+  "@nav_profile": {
+    "description": "导航栏个人资料屏幕标签"
+  },
   
   "language_english": "English",
   "@language_english": {

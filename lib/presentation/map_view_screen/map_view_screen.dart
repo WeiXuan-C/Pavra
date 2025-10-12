@@ -154,23 +154,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
         ),
       );
 
-      if (_currentPosition != null) {
-        _circles.add(
-          Circle(
-            circleId: CircleId('current_location'),
-            center: LatLng(
-              _currentPosition!.latitude,
-              _currentPosition!.longitude,
-            ),
-            radius: 50,
-            fillColor: AppTheme.lightTheme.colorScheme.primary.withValues(
-              alpha: 0.2,
-            ),
-            strokeColor: AppTheme.lightTheme.colorScheme.primary,
-            strokeWidth: 2,
-          ),
-        );
-      }
+      // Circle will be created in _buildLocationCircle() during build
     } catch (e) {
       // Handle location error silently
     }
@@ -352,13 +336,34 @@ class _MapViewScreenState extends State<MapViewScreen> {
     });
   }
 
+  Set<Circle> _buildLocationCircle(ThemeData theme) {
+    final circles = Set<Circle>.from(_circles);
+    if (_currentPosition != null) {
+      circles.add(
+        Circle(
+          circleId: CircleId('current_location'),
+          center: LatLng(
+            _currentPosition!.latitude,
+            _currentPosition!.longitude,
+          ),
+          radius: 50,
+          fillColor: theme.colorScheme.primary.withValues(alpha: 0.2),
+          strokeColor: theme.colorScheme.primary,
+          strokeWidth: 2,
+        ),
+      );
+    }
+    return circles;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(
-                color: AppTheme.lightTheme.colorScheme.primary,
+                color: theme.colorScheme.primary,
               ),
             )
           : Stack(
@@ -379,7 +384,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                     zoom: 14.0,
                   ),
                   markers: _markers,
-                  circles: _circles,
+                  circles: _buildLocationCircle(theme),
                   mapType: _currentMapType,
                   trafficEnabled: _showTraffic,
                   myLocationEnabled: true,
@@ -410,10 +415,10 @@ class _MapViewScreenState extends State<MapViewScreen> {
                       FloatingActionButton(
                         heroTag: 'location',
                         onPressed: _centerOnCurrentLocation,
-                        backgroundColor: AppTheme.lightTheme.cardColor,
+                        backgroundColor: theme.cardColor,
                         child: CustomIconWidget(
                           iconName: 'my_location',
-                          color: AppTheme.lightTheme.colorScheme.primary,
+                          color: theme.colorScheme.primary,
                           size: 24,
                         ),
                       ),
@@ -424,10 +429,10 @@ class _MapViewScreenState extends State<MapViewScreen> {
                       FloatingActionButton(
                         heroTag: 'map_type',
                         onPressed: _toggleMapType,
-                        backgroundColor: AppTheme.lightTheme.cardColor,
+                        backgroundColor: theme.cardColor,
                         child: CustomIconWidget(
                           iconName: 'layers',
-                          color: AppTheme.lightTheme.colorScheme.primary,
+                          color: theme.colorScheme.primary,
                           size: 24,
                         ),
                       ),
@@ -439,13 +444,13 @@ class _MapViewScreenState extends State<MapViewScreen> {
                         heroTag: 'traffic',
                         onPressed: _toggleTraffic,
                         backgroundColor: _showTraffic
-                            ? AppTheme.lightTheme.colorScheme.primary
-                            : AppTheme.lightTheme.cardColor,
+                            ? theme.colorScheme.primary
+                            : theme.cardColor,
                         child: CustomIconWidget(
                           iconName: 'traffic',
                           color: _showTraffic
-                              ? Colors.white
-                              : AppTheme.lightTheme.colorScheme.primary,
+                              ? theme.colorScheme.onPrimary
+                              : theme.colorScheme.primary,
                           size: 24,
                         ),
                       ),
@@ -460,16 +465,16 @@ class _MapViewScreenState extends State<MapViewScreen> {
                   child: FloatingActionButton.extended(
                     heroTag: 'nearby',
                     onPressed: _showNearbyIssues,
-                    backgroundColor: AppTheme.lightTheme.colorScheme.primary,
+                    backgroundColor: theme.colorScheme.primary,
                     icon: CustomIconWidget(
                       iconName: 'list',
-                      color: Colors.white,
+                      color: theme.colorScheme.onPrimary,
                       size: 20,
                     ),
                     label: Text(
                       'Nearby Issues',
-                      style: AppTheme.lightTheme.textTheme.labelLarge?.copyWith(
-                        color: Colors.white,
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: theme.colorScheme.onPrimary,
                       ),
                     ),
                   ),
@@ -484,10 +489,10 @@ class _MapViewScreenState extends State<MapViewScreen> {
                     onPressed: () {
                       Navigator.pushNamed(context, '/report-submission-screen');
                     },
-                    backgroundColor: AppTheme.lightTheme.colorScheme.secondary,
+                    backgroundColor: theme.colorScheme.secondary,
                     child: CustomIconWidget(
                       iconName: 'add',
-                      color: Colors.white,
+                      color: theme.colorScheme.onSecondary,
                       size: 28,
                     ),
                   ),

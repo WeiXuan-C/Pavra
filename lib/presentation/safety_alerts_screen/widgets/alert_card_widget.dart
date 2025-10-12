@@ -15,16 +15,17 @@ class AlertCardWidget extends StatelessWidget {
     this.onDismiss,
   });
 
-  Color _getSeverityColor(String severity) {
+  Color _getSeverityColor(BuildContext context, String severity) {
+    final theme = Theme.of(context);
     switch (severity.toLowerCase()) {
       case 'critical':
-        return AppTheme.lightTheme.colorScheme.error;
+        return theme.colorScheme.error;
       case 'high':
-        return const Color(0xFFFF6F00);
+        return theme.colorScheme.secondary;
       case 'medium':
-        return const Color(0xFFF57C00);
+        return theme.colorScheme.tertiary;
       default:
-        return AppTheme.lightTheme.colorScheme.primary;
+        return theme.colorScheme.primary;
     }
   }
 
@@ -45,6 +46,7 @@ class AlertCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final severity = alert['severity'] as String;
     final hazardType = alert['hazardType'] as String;
     final location = alert['location'] as String;
@@ -60,12 +62,12 @@ class AlertCardWidget extends StatelessWidget {
         alignment: Alignment.centerRight,
         padding: EdgeInsets.only(right: 4.w),
         decoration: BoxDecoration(
-          color: AppTheme.lightTheme.colorScheme.error,
+          color: theme.colorScheme.error,
           borderRadius: BorderRadius.circular(12),
         ),
         child: CustomIconWidget(
           iconName: 'check',
-          color: Colors.white,
+          color: theme.colorScheme.onError,
           size: 6.w,
         ),
       ),
@@ -74,7 +76,10 @@ class AlertCardWidget extends StatelessWidget {
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: _getSeverityColor(severity), width: 2),
+          side: BorderSide(
+            color: _getSeverityColor(context, severity),
+            width: 2,
+          ),
         ),
         child: InkWell(
           onTap: onTap,
@@ -90,13 +95,14 @@ class AlertCardWidget extends StatelessWidget {
                       padding: EdgeInsets.all(2.w),
                       decoration: BoxDecoration(
                         color: _getSeverityColor(
+                          context,
                           severity,
                         ).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: CustomIconWidget(
                         iconName: _getHazardIcon(hazardType),
-                        color: _getSeverityColor(severity),
+                        color: _getSeverityColor(context, severity),
                         size: 6.w,
                       ),
                     ),
@@ -113,52 +119,43 @@ class AlertCardWidget extends StatelessWidget {
                                   vertical: 0.5.h,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: _getSeverityColor(severity),
+                                  color: _getSeverityColor(context, severity),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
                                   severity.toUpperCase(),
-                                  style: AppTheme
-                                      .lightTheme
-                                      .textTheme
-                                      .labelSmall
-                                      ?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: theme.colorScheme.onError,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                               const Spacer(),
                               Text(
                                 distance,
-                                style: AppTheme.lightTheme.textTheme.bodySmall
-                                    ?.copyWith(
-                                      color: AppTheme
-                                          .lightTheme
-                                          .colorScheme
-                                          .onSurface
-                                          .withValues(alpha: 0.7),
-                                    ),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.7,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                           SizedBox(height: 1.h),
                           Text(
                             hazardType,
-                            style: AppTheme.lightTheme.textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.w600),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           SizedBox(height: 0.5.h),
                           Text(
                             location,
-                            style: AppTheme.lightTheme.textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: AppTheme
-                                      .lightTheme
-                                      .colorScheme
-                                      .onSurface
-                                      .withValues(alpha: 0.8),
-                                ),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.8,
+                              ),
+                            ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -167,15 +164,14 @@ class AlertCardWidget extends StatelessWidget {
                     ),
                     CustomIconWidget(
                       iconName: isExpanded ? 'expand_less' : 'expand_more',
-                      color: AppTheme.lightTheme.colorScheme.onSurface
-                          .withValues(alpha: 0.6),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       size: 6.w,
                     ),
                   ],
                 ),
                 if (isExpanded) ...[
                   SizedBox(height: 2.h),
-                  Divider(color: AppTheme.lightTheme.dividerColor, height: 1),
+                  Divider(color: theme.dividerColor, height: 1),
                   SizedBox(height: 2.h),
                   if (alert['photo'] != null) ...[
                     ClipRRect(
@@ -192,14 +188,14 @@ class AlertCardWidget extends StatelessWidget {
                   if (alert['description'] != null) ...[
                     Text(
                       'Details:',
-                      style: AppTheme.lightTheme.textTheme.titleSmall?.copyWith(
+                      style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     SizedBox(height: 1.h),
                     Text(
                       alert['description'] as String,
-                      style: AppTheme.lightTheme.textTheme.bodyMedium,
+                      style: theme.textTheme.bodyMedium,
                     ),
                     SizedBox(height: 2.h),
                   ],
@@ -207,31 +203,29 @@ class AlertCardWidget extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.all(3.w),
                       decoration: BoxDecoration(
-                        color: AppTheme.lightTheme.colorScheme.primary
-                            .withValues(alpha: 0.1),
+                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: AppTheme.lightTheme.colorScheme.primary
-                              .withValues(alpha: 0.3),
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.3,
+                          ),
                         ),
                       ),
                       child: Row(
                         children: [
                           CustomIconWidget(
                             iconName: 'alt_route',
-                            color: AppTheme.lightTheme.colorScheme.primary,
+                            color: theme.colorScheme.primary,
                             size: 5.w,
                           ),
                           SizedBox(width: 2.w),
                           Expanded(
                             child: Text(
                               'Suggested Route: ${alert['alternateRoute']}',
-                              style: AppTheme.lightTheme.textTheme.bodySmall
-                                  ?.copyWith(
-                                    color:
-                                        AppTheme.lightTheme.colorScheme.primary,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.primary,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ],
@@ -243,18 +237,19 @@ class AlertCardWidget extends StatelessWidget {
                     children: [
                       CustomIconWidget(
                         iconName: 'access_time',
-                        color: AppTheme.lightTheme.colorScheme.onSurface
-                            .withValues(alpha: 0.6),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
                         size: 4.w,
                       ),
                       SizedBox(width: 1.w),
                       Text(
                         'Reported: $timeReported',
-                        style: AppTheme.lightTheme.textTheme.bodySmall
-                            ?.copyWith(
-                              color: AppTheme.lightTheme.colorScheme.onSurface
-                                  .withValues(alpha: 0.6),
-                            ),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
+                        ),
                       ),
                     ],
                   ),

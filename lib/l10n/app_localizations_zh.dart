@@ -534,6 +534,168 @@ class AppLocalizationsZh extends AppLocalizations {
   String get alerts_distance => '距离';
 
   @override
+  String get alerts_activeAlerts => '活跃警报';
+
+  @override
+  String get alerts_settings => '设置';
+
+  @override
+  String get alerts_routes => '路线';
+
+  @override
+  String get alerts_alertTypes => '警报类型';
+
+  @override
+  String get alerts_roadDamage => '路面损坏';
+
+  @override
+  String get alerts_constructionZones => '施工区域';
+
+  @override
+  String get alerts_weatherHazards => '天气危险';
+
+  @override
+  String get alerts_trafficIncidents => '交通事故';
+
+  @override
+  String get alerts_locationSettings => '位置设置';
+
+  @override
+  String get alerts_coveragePreview => '覆盖范围预览';
+
+  @override
+  String get alerts_savedRoutes => '已保存的路线';
+
+  @override
+  String get alerts_addRoute => '添加路线';
+
+  @override
+  String get alerts_allClear => '一切正常！';
+
+  @override
+  String get alerts_noAlertsMessage => '您所在区域目前没有安全警报。如果附近报告任何道路危险，我们将立即通知您。';
+
+  @override
+  String get alerts_checkForUpdates => '检查更新';
+
+  @override
+  String get alerts_checking => '检查中...';
+
+  @override
+  String get alerts_updated => '安全警报已更新';
+
+  @override
+  String get alerts_acknowledged => '警报已标记为已确认';
+
+  @override
+  String get alerts_undo => '撤销';
+
+  @override
+  String get alerts_notificationSettings => '通知设置';
+
+  @override
+  String get alerts_soundAlerts => '声音警报';
+
+  @override
+  String get alerts_soundAlertsDesc => '为严重警报播放通知声音';
+
+  @override
+  String get alerts_vibration => '振动';
+
+  @override
+  String get alerts_vibrationDesc => '为高优先级警报振动设备';
+
+  @override
+  String get alerts_doNotDisturb => '勿扰模式';
+
+  @override
+  String get alerts_doNotDisturbDesc => '遵守系统勿扰设置';
+
+  @override
+  String get alerts_quietHours => '免打扰时段';
+
+  @override
+  String get alerts_quietHoursDesc => '在免打扰时段内仅显示严重安全警报';
+
+  @override
+  String get alerts_routeMonitoringInfo => '为您常用的路线启用监控，以接收有关路况、施工和事故的主动警报。';
+
+  @override
+  String get alerts_critical => '严重';
+
+  @override
+  String get report_reportSubmitted => '报告已提交';
+
+  @override
+  String get report_reportSubmittedMessage => '您的道路安全报告已成功提交给有关部门。';
+
+  @override
+  String get report_reportId => '报告ID';
+
+  @override
+  String get report_estimatedResponse => '预计响应时间：2-3个工作日';
+
+  @override
+  String get report_viewOnMap => '在地图上查看';
+
+  @override
+  String get report_done => '完成';
+
+  @override
+  String get report_unsavedChanges => '未保存的更改';
+
+  @override
+  String get report_unsavedChangesMessage => '您有未保存的更改。是否要在离开前保存草稿？';
+
+  @override
+  String get report_discard => '丢弃';
+
+  @override
+  String get report_photoUpdated => '照片更新成功';
+
+  @override
+  String get report_photoCaptureFailed => '拍摄照片失败';
+
+  @override
+  String get report_locationUpdated => '位置已更新';
+
+  @override
+  String get report_photoAdded => '照片添加成功';
+
+  @override
+  String get report_photoRemoved => '照片已移除';
+
+  @override
+  String get report_maxPhotos => '最多允许添加5张附加照片';
+
+  @override
+  String get report_photoAddFailed => '添加照片失败';
+
+  @override
+  String get report_draftSaved => '草稿保存成功';
+
+  @override
+  String get report_submitFailed => '提交报告失败。请重试。';
+
+  @override
+  String get report_obstacle => '障碍物';
+
+  @override
+  String get nav_camera => '相机';
+
+  @override
+  String get nav_map => '地图';
+
+  @override
+  String get nav_report => '报告';
+
+  @override
+  String get nav_alerts => '警报';
+
+  @override
+  String get nav_profile => '我的';
+
+  @override
   String get language_english => 'English';
 
   @override

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../../core/app_export.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../theme/app_theme.dart';
 
 class MapFilterBottomSheet extends StatefulWidget {
   final Map<String, bool> selectedFilters;
@@ -31,10 +29,11 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(5.w)),
       ),
       child: Column(
@@ -48,7 +47,7 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
               height: 0.5.h,
               margin: EdgeInsets.only(bottom: 3.h),
               decoration: BoxDecoration(
-                color: AppTheme.lightTheme.dividerColor,
+                color: theme.dividerColor,
                 borderRadius: BorderRadius.circular(2.w),
               ),
             ),
@@ -57,12 +56,12 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
           // Title
           Text(
             l10n.map_filterTitle,
-            style: AppTheme.lightTheme.textTheme.titleLarge,
+            style: theme.textTheme.titleLarge,
           ),
           SizedBox(height: 3.h),
 
           // Issue Types Section
-          Text(l10n.map_issueTypes, style: AppTheme.lightTheme.textTheme.titleMedium),
+          Text(l10n.map_issueTypes, style: theme.textTheme.titleMedium),
           SizedBox(height: 1.h),
 
           _buildFilterTile(l10n.camera_potholes, 'potholes'),
@@ -75,7 +74,7 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
           // Severity Levels Section
           Text(
             l10n.map_severityLevels,
-            style: AppTheme.lightTheme.textTheme.titleMedium,
+            style: theme.textTheme.titleMedium,
           ),
           SizedBox(height: 1.h),
 
@@ -88,7 +87,7 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
           // Status Section
           Text(
             l10n.map_status,
-            style: AppTheme.lightTheme.textTheme.titleMedium,
+            style: theme.textTheme.titleMedium,
           ),
           SizedBox(height: 1.h),
 
@@ -131,8 +130,9 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
   }
 
   Widget _buildFilterTile(String title, String key) {
+    final theme = Theme.of(context);
     return CheckboxListTile(
-      title: Text(title, style: AppTheme.lightTheme.textTheme.bodyLarge),
+      title: Text(title, style: theme.textTheme.bodyLarge),
       value: _filters[key] ?? false,
       onChanged: (bool? value) {
         setState(() {
