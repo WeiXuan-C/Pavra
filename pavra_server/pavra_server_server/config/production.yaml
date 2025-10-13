@@ -31,7 +31,7 @@ webServer:
 # connect on the public IP of the database e.g. database.examplepod.com.
 database:
   host: ${DATABASE_HOST}
-  port: !int ${DATABASE_PORT}
+  port: 5432
   name: ${DATABASE_NAME}
   user: ${DATABASE_USER}
   password: ${DATABASE_PASSWORD}
