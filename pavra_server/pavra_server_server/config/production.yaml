@@ -7,21 +7,21 @@
 # Configuration for the main API server.
 apiServer:
   port: 8080
-  publicHost: api.examplepod.com
+  publicHost: https://your-railway-app.up.railway.app
   publicPort: 443
   publicScheme: https
 
 # Configuration for the Insights server.
 insightsServer:
   port: 8081
-  publicHost: insights.examplepod.com
+  publicHost: https://pavra-insights.up.railway.app
   publicPort: 443
   publicScheme: https
 
 # Configuration for the web server.
 webServer:
   port: 8082
-  publicHost: app.examplepod.com
+  publicHost: https://pavra-web.up.railway.app
   publicPort: 443
   publicScheme: https
 
@@ -52,11 +52,14 @@ maxRequestSize: 524288 # The maximum size of requests allowed in bytes
 
 sessionLogs:
   consoleEnabled: false
-# persistentEnabled: true
+  persistentEnabled: false
 # consoleLogFormat: json # Defaults to "json", options are "text" or "json"
 
-# futureCallExecutionEnabled: true # Defaults to true
+futureCallExecutionEnabled: false # Defaults to true
 
 #futureCall:
 #  concurrencyLimit: 1 # Defaults to 1, a negative or null value removes the limit
 #  scanInterval: 5000 # Unit in milliseconds, defaults to 5000
+
+# Security secret — you create this yourself
+serviceSecret: pavra_super_secret_key_userx3C!
