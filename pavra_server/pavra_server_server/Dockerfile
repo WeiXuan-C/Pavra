@@ -6,27 +6,17 @@ RUN dart pub get
 RUN dart compile exe bin/main.dart -o bin/server
 
 # Final stage
-FROM alpine:latest
+FROM debian:bookworm-slim
 WORKDIR /app
 
-# Environment variables
-ENV runmode=production
-ENV serverid=default
-ENV logging=normal
-ENV role=monolith
-
-# Copy compiled server executable
 COPY --from=build /app/bin/server server
 RUN chmod +x server
 
-# Copy configuration files and resources
 COPY --from=build /app/config/ config/
 COPY --from=build /app/web/ web/
 COPY --from=build /app/migrations/ migrations/
 COPY --from=build /app/lib/src/generated/protocol.yaml lib/src/generated/protocol.yaml
 
-# Expose ports
-EXPOSE 8080 8081 8082
+EXPOSE 8080
 
-# Entrypoint
-ENTRYPOINT ["./server", "--mode=production", "--server-id=default", "--logging=normal", "--role=monolith"]
+ENTRYPOINT ["/bin/sh", "-c", "./server --port=$PORT --mode=production --server-id=default --logging=normal --role=monolith"]
