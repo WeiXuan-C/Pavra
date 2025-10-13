@@ -23,9 +23,9 @@ class IssueTypeSelectorWidget extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.lightTheme.dividerColor, width: 1),
+        border: Border.all(color: Theme.of(context).dividerColor, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,13 +35,13 @@ class IssueTypeSelectorWidget extends StatelessWidget {
             children: [
               CustomIconWidget(
                 iconName: 'category',
-                color: AppTheme.lightTheme.primaryColor,
+                color: Theme.of(context).colorScheme.primary,
                 size: 20,
               ),
               SizedBox(width: 2.w),
               Text(
                 l10n.report_issueType,
-                style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -52,10 +52,8 @@ class IssueTypeSelectorWidget extends StatelessWidget {
 
           Text(
             l10n.report_selectIssueType,
-            style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                alpha: 0.6,
-              ),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
 

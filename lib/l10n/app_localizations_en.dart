@@ -713,4 +713,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get language_chinese => '中文';
+
+  @override
+  String get settings_notifications => 'Notifications';
+
+  @override
+  String get settings_pushNotifications => 'Push Notifications';
+
+  @override
+  String get settings_pushNotificationsDesc => 'Enable push notifications';
+
+  @override
+  String get settings_alertTypes => 'Alert Types';
+
+  @override
+  String get settings_roadDamage => 'Road Damage';
+
+  @override
+  String get settings_roadDamageDesc => 'Potholes, cracks, and surface issues';
+
+  @override
+  String get settings_constructionZones => 'Construction Zones';
+
+  @override
+  String get settings_constructionZonesDesc => 'Road work and lane closures';
+
+  @override
+  String get settings_weatherHazards => 'Weather Hazards';
+
+  @override
+  String get settings_weatherHazardsDesc => 'Fog, ice, and weather conditions';
+
+  @override
+  String get settings_trafficIncidents => 'Traffic Incidents';
+
+  @override
+  String get settings_trafficIncidentsDesc => 'Accidents and traffic delays';
+
+  @override
+  String get settings_notificationBehavior => 'Notification Behavior';
+
+  @override
+  String get settings_sound => 'Sound';
+
+  @override
+  String get settings_soundDesc => 'Play sound for notifications';
+
+  @override
+  String get settings_vibration => 'Vibration';
+
+  @override
+  String get settings_vibrationDesc => 'Vibrate for notifications';
 }

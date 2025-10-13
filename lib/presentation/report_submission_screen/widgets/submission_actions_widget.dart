@@ -23,11 +23,12 @@ class SubmissionActionsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
+        color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         boxShadow: [
           BoxShadow(
@@ -55,10 +56,8 @@ class SubmissionActionsWidget extends StatelessWidget {
                 onPressed: isFormValid && !isSubmitting ? onSubmit : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isFormValid
-                      ? AppTheme.lightTheme.primaryColor
-                      : AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                          alpha: 0.3,
-                        ),
+                      ? theme.primaryColor
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.3),
                   foregroundColor: Colors.white,
                   elevation: isFormValid ? 2.0 : 0.0,
                   shape: RoundedRectangleBorder(
@@ -82,11 +81,10 @@ class SubmissionActionsWidget extends StatelessWidget {
                           SizedBox(width: 3.w),
                           Text(
                             l10n.report_submittingReport,
-                            style: AppTheme.lightTheme.textTheme.titleMedium
-                                ?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       )
@@ -101,11 +99,10 @@ class SubmissionActionsWidget extends StatelessWidget {
                           SizedBox(width: 2.w),
                           Text(
                             l10n.report_submitReport,
-                            style: AppTheme.lightTheme.textTheme.titleMedium
-                                ?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
@@ -121,9 +118,9 @@ class SubmissionActionsWidget extends StatelessWidget {
               child: OutlinedButton(
                 onPressed: !isSubmitting ? onSaveDraft : null,
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: AppTheme.lightTheme.primaryColor,
+                  foregroundColor: theme.primaryColor,
                   side: BorderSide(
-                    color: AppTheme.lightTheme.primaryColor.withValues(
+                    color: theme.primaryColor.withValues(
                       alpha: isSubmitting ? 0.3 : 1.0,
                     ),
                     width: 1.5,
@@ -137,7 +134,7 @@ class SubmissionActionsWidget extends StatelessWidget {
                   children: [
                     CustomIconWidget(
                       iconName: 'save',
-                      color: AppTheme.lightTheme.primaryColor.withValues(
+                      color: theme.primaryColor.withValues(
                         alpha: isSubmitting ? 0.3 : 1.0,
                       ),
                       size: 18,
@@ -145,8 +142,8 @@ class SubmissionActionsWidget extends StatelessWidget {
                     SizedBox(width: 2.w),
                     Text(
                       l10n.report_saveDraft,
-                      style: AppTheme.lightTheme.textTheme.titleSmall?.copyWith(
-                        color: AppTheme.lightTheme.primaryColor.withValues(
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: theme.primaryColor.withValues(
                           alpha: isSubmitting ? 0.3 : 1.0,
                         ),
                         fontWeight: FontWeight.w500,
@@ -164,14 +161,10 @@ class SubmissionActionsWidget extends StatelessWidget {
                 width: double.infinity,
                 padding: EdgeInsets.all(3.w),
                 decoration: BoxDecoration(
-                  color: AppTheme.lightTheme.colorScheme.error.withValues(
-                    alpha: 0.1,
-                  ),
+                  color: theme.colorScheme.error.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: AppTheme.lightTheme.colorScheme.error.withValues(
-                      alpha: 0.3,
-                    ),
+                    color: theme.colorScheme.error.withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
@@ -179,17 +172,16 @@ class SubmissionActionsWidget extends StatelessWidget {
                   children: [
                     CustomIconWidget(
                       iconName: 'info',
-                      color: AppTheme.lightTheme.colorScheme.error,
+                      color: theme.colorScheme.error,
                       size: 16,
                     ),
                     SizedBox(width: 2.w),
                     Expanded(
                       child: Text(
                         l10n.report_selectIssueTypeWarning,
-                        style: AppTheme.lightTheme.textTheme.labelMedium
-                            ?.copyWith(
-                              color: AppTheme.lightTheme.colorScheme.error,
-                            ),
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.error,
+                        ),
                       ),
                     ),
                   ],
@@ -203,59 +195,56 @@ class SubmissionActionsWidget extends StatelessWidget {
   }
 
   Widget _buildUploadProgress(AppLocalizations l10n) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Builder(
+      builder: (context) {
+        final theme = Theme.of(context);
+        return Column(
           children: [
-            Text(
-              l10n.report_uploadingReport,
-              style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
-                color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                  alpha: 0.8,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  l10n.report_uploadingReport,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                  ),
                 ),
-              ),
+                Text(
+                  '${(uploadProgress * 100).toInt()}%',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.primaryColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              '${(uploadProgress * 100).toInt()}%',
-              style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
-                color: AppTheme.lightTheme.primaryColor,
-                fontWeight: FontWeight.w600,
-              ),
+            SizedBox(height: 1.h),
+            LinearProgressIndicator(
+              value: uploadProgress,
+              backgroundColor: theme.dividerColor,
+              valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
+              minHeight: 4,
+            ),
+            SizedBox(height: 1.h),
+            Row(
+              children: [
+                CustomIconWidget(
+                  iconName: 'cloud_upload',
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  size: 14,
+                ),
+                SizedBox(width: 1.w),
+                Text(
+                  l10n.report_syncingCloud,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-        SizedBox(height: 1.h),
-        LinearProgressIndicator(
-          value: uploadProgress,
-          backgroundColor: AppTheme.lightTheme.dividerColor,
-          valueColor: AlwaysStoppedAnimation<Color>(
-            AppTheme.lightTheme.primaryColor,
-          ),
-          minHeight: 4,
-        ),
-        SizedBox(height: 1.h),
-        Row(
-          children: [
-            CustomIconWidget(
-              iconName: 'cloud_upload',
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                alpha: 0.6,
-              ),
-              size: 14,
-            ),
-            SizedBox(width: 1.w),
-            Text(
-              l10n.report_syncingCloud,
-              style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
-                color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                  alpha: 0.6,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
+        );
+      },
     );
   }
 }

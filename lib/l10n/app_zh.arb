@@ -933,5 +933,74 @@
   "language_chinese": "中文",
   "@language_chinese": {
     "description": "中文语言选项"
+  },
+  
+  "settings_notifications": "通知",
+  "@settings_notifications": {
+    "description": "通知部分标题"
+  },
+  "settings_pushNotifications": "推送通知",
+  "@settings_pushNotifications": {
+    "description": "推送通知设置标签"
+  },
+  "settings_pushNotificationsDesc": "启用推送通知",
+  "@settings_pushNotificationsDesc": {
+    "description": "推送通知描述"
+  },
+  "settings_alertTypes": "警报类型",
+  "@settings_alertTypes": {
+    "description": "警报类型部分标题"
+  },
+  "settings_roadDamage": "路面损坏",
+  "@settings_roadDamage": {
+    "description": "路面损坏通知类型"
+  },
+  "settings_roadDamageDesc": "坑洞、裂缝和路面问题",
+  "@settings_roadDamageDesc": {
+    "description": "路面损坏描述"
+  },
+  "settings_constructionZones": "施工区域",
+  "@settings_constructionZones": {
+    "description": "施工区域通知类型"
+  },
+  "settings_constructionZonesDesc": "道路施工和车道封闭",
+  "@settings_constructionZonesDesc": {
+    "description": "施工区域描述"
+  },
+  "settings_weatherHazards": "天气危险",
+  "@settings_weatherHazards": {
+    "description": "天气危险通知类型"
+  },
+  "settings_weatherHazardsDesc": "大雾、结冰和天气状况",
+  "@settings_weatherHazardsDesc": {
+    "description": "天气危险描述"
+  },
+  "settings_trafficIncidents": "交通事故",
+  "@settings_trafficIncidents": {
+    "description": "交通事故通知类型"
+  },
+  "settings_trafficIncidentsDesc": "事故和交通延误",
+  "@settings_trafficIncidentsDesc": {
+    "description": "交通事故描述"
+  },
+  "settings_notificationBehavior": "通知行为",
+  "@settings_notificationBehavior": {
+    "description": "通知行为部分标题"
+  },
+  "settings_sound": "声音",
+  "@settings_sound": {
+    "description": "声音设置标签"
+  },
+  "settings_soundDesc": "为通知播放声音",
+  "@settings_soundDesc": {
+    "description": "声音设置描述"
+  },
+  "settings_vibration": "振动",
+  "@settings_vibration": {
+    "description": "振动设置标签"
+  },
+  "settings_vibrationDesc": "为通知振动设备",
+  "@settings_vibrationDesc": {
+    "description": "振动设置描述"
   }
 }

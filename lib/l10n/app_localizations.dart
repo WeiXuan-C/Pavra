@@ -1483,6 +1483,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'中文'**
   String get language_chinese;
+
+  /// Notifications section title
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get settings_notifications;
+
+  /// Push notifications setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get settings_pushNotifications;
+
+  /// Push notifications description
+  ///
+  /// In en, this message translates to:
+  /// **'Enable push notifications'**
+  String get settings_pushNotificationsDesc;
+
+  /// Alert types section title
+  ///
+  /// In en, this message translates to:
+  /// **'Alert Types'**
+  String get settings_alertTypes;
+
+  /// Road damage notification type
+  ///
+  /// In en, this message translates to:
+  /// **'Road Damage'**
+  String get settings_roadDamage;
+
+  /// Road damage description
+  ///
+  /// In en, this message translates to:
+  /// **'Potholes, cracks, and surface issues'**
+  String get settings_roadDamageDesc;
+
+  /// Construction zones notification type
+  ///
+  /// In en, this message translates to:
+  /// **'Construction Zones'**
+  String get settings_constructionZones;
+
+  /// Construction zones description
+  ///
+  /// In en, this message translates to:
+  /// **'Road work and lane closures'**
+  String get settings_constructionZonesDesc;
+
+  /// Weather hazards notification type
+  ///
+  /// In en, this message translates to:
+  /// **'Weather Hazards'**
+  String get settings_weatherHazards;
+
+  /// Weather hazards description
+  ///
+  /// In en, this message translates to:
+  /// **'Fog, ice, and weather conditions'**
+  String get settings_weatherHazardsDesc;
+
+  /// Traffic incidents notification type
+  ///
+  /// In en, this message translates to:
+  /// **'Traffic Incidents'**
+  String get settings_trafficIncidents;
+
+  /// Traffic incidents description
+  ///
+  /// In en, this message translates to:
+  /// **'Accidents and traffic delays'**
+  String get settings_trafficIncidentsDesc;
+
+  /// Notification behavior section title
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Behavior'**
+  String get settings_notificationBehavior;
+
+  /// Sound setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Sound'**
+  String get settings_sound;
+
+  /// Sound setting description
+  ///
+  /// In en, this message translates to:
+  /// **'Play sound for notifications'**
+  String get settings_soundDesc;
+
+  /// Vibration setting label
+  ///
+  /// In en, this message translates to:
+  /// **'Vibration'**
+  String get settings_vibration;
+
+  /// Vibration setting description
+  ///
+  /// In en, this message translates to:
+  /// **'Vibrate for notifications'**
+  String get settings_vibrationDesc;
 }
 
 class _AppLocalizationsDelegate

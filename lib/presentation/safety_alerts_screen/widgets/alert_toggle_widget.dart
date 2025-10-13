@@ -23,9 +23,9 @@ class AlertToggleWidget extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.cardColor,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.lightTheme.dividerColor, width: 1),
+        border: Border.all(color: Theme.of(context).dividerColor, width: 1),
       ),
       child: Row(
         children: [
@@ -33,21 +33,15 @@ class AlertToggleWidget extends StatelessWidget {
             padding: EdgeInsets.all(2.w),
             decoration: BoxDecoration(
               color: isEnabled
-                  ? AppTheme.lightTheme.colorScheme.primary.withValues(
-                      alpha: 0.1,
-                    )
-                  : AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                      alpha: 0.1,
-                    ),
+                  ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
+                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: CustomIconWidget(
               iconName: iconName,
               color: isEnabled
-                  ? AppTheme.lightTheme.colorScheme.primary
-                  : AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                      alpha: 0.5,
-                    ),
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
               size: 6.w,
             ),
           ),
@@ -55,12 +49,10 @@ class AlertToggleWidget extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: isEnabled
-                    ? AppTheme.lightTheme.colorScheme.onSurface
-                    : AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                        alpha: 0.7,
-                      ),
+                    ? Theme.of(context).colorScheme.onSurface
+                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -68,11 +60,9 @@ class AlertToggleWidget extends StatelessWidget {
           Switch(
             value: isEnabled,
             onChanged: onChanged,
-            activeThumbColor: AppTheme.lightTheme.colorScheme.primary,
-            inactiveThumbColor: AppTheme.lightTheme.colorScheme.onSurface
-                .withValues(alpha: 0.5),
-            inactiveTrackColor: AppTheme.lightTheme.colorScheme.onSurface
-                .withValues(alpha: 0.2),
+            activeThumbColor: Theme.of(context).colorScheme.primary,
+            inactiveThumbColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+            inactiveTrackColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
           ),
         ],
       ),

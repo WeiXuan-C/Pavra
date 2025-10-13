@@ -27,9 +27,9 @@ class LocationInfoWidget extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.lightTheme.dividerColor, width: 1),
+        border: Border.all(color: Theme.of(context).dividerColor, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,14 +39,14 @@ class LocationInfoWidget extends StatelessWidget {
             children: [
               CustomIconWidget(
                 iconName: 'location_on',
-                color: AppTheme.lightTheme.primaryColor,
+                color: Theme.of(context).colorScheme.primary,
                 size: 20,
               ),
               SizedBox(width: 2.w),
               Expanded(
                 child: Text(
                   l10n.report_locationDetails,
-                  style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -56,14 +56,12 @@ class LocationInfoWidget extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(1.w),
                   decoration: BoxDecoration(
-                    color: AppTheme.lightTheme.primaryColor.withValues(
-                      alpha: 0.1,
-                    ),
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: CustomIconWidget(
                     iconName: 'refresh',
-                    color: AppTheme.lightTheme.primaryColor,
+                    color: Theme.of(context).colorScheme.primary,
                     size: 16,
                   ),
                 ),
@@ -91,11 +89,9 @@ class LocationInfoWidget extends StatelessWidget {
                   children: [
                     Text(
                       l10n.report_address,
-                      style: AppTheme.lightTheme.textTheme.labelMedium
-                          ?.copyWith(
-                            color: AppTheme.lightTheme.colorScheme.onSurface
-                                .withValues(alpha: 0.6),
-                          ),
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                      ),
                     ),
                     SizedBox(height: 0.5.h),
                     Text(

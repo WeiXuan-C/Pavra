@@ -157,7 +157,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Notifications',
+                          l10n.settings_notifications,
                           style: theme.textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
@@ -165,8 +165,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         
                         // Push Notifications
                         SwitchListTile(
-                          title: const Text('Push Notifications'),
-                          subtitle: const Text('Enable push notifications'),
+                          title: Text(l10n.settings_pushNotifications),
+                          subtitle: Text(l10n.settings_pushNotificationsDesc),
                           value: _pushNotificationsEnabled,
                           onChanged: (value) {
                             setState(() {
@@ -180,7 +180,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                         // Alert Type Notifications
                         Text(
-                          'Alert Types',
+                          l10n.settings_alertTypes,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -189,8 +189,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                         // Road Damage
                         SwitchListTile(
-                          title: const Text('Road Damage'),
-                          subtitle: const Text('Potholes, cracks, and surface issues'),
+                          title: Text(l10n.settings_roadDamage),
+                          subtitle: Text(l10n.settings_roadDamageDesc),
                           value: _roadDamageNotifications,
                           onChanged: _pushNotificationsEnabled
                               ? (value) {
@@ -204,8 +204,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                         // Construction Zones
                         SwitchListTile(
-                          title: const Text('Construction Zones'),
-                          subtitle: const Text('Road work and lane closures'),
+                          title: Text(l10n.settings_constructionZones),
+                          subtitle: Text(l10n.settings_constructionZonesDesc),
                           value: _constructionZonesNotifications,
                           onChanged: _pushNotificationsEnabled
                               ? (value) {
@@ -219,8 +219,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                         // Weather Hazards
                         SwitchListTile(
-                          title: const Text('Weather Hazards'),
-                          subtitle: const Text('Fog, ice, and weather conditions'),
+                          title: Text(l10n.settings_weatherHazards),
+                          subtitle: Text(l10n.settings_weatherHazardsDesc),
                           value: _weatherHazardsNotifications,
                           onChanged: _pushNotificationsEnabled
                               ? (value) {
@@ -234,8 +234,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                         // Traffic Incidents
                         SwitchListTile(
-                          title: const Text('Traffic Incidents'),
-                          subtitle: const Text('Accidents and traffic delays'),
+                          title: Text(l10n.settings_trafficIncidents),
+                          subtitle: Text(l10n.settings_trafficIncidentsDesc),
                           value: _trafficIncidentsNotifications,
                           onChanged: _pushNotificationsEnabled
                               ? (value) {
@@ -251,7 +251,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                         // Notification Behavior
                         Text(
-                          'Notification Behavior',
+                          l10n.settings_notificationBehavior,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -260,8 +260,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                         // Sound
                         SwitchListTile(
-                          title: const Text('Sound'),
-                          subtitle: const Text('Play sound for notifications'),
+                          title: Text(l10n.settings_sound),
+                          subtitle: Text(l10n.settings_soundDesc),
                           value: _soundEnabled,
                           onChanged: _pushNotificationsEnabled
                               ? (value) {
@@ -275,8 +275,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                         // Vibration
                         SwitchListTile(
-                          title: const Text('Vibration'),
-                          subtitle: const Text('Vibrate for notifications'),
+                          title: Text(l10n.settings_vibration),
+                          subtitle: Text(l10n.settings_vibrationDesc),
                           value: _vibrationEnabled,
                           onChanged: _pushNotificationsEnabled
                               ? (value) {

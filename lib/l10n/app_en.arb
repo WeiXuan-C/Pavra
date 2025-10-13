@@ -933,5 +933,74 @@
   "language_chinese": "中文",
   "@language_chinese": {
     "description": "Chinese language option"
+  },
+  
+  "settings_notifications": "Notifications",
+  "@settings_notifications": {
+    "description": "Notifications section title"
+  },
+  "settings_pushNotifications": "Push Notifications",
+  "@settings_pushNotifications": {
+    "description": "Push notifications setting label"
+  },
+  "settings_pushNotificationsDesc": "Enable push notifications",
+  "@settings_pushNotificationsDesc": {
+    "description": "Push notifications description"
+  },
+  "settings_alertTypes": "Alert Types",
+  "@settings_alertTypes": {
+    "description": "Alert types section title"
+  },
+  "settings_roadDamage": "Road Damage",
+  "@settings_roadDamage": {
+    "description": "Road damage notification type"
+  },
+  "settings_roadDamageDesc": "Potholes, cracks, and surface issues",
+  "@settings_roadDamageDesc": {
+    "description": "Road damage description"
+  },
+  "settings_constructionZones": "Construction Zones",
+  "@settings_constructionZones": {
+    "description": "Construction zones notification type"
+  },
+  "settings_constructionZonesDesc": "Road work and lane closures",
+  "@settings_constructionZonesDesc": {
+    "description": "Construction zones description"
+  },
+  "settings_weatherHazards": "Weather Hazards",
+  "@settings_weatherHazards": {
+    "description": "Weather hazards notification type"
+  },
+  "settings_weatherHazardsDesc": "Fog, ice, and weather conditions",
+  "@settings_weatherHazardsDesc": {
+    "description": "Weather hazards description"
+  },
+  "settings_trafficIncidents": "Traffic Incidents",
+  "@settings_trafficIncidents": {
+    "description": "Traffic incidents notification type"
+  },
+  "settings_trafficIncidentsDesc": "Accidents and traffic delays",
+  "@settings_trafficIncidentsDesc": {
+    "description": "Traffic incidents description"
+  },
+  "settings_notificationBehavior": "Notification Behavior",
+  "@settings_notificationBehavior": {
+    "description": "Notification behavior section title"
+  },
+  "settings_sound": "Sound",
+  "@settings_sound": {
+    "description": "Sound setting label"
+  },
+  "settings_soundDesc": "Play sound for notifications",
+  "@settings_soundDesc": {
+    "description": "Sound setting description"
+  },
+  "settings_vibration": "Vibration",
+  "@settings_vibration": {
+    "description": "Vibration setting label"
+  },
+  "settings_vibrationDesc": "Vibrate for notifications",
+  "@settings_vibrationDesc": {
+    "description": "Vibration setting description"
   }
 }

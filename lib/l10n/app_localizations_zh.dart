@@ -700,4 +700,55 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get language_chinese => '中文';
+
+  @override
+  String get settings_notifications => '通知';
+
+  @override
+  String get settings_pushNotifications => '推送通知';
+
+  @override
+  String get settings_pushNotificationsDesc => '启用推送通知';
+
+  @override
+  String get settings_alertTypes => '警报类型';
+
+  @override
+  String get settings_roadDamage => '路面损坏';
+
+  @override
+  String get settings_roadDamageDesc => '坑洞、裂缝和路面问题';
+
+  @override
+  String get settings_constructionZones => '施工区域';
+
+  @override
+  String get settings_constructionZonesDesc => '道路施工和车道封闭';
+
+  @override
+  String get settings_weatherHazards => '天气危险';
+
+  @override
+  String get settings_weatherHazardsDesc => '大雾、结冰和天气状况';
+
+  @override
+  String get settings_trafficIncidents => '交通事故';
+
+  @override
+  String get settings_trafficIncidentsDesc => '事故和交通延误';
+
+  @override
+  String get settings_notificationBehavior => '通知行为';
+
+  @override
+  String get settings_sound => '声音';
+
+  @override
+  String get settings_soundDesc => '为通知播放声音';
+
+  @override
+  String get settings_vibration => '振动';
+
+  @override
+  String get settings_vibrationDesc => '为通知振动设备';
 }
