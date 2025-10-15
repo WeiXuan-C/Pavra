@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION public.handle_new_user()
+CREATE OR REPLACE FUNCTION public.handle_new_user() -- handle_new_oauth_user, handle_confirmed_user
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
