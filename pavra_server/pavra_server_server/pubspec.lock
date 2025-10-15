@@ -274,7 +274,7 @@ packages:
     source: hosted
     version: "2.2.0"
   redis:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: redis
       sha256: "4a8218ef7b0642ff499147c7a105591208259e2f55f07db0101ace7f82f66cf9"

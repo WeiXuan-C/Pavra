@@ -21,13 +21,14 @@ class PhotoGalleryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.lightTheme.dividerColor, width: 1),
+        border: Border.all(color: theme.dividerColor, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,15 +44,15 @@ class PhotoGalleryWidget extends StatelessWidget {
               SizedBox(width: 2.w),
               Text(
                 l10n.report_additionalPhotos,
-                style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+                style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
               const Spacer(),
               Text(
                 '${imageUrls.length}/$maxPhotos',
-                style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
-                  color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(
                     alpha: 0.6,
                   ),
                 ),
@@ -63,8 +64,8 @@ class PhotoGalleryWidget extends StatelessWidget {
 
           Text(
             l10n.report_addPhotoHint,
-            style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(
                 alpha: 0.6,
               ),
             ),
@@ -74,7 +75,7 @@ class PhotoGalleryWidget extends StatelessWidget {
 
           // Photo grid
           if (imageUrls.isEmpty)
-            _buildEmptyState(l10n)
+            _buildEmptyState(context, l10n)
           else
             SizedBox(
               height: 25.h,
@@ -84,7 +85,7 @@ class PhotoGalleryWidget extends StatelessWidget {
                     (imageUrls.length < maxPhotos ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (index == imageUrls.length) {
-                    return _buildAddPhotoCard(l10n);
+                    return _buildAddPhotoCard(context, l10n);
                   }
                   return _buildPhotoThumbnail(imageUrls[index], index);
                 },
@@ -153,17 +154,18 @@ class PhotoGalleryWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildAddPhotoCard(AppLocalizations l10n) {
+  Widget _buildAddPhotoCard(BuildContext context, AppLocalizations l10n) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: onAddPhoto,
       child: Container(
         width: 30.w,
         height: 25.h,
         decoration: BoxDecoration(
-          color: AppTheme.lightTheme.primaryColor.withValues(alpha: 0.1),
+          color: theme.primaryColor.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: AppTheme.lightTheme.primaryColor.withValues(alpha: 0.3),
+            color: theme.primaryColor.withValues(alpha: 0.3),
             width: 2,
             style: BorderStyle.solid,
           ),
@@ -171,24 +173,24 @@ class PhotoGalleryWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CustomIconWidget(
+              CustomIconWidget(
               iconName: 'add_a_photo',
-              color: AppTheme.lightTheme.primaryColor,
+              color: theme.primaryColor,
               size: 32,
             ),
             SizedBox(height: 1.h),
             Text(
               l10n.report_addPhoto,
-              style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
-                color: AppTheme.lightTheme.primaryColor,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.primaryColor,
                 fontWeight: FontWeight.w600,
               ),
             ),
             SizedBox(height: 0.5.h),
             Text(
               '${maxPhotos - imageUrls.length} ${l10n.report_photosLeft}',
-              style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
-                color: AppTheme.lightTheme.primaryColor.withValues(alpha: 0.7),
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.primaryColor.withValues(alpha: 0.7),
               ),
             ),
           ],
@@ -197,21 +199,22 @@ class PhotoGalleryWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState(AppLocalizations l10n) {
+  Widget _buildEmptyState(BuildContext context, AppLocalizations l10n) {
+    final theme = Theme.of(context);
     return Container(
       width: double.infinity,
       height: 20.h,
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface.withValues(alpha: 0.5),
+        color: theme.colorScheme.surface.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppTheme.lightTheme.dividerColor, width: 1),
+        border: Border.all(color: theme.dividerColor, width: 1),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CustomIconWidget(
             iconName: 'photo_library',
-            color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
+            color: theme.colorScheme.onSurface.withValues(
               alpha: 0.4,
             ),
             size: 32,
@@ -219,8 +222,8 @@ class PhotoGalleryWidget extends StatelessWidget {
           SizedBox(height: 1.h),
           Text(
             l10n.report_noAdditionalPhotos,
-            style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(
                 alpha: 0.6,
               ),
             ),

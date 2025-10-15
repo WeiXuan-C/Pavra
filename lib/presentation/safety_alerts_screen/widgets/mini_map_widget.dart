@@ -28,11 +28,17 @@ class MiniMapWidget extends StatelessWidget {
               width: double.infinity,
               height: double.infinity,
               decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withValues(
-                  alpha: 0.05,
+                color: theme.brightness == Brightness.light
+                    ? const Color(0xFFF5F5F5)  // 浅灰色背景用于浅色模式
+                    : const Color(0xFF1A1A1A),  // 深灰色背景用于深色模式
+              ),
+              child: CustomPaint(
+                painter: _GridPainter(
+                  theme.brightness == Brightness.light
+                      ? const Color(0xFF000000)  // 浅色模式下的深色网格
+                      : const Color(0xFFFFFFFF), // 深色模式下的浅色网格
                 ),
               ),
-              child: CustomPaint(painter: _GridPainter(theme.colorScheme.onSurface)),
             ),
             // Center location marker
             Center(

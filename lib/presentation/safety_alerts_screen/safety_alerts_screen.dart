@@ -363,10 +363,10 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
                   margin: EdgeInsets.symmetric(horizontal: 4.w),
                   padding: EdgeInsets.all(4.w),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                    color: theme.colorScheme.primary.withAlpha(26), // 0.1 * 255 ≈ 26
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                      color: theme.colorScheme.primary.withAlpha(51), // 0.2 * 255 ≈ 51
                     ),
                   ),
                   child: Column(
@@ -393,9 +393,7 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
                       Text(
                         l10n.alerts_routeMonitoringInfo,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.8,
-                          ),
+                          color: theme.colorScheme.onSurface.withAlpha(204),
                         ),
                       ),
                     ],
@@ -422,7 +420,7 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
             Container(
               padding: EdgeInsets.all(8.w),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                color: theme.colorScheme.primary.withAlpha(26),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -443,7 +441,7 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
             Text(
               l10n.alerts_noAlertsMessage,
               style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                color: theme.colorScheme.onSurface.withAlpha(179),
               ),
               textAlign: TextAlign.center,
             ),

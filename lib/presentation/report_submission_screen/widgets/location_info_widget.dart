@@ -56,7 +56,7 @@ class LocationInfoWidget extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(1.w),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                    color: Theme.of(context).colorScheme.primary.withAlpha(26), // 0.1 * 255 ≈ 26
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: CustomIconWidget(
@@ -77,9 +77,7 @@ class LocationInfoWidget extends StatelessWidget {
             children: [
               CustomIconWidget(
                 iconName: 'place',
-                color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                  alpha: 0.6,
-                ),
+                color: Theme.of(context).colorScheme.onSurface.withAlpha(153), // 0.6 * 255 ≈ 153
                 size: 16,
               ),
               SizedBox(width: 2.w),
@@ -90,13 +88,13 @@ class LocationInfoWidget extends StatelessWidget {
                     Text(
                       l10n.report_address,
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: Theme.of(context).colorScheme.onSurface.withAlpha(153), // 0.6 * 255 ≈ 153
                       ),
                     ),
                     SizedBox(height: 0.5.h),
                     Text(
                       streetAddress,
-                      style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -113,6 +111,7 @@ class LocationInfoWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildCoordinateItem(
+                  context,
                   'Latitude',
                   latitude.toStringAsFixed(6),
                   'my_location',
@@ -121,6 +120,7 @@ class LocationInfoWidget extends StatelessWidget {
               SizedBox(width: 4.w),
               Expanded(
                 child: _buildCoordinateItem(
+                  context,
                   'Longitude',
                   longitude.toStringAsFixed(6),
                   'my_location',
@@ -142,18 +142,21 @@ class LocationInfoWidget extends StatelessWidget {
               SizedBox(width: 2.w),
               Text(
                 'GPS Accuracy: ${accuracy.toStringAsFixed(1)}m',
-                style: AppTheme.dataTextStyle(isLight: true, fontSize: 12.sp),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontFamily: 'JetBrains Mono',
+                  fontSize: 12.sp,
+                ),
               ),
               SizedBox(width: 2.w),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
                 decoration: BoxDecoration(
-                  color: _getAccuracyColor().withValues(alpha: 0.1),
+                  color: _getAccuracyColor().withAlpha(26), // 0.1 * 255 ≈ 26
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   _getAccuracyLabel(),
-                  style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: _getAccuracyColor(),
                     fontWeight: FontWeight.w600,
                   ),
@@ -166,7 +169,7 @@ class LocationInfoWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildCoordinateItem(String label, String value, String iconName) {
+  Widget _buildCoordinateItem(BuildContext context, String label, String value, String iconName) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -174,18 +177,14 @@ class LocationInfoWidget extends StatelessWidget {
           children: [
             CustomIconWidget(
               iconName: iconName,
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                alpha: 0.6,
-              ),
+              color: Theme.of(context).colorScheme.onSurface.withAlpha(153), // 0.6 * 255 ≈ 153
               size: 14,
             ),
             SizedBox(width: 1.w),
             Text(
               label,
-              style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
-                color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                  alpha: 0.6,
-                ),
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withAlpha(153), // 0.6 * 255 ≈ 153
               ),
             ),
           ],
@@ -193,7 +192,10 @@ class LocationInfoWidget extends StatelessWidget {
         SizedBox(height: 0.5.h),
         Text(
           value,
-          style: AppTheme.dataTextStyle(isLight: true, fontSize: 12.sp),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            fontFamily: 'JetBrains Mono',
+            fontSize: 12.sp,
+          ),
         ),
       ],
     );
