@@ -64,4 +64,4 @@ futureCallExecutionEnabled: false # Defaults to true
 #  scanInterval: 5000 # Unit in milliseconds, defaults to 5000
 
 # Security secret — you create this yourself
-serviceSecret: pavra_super_secret_key_userx3C!
+serviceSecret: ${SERVICE_SECRET}

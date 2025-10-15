@@ -3,11 +3,12 @@ import 'package:pavra_server_server/src/web/routes/root.dart';
 import 'src/generated/protocol.dart';
 import 'src/generated/endpoints.dart';
 import 'src/services/redis_service.dart';
+import 'src/tasks/sync_action_logs.dart';
 
 /// Names of all future calls in the server.
 ///
 /// Declaring it here ensures it's globally accessible and avoids syntax errors.
-enum FutureCallNames { birthdayReminder }
+enum FutureCallNames { birthdayReminder, actionLogSync }
 
 void run(List<String> args) async {
   // Initialize Serverpod and connect it with your generated code.
@@ -15,6 +16,9 @@ void run(List<String> args) async {
 
   // Initialize Redis connection
   await _initializeRedis(pod);
+
+  // Initialize action log sync to Supabase
+  await initializeActionLogSync(pod);
 
   // Setup a default page at the web root.
   pod.webServer.addRoute(RouteRoot(), '/');

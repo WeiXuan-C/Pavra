@@ -3,124 +3,92 @@
 
 ---
 
-## 🌍 Project Description  
+## 🌍 Overview
 **Pavra** is a mobile application that leverages **AI** and **geolocation technology** to enhance road care, quality, and safety.  
-The app empowers road users, drivers, and local authorities to **detect**, **report**, and **analyze** road conditions in real time.  
+The app empowers users and drivers to **detect**, **report**, and **analyze** road conditions in real time.  
 
-By combining **mobile intelligence**, **computer vision**, and **gamified engagement**, Pavra aims to create **smarter roads and safer journeys** for everyone.
+By combining **mobile intelligence**, **computer vision**, and **gamified engagement**, Pavra helps create **smarter roads and safer journeys** for everyone.
 
 ---
 
 ## 🧠 Tech Stack
-- **Framework:** Flutter (Dart) – cross-platform mobile development  
-- **AI Model:** YOLOv8n – deployed on Hugging Face Spaces (cloud inference)  
-- **Database:** Supabase – store reports, user data, and metadata  
-- **Storage:** Supabase Storage – road image storage and history  
-- **Map & GPS:** Google Maps Flutter plugin – visualize reports and user position  
-- **Location Services:** geolocator – GPS tracking and location tagging  
-- **Push Notifications:** OneSignal – road alerts and authority updates  
-- **Text-to-Speech:** flutter_tts – real-time road safety voice alerts  
-- **State Management:** Provider – manage user state, detection data, and UI updates  
-- **Version Control:** GitHub – collaborative development  
+
+| Layer | Technology | Purpose |
+|-------|-------------|----------|
+| **Frontend** | Flutter (Dart) | Cross-platform mobile development |
+| **Backend** | Serverpod | Custom server logic and Redis caching |
+| **Database** | Supabase (PostgreSQL) | Manage user and report data |
+| **Storage** | Supabase Storage | Store road images and history |
+| **AI Model** | YOLOv8n (Hugging Face Spaces) | Detect road damages such as cracks or potholes |
+| **Map & GPS** | Google Maps Flutter, Geolocator | Display and track report locations |
+| **Push Notifications** | OneSignal | Send nearby hazard alerts |
+| **Text-to-Speech** | flutter_tts | Real-time voice safety alerts |
+| **State Management** | Provider | Manage user, report, and UI state |
+| **Cache Layer** | Redis | Store short-term data such as action logs |
+| **Version Control** | GitHub | Collaborative development and versioning |
 
 ---
 
-## ⚙️ Key Modules
-1. **Authentication & User Roles**  
-   - Email/password login & registration  
-   - Role-based access: *User* (reporter) & *Authority* (reviewer)
+## ⚙️ Core Modules
 
-2. **Road Condition Detection**  
-   - Capture or upload road images  
-   - AI (YOLOv8n) detects potholes, cracks, or obstacles in real time  
+### 1. Authentication
+- Email/password registration and login via Supabase Auth
+- Persistent session management
+- Route guard middleware for authenticated navigation
 
-3. **Report Management**  
-   - Review and submit detected issues with geotagged images  
-   - Sync data to Supabase for public + authority visibility  
+### 2. Road Condition Detection
+- Capture or upload road images  
+- YOLOv8n detects potholes, cracks, or obstacles  
+- Real-time inference through Hugging Face API  
 
-4. **Map Visualization**  
-   - Display reported issues with color-coded markers based on status or severity  
+### 3. Report Management
+- Submit detected issues with geolocation  
+- Upload road images to Supabase Storage  
+- View and manage past reports  
 
-5. **Real-time Voice Safety Alerts**  
-   - *Smart Drive Mode* analyzes the road in front of the vehicle using the camera  
-   - AI detects damage and triggers **voice alerts** via Text-to-Speech  
-   - Example: “⚠️ Pothole detected ahead. Please slow down.”  
-   - Integrates with Google Maps distance tracking to warn of nearby hazards  
+### 4. Map Visualization
+- Interactive Google Map to view all reports  
+- Color-coded markers based on severity or status  
+- Tap marker → open detailed report info  
 
-6. **Gamification: Road Hero System**  
-   - Users earn points for reporting or verifying road issues  
-   - Unlock badges for milestones (e.g., “First 10 Reports”, “Safety Guardian”)  
-   - Global leaderboard to encourage engagement and local impact  
-   - Points & badges stored in Supabase and synced to user profiles  
+### 5. Smart Drive Mode (Voice Alerts)
+- Live GPS tracking  
+- Detect nearby hazards in real time  
+- Text-to-Speech warnings such as  
+  > “⚠️ Pothole detected ahead. Please slow down.”  
 
-7. **Analytics Dashboard**  
-   - Visual insights into frequently reported areas and issue types  
+### 6. Gamification System
+- Users earn points for contributing valid reports  
+- Unlock badges for milestones (e.g. “First 10 Reports”)  
+- Leaderboard to encourage engagement  
+- Data synced to Supabase  
 
-8. **Safety Alerts & Notifications**  
-   - Notify users of nearby hazards or new authority updates via OneSignal  
+### 7. Notifications & Alerts
+- Push alerts for nearby hazards or updates  
+- Powered by OneSignal  
+
+### 8. Analytics Dashboard *(Future Phase)*
+- Visualize reported issues and patterns  
+- Useful for identifying high-risk road areas  
 
 ---
 
 ## 🧩 Key Features
-- Real-time AI damage detection  
-- GPS-based tagging  
-- Cloud-synced reports  
-- Real-time **voice warnings for road hazards**  
-- **Gamified user engagement** (points, badges, leaderboard)  
-- Clean, intuitive UI for quick use while driving  
+- 🤖 Real-time AI road damage detection  
+- 📍 GPS-based location tagging  
+- ☁️ Cloud-synced reports  
+- 🔊 Voice alerts for nearby hazards  
+- 🏅 Gamified user engagement (points, badges, leaderboard)  
+- 🌗 Light/Dark mode + i10n localization  
 
 ---
 
 ## 🔁 Workflow Overview
-1. User opens Pavra app  
-2. Captures or streams a road video/image  
-3. AI model (YOLOv8n) analyzes the frame  
-4. Detected damage tagged with GPS coordinates  
-5. Pavra triggers **voice warning** if a hazard is detected nearby  
-6. User reviews and submits the report  
-7. Report stored in Supabase and visible on the map  
-8. User earns **points and badges** for contribution  
-9. Authorities view data and issue public safety alerts  
-
----
-
-## 🚀 Build Steps
-1. Install Flutter SDK  
-2. Clone repository:  
-   ```bash
-   git clone https://github.com/<your-username>/pavra.git
-   cd pavra
-   ```
-3. Install dependencies:  
-   ```bash
-   flutter pub get
-   ```
-4. Connect your device or emulator  
-5. Run the app:  
-   ```bash
-   flutter run
-   ```
-6. (Optional) Set up environment variables for Supabase and Hugging Face endpoints  
-
----
-
-## 🌟 Hackathon Highlights
-| Feature | Description | Impact |
-|----------|--------------|--------|
-| **AI Detection** | Real-time YOLOv8n model detects road damage | Smart, automated road awareness |
-| **Voice Alerts** | Warn drivers in real time about nearby hazards | Improves road safety instantly |
-| **Gamification** | Reward users for helping their community | Boosts engagement & data reliability |
-| **Open Data Dashboard** | Insights for authorities | Enables preventive maintenance |
-
----
-
-## 🧭 Future Enhancements
-- AR-based reporting (mark damage directly on camera view)  
-- Predictive analytics to forecast high-risk areas  
-- Integration with municipal maintenance systems  
-- Offline AI detection support  
-
----
-
-## 🏁 License
-MIT License © 2025 Pavra Team  
+1. User opens Pavra  
+2. Captures or uploads a road image/video  
+3. YOLOv8n detects damage and returns predictions  
+4. App tags result with GPS coordinates  
+5. Pavra issues voice alert if a nearby hazard is found  
+6. User confirms and submits the report  
+7. Report stored in Supabase and displayed on map  
+8. User earns points and badges  

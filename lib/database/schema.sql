@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS public.action_log (
   target_table TEXT,                 -- optional table name
   description TEXT,                  -- e.g. "User submitted report #23"
   metadata JSONB DEFAULT '{}',       -- extra data
-  created_at TIMESTAMPTZ DEFAULT now()
+  created_at TIMESTAMPTZ DEFAULT now(),
+  is_synced BOOLEAN DEFAULT FALSE
 );
 
 
@@ -93,6 +94,7 @@ CREATE TRIGGER trg_set_updated_at_notifications
 CREATE INDEX IF NOT EXISTS idx_action_log_user_id ON public.action_log(user_id);
 CREATE INDEX IF NOT EXISTS idx_action_log_created_at ON public.action_log(created_at);
 CREATE INDEX IF NOT EXISTS idx_action_log_action_type ON public.action_log(action_type);
+CREATE INDEX IF NOT EXISTS idx_action_log_is_synced ON action_log(is_synced) WHERE is_synced = FALSE;
 
 -- NOTIFICATIONS
 CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON public.notifications(user_id);
