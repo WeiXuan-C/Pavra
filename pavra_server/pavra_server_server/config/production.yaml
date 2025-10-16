@@ -57,7 +57,7 @@ sessionLogs:
   persistentEnabled: false
 # consoleLogFormat: json # Defaults to "json", options are "text" or "json"
 
-futureCallExecutionEnabled: false # Defaults to true
+futureCallExecutionEnabled: true #defaults to true
 
 #futureCall:
 #  concurrencyLimit: 1 # Defaults to 1, a negative or null value removes the limit

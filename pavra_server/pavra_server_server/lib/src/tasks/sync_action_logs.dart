@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:pavra_server_server/server.dart';
 import 'package:http/http.dart' as http;
 import 'package:serverpod/serverpod.dart';
 
@@ -170,6 +171,15 @@ class ActionLogSyncTask extends FutureCall {
 
   /// Schedules the next sync
   void _scheduleNextSync(Session session) {
+    if (!session.serverpod.config.futureCallExecutionEnabled ||
+        session.serverpod.config.redis?.enabled != true) {
+      session.log(
+        'Skipping scheduling next action log sync: future calls or Redis not enabled',
+        level: LogLevel.warning,
+      );
+      return;
+    }
+
     session.serverpod.futureCallAtTime(
       'actionLogSync',
       null,
@@ -180,10 +190,18 @@ class ActionLogSyncTask extends FutureCall {
 
 /// Initialize the action log sync task
 Future<void> initializeActionLogSync(Serverpod pod) async {
-  // Schedule the first sync to run 30 seconds after server start
-  await pod.futureCallAtTime(
-    'actionLogSync',
+  if (!pod.config.futureCallExecutionEnabled ||
+      pod.config.redis?.enabled != true) {
+    print(
+        '⚠️ Future calls disabled or Redis not enabled, skipping action log sync.');
+    return;
+  }
+
+  await pod.futureCallWithDelay(
+    FutureCallNames.actionLogSync.name,
     null,
-    DateTime.now().add(const Duration(seconds: 30)),
+    Duration(minutes: 10),
   );
+
+  print('✓ Action log sync task registered.');
 }

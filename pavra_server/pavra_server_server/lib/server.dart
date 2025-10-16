@@ -1,4 +1,5 @@
 import 'package:serverpod/serverpod.dart';
+import 'package:logging/logging.dart'; // ✅ Add this line
 import 'package:pavra_server_server/src/web/routes/root.dart';
 import 'src/generated/protocol.dart';
 import 'src/generated/endpoints.dart';
@@ -10,6 +11,39 @@ import 'src/tasks/sync_action_logs.dart';
 /// Declaring it here ensures it's globally accessible and avoids syntax errors.
 enum FutureCallNames { birthdayReminder, actionLogSync }
 
+/// Custom logging helper that adapts to dev / production mode.
+class PLog {
+  static bool get _isDebug => !bool.fromEnvironment('dart.vm.product');
+  static final _logger = Logger('PavraServer');
+
+  static void info(String message) {
+    if (_isDebug) {
+      print('ℹ️ [INFO] $message');
+    } else {
+      _logger.info(message);
+    }
+  }
+
+  static void warn(String message) {
+    if (_isDebug) {
+      print('⚠️ [WARN] $message');
+    } else {
+      _logger.warning(message);
+    }
+  }
+
+  static void error(String message, [Object? e, StackTrace? stack]) {
+    if (_isDebug) {
+      print('❌ [ERROR] $message');
+      if (e != null) print('Exception: $e');
+      if (stack != null) print(stack);
+    } else {
+      _logger.severe(message, e, stack);
+    }
+  }
+}
+
+/// Entry point of the Serverpod backend.
 void run(List<String> args) async {
   // Initialize Serverpod and connect it with your generated code.
   final pod = Serverpod(args, Protocol(), Endpoints());
@@ -31,15 +65,6 @@ void run(List<String> args) async {
 
   // Start the server.
   await pod.start();
-
-  // (Optional) Example only – comment out if not ready:
-  // if (!pod.runtimeOptions.runMode.isDevelopment) {
-  //   await pod.futureCallWithDelay(
-  //     FutureCallNames.birthdayReminder,
-  //     Duration(days: 1),
-  //     {'userId': 123},
-  //   );
-  // }
 }
 
 /// Initialize Redis connection using configuration from yaml files.
@@ -49,7 +74,7 @@ Future<void> _initializeRedis(Serverpod pod) async {
 
     // Check if Redis is enabled in config
     if (config.redis?.enabled != true) {
-      print('Redis is disabled in configuration');
+      PLog.warn('Redis is disabled in configuration.');
       return;
     }
 
@@ -58,22 +83,19 @@ Future<void> _initializeRedis(Serverpod pod) async {
     final redisPassword = config.redis?.password;
 
     if (redisHost == null || redisHost.isEmpty) {
-      print('ERROR: Redis host not configured');
+      PLog.error('Redis host not configured.');
       return;
     }
 
-    print('Initializing Redis connection to $redisHost:$redisPort...');
-
+    PLog.info('Connecting to Redis at $redisHost:$redisPort...');
     await RedisService.initialize(
       host: redisHost,
       port: redisPort,
       password: redisPassword,
     );
-
-    print('✓ Redis initialized successfully');
-  } catch (e, stackTrace) {
-    print('ERROR: Failed to initialize Redis: $e');
-    print(stackTrace);
+    PLog.info('✓ Redis connection established successfully.');
+  } catch (e, stack) {
+    PLog.error('Failed to initialize Redis.', e, stack);
     // Don't rethrow - server should continue even if Redis fails
   }
 }
