@@ -7,7 +7,7 @@
 # Configuration for the main API server.
 apiServer:
   port: 8080
-  publicHost: https://your-railway-app.up.railway.app
+  publicHost: ${PUBLIC_HOST}
   publicPort: 443
   publicScheme: https
 
@@ -47,7 +47,7 @@ redis:
   host: ${REDIS_HOST}
   port: ${REDIS_PORT}
   password: ${REDIS_PASSWORD}
-  #user: # defaults to empty
+  user: ${REDIS_USER}
   #requireSsl: true # defaults to false
 
 maxRequestSize: 524288 # The maximum size of requests allowed in bytes
