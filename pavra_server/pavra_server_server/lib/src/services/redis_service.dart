@@ -145,6 +145,32 @@ class RedisService {
     }
   }
 
+  /// Push a value to the left of a Redis list (LPUSH).
+  Future<void> lpush(String key, String value) async {
+    try {
+      await _ensureConnected();
+      await _command.send_object(['LPUSH', key, value]);
+      PLog.info('LPUSH to Redis key: $key');
+    } catch (e, stack) {
+      _isConnected = false;
+      PLog.error('Failed to LPUSH to Redis key: $key', e, stack);
+      rethrow;
+    }
+  }
+
+  /// Pop a value from the right of a Redis list (RPOP).
+  Future<String?> rpop(String key) async {
+    try {
+      await _ensureConnected();
+      final result = await _command.send_object(['RPOP', key]);
+      return result?.toString();
+    } catch (e, stack) {
+      _isConnected = false;
+      PLog.error('Failed to RPOP from Redis key: $key', e, stack);
+      return null;
+    }
+  }
+
   /// Add an action log entry for a specific user.
   Future<void> addAction({
     required int userId,

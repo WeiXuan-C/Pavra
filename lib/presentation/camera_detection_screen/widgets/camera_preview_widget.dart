@@ -22,7 +22,7 @@ class CameraPreviewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    
+
     if (cameraController == null || !cameraController!.value.isInitialized) {
       return Container(
         width: double.infinity,
@@ -73,47 +73,53 @@ class CameraPreviewWidget extends StatelessWidget {
   }
 
   Widget _buildDetectionOverlay(AppLocalizations l10n) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppTheme.lightTheme.colorScheme.secondary,
-          width: 2,
-        ),
-      ),
-      child: Positioned(
-        top: 2.h,
-        left: 4.w,
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+    return Stack(
+      children: [
+        // Border overlay
+        Container(
+          width: double.infinity,
+          height: double.infinity,
           decoration: BoxDecoration(
-            color: AppTheme.lightTheme.colorScheme.secondary.withValues(
-              alpha: 0.9,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppTheme.lightTheme.colorScheme.secondary,
+              width: 2,
             ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CustomIconWidget(
-                iconName: 'visibility',
-                color: AppTheme.lightTheme.colorScheme.onSecondary,
-                size: 16,
-              ),
-              SizedBox(width: 1.w),
-              Text(
-                l10n.camera_aiDetectionActive,
-                style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
-                  color: AppTheme.lightTheme.colorScheme.onSecondary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
           ),
         ),
-      ),
+        // AI Detection badge
+        Positioned(
+          top: 2.h,
+          left: 4.w,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+            decoration: BoxDecoration(
+              color: AppTheme.lightTheme.colorScheme.secondary.withValues(
+                alpha: 0.9,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomIconWidget(
+                  iconName: 'visibility',
+                  color: AppTheme.lightTheme.colorScheme.onSecondary,
+                  size: 16,
+                ),
+                SizedBox(width: 1.w),
+                Text(
+                  l10n.camera_aiDetectionActive,
+                  style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
+                    color: AppTheme.lightTheme.colorScheme.onSecondary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 

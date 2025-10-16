@@ -170,7 +170,7 @@ Future<void> initializeActionLogSync(Serverpod pod) async {
   await pod.futureCallWithDelay(
     FutureCallNames.actionLogSync.name,
     null,
-    Duration(minutes: 10),
+    Duration(minutes: 1),
   );
 
   print('✓ Action log sync task registered.');

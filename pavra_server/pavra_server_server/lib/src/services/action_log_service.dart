@@ -32,12 +32,11 @@ class ActionLogService {
         'created_at': DateTime.now().toIso8601String(),
       };
 
-      // Push to Redis queue for batch processing
-      await redis.addAction(
-        userId: int.tryParse(userId) ?? 0,
-        action: action,
-        metadata: logEntry,
-      );
+      // Push to Redis queue using LPUSH (list push)
+      final queueKey = 'action_logs:queue';
+      final logJson = jsonEncode(logEntry);
+
+      await redis.lpush(queueKey, logJson);
 
       PLog.info('Action logged to Redis: $action by user $userId');
     } catch (e, stack) {
@@ -50,17 +49,13 @@ class ActionLogService {
     int syncedCount = 0;
 
     try {
-      // Get all user action keys from Redis
-      // Note: This is a simplified approach. In production, you might want to
-      // maintain a separate queue for all actions across users.
-
       PLog.info('Starting flush of action logs to Supabase...');
 
-      // For now, we'll use a dedicated queue key for all actions
       final queueKey = 'action_logs:queue';
 
       for (int i = 0; i < batchSize; i++) {
-        final logJson = await redis.get(queueKey);
+        // Pop from the right side of the list (FIFO queue)
+        final logJson = await redis.rpop(queueKey);
         if (logJson == null) break;
 
         Map<String, dynamic> log;
@@ -68,18 +63,20 @@ class ActionLogService {
           log = jsonDecode(logJson);
         } catch (e) {
           PLog.warn('Invalid JSON in action log: $logJson');
-          await redis.delete(queueKey);
           continue;
         }
 
         // Insert to Supabase
-        await supabase.insert('action_log', [log]);
-
-        // Remove from Redis queue on success
-        await redis.delete(queueKey);
-        syncedCount++;
-
-        PLog.info('Log synced to Supabase: ${log['action']}');
+        try {
+          await supabase.insert('action_log', [log]);
+          syncedCount++;
+          PLog.info('Log synced to Supabase: ${log['action']}');
+        } catch (e) {
+          PLog.error('Failed to sync log to Supabase, re-queuing', e);
+          // Re-queue the failed log
+          await redis.lpush(queueKey, logJson);
+          break; // Stop processing to avoid cascading failures
+        }
       }
 
       if (syncedCount > 0) {
