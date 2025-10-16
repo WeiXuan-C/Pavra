@@ -1,16 +1,17 @@
 import 'dart:async';
 import 'package:redis/redis.dart';
 import 'package:serverpod/serverpod.dart';
+import '../../server.dart'; // 用于 PLog 日志打印
 
-/// Singleton Redis service for managing Redis connections and operations.
+/// Redis Service - Singleton pattern
+/// Handles Redis connection, reconnection, and common operations.
 ///
-/// Usage:
-/// ```dart
-/// await RedisService.instance.addAction(userId: 123, action: 'login');
-/// final logs = await RedisService.instance.getActions(userId: 123);
-/// ```
+/// Works for both:
+/// - Railway Redis (with password)
+/// - Local Redis (no password)
 class RedisService {
   static RedisService? _instance;
+
   static RedisService get instance {
     if (_instance == null) {
       throw StateError(
@@ -36,8 +37,7 @@ class RedisService {
     this.session,
   });
 
-  /// Initialize the Redis service with connection parameters.
-  /// Should be called once during server startup.
+  /// Initialize Redis service once at server startup.
   static Future<void> initialize({
     required String host,
     required int port,
@@ -45,188 +45,90 @@ class RedisService {
     Session? session,
   }) async {
     if (_instance != null) {
-      session?.log('RedisService already initialized', level: LogLevel.warning);
+      PLog.warn('RedisService already initialized, skipping.');
       return;
     }
 
-    _instance = RedisService._(
+    final service = RedisService._(
       host: host,
       port: port,
       password: password,
       session: session,
     );
 
-    await _instance!._connect();
+    _instance = service;
+    await service._connect();
   }
 
-  /// Establish connection to Redis server.
+  /// Connect to Redis and authenticate if needed.
   Future<void> _connect() async {
     try {
-      session?.log('Connecting to Redis at $host:$port...');
-
+      PLog.info('Connecting to Redis at $host:$port...');
       _connection = RedisConnection();
       _command = await _connection.connect(host, port);
 
-      // Authenticate if password is provided
       if (password != null && password!.isNotEmpty) {
         final authResult = await _command.send_object(['AUTH', password!]);
-        session?.log('Redis authentication: $authResult');
+        PLog.info('Redis AUTH result: $authResult');
       }
 
       _isConnected = true;
-      session?.log('Redis connected successfully', level: LogLevel.info);
-    } catch (e, stackTrace) {
+      PLog.info('✅ Redis connected successfully.');
+    } catch (e, stack) {
       _isConnected = false;
-      session?.log(
-        'Failed to connect to Redis: $e',
-        level: LogLevel.error,
-        exception: e,
-        stackTrace: stackTrace,
-      );
+      PLog.error('❌ Failed to connect to Redis.', e, stack);
       rethrow;
     }
   }
 
-  /// Reconnect to Redis if connection is lost.
+  /// Ensure Redis connection is alive, reconnect if needed.
   Future<void> _ensureConnected() async {
     if (!_isConnected) {
-      session?.log('Redis disconnected, attempting to reconnect...');
+      PLog.warn('Redis disconnected. Attempting to reconnect...');
       await _connect();
     }
   }
 
-  /// Add an action log for a user.
-  /// Uses LPUSH to add to the beginning of the list and LTRIM to keep only the last [maxLogs] entries.
-  ///
-  /// Example:
-  /// ```dart
-  /// await RedisService.instance.addAction(
-  ///   userId: 123,
-  ///   action: 'user_login',
-  ///   metadata: {'ip': '192.168.1.1', 'device': 'mobile'},
-  /// );
-  /// ```
-  Future<void> addAction({
-    required int userId,
-    required String action,
-    Map<String, dynamic>? metadata,
-    int maxLogs = 100,
-  }) async {
+  /// Check Redis health by sending a PING.
+  Future<bool> ping() async {
     try {
       await _ensureConnected();
-
-      final timestamp = DateTime.now().toIso8601String();
-      final logEntry = {
-        'action': action,
-        'timestamp': timestamp,
-        if (metadata != null) 'metadata': metadata,
-      };
-
-      final key = 'user:$userId:actions';
-      final value = logEntry.toString();
-
-      // Add to the beginning of the list
-      await _command.send_object(['LPUSH', key, value]);
-
-      // Trim to keep only the last maxLogs entries
-      await _command.send_object(['LTRIM', key, '0', '${maxLogs - 1}']);
-
-      session?.log('Action logged for user $userId: $action');
-    } catch (e, stackTrace) {
+      final response = await _command.send_object(['PING']);
+      final ok = response == 'PONG';
+      PLog.info(
+          ok ? '✅ Redis PING successful.' : '⚠️ Redis PING failed: $response');
+      return ok;
+    } catch (e, stack) {
       _isConnected = false;
-      session?.log(
-        'Failed to add action log: $e',
-        level: LogLevel.error,
-        exception: e,
-        stackTrace: stackTrace,
-      );
-      // Don't rethrow - logging failures shouldn't break the app
+      PLog.error('Redis PING error.', e, stack);
+      return false;
     }
   }
 
-  /// Retrieve action logs for a user.
-  /// Returns a list of action log entries, most recent first.
-  ///
-  /// Example:
-  /// ```dart
-  /// final logs = await RedisService.instance.getActions(userId: 123, limit: 50);
-  /// ```
-  Future<List<String>> getActions({
-    required int userId,
-    int limit = 100,
-  }) async {
-    try {
-      await _ensureConnected();
-
-      final key = 'user:$userId:actions';
-
-      // Get the range of logs (0 to limit-1)
-      final result =
-          await _command.send_object(['LRANGE', key, '0', '${limit - 1}']);
-
-      if (result is List) {
-        return result.map((e) => e.toString()).toList();
-      }
-
-      return [];
-    } catch (e, stackTrace) {
-      _isConnected = false;
-      session?.log(
-        'Failed to retrieve action logs: $e',
-        level: LogLevel.error,
-        exception: e,
-        stackTrace: stackTrace,
-      );
-      return [];
-    }
-  }
-
-  /// Set a key-value pair in Redis with optional expiration.
-  ///
-  /// Example:
-  /// ```dart
-  /// await RedisService.instance.set('session:abc123', 'user_data', expireSeconds: 3600);
-  /// ```
+  /// Set a key-value pair with optional expiration time.
   Future<void> set(String key, String value, {int? expireSeconds}) async {
     try {
       await _ensureConnected();
-
       await _command.send_object(['SET', key, value]);
-
       if (expireSeconds != null) {
         await _command.send_object(['EXPIRE', key, expireSeconds.toString()]);
       }
-    } catch (e, stackTrace) {
+      PLog.info('Set Redis key: $key');
+    } catch (e, stack) {
       _isConnected = false;
-      session?.log(
-        'Failed to set key: $e',
-        level: LogLevel.error,
-        exception: e,
-        stackTrace: stackTrace,
-      );
+      PLog.error('Failed to set Redis key: $key', e, stack);
     }
   }
 
   /// Get a value from Redis by key.
-  ///
-  /// Example:
-  /// ```dart
-  /// final value = await RedisService.instance.get('session:abc123');
-  /// ```
   Future<String?> get(String key) async {
     try {
       await _ensureConnected();
-
       final result = await _command.send_object(['GET', key]);
       return result?.toString();
-    } catch (e, stackTrace) {
+    } catch (e, stack) {
       _isConnected = false;
-      session?.log(
-        'Failed to get key: $e',
-        level: LogLevel.error,
-        exception: e,
-        stackTrace: stackTrace,
-      );
+      PLog.error('Failed to get Redis key: $key', e, stack);
       return null;
     }
   }
@@ -236,36 +138,77 @@ class RedisService {
     try {
       await _ensureConnected();
       await _command.send_object(['DEL', key]);
-    } catch (e, stackTrace) {
+      PLog.info('Deleted Redis key: $key');
+    } catch (e, stack) {
       _isConnected = false;
-      session?.log(
-        'Failed to delete key: $e',
-        level: LogLevel.error,
-        exception: e,
-        stackTrace: stackTrace,
-      );
+      PLog.error('Failed to delete Redis key: $key', e, stack);
     }
   }
 
-  /// Check if Redis is connected.
-  bool get isConnected => _isConnected;
+  /// Add an action log entry for a specific user.
+  Future<void> addAction({
+    required int userId,
+    required String action,
+    Map<String, dynamic>? metadata,
+    int maxLogs = 100,
+  }) async {
+    try {
+      await _ensureConnected();
+      final timestamp = DateTime.now().toIso8601String();
+      final logEntry = {
+        'action': action,
+        'timestamp': timestamp,
+        if (metadata != null) 'metadata': metadata,
+      };
+      final key = 'user:$userId:actions';
+      await _command.send_object(['LPUSH', key, logEntry.toString()]);
+      await _command.send_object(['LTRIM', key, '0', '${maxLogs - 1}']);
+      PLog.info('Action logged for user $userId: $action');
+    } catch (e, stack) {
+      _isConnected = false;
+      PLog.error('Failed to add action log.', e, stack);
+    }
+  }
 
-  /// Close the Redis connection.
-  /// Should be called during server shutdown.
+  /// Retrieve user action logs.
+  Future<List<String>> getActions({
+    required int userId,
+    int limit = 100,
+  }) async {
+    try {
+      await _ensureConnected();
+      final key = 'user:$userId:actions';
+      final result =
+          await _command.send_object(['LRANGE', key, '0', '${limit - 1}']);
+      if (result is List) {
+        return result.map((e) => e.toString()).toList();
+      }
+      return [];
+    } catch (e, stack) {
+      _isConnected = false;
+      PLog.error('Failed to retrieve action logs.', e, stack);
+      return [];
+    }
+  }
+
+  /// Close Redis connection safely.
   Future<void> close() async {
     try {
       if (_isConnected) {
         await _connection.close();
         _isConnected = false;
-        session?.log('Redis connection closed');
+        PLog.info('Redis connection closed.');
       }
     } catch (e) {
-      session?.log('Error closing Redis connection: $e', level: LogLevel.error);
+      PLog.error('Error closing Redis connection.', e);
     }
   }
 
-  /// Dispose the singleton instance (mainly for testing).
+  /// Dispose singleton instance (useful for testing).
   static void dispose() {
     _instance = null;
+    PLog.warn('RedisService instance disposed.');
   }
+
+  bool get isConnected => _isConnected;
 }

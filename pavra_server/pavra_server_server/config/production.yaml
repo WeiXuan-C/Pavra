@@ -46,7 +46,7 @@ redis:
   enabled: true
   host: ${REDISHOST}
   port: ${REDISPORT}
-  password: ${REDISPASSWORD}
+  password: ${REDIS_PASSWORD}
   #user: # defaults to empty
   #requireSsl: true # defaults to false
 
