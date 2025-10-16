@@ -32,4 +32,4 @@ COPY --from=build /app/lib/src/generated/protocol.yaml ./lib/src/generated/proto
 EXPOSE 8080
 
 # 启动命令
-CMD ["./server", "--port=${PORT:-8080}", "--mode=production", "--server-id=default", "--logging=normal", "--role=monolith"]
+CMD ["./server", "--mode=production", "--server-id=default", "--logging=normal", "--role=monolith"]
