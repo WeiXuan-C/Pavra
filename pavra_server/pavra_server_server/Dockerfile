@@ -19,4 +19,4 @@ COPY --from=build /app/lib/src/generated/protocol.yaml lib/src/generated/protoco
 
 EXPOSE 8080
 
-ENTRYPOINT ["/bin/sh", "-c", "export SERVERPOD_ENVIRONMENT=production && ./server"]
+ENTRYPOINT ["./server", "--port=${PORT}", "--mode=production", "--server-id=default", "--logging=normal", "--role=monolith"]
