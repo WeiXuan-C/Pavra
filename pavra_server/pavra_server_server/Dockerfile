@@ -21,4 +21,5 @@ COPY --from=build /app/lib/src/generated/protocol.yaml lib/src/generated/protoco
 
 EXPOSE 8080
 
-ENTRYPOINT ["./server", "--port=${PORT}", "--mode=production", "--server-id=default", "--logging=normal", "--role=monolith"]
+# Use shell form to allow environment variable expansion
+CMD ./server --port=${PORT:-8080} --mode=production --server-id=default --logging=normal --role=monolith
