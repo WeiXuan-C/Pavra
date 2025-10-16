@@ -25,14 +25,6 @@ webServer:
   publicPort: 443
   publicScheme: https
 
-# ❌ Database is disabled - using Supabase HTTPS REST API instead
-# Serverpod requires these fields even when disabled, so we provide dummy values
-database:
-  enabled: false
-  host: localhost
-  port: 5432
-  name: dummy
-  user: dummy
 
 # This is the setup for Redis. The default for the Google Cloud Engine Terraform
 # configuration is to connect on a private IP address.

@@ -41,7 +41,7 @@ set -e
 
 echo "=== Generating passwords.yaml from environment variables ==="
 
-# 生成 passwords.yaml (❌ 不包含 database 密码，因为已禁用 Postgres)
+# 生成 passwords.yaml (不包含 database - 使用 Supabase REST API)
 cat > /app/config/passwords.yaml << PWDEOF
 production:
   redis: "${REDIS_PASSWORD}"
