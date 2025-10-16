@@ -5,6 +5,7 @@ import 'package:pavra_server_server/src/web/routes/root.dart';
 import 'src/generated/protocol.dart';
 import 'src/generated/endpoints.dart';
 import 'src/services/redis_service.dart';
+import 'src/services/supabase_service.dart';
 import 'src/tasks/sync_action_logs.dart';
 
 /// ✅ Declare all future calls here to avoid undefined reference issues.
@@ -52,10 +53,13 @@ void run(List<String> args) async {
   // 2️⃣ Initialize Redis connection (Railway)
   await _initializeRedis(pod);
 
-  // 3️⃣ Start background task: Action Log Sync
+  // 3️⃣ Initialize Supabase connection
+  await _initializeSupabase(pod);
+
+  // 4️⃣ Start background task: Action Log Sync
   await initializeActionLogSync(pod);
 
-  // 4️⃣ Setup web routes
+  // 5️⃣ Setup web routes
   pod.webServer.addRoute(RouteRoot(), '/');
   pod.webServer.addRoute(RouteRoot(), '/index.html');
   pod.webServer.addRoute(
@@ -124,5 +128,31 @@ Future<void> _initializeRedis(Serverpod pod) async {
     }
   } catch (e, stack) {
     PLog.error('❌ Failed to initialize Redis.', e, stack);
+  }
+}
+
+/// ✅ Supabase initialization
+Future<void> _initializeSupabase(Serverpod pod) async {
+  try {
+    final supabaseUrl =
+        Platform.environment['SUPABASE_URL'] ?? pod.getPassword('SUPABASE_URL');
+    final supabaseKey = Platform.environment['SUPABASE_SERVICE_ROLE_KEY'] ??
+        pod.getPassword('SUPABASE_SERVICE_ROLE_KEY');
+
+    if (supabaseUrl == null || supabaseKey == null) {
+      PLog.warn(
+          '⚠️ Supabase credentials not found. Action log sync will be disabled.');
+      return;
+    }
+
+    PLog.info('🔌 Connecting to Supabase...');
+    await SupabaseService.initialize(
+      url: supabaseUrl,
+      serviceRoleKey: supabaseKey,
+    );
+
+    PLog.info('✅ Supabase initialized successfully.');
+  } catch (e, stack) {
+    PLog.error('❌ Failed to initialize Supabase.', e, stack);
   }
 }

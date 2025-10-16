@@ -1,66 +1,41 @@
-import 'dart:convert';
 import 'package:pavra_server_server/server.dart';
-import 'package:http/http.dart' as http;
 import 'package:serverpod/serverpod.dart';
+import '../services/action_log_service.dart';
 
 /// FutureCall that syncs action logs from local PostgreSQL to Supabase
 class ActionLogSyncTask extends FutureCall {
   static const Duration _syncInterval = Duration(minutes: 10);
+  static ActionLogService? _actionLogService;
 
   @override
   Future<void> invoke(Session session, SerializableModel? object) async {
     try {
-      session.log('Starting action log sync...', level: LogLevel.info);
+      PLog.info('Starting action log sync...');
 
-      // Get Supabase credentials from environment
-      final supabaseUrl = session.serverpod.getPassword('SUPABASE_URL');
-      final supabaseKey =
-          session.serverpod.getPassword('SUPABASE_SERVICE_ROLE_KEY');
+      // Initialize service if needed (uses singleton instances)
+      _actionLogService ??= ActionLogService();
 
-      if (supabaseUrl == null || supabaseKey == null) {
-        session.log(
-          'Supabase credentials not found in environment',
-          level: LogLevel.error,
-        );
-        _scheduleNextSync(session);
-        return;
-      }
-
-      // Fetch unsynced logs
+      // Fetch unsynced logs from PostgreSQL
       final unsyncedLogs = await _fetchUnsyncedLogs(session);
 
       if (unsyncedLogs.isEmpty) {
-        session.log('No unsynced logs found', level: LogLevel.info);
+        PLog.info('No unsynced logs found in PostgreSQL');
         _scheduleNextSync(session);
         return;
       }
 
-      session.log('Found ${unsyncedLogs.length} unsynced logs',
-          level: LogLevel.info);
+      PLog.info('Found ${unsyncedLogs.length} unsynced logs');
 
-      // Push to Supabase
-      final syncedIds = await _pushToSupabase(
-        session,
-        unsyncedLogs,
-        supabaseUrl,
-        supabaseKey,
-      );
+      // Push to Supabase using ActionLogService
+      final syncedIds = await _pushToSupabase(session, unsyncedLogs);
 
       // Mark as synced in local DB
       if (syncedIds.isNotEmpty) {
         await _markAsSynced(session, syncedIds);
-        session.log(
-          'Successfully synced ${syncedIds.length} action logs',
-          level: LogLevel.info,
-        );
+        PLog.info('Successfully synced ${syncedIds.length} action logs');
       }
     } catch (e, stackTrace) {
-      session.log(
-        'Error during action log sync: $e',
-        level: LogLevel.error,
-        exception: e,
-        stackTrace: stackTrace,
-      );
+      PLog.error('Error during action log sync', e, stackTrace);
     } finally {
       // Schedule next sync
       _scheduleNextSync(session);
@@ -104,43 +79,38 @@ class ActionLogSyncTask extends FutureCall {
     }
   }
 
-  /// Pushes logs to Supabase
+  /// Pushes logs to Supabase using ActionLogService
   Future<List<int>> _pushToSupabase(
     Session session,
     List<Map<String, dynamic>> logs,
-    String supabaseUrl,
-    String supabaseKey,
   ) async {
     final syncedIds = <int>[];
 
     try {
-      final url = Uri.parse('$supabaseUrl/rest/v1/action_log');
+      // Use ActionLogService to insert logs
+      final service = _actionLogService!;
 
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': supabaseKey,
-          'Authorization': 'Bearer $supabaseKey',
-          'Prefer': 'return=minimal',
-        },
-        body: jsonEncode(logs),
-      );
+      // Remove 'id' field before inserting to Supabase (it will generate its own)
+      final logsForSupabase = logs.map((log) {
+        final logCopy = Map<String, dynamic>.from(log);
+        final localId = logCopy.remove('id'); // Store local DB id
+        return {'localId': localId, 'data': logCopy};
+      }).toList();
 
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        // All logs synced successfully
-        syncedIds.addAll(logs.map((log) => log['id'] as int));
-      } else {
-        session.log(
-          'Supabase sync failed: ${response.statusCode} - ${response.body}',
-          level: LogLevel.warning,
-        );
+      for (final entry in logsForSupabase) {
+        try {
+          await service.supabase
+              .insert('action_log', [entry['data'] as Map<String, dynamic>]);
+          syncedIds.add(entry['localId'] as int);
+        } catch (e) {
+          PLog.error('Failed to sync log ${entry['localId']}', e);
+        }
       }
-    } catch (e) {
-      session.log(
-        'Error pushing to Supabase: $e',
-        level: LogLevel.error,
-      );
+
+      PLog.info(
+          'Successfully pushed ${syncedIds.length}/${logs.length} logs to Supabase');
+    } catch (e, stack) {
+      PLog.error('Error pushing to Supabase', e, stack);
     }
 
     return syncedIds;
