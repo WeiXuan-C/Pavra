@@ -1,9 +1,11 @@
+-- You can safely remove BEGIN/COMMIT in pgAdmin if desired
 BEGIN;
 
---
--- ACTION CREATE TABLE
---
-CREATE TABLE "serverpod_cloud_storage" (
+-- =======================================
+-- ACTION CREATE TABLES
+-- =======================================
+
+CREATE TABLE IF NOT EXISTS "serverpod_cloud_storage" (
     "id" bigserial PRIMARY KEY,
     "storageId" text NOT NULL,
     "path" text NOT NULL,
@@ -13,14 +15,13 @@ CREATE TABLE "serverpod_cloud_storage" (
     "verified" boolean NOT NULL
 );
 
--- Indexes
-CREATE UNIQUE INDEX "serverpod_cloud_storage_path_idx" ON "serverpod_cloud_storage" USING btree ("storageId", "path");
-CREATE INDEX "serverpod_cloud_storage_expiration" ON "serverpod_cloud_storage" USING btree ("expiration");
+CREATE UNIQUE INDEX IF NOT EXISTS "serverpod_cloud_storage_path_idx"
+    ON "serverpod_cloud_storage" ("storageId", "path");
+CREATE INDEX IF NOT EXISTS "serverpod_cloud_storage_expiration"
+    ON "serverpod_cloud_storage" ("expiration");
 
---
--- ACTION CREATE TABLE
---
-CREATE TABLE "serverpod_cloud_storage_direct_upload" (
+
+CREATE TABLE IF NOT EXISTS "serverpod_cloud_storage_direct_upload" (
     "id" bigserial PRIMARY KEY,
     "storageId" text NOT NULL,
     "path" text NOT NULL,
@@ -28,13 +29,11 @@ CREATE TABLE "serverpod_cloud_storage_direct_upload" (
     "authKey" text NOT NULL
 );
 
--- Indexes
-CREATE UNIQUE INDEX "serverpod_cloud_storage_direct_upload_storage_path" ON "serverpod_cloud_storage_direct_upload" USING btree ("storageId", "path");
+CREATE UNIQUE INDEX IF NOT EXISTS "serverpod_cloud_storage_direct_upload_storage_path"
+    ON "serverpod_cloud_storage_direct_upload" ("storageId", "path");
 
---
--- ACTION CREATE TABLE
---
-CREATE TABLE "serverpod_future_call" (
+
+CREATE TABLE IF NOT EXISTS "serverpod_future_call" (
     "id" bigserial PRIMARY KEY,
     "name" text NOT NULL,
     "time" timestamp without time zone NOT NULL,
@@ -43,15 +42,15 @@ CREATE TABLE "serverpod_future_call" (
     "identifier" text
 );
 
--- Indexes
-CREATE INDEX "serverpod_future_call_time_idx" ON "serverpod_future_call" USING btree ("time");
-CREATE INDEX "serverpod_future_call_serverId_idx" ON "serverpod_future_call" USING btree ("serverId");
-CREATE INDEX "serverpod_future_call_identifier_idx" ON "serverpod_future_call" USING btree ("identifier");
+CREATE INDEX IF NOT EXISTS "serverpod_future_call_time_idx"
+    ON "serverpod_future_call" ("time");
+CREATE INDEX IF NOT EXISTS "serverpod_future_call_serverId_idx"
+    ON "serverpod_future_call" ("serverId");
+CREATE INDEX IF NOT EXISTS "serverpod_future_call_identifier_idx"
+    ON "serverpod_future_call" ("identifier");
 
---
--- ACTION CREATE TABLE
---
-CREATE TABLE "serverpod_health_connection_info" (
+
+CREATE TABLE IF NOT EXISTS "serverpod_health_connection_info" (
     "id" bigserial PRIMARY KEY,
     "serverId" text NOT NULL,
     "timestamp" timestamp without time zone NOT NULL,
@@ -61,13 +60,11 @@ CREATE TABLE "serverpod_health_connection_info" (
     "granularity" bigint NOT NULL
 );
 
--- Indexes
-CREATE UNIQUE INDEX "serverpod_health_connection_info_timestamp_idx" ON "serverpod_health_connection_info" USING btree ("timestamp", "serverId", "granularity");
+CREATE UNIQUE INDEX IF NOT EXISTS "serverpod_health_connection_info_timestamp_idx"
+    ON "serverpod_health_connection_info" ("timestamp", "serverId", "granularity");
 
---
--- ACTION CREATE TABLE
---
-CREATE TABLE "serverpod_health_metric" (
+
+CREATE TABLE IF NOT EXISTS "serverpod_health_metric" (
     "id" bigserial PRIMARY KEY,
     "name" text NOT NULL,
     "serverId" text NOT NULL,
@@ -77,13 +74,11 @@ CREATE TABLE "serverpod_health_metric" (
     "granularity" bigint NOT NULL
 );
 
--- Indexes
-CREATE UNIQUE INDEX "serverpod_health_metric_timestamp_idx" ON "serverpod_health_metric" USING btree ("timestamp", "serverId", "name", "granularity");
+CREATE UNIQUE INDEX IF NOT EXISTS "serverpod_health_metric_timestamp_idx"
+    ON "serverpod_health_metric" ("timestamp", "serverId", "name", "granularity");
 
---
--- ACTION CREATE TABLE
---
-CREATE TABLE "serverpod_log" (
+
+CREATE TABLE IF NOT EXISTS "serverpod_log" (
     "id" bigserial PRIMARY KEY,
     "sessionLogId" bigint NOT NULL,
     "messageId" bigint,
@@ -97,13 +92,11 @@ CREATE TABLE "serverpod_log" (
     "order" bigint NOT NULL
 );
 
--- Indexes
-CREATE INDEX "serverpod_log_sessionLogId_idx" ON "serverpod_log" USING btree ("sessionLogId");
+CREATE INDEX IF NOT EXISTS "serverpod_log_sessionLogId_idx"
+    ON "serverpod_log" ("sessionLogId");
 
---
--- ACTION CREATE TABLE
---
-CREATE TABLE "serverpod_message_log" (
+
+CREATE TABLE IF NOT EXISTS "serverpod_message_log" (
     "id" bigserial PRIMARY KEY,
     "sessionLogId" bigint NOT NULL,
     "serverId" text NOT NULL,
@@ -117,35 +110,29 @@ CREATE TABLE "serverpod_message_log" (
     "order" bigint NOT NULL
 );
 
---
--- ACTION CREATE TABLE
---
-CREATE TABLE "serverpod_method" (
+
+CREATE TABLE IF NOT EXISTS "serverpod_method" (
     "id" bigserial PRIMARY KEY,
     "endpoint" text NOT NULL,
     "method" text NOT NULL
 );
 
--- Indexes
-CREATE UNIQUE INDEX "serverpod_method_endpoint_method_idx" ON "serverpod_method" USING btree ("endpoint", "method");
+CREATE UNIQUE INDEX IF NOT EXISTS "serverpod_method_endpoint_method_idx"
+    ON "serverpod_method" ("endpoint", "method");
 
---
--- ACTION CREATE TABLE
---
-CREATE TABLE "serverpod_migrations" (
+
+CREATE TABLE IF NOT EXISTS "serverpod_migrations" (
     "id" bigserial PRIMARY KEY,
     "module" text NOT NULL,
     "version" text NOT NULL,
     "timestamp" timestamp without time zone
 );
 
--- Indexes
-CREATE UNIQUE INDEX "serverpod_migrations_ids" ON "serverpod_migrations" USING btree ("module");
+CREATE UNIQUE INDEX IF NOT EXISTS "serverpod_migrations_ids"
+    ON "serverpod_migrations" ("module");
 
---
--- ACTION CREATE TABLE
---
-CREATE TABLE "serverpod_query_log" (
+
+CREATE TABLE IF NOT EXISTS "serverpod_query_log" (
     "id" bigserial PRIMARY KEY,
     "serverId" text NOT NULL,
     "sessionLogId" bigint NOT NULL,
@@ -159,21 +146,17 @@ CREATE TABLE "serverpod_query_log" (
     "order" bigint NOT NULL
 );
 
--- Indexes
-CREATE INDEX "serverpod_query_log_sessionLogId_idx" ON "serverpod_query_log" USING btree ("sessionLogId");
+CREATE INDEX IF NOT EXISTS "serverpod_query_log_sessionLogId_idx"
+    ON "serverpod_query_log" ("sessionLogId");
 
---
--- ACTION CREATE TABLE
---
-CREATE TABLE "serverpod_readwrite_test" (
+
+CREATE TABLE IF NOT EXISTS "serverpod_readwrite_test" (
     "id" bigserial PRIMARY KEY,
     "number" bigint NOT NULL
 );
 
---
--- ACTION CREATE TABLE
---
-CREATE TABLE "serverpod_runtime_settings" (
+
+CREATE TABLE IF NOT EXISTS "serverpod_runtime_settings" (
     "id" bigserial PRIMARY KEY,
     "logSettings" json NOT NULL,
     "logSettingsOverrides" json NOT NULL,
@@ -181,10 +164,8 @@ CREATE TABLE "serverpod_runtime_settings" (
     "logMalformedCalls" boolean NOT NULL
 );
 
---
--- ACTION CREATE TABLE
---
-CREATE TABLE "serverpod_session_log" (
+
+CREATE TABLE IF NOT EXISTS "serverpod_session_log" (
     "id" bigserial PRIMARY KEY,
     "serverId" text NOT NULL,
     "time" timestamp without time zone NOT NULL,
@@ -201,57 +182,70 @@ CREATE TABLE "serverpod_session_log" (
     "touched" timestamp without time zone NOT NULL
 );
 
--- Indexes
-CREATE INDEX "serverpod_session_log_serverid_idx" ON "serverpod_session_log" USING btree ("serverId");
-CREATE INDEX "serverpod_session_log_touched_idx" ON "serverpod_session_log" USING btree ("touched");
-CREATE INDEX "serverpod_session_log_isopen_idx" ON "serverpod_session_log" USING btree ("isOpen");
-
---
--- ACTION CREATE FOREIGN KEY
---
-ALTER TABLE ONLY "serverpod_log"
-    ADD CONSTRAINT "serverpod_log_fk_0"
-    FOREIGN KEY("sessionLogId")
-    REFERENCES "serverpod_session_log"("id")
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION;
-
---
--- ACTION CREATE FOREIGN KEY
---
-ALTER TABLE ONLY "serverpod_message_log"
-    ADD CONSTRAINT "serverpod_message_log_fk_0"
-    FOREIGN KEY("sessionLogId")
-    REFERENCES "serverpod_session_log"("id")
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION;
-
---
--- ACTION CREATE FOREIGN KEY
---
-ALTER TABLE ONLY "serverpod_query_log"
-    ADD CONSTRAINT "serverpod_query_log_fk_0"
-    FOREIGN KEY("sessionLogId")
-    REFERENCES "serverpod_session_log"("id")
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION;
+CREATE INDEX IF NOT EXISTS "serverpod_session_log_serverid_idx"
+    ON "serverpod_session_log" ("serverId");
+CREATE INDEX IF NOT EXISTS "serverpod_session_log_touched_idx"
+    ON "serverpod_session_log" ("touched");
+CREATE INDEX IF NOT EXISTS "serverpod_session_log_isopen_idx"
+    ON "serverpod_session_log" ("isOpen");
 
 
---
--- MIGRATION VERSION FOR pavra_server
---
+-- =======================================
+-- ACTION CREATE FOREIGN KEYS (safe add)
+-- =======================================
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint WHERE conname = 'serverpod_log_fk_0'
+    ) THEN
+        ALTER TABLE "serverpod_log"
+            ADD CONSTRAINT "serverpod_log_fk_0"
+            FOREIGN KEY("sessionLogId")
+            REFERENCES "serverpod_session_log"("id")
+            ON DELETE CASCADE ON UPDATE NO ACTION;
+    END IF;
+END$$;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint WHERE conname = 'serverpod_message_log_fk_0'
+    ) THEN
+        ALTER TABLE "serverpod_message_log"
+            ADD CONSTRAINT "serverpod_message_log_fk_0"
+            FOREIGN KEY("sessionLogId")
+            REFERENCES "serverpod_session_log"("id")
+            ON DELETE CASCADE ON UPDATE NO ACTION;
+    END IF;
+END$$;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint WHERE conname = 'serverpod_query_log_fk_0'
+    ) THEN
+        ALTER TABLE "serverpod_query_log"
+            ADD CONSTRAINT "serverpod_query_log_fk_0"
+            FOREIGN KEY("sessionLogId")
+            REFERENCES "serverpod_session_log"("id")
+            ON DELETE CASCADE ON UPDATE NO ACTION;
+    END IF;
+END$$;
+
+
+-- =======================================
+-- MIGRATION VERSION UPDATES
+-- =======================================
+
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
     VALUES ('pavra_server', '20251013093515748', now())
     ON CONFLICT ("module")
     DO UPDATE SET "version" = '20251013093515748', "timestamp" = now();
 
---
--- MIGRATION VERSION FOR serverpod
---
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
     VALUES ('serverpod', '20240516151843329', now())
     ON CONFLICT ("module")
     DO UPDATE SET "version" = '20240516151843329', "timestamp" = now();
-
 
 COMMIT;

@@ -26,17 +26,22 @@ webServer:
   publicScheme: https
 
 
-# This is the setup for Redis. The default for the Google Cloud Engine Terraform
-# configuration is to connect on a private IP address.
-# If you are connecting on a public IP (e.g. on AWS or Google Cloud Run), you
-# connect on the public IP of the database e.g. redis.examplepod.com.
+# Database - Railway PostgreSQL (dummy, not used, all data via Supabase REST API)
+database:
+  host: ${PGHOST}
+  port: 5432
+  name: postgres
+  user: ${PGUSER}
+  password: ${PGPASSWORD}
+
+# This is the setup for Redis (Railway)
 redis:
   enabled: true
-  host: ${REDIS_HOST}
+  host: redis.railway.internal
   port: 6379
   password: ${REDIS_PASSWORD}
-  user: ${REDIS_USER}
-  requireSsl: true # defaults to false
+  user: default
+  requireSsl: false
 
 maxRequestSize: 524288 # The maximum size of requests allowed in bytes
 

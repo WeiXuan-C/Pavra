@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:pavra_server_server/server.dart';
 import 'package:serverpod/serverpod.dart';
 import '../services/action_log_service.dart';
@@ -160,18 +161,36 @@ class ActionLogSyncTask extends FutureCall {
 
 /// Initialize the action log sync task
 Future<void> initializeActionLogSync(Serverpod pod) async {
-  if (!pod.config.futureCallExecutionEnabled ||
-      pod.config.redis?.enabled != true) {
-    print(
-        '⚠️ Future calls disabled or Redis not enabled, skipping action log sync.');
+  // Check if we have Redis and Supabase configured
+  final hasRedis = Platform.environment['REDIS_URL'] != null;
+  final hasSupabase = Platform.environment['SUPABASE_URL'] != null &&
+      Platform.environment['SUPABASE_SERVICE_ROLE_KEY'] != null;
+
+  if (!hasRedis || !hasSupabase) {
+    print('⚠️ Redis or Supabase not configured, skipping action log sync.');
+    if (!hasRedis) print('   Missing: REDIS_URL');
+    if (!hasSupabase)
+      print('   Missing: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
     return;
   }
 
-  await pod.futureCallWithDelay(
-    FutureCallNames.actionLogSync.name,
-    null,
-    Duration(minutes: 1),
-  );
+  // Check if future calls are enabled
+  if (!pod.config.futureCallExecutionEnabled) {
+    print('⚠️ Future calls disabled in config, skipping action log sync.');
+    return;
+  }
 
-  print('✓ Action log sync task registered.');
+  try {
+    await pod.futureCallWithDelay(
+      FutureCallNames.actionLogSync.name,
+      null,
+      Duration(minutes: 1),
+    );
+
+    print('✓ Action log sync task registered.');
+  } catch (e) {
+    print('⚠️ Failed to register action log sync task: $e');
+    print(
+        '   Action logs will still be stored in Redis, but not synced to Supabase.');
+  }
 }

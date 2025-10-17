@@ -11,50 +11,52 @@ apiServer:
   port: 8080
   publicHost: localhost
   publicPort: 8080
-  publicScheme: http
+  publicScheme: https
 
 # Configuration for the Insights server.
 insightsServer:
   port: 8081
   publicHost: localhost
   publicPort: 8081
-  publicScheme: http
+  publicScheme: https
 
 # Configuration for the web server.
 webServer:
   port: 8082
   publicHost: localhost
   publicPort: 8082
-  publicScheme: http
+  publicScheme: https
 
-# This is the database setup for your server.
-# database:
-#   host: localhost
-#   port: 8090
-#   name: pavra_server
-#   user: postgres
-  #requireSsl: true # defaults to false
-  #isUnixSocket: true # defaults to false
+# Database - dummy local PostgreSQL (not used, all data via Supabase REST API)
+# This is only here to satisfy Serverpod's startup requirements
+database:
+  host: localhost
+  port: 5432
+  name: postgres
+  user: postgres
+  requireSsl: false
+  isUnixSocket: false
 
 # This is the setup for Redis.
-# For Railway Redis, set REDIS_URL environment variable
-# Format: redis://default:password@host:port
+# Disabled for local development - enable when Redis is available
 redis:
-  enabled: true
+  enabled: false
   host: localhost
   port: 6379
-  #user: # defaults to empty
-  #requireSsl: true # defaults to false
+  requireSsl: false
 
 maxRequestSize: 524288 # The maximum size of requests allowed in bytes
 
 sessionLogs:
   persistentEnabled: false
   consoleEnabled: true
-  consoleLogFormat: text # Defaults to "json", options are "text" or "json"
+  # consoleLogFormat: text # Defaults to "json", options are "text" or "json"
 
-# futureCallExecutionEnabled: true # Defaults to true
+futureCallExecutionEnabled: true # Enable future calls for action log sync
 
 #futureCall:
 #  concurrencyLimit: 1 # Defaults to 1, a negative or null value removes the limit
 #  scanInterval: 5000 # Unit in milliseconds, defaults to 5000
+
+# Security secret — loaded from environment variable
+serviceSecret: ${SERVICE_SECRET}
