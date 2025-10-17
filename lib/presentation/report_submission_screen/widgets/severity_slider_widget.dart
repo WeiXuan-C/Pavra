@@ -52,9 +52,7 @@ class SeveritySliderWidget extends StatelessWidget {
           Text(
             l10n.report_rateSeverity,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(
-                alpha: 0.6,
-              ),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
 
@@ -78,7 +76,7 @@ class SeveritySliderWidget extends StatelessWidget {
                   ),
                   SizedBox(height: 1.h),
                   Text(
-                    _getSeverityLabel(),
+                    _getSeverityLabel(context),
                     style: theme.textTheme.titleMedium?.copyWith(
                       color: _getSeverityColor(context),
                       fontWeight: FontWeight.w700,
@@ -86,7 +84,7 @@ class SeveritySliderWidget extends StatelessWidget {
                   ),
                   SizedBox(height: 0.5.h),
                   Text(
-                    _getSeverityDescription(),
+                    _getSeverityDescription(context),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: _getSeverityColor(context),
                     ),
@@ -139,13 +137,28 @@ class SeveritySliderWidget extends StatelessWidget {
 
   Widget _buildSeverityLabel(BuildContext context, String label, double value) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final bool isSelected = severity == value;
     final Color color = isSelected
         ? _getSeverityColor(context)
         : theme.colorScheme.onSurface.withValues(alpha: 0.6);
 
+    // Get translated label
+    String translatedLabel;
+    if (value == 1.0) {
+      translatedLabel = l10n.severity_minor;
+    } else if (value == 2.0) {
+      translatedLabel = l10n.severity_low;
+    } else if (value == 3.0) {
+      translatedLabel = l10n.severity_moderate;
+    } else if (value == 4.0) {
+      translatedLabel = l10n.severity_high;
+    } else {
+      translatedLabel = l10n.severity_critical;
+    }
+
     return Text(
-      label,
+      translatedLabel,
       style: theme.textTheme.labelSmall?.copyWith(
         color: color,
         fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
@@ -156,15 +169,25 @@ class SeveritySliderWidget extends StatelessWidget {
   Color _getSeverityColor(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     if (severity <= 1.5) {
-      return isDark ? const Color(0xFF66BB6A) : const Color(0xFF4CAF50); // Green - Minor
+      return isDark
+          ? const Color(0xFF66BB6A)
+          : const Color(0xFF4CAF50); // Green - Minor
     } else if (severity <= 2.5) {
-      return isDark ? const Color(0xFF9CCC65) : const Color(0xFF8BC34A); // Light Green - Low
+      return isDark
+          ? const Color(0xFF9CCC65)
+          : const Color(0xFF8BC34A); // Light Green - Low
     } else if (severity <= 3.5) {
-      return isDark ? const Color(0xFFFFB74D) : const Color(0xFFFF9800); // Orange - Moderate
+      return isDark
+          ? const Color(0xFFFFB74D)
+          : const Color(0xFFFF9800); // Orange - Moderate
     } else if (severity <= 4.5) {
-      return isDark ? const Color(0xFFFF8A65) : const Color(0xFFFF5722); // Deep Orange - High
+      return isDark
+          ? const Color(0xFFFF8A65)
+          : const Color(0xFFFF5722); // Deep Orange - High
     } else {
-      return isDark ? const Color(0xFFEF5350) : const Color(0xFFF44336); // Red - Critical
+      return isDark
+          ? const Color(0xFFEF5350)
+          : const Color(0xFFF44336); // Red - Critical
     }
   }
 
@@ -182,31 +205,33 @@ class SeveritySliderWidget extends StatelessWidget {
     }
   }
 
-  String _getSeverityLabel() {
+  String _getSeverityLabel(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     if (severity <= 1.5) {
-      return 'Minor';
+      return l10n.severity_minor;
     } else if (severity <= 2.5) {
-      return 'Low';
+      return l10n.severity_low;
     } else if (severity <= 3.5) {
-      return 'Moderate';
+      return l10n.severity_moderate;
     } else if (severity <= 4.5) {
-      return 'High';
+      return l10n.severity_high;
     } else {
-      return 'Critical';
+      return l10n.severity_critical;
     }
   }
 
-  String _getSeverityDescription() {
+  String _getSeverityDescription(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     if (severity <= 1.5) {
-      return 'Minor inconvenience, no immediate danger';
+      return l10n.severity_minorDesc;
     } else if (severity <= 2.5) {
-      return 'Slight discomfort, minimal impact';
+      return l10n.severity_lowDesc;
     } else if (severity <= 3.5) {
-      return 'Noticeable issue, requires attention';
+      return l10n.severity_moderateDesc;
     } else if (severity <= 4.5) {
-      return 'Significant hazard, needs urgent repair';
+      return l10n.severity_highDesc;
     } else {
-      return 'Extreme danger, immediate action required';
+      return l10n.severity_criticalDesc;
     }
   }
 }

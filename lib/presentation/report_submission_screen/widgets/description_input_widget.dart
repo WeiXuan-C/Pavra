@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../../core/app_export.dart';
 import '../../../l10n/app_localizations.dart';
 
 class DescriptionInputWidget extends StatelessWidget {
@@ -34,23 +33,31 @@ class DescriptionInputWidget extends StatelessWidget {
           // Header
           Row(
             children: [
-              CustomIconWidget(
-                iconName: 'description',
+              Icon(
+                Icons.description_outlined,
                 color: theme.colorScheme.primary,
                 size: 20,
               ),
-              SizedBox(width: 2.w),
-              Text(
-                l10n.report_description,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  l10n.report_description,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-              const Spacer(),
-              Text(
-                l10n.common_cancel,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  l10n.report_optional,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
                 ),
               ),
             ],
@@ -73,13 +80,28 @@ class DescriptionInputWidget extends StatelessWidget {
             maxLength: maxLength,
             maxLines: 4,
             decoration: InputDecoration(
-              hintText:
-                  'Describe the road condition, traffic impact, or any other relevant details...',
-              hintStyle: theme.inputDecorationTheme.hintStyle,
-              border: theme.inputDecorationTheme.border,
-              enabledBorder: theme.inputDecorationTheme.enabledBorder,
-              focusedBorder: theme.inputDecorationTheme.focusedBorder,
-              fillColor: theme.inputDecorationTheme.fillColor,
+              hintText: l10n.report_descriptionPlaceholder,
+              hintStyle: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: theme.dividerColor),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: theme.dividerColor),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.primary,
+                  width: 2,
+                ),
+              ),
+              fillColor: theme.brightness == Brightness.dark
+                  ? theme.colorScheme.surfaceContainerHighest
+                  : theme.colorScheme.surface,
               filled: true,
               contentPadding: EdgeInsets.all(3.w),
               counterStyle: theme.textTheme.labelSmall?.copyWith(
@@ -93,7 +115,7 @@ class DescriptionInputWidget extends StatelessWidget {
           if (suggestions.isNotEmpty) ...[
             SizedBox(height: 2.h),
             Text(
-              l10n.report_description,
+              l10n.report_suggestions,
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                 fontWeight: FontWeight.w500,
@@ -104,7 +126,9 @@ class DescriptionInputWidget extends StatelessWidget {
               spacing: 2.w,
               runSpacing: 1.h,
               children: suggestions
-                  .map((suggestion) => _buildSuggestionChip(suggestion))
+                  .map(
+                    (suggestion) => _buildSuggestionChip(context, suggestion),
+                  )
                   .toList(),
             ),
           ],
@@ -113,55 +137,51 @@ class DescriptionInputWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSuggestionChip(String suggestion) {
-    return Builder(
-      builder: (context) {
-        final theme = Theme.of(context);
-        return GestureDetector(
-          onTap: () {
-            final currentText = controller.text;
-            final newText = currentText.isEmpty
-                ? suggestion
-                : '$currentText ${currentText.endsWith('.') ? '' : '.'} $suggestion';
+  Widget _buildSuggestionChip(BuildContext context, String suggestion) {
+    final theme = Theme.of(context);
+    return GestureDetector(
+      onTap: () {
+        final currentText = controller.text;
+        final newText = currentText.isEmpty
+            ? suggestion
+            : '$currentText ${currentText.endsWith('.') ? '' : '.'} $suggestion';
 
-            if (newText.length <= maxLength) {
-              controller.text = newText;
-              controller.selection = TextSelection.fromPosition(
-                TextPosition(offset: controller.text.length),
-              );
-            }
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
-            decoration: BoxDecoration(
-              color: theme.primaryColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: theme.primaryColor.withValues(alpha: 0.3),
-                width: 1,
+        if (newText.length <= maxLength) {
+          controller.text = newText;
+          controller.selection = TextSelection.fromPosition(
+            TextPosition(offset: controller.text.length),
+          );
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.primary.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.add_circle_outline,
+              color: theme.colorScheme.primary,
+              size: 16,
+            ),
+            SizedBox(width: 1.w),
+            Text(
+              suggestion,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.w500,
               ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomIconWidget(
-                  iconName: 'add',
-                  color: theme.primaryColor,
-                  size: 14,
-                ),
-                SizedBox(width: 1.w),
-                Text(
-                  suggestion,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.primaryColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 }

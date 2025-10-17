@@ -24,19 +24,26 @@ class SubmissionActionsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: isDark
+            ? theme.colorScheme.surface
+            : theme.scaffoldBackgroundColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.black.withValues(alpha: 0.1),
+            blurRadius: 12,
+            offset: const Offset(0, -4),
           ),
         ],
+        border: Border(top: BorderSide(color: theme.dividerColor, width: 1)),
       ),
       child: SafeArea(
         child: Column(
@@ -51,15 +58,22 @@ class SubmissionActionsWidget extends StatelessWidget {
             // Submit button
             SizedBox(
               width: double.infinity,
-              height: 6.h,
+              height: 56,
               child: ElevatedButton(
                 onPressed: isFormValid && !isSubmitting ? onSubmit : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isFormValid
-                      ? theme.primaryColor
-                      : theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                  foregroundColor: Colors.white,
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.12),
+                  foregroundColor: isFormValid
+                      ? theme.colorScheme.onPrimary
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.38),
+                  disabledBackgroundColor: theme.colorScheme.onSurface
+                      .withValues(alpha: 0.12),
+                  disabledForegroundColor: theme.colorScheme.onSurface
+                      .withValues(alpha: 0.38),
                   elevation: isFormValid ? 2.0 : 0.0,
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -74,15 +88,15 @@ class SubmissionActionsWidget extends StatelessWidget {
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
+                                theme.colorScheme.onPrimary,
                               ),
                             ),
                           ),
-                          SizedBox(width: 3.w),
+                          const SizedBox(width: 12),
                           Text(
                             l10n.report_submittingReport,
                             style: theme.textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
+                              color: theme.colorScheme.onPrimary,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -91,16 +105,19 @@ class SubmissionActionsWidget extends StatelessWidget {
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CustomIconWidget(
-                            iconName: 'send',
-                            color: Colors.white,
+                          Icon(
+                            Icons.send,
+                            color: isFormValid
+                                ? theme.colorScheme.onPrimary
+                                : theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.38,
+                                  ),
                             size: 20,
                           ),
-                          SizedBox(width: 2.w),
+                          const SizedBox(width: 12),
                           Text(
                             l10n.report_submitReport,
                             style: theme.textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -114,17 +131,20 @@ class SubmissionActionsWidget extends StatelessWidget {
             // Save draft button
             SizedBox(
               width: double.infinity,
-              height: 5.h,
+              height: 48,
               child: OutlinedButton(
                 onPressed: !isSubmitting ? onSaveDraft : null,
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: theme.primaryColor,
+                  foregroundColor: theme.colorScheme.primary,
+                  disabledForegroundColor: theme.colorScheme.onSurface
+                      .withValues(alpha: 0.38),
                   side: BorderSide(
-                    color: theme.primaryColor.withValues(
-                      alpha: isSubmitting ? 0.3 : 1.0,
-                    ),
+                    color: isSubmitting
+                        ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
+                        : theme.colorScheme.primary,
                     width: 1.5,
                   ),
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -132,20 +152,17 @@ class SubmissionActionsWidget extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CustomIconWidget(
-                      iconName: 'save',
-                      color: theme.primaryColor.withValues(
-                        alpha: isSubmitting ? 0.3 : 1.0,
-                      ),
-                      size: 18,
+                    Icon(
+                      Icons.save_outlined,
+                      color: isSubmitting
+                          ? theme.colorScheme.onSurface.withValues(alpha: 0.38)
+                          : theme.colorScheme.primary,
+                      size: 20,
                     ),
-                    SizedBox(width: 2.w),
+                    const SizedBox(width: 8),
                     Text(
                       l10n.report_saveDraft,
                       style: theme.textTheme.titleSmall?.copyWith(
-                        color: theme.primaryColor.withValues(
-                          alpha: isSubmitting ? 0.3 : 1.0,
-                        ),
                         fontWeight: FontWeight.w500,
                       ),
                     ),

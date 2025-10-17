@@ -764,4 +764,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings_vibrationDesc => 'Vibrate for notifications';
+
+  @override
+  String get alerts_miles => 'miles';
+
+  @override
+  String get alerts_mile => 'mile';
+
+  @override
+  String get alerts_routeMonitoringTitle => 'Route Monitoring';
+
+  @override
+  String get alerts_noSavedRoutes =>
+      'No saved routes. Add frequent routes to monitor for alerts.';
+
+  @override
+  String get severity_minor => 'Minor';
+
+  @override
+  String get severity_low => 'Low';
+
+  @override
+  String get severity_moderate => 'Moderate';
+
+  @override
+  String get severity_high => 'High';
+
+  @override
+  String get severity_critical => 'Critical';
+
+  @override
+  String get severity_minorDesc => 'Minor inconvenience, no immediate danger';
+
+  @override
+  String get severity_lowDesc => 'Slight discomfort, minimal impact';
+
+  @override
+  String get severity_moderateDesc => 'Noticeable issue, requires attention';
+
+  @override
+  String get severity_highDesc => 'Significant hazard, needs urgent repair';
+
+  @override
+  String get severity_criticalDesc =>
+      'Extreme danger, immediate action required';
+
+  @override
+  String get report_descriptionPlaceholder =>
+      'Describe the road condition, traffic impact, or any other relevant details...';
+
+  @override
+  String get report_optional => 'Optional';
+
+  @override
+  String get report_suggestions => 'Suggestions';
 }

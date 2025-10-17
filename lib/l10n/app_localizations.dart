@@ -1585,6 +1585,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Vibrate for notifications'**
   String get settings_vibrationDesc;
+
+  /// Miles unit (plural)
+  ///
+  /// In en, this message translates to:
+  /// **'miles'**
+  String get alerts_miles;
+
+  /// Mile unit (singular)
+  ///
+  /// In en, this message translates to:
+  /// **'mile'**
+  String get alerts_mile;
+
+  /// Route monitoring section title
+  ///
+  /// In en, this message translates to:
+  /// **'Route Monitoring'**
+  String get alerts_routeMonitoringTitle;
+
+  /// Message when no routes are saved
+  ///
+  /// In en, this message translates to:
+  /// **'No saved routes. Add frequent routes to monitor for alerts.'**
+  String get alerts_noSavedRoutes;
+
+  /// Minor severity level
+  ///
+  /// In en, this message translates to:
+  /// **'Minor'**
+  String get severity_minor;
+
+  /// Low severity level
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get severity_low;
+
+  /// Moderate severity level
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get severity_moderate;
+
+  /// High severity level
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get severity_high;
+
+  /// Critical severity level
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get severity_critical;
+
+  /// Minor severity description
+  ///
+  /// In en, this message translates to:
+  /// **'Minor inconvenience, no immediate danger'**
+  String get severity_minorDesc;
+
+  /// Low severity description
+  ///
+  /// In en, this message translates to:
+  /// **'Slight discomfort, minimal impact'**
+  String get severity_lowDesc;
+
+  /// Moderate severity description
+  ///
+  /// In en, this message translates to:
+  /// **'Noticeable issue, requires attention'**
+  String get severity_moderateDesc;
+
+  /// High severity description
+  ///
+  /// In en, this message translates to:
+  /// **'Significant hazard, needs urgent repair'**
+  String get severity_highDesc;
+
+  /// Critical severity description
+  ///
+  /// In en, this message translates to:
+  /// **'Extreme danger, immediate action required'**
+  String get severity_criticalDesc;
+
+  /// Description input placeholder text
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the road condition, traffic impact, or any other relevant details...'**
+  String get report_descriptionPlaceholder;
+
+  /// Optional field indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get report_optional;
+
+  /// Suggestions section title
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions'**
+  String get report_suggestions;
 }
 
 class _AppLocalizationsDelegate

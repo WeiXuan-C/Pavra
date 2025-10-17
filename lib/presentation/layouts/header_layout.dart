@@ -24,6 +24,9 @@ class HeaderLayout extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(title),
       elevation: elevation,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
+      shadowColor: Colors.transparent,
       leading: leading,
       actions: actions,
       bottom: bottom,

@@ -751,4 +751,55 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settings_vibrationDesc => '为通知振动设备';
+
+  @override
+  String get alerts_miles => '英里';
+
+  @override
+  String get alerts_mile => '英里';
+
+  @override
+  String get alerts_routeMonitoringTitle => '路线监控';
+
+  @override
+  String get alerts_noSavedRoutes => '没有保存的路线。添加常用路线以监控警报。';
+
+  @override
+  String get severity_minor => '轻微';
+
+  @override
+  String get severity_low => '较低';
+
+  @override
+  String get severity_moderate => '中等';
+
+  @override
+  String get severity_high => '严重';
+
+  @override
+  String get severity_critical => '危急';
+
+  @override
+  String get severity_minorDesc => '轻微不便，无即时危险';
+
+  @override
+  String get severity_lowDesc => '轻微不适，影响最小';
+
+  @override
+  String get severity_moderateDesc => '明显问题，需要关注';
+
+  @override
+  String get severity_highDesc => '重大隐患，需要紧急修复';
+
+  @override
+  String get severity_criticalDesc => '极度危险，需要立即采取行动';
+
+  @override
+  String get report_descriptionPlaceholder => '描述道路状况、交通影响或其他相关细节...';
+
+  @override
+  String get report_optional => '可选';
+
+  @override
+  String get report_suggestions => '建议';
 }

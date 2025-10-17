@@ -57,9 +57,12 @@ class ProfileScreen extends StatelessWidget {
                         // Avatar
                         CircleAvatar(
                           radius: 50,
-                          backgroundColor: Theme.of(
-                            context,
-                          ).primaryColor.withValues(alpha: 0.1),
+                          backgroundColor:
+                              Theme.of(context).brightness == Brightness.dark
+                              ? Theme.of(context).colorScheme.primaryContainer
+                              : Theme.of(
+                                  context,
+                                ).colorScheme.primary.withValues(alpha: 0.1),
                           backgroundImage: profile?.avatarUrl != null
                               ? CachedNetworkImageProvider(profile!.avatarUrl!)
                               : null,
@@ -67,7 +70,13 @@ class ProfileScreen extends StatelessWidget {
                               ? Icon(
                                   Icons.person,
                                   size: 50,
-                                  color: Theme.of(context).primaryColor,
+                                  color:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Theme.of(
+                                          context,
+                                        ).colorScheme.onPrimaryContainer
+                                      : Theme.of(context).colorScheme.primary,
                                 )
                               : null,
                         ),
@@ -99,13 +108,19 @@ class ProfileScreen extends StatelessWidget {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.grey[200],
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Theme.of(
+                                    context,
+                                  ).colorScheme.surfaceContainerHighest
+                                : Colors.grey[200],
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            '${l10n.home_userId}: ${user.id.substring(0, 8)}...',
+                            '${l10n.home_userId}: ${user.id}',
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(fontFamily: 'monospace'),
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       ],

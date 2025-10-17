@@ -1002,5 +1002,77 @@
   "settings_vibrationDesc": "为通知振动设备",
   "@settings_vibrationDesc": {
     "description": "振动设置描述"
+  },
+  
+  "alerts_miles": "英里",
+  "@alerts_miles": {
+    "description": "英里单位（复数）"
+  },
+  "alerts_mile": "英里",
+  "@alerts_mile": {
+    "description": "英里单位（单数）"
+  },
+  
+  "alerts_routeMonitoringTitle": "路线监控",
+  "@alerts_routeMonitoringTitle": {
+    "description": "路线监控部分标题"
+  },
+  "alerts_noSavedRoutes": "没有保存的路线。添加常用路线以监控警报。",
+  "@alerts_noSavedRoutes": {
+    "description": "没有保存路线时的消息"
+  },
+  
+  "severity_minor": "轻微",
+  "@severity_minor": {
+    "description": "轻微严重程度"
+  },
+  "severity_low": "较低",
+  "@severity_low": {
+    "description": "较低严重程度"
+  },
+  "severity_moderate": "中等",
+  "@severity_moderate": {
+    "description": "中等严重程度"
+  },
+  "severity_high": "严重",
+  "@severity_high": {
+    "description": "严重程度"
+  },
+  "severity_critical": "危急",
+  "@severity_critical": {
+    "description": "危急严重程度"
+  },
+  "severity_minorDesc": "轻微不便，无即时危险",
+  "@severity_minorDesc": {
+    "description": "轻微严重程度描述"
+  },
+  "severity_lowDesc": "轻微不适，影响最小",
+  "@severity_lowDesc": {
+    "description": "较低严重程度描述"
+  },
+  "severity_moderateDesc": "明显问题，需要关注",
+  "@severity_moderateDesc": {
+    "description": "中等严重程度描述"
+  },
+  "severity_highDesc": "重大隐患，需要紧急修复",
+  "@severity_highDesc": {
+    "description": "严重程度描述"
+  },
+  "severity_criticalDesc": "极度危险，需要立即采取行动",
+  "@severity_criticalDesc": {
+    "description": "危急严重程度描述"
+  },
+  
+  "report_descriptionPlaceholder": "描述道路状况、交通影响或其他相关细节...",
+  "@report_descriptionPlaceholder": {
+    "description": "描述输入占位符文本"
+  },
+  "report_optional": "可选",
+  "@report_optional": {
+    "description": "可选字段指示器"
+  },
+  "report_suggestions": "建议",
+  "@report_suggestions": {
+    "description": "建议部分标题"
   }
 }

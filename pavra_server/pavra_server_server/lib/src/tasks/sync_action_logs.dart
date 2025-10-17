@@ -4,7 +4,7 @@ import '../services/action_log_service.dart';
 
 /// FutureCall that syncs action logs from local PostgreSQL to Supabase
 class ActionLogSyncTask extends FutureCall {
-  static const Duration _syncInterval = Duration(minutes: 10);
+  static const Duration _syncInterval = Duration(minutes: 1);
   static ActionLogService? _actionLogService;
 
   @override

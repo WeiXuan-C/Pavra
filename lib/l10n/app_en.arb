@@ -1002,5 +1002,77 @@
   "settings_vibrationDesc": "Vibrate for notifications",
   "@settings_vibrationDesc": {
     "description": "Vibration setting description"
+  },
+  
+  "alerts_miles": "miles",
+  "@alerts_miles": {
+    "description": "Miles unit (plural)"
+  },
+  "alerts_mile": "mile",
+  "@alerts_mile": {
+    "description": "Mile unit (singular)"
+  },
+  
+  "alerts_routeMonitoringTitle": "Route Monitoring",
+  "@alerts_routeMonitoringTitle": {
+    "description": "Route monitoring section title"
+  },
+  "alerts_noSavedRoutes": "No saved routes. Add frequent routes to monitor for alerts.",
+  "@alerts_noSavedRoutes": {
+    "description": "Message when no routes are saved"
+  },
+  
+  "severity_minor": "Minor",
+  "@severity_minor": {
+    "description": "Minor severity level"
+  },
+  "severity_low": "Low",
+  "@severity_low": {
+    "description": "Low severity level"
+  },
+  "severity_moderate": "Moderate",
+  "@severity_moderate": {
+    "description": "Moderate severity level"
+  },
+  "severity_high": "High",
+  "@severity_high": {
+    "description": "High severity level"
+  },
+  "severity_critical": "Critical",
+  "@severity_critical": {
+    "description": "Critical severity level"
+  },
+  "severity_minorDesc": "Minor inconvenience, no immediate danger",
+  "@severity_minorDesc": {
+    "description": "Minor severity description"
+  },
+  "severity_lowDesc": "Slight discomfort, minimal impact",
+  "@severity_lowDesc": {
+    "description": "Low severity description"
+  },
+  "severity_moderateDesc": "Noticeable issue, requires attention",
+  "@severity_moderateDesc": {
+    "description": "Moderate severity description"
+  },
+  "severity_highDesc": "Significant hazard, needs urgent repair",
+  "@severity_highDesc": {
+    "description": "High severity description"
+  },
+  "severity_criticalDesc": "Extreme danger, immediate action required",
+  "@severity_criticalDesc": {
+    "description": "Critical severity description"
+  },
+  
+  "report_descriptionPlaceholder": "Describe the road condition, traffic impact, or any other relevant details...",
+  "@report_descriptionPlaceholder": {
+    "description": "Description input placeholder text"
+  },
+  "report_optional": "Optional",
+  "@report_optional": {
+    "description": "Optional field indicator"
+  },
+  "report_suggestions": "Suggestions",
+  "@report_suggestions": {
+    "description": "Suggestions section title"
   }
 }
