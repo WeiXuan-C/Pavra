@@ -722,6 +722,48 @@ abstract class AppLocalizations {
   /// **'Submit Report'**
   String get camera_submitReport;
 
+  /// Burst mode active indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Burst Mode Active'**
+  String get camera_burstModeActive;
+
+  /// Instructions for normal capture mode
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to capture • Long press for burst mode'**
+  String get camera_captureInstructions;
+
+  /// Instructions for burst mode
+  ///
+  /// In en, this message translates to:
+  /// **'{burstMode} • Tap to capture • Long press to exit'**
+  String camera_burstModeInstructions(String burstMode);
+
+  /// Timestamp for very recent activity
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get time_justNow;
+
+  /// Timestamp for minutes ago
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m ago'**
+  String time_minutesAgo(int minutes);
+
+  /// Timestamp for hours ago
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h ago'**
+  String time_hoursAgo(int hours);
+
+  /// Timestamp for days ago
+  ///
+  /// In en, this message translates to:
+  /// **'{days}d ago'**
+  String time_daysAgo(int days);
+
   /// Map view screen title
   ///
   /// In en, this message translates to:

@@ -321,6 +321,35 @@ class AppLocalizationsZh extends AppLocalizations {
   String get camera_submitReport => '提交报告';
 
   @override
+  String get camera_burstModeActive => '连拍模式已激活';
+
+  @override
+  String get camera_captureInstructions => '点击拍摄 • 长按启用连拍模式';
+
+  @override
+  String camera_burstModeInstructions(String burstMode) {
+    return '$burstMode • 点击拍摄 • 长按退出';
+  }
+
+  @override
+  String get time_justNow => '刚刚';
+
+  @override
+  String time_minutesAgo(int minutes) {
+    return '$minutes分钟前';
+  }
+
+  @override
+  String time_hoursAgo(int hours) {
+    return '$hours小时前';
+  }
+
+  @override
+  String time_daysAgo(int days) {
+    return '$days天前';
+  }
+
+  @override
   String get map_title => '地图视图';
 
   @override

@@ -1,6 +1,5 @@
 {
   "@@locale": "zh",
-  
   "appName": "Pavra",
   "@appName": {
     "description": "应用名称"
@@ -9,7 +8,6 @@
   "@appTitle": {
     "description": "应用标题"
   },
-  
   "common_ok": "确定",
   "@common_ok": {
     "description": "确定按钮文本"
@@ -66,7 +64,6 @@
   "@common_submit": {
     "description": "提交按钮文本"
   },
-  
   "auth_welcomeTitle": "欢迎使用 Pavra",
   "@auth_welcomeTitle": {
     "description": "欢迎屏幕标题"
@@ -147,7 +144,6 @@
   "@auth_orContinueWith": {
     "description": "替代登录方式分隔文本"
   },
-  
   "home_title": "主页",
   "@home_title": {
     "description": "主页屏幕标题"
@@ -220,7 +216,6 @@
   "@home_settings": {
     "description": "设置菜单项"
   },
-  
   "camera_title": "摄像头检测",
   "@camera_title": {
     "description": "相机检测屏幕标题"
@@ -421,7 +416,54 @@
   "@camera_submitReport": {
     "description": "提交报告按钮文本"
   },
-  
+  "camera_burstModeActive": "连拍模式已激活",
+  "@camera_burstModeActive": {
+    "description": "连拍模式激活指示器"
+  },
+  "camera_captureInstructions": "点击拍摄 • 长按启用连拍模式",
+  "@camera_captureInstructions": {
+    "description": "普通拍摄模式说明"
+  },
+  "camera_burstModeInstructions": "{burstMode} • 点击拍摄 • 长按退出",
+  "@camera_burstModeInstructions": {
+    "description": "连拍模式说明",
+    "placeholders": {
+      "burstMode": {
+        "type": "String"
+      }
+    }
+  },
+  "time_justNow": "刚刚",
+  "@time_justNow": {
+    "description": "最近活动的时间戳"
+  },
+  "time_minutesAgo": "{minutes}分钟前",
+  "@time_minutesAgo": {
+    "description": "分钟前的时间戳",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "time_hoursAgo": "{hours}小时前",
+  "@time_hoursAgo": {
+    "description": "小时前的时间戳",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "time_daysAgo": "{days}天前",
+  "@time_daysAgo": {
+    "description": "天前的时间戳",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   "map_title": "地图视图",
   "@map_title": {
     "description": "地图视图屏幕标题"
@@ -522,7 +564,6 @@
   "@map_away": {
     "description": "距离后缀"
   },
-  
   "report_title": "报告问题",
   "@report_title": {
     "description": "报告问题屏幕标题"
@@ -679,7 +720,6 @@
   "@report_gpsAccuracy": {
     "description": "GPS精度标签"
   },
-  
   "alerts_title": "安全警报",
   "@alerts_title": {
     "description": "安全警报屏幕标题"
@@ -904,7 +944,6 @@
   "@report_obstacle": {
     "description": "障碍物问题类型"
   },
-  
   "nav_camera": "相机",
   "@nav_camera": {
     "description": "导航栏相机屏幕标签"
@@ -925,7 +964,6 @@
   "@nav_profile": {
     "description": "导航栏个人资料屏幕标签"
   },
-  
   "language_english": "English",
   "@language_english": {
     "description": "英语语言选项"
@@ -934,7 +972,6 @@
   "@language_chinese": {
     "description": "中文语言选项"
   },
-  
   "settings_notifications": "通知",
   "@settings_notifications": {
     "description": "通知部分标题"
@@ -1003,7 +1040,6 @@
   "@settings_vibrationDesc": {
     "description": "振动设置描述"
   },
-  
   "alerts_miles": "英里",
   "@alerts_miles": {
     "description": "英里单位（复数）"
@@ -1012,7 +1048,6 @@
   "@alerts_mile": {
     "description": "英里单位（单数）"
   },
-  
   "alerts_routeMonitoringTitle": "路线监控",
   "@alerts_routeMonitoringTitle": {
     "description": "路线监控部分标题"
@@ -1021,7 +1056,6 @@
   "@alerts_noSavedRoutes": {
     "description": "没有保存路线时的消息"
   },
-  
   "severity_minor": "轻微",
   "@severity_minor": {
     "description": "轻微严重程度"
@@ -1062,7 +1096,6 @@
   "@severity_criticalDesc": {
     "description": "危急严重程度描述"
   },
-  
   "report_descriptionPlaceholder": "描述道路状况、交通影响或其他相关细节...",
   "@report_descriptionPlaceholder": {
     "description": "描述输入占位符文本"

@@ -19,16 +19,17 @@ class DetectionHistoryPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    
+    final theme = Theme.of(context);
+
     return Container(
       width: 80.w,
       height: double.infinity,
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.horizontal(left: Radius.circular(20)),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.lightTheme.colorScheme.shadow,
+            color: theme.colorScheme.shadow,
             blurRadius: 16,
             offset: Offset(-4, 0),
           ),
@@ -40,7 +41,7 @@ class DetectionHistoryPanel extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(4.w),
             decoration: BoxDecoration(
-              color: AppTheme.lightTheme.colorScheme.primary,
+              color: theme.colorScheme.primary,
               borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
             ),
             child: Row(
@@ -48,8 +49,8 @@ class DetectionHistoryPanel extends StatelessWidget {
                 Expanded(
                   child: Text(
                     l10n.camera_recentDetections,
-                    style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-                      color: AppTheme.lightTheme.colorScheme.onPrimary,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: theme.colorScheme.onPrimary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -60,12 +61,11 @@ class DetectionHistoryPanel extends StatelessWidget {
                     padding: EdgeInsets.all(1.w),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppTheme.lightTheme.colorScheme.onPrimary
-                          .withValues(alpha: 0.2),
+                      color: theme.colorScheme.onPrimary.withValues(alpha: 0.2),
                     ),
                     child: CustomIconWidget(
                       iconName: 'close',
-                      color: AppTheme.lightTheme.colorScheme.onPrimary,
+                      color: theme.colorScheme.onPrimary,
                       size: 20,
                     ),
                   ),
@@ -77,14 +77,14 @@ class DetectionHistoryPanel extends StatelessWidget {
           // Content
           Expanded(
             child: recentDetections.isEmpty
-                ? _buildEmptyState(l10n)
+                ? _buildEmptyState(context, l10n)
                 : ListView.separated(
                     padding: EdgeInsets.all(4.w),
                     itemCount: recentDetections.length,
                     separatorBuilder: (context, index) => SizedBox(height: 2.h),
                     itemBuilder: (context, index) {
                       final detection = recentDetections[index];
-                      return _buildDetectionCard(detection);
+                      return _buildDetectionCard(context, detection);
                     },
                   ),
           ),
@@ -93,34 +93,29 @@ class DetectionHistoryPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState(AppLocalizations l10n) {
+  Widget _buildEmptyState(BuildContext context, AppLocalizations l10n) {
+    final theme = Theme.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CustomIconWidget(
             iconName: 'search_off',
-            color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-              alpha: 0.3,
-            ),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
             size: 48,
           ),
           SizedBox(height: 2.h),
           Text(
             l10n.camera_noDetectionsYet,
-            style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                alpha: 0.7,
-              ),
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
           SizedBox(height: 1.h),
           Text(
             l10n.camera_startScanning,
-            style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                alpha: 0.5,
-              ),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
             textAlign: TextAlign.center,
           ),
@@ -129,7 +124,11 @@ class DetectionHistoryPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildDetectionCard(Map<String, dynamic> detection) {
+  Widget _buildDetectionCard(
+    BuildContext context,
+    Map<String, dynamic> detection,
+  ) {
+    final theme = Theme.of(context);
     final String type = detection['type'] as String;
     final double confidence = detection['confidence'] as double;
     final DateTime timestamp = detection['timestamp'] as DateTime;
@@ -142,19 +141,19 @@ class DetectionHistoryPanel extends StatelessWidget {
 
     switch (type.toLowerCase()) {
       case 'pothole':
-        typeColor = AppTheme.lightTheme.colorScheme.error;
+        typeColor = theme.colorScheme.error;
         typeIcon = Icons.warning;
         break;
       case 'crack':
-        typeColor = AppTheme.lightTheme.colorScheme.tertiary;
+        typeColor = theme.colorScheme.tertiary;
         typeIcon = Icons.linear_scale;
         break;
       case 'obstacle':
-        typeColor = AppTheme.lightTheme.colorScheme.secondary;
+        typeColor = theme.colorScheme.secondary;
         typeIcon = Icons.block;
         break;
       default:
-        typeColor = AppTheme.lightTheme.colorScheme.primary;
+        typeColor = theme.colorScheme.primary;
         typeIcon = Icons.info;
     }
 
@@ -163,12 +162,12 @@ class DetectionHistoryPanel extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(3.w),
         decoration: BoxDecoration(
-          color: AppTheme.lightTheme.colorScheme.surface,
+          color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppTheme.lightTheme.dividerColor, width: 1),
+          border: Border.all(color: theme.dividerColor, width: 1),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.lightTheme.colorScheme.shadow,
+              color: theme.colorScheme.shadow,
               blurRadius: 4,
               offset: Offset(0, 2),
             ),
@@ -219,41 +218,39 @@ class DetectionHistoryPanel extends StatelessWidget {
                         ),
                         child: Text(
                           type.toUpperCase(),
-                          style: AppTheme.lightTheme.textTheme.labelSmall
-                              ?.copyWith(
-                                color: Colors.white,
-                                fontSize: 8.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: Colors.white,
+                            fontSize: 8.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                       SizedBox(width: 2.w),
                       Text(
                         '${(confidence * 100).toInt()}%',
-                        style: AppTheme.lightTheme.textTheme.labelSmall
-                            ?.copyWith(
-                              color: AppTheme.lightTheme.colorScheme.onSurface
-                                  .withValues(alpha: 0.7),
-                              fontWeight: FontWeight.w500,
-                            ),
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.7,
+                          ),
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
                   SizedBox(height: 1.h),
                   Text(
                     location,
-                    style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                      color: AppTheme.lightTheme.colorScheme.onSurface,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 0.5.h),
                   Text(
-                    _formatTimestamp(timestamp),
-                    style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                      color: AppTheme.lightTheme.colorScheme.onSurface
-                          .withValues(alpha: 0.5),
+                    _formatTimestamp(timestamp, context),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
                 ],
@@ -263,9 +260,7 @@ class DetectionHistoryPanel extends StatelessWidget {
             // Action Button
             CustomIconWidget(
               iconName: 'arrow_forward_ios',
-              color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                alpha: 0.3,
-              ),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
               size: 16,
             ),
           ],
@@ -274,18 +269,19 @@ class DetectionHistoryPanel extends StatelessWidget {
     );
   }
 
-  String _formatTimestamp(DateTime timestamp) {
+  String _formatTimestamp(DateTime timestamp, BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final now = DateTime.now();
     final difference = now.difference(timestamp);
 
     if (difference.inMinutes < 1) {
-      return 'Just now';
+      return l10n.time_justNow;
     } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}m ago';
+      return l10n.time_minutesAgo(difference.inMinutes);
     } else if (difference.inHours < 24) {
-      return '${difference.inHours}h ago';
+      return l10n.time_hoursAgo(difference.inHours);
     } else {
-      return '${difference.inDays}d ago';
+      return l10n.time_daysAgo(difference.inDays);
     }
   }
 }

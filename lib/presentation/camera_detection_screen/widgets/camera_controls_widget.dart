@@ -26,16 +26,17 @@ class CameraControlsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
 
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.surface.withValues(alpha: 0.95),
+        color: theme.colorScheme.surface.withValues(alpha: 0.95),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.lightTheme.colorScheme.shadow,
+            color: theme.colorScheme.shadow,
             blurRadius: 12,
             offset: Offset(0, -4),
           ),
@@ -47,7 +48,7 @@ class CameraControlsWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             // Burst Mode Toggle
-            if (isBurstMode) _buildBurstModeIndicator(),
+            if (isBurstMode) _buildBurstModeIndicator(context),
 
             SizedBox(height: 1.h),
 
@@ -57,6 +58,7 @@ class CameraControlsWidget extends StatelessWidget {
               children: [
                 // Gallery Button
                 _buildControlButton(
+                  context: context,
                   icon: 'photo_library',
                   onPressed: onGalleryPressed,
                   size: 12.w,
@@ -72,11 +74,11 @@ class CameraControlsWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: isCapturing
-                          ? AppTheme.lightTheme.colorScheme.error
-                          : AppTheme.lightTheme.colorScheme.primary,
+                          ? theme.colorScheme.error
+                          : theme.colorScheme.primary,
                       boxShadow: [
                         BoxShadow(
-                          color: AppTheme.lightTheme.colorScheme.shadow,
+                          color: theme.colorScheme.shadow,
                           blurRadius: 8,
                           offset: Offset(0, 4),
                         ),
@@ -90,14 +92,14 @@ class CameraControlsWidget extends StatelessWidget {
                             height: 16.w,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: AppTheme.lightTheme.colorScheme.onPrimary,
+                              color: theme.colorScheme.onPrimary,
                             ),
                           ),
                         ),
                         if (isCapturing)
                           Center(
                             child: CircularProgressIndicator(
-                              color: AppTheme.lightTheme.colorScheme.onError,
+                              color: theme.colorScheme.onError,
                               strokeWidth: 3,
                             ),
                           ),
@@ -110,24 +112,16 @@ class CameraControlsWidget extends StatelessWidget {
                               height: 4.w,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color:
-                                    AppTheme.lightTheme.colorScheme.secondary,
+                                color: theme.colorScheme.secondary,
                               ),
                               child: Center(
                                 child: Text(
                                   'B',
-                                  style: AppTheme
-                                      .lightTheme
-                                      .textTheme
-                                      .labelSmall
-                                      ?.copyWith(
-                                        color: AppTheme
-                                            .lightTheme
-                                            .colorScheme
-                                            .onSecondary,
-                                        fontSize: 8.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: theme.colorScheme.onSecondary,
+                                    fontSize: 8.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
@@ -139,6 +133,7 @@ class CameraControlsWidget extends StatelessWidget {
 
                 // Flash Button
                 _buildControlButton(
+                  context: context,
                   icon: isFlashOn ? 'flash_on' : 'flash_off',
                   onPressed: onFlashToggle,
                   size: 12.w,
@@ -152,12 +147,10 @@ class CameraControlsWidget extends StatelessWidget {
             // Instructions
             Text(
               isBurstMode
-                  ? '${l10n.camera_burstMode} • Tap to capture • Long press to exit'
-                  : 'Tap to capture • Long press for burst mode',
-              style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                color: AppTheme.lightTheme.colorScheme.onSurface.withValues(
-                  alpha: 0.7,
-                ),
+                  ? l10n.camera_burstModeInstructions(l10n.camera_burstMode)
+                  : l10n.camera_captureInstructions,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -168,11 +161,13 @@ class CameraControlsWidget extends StatelessWidget {
   }
 
   Widget _buildControlButton({
+    required BuildContext context,
     required String icon,
     required VoidCallback onPressed,
     required double size,
     bool isActive = false,
   }) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: onPressed,
       child: Container(
@@ -181,12 +176,12 @@ class CameraControlsWidget extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: isActive
-              ? AppTheme.lightTheme.colorScheme.secondary
-              : AppTheme.lightTheme.colorScheme.surface,
-          border: Border.all(color: AppTheme.lightTheme.dividerColor, width: 1),
+              ? theme.colorScheme.secondary
+              : theme.colorScheme.surface,
+          border: Border.all(color: theme.dividerColor, width: 1),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.lightTheme.colorScheme.shadow,
+              color: theme.colorScheme.shadow,
               blurRadius: 4,
               offset: Offset(0, 2),
             ),
@@ -196,8 +191,8 @@ class CameraControlsWidget extends StatelessWidget {
           child: CustomIconWidget(
             iconName: icon,
             color: isActive
-                ? AppTheme.lightTheme.colorScheme.onSecondary
-                : AppTheme.lightTheme.colorScheme.onSurface,
+                ? theme.colorScheme.onSecondary
+                : theme.colorScheme.onSurface,
             size: size * 0.4,
           ),
         ),
@@ -205,30 +200,29 @@ class CameraControlsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildBurstModeIndicator() {
+  Widget _buildBurstModeIndicator(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.colorScheme.secondary.withValues(alpha: 0.1),
+        color: theme.colorScheme.secondary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: AppTheme.lightTheme.colorScheme.secondary,
-          width: 1,
-        ),
+        border: Border.all(color: theme.colorScheme.secondary, width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomIconWidget(
             iconName: 'burst_mode',
-            color: AppTheme.lightTheme.colorScheme.secondary,
+            color: theme.colorScheme.secondary,
             size: 16,
           ),
           SizedBox(width: 2.w),
           Text(
-            'Burst Mode Active',
-            style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.secondary,
+            l10n.camera_burstModeActive,
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: theme.colorScheme.secondary,
               fontWeight: FontWeight.w600,
             ),
           ),

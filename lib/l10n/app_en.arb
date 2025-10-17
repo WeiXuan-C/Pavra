@@ -421,6 +421,55 @@
   "@camera_submitReport": {
     "description": "Submit report button text"
   },
+  "camera_burstModeActive": "Burst Mode Active",
+  "@camera_burstModeActive": {
+    "description": "Burst mode active indicator"
+  },
+  "camera_captureInstructions": "Tap to capture • Long press for burst mode",
+  "@camera_captureInstructions": {
+    "description": "Instructions for normal capture mode"
+  },
+  "camera_burstModeInstructions": "{burstMode} • Tap to capture • Long press to exit",
+  "@camera_burstModeInstructions": {
+    "description": "Instructions for burst mode",
+    "placeholders": {
+      "burstMode": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "time_justNow": "Just now",
+  "@time_justNow": {
+    "description": "Timestamp for very recent activity"
+  },
+  "time_minutesAgo": "{minutes}m ago",
+  "@time_minutesAgo": {
+    "description": "Timestamp for minutes ago",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "time_hoursAgo": "{hours}h ago",
+  "@time_hoursAgo": {
+    "description": "Timestamp for hours ago",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "time_daysAgo": "{days}d ago",
+  "@time_daysAgo": {
+    "description": "Timestamp for days ago",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
   
   "map_title": "Map View",
   "@map_title": {

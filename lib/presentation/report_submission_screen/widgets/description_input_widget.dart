@@ -172,11 +172,14 @@ class DescriptionInputWidget extends StatelessWidget {
               size: 16,
             ),
             SizedBox(width: 1.w),
-            Text(
-              suggestion,
-              style: theme.textTheme.labelMedium?.copyWith(
-                color: theme.colorScheme.primary,
-                fontWeight: FontWeight.w500,
+            Flexible(
+              child: Text(
+                suggestion,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],

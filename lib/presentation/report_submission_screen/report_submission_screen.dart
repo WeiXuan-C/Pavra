@@ -294,7 +294,7 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
               Icon(
                 Icons.check_circle,
                 color: theme.brightness == Brightness.light
-                    ? const Color(0xFF388E3C)  // Success green from theme
+                    ? const Color(0xFF388E3C) // Success green from theme
                     : const Color(0xFF66BB6A),
                 size: 28,
               ),
@@ -433,12 +433,12 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
       child: Scaffold(
         appBar: HeaderLayout(
           title: l10n.report_title,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(Icons.arrow_back, size: 24),
-          ),
+          // leading: IconButton(
+          //   onPressed: () {
+          //     Navigator.of(context).pop();
+          //   },
+          //   icon: Icon(Icons.arrow_back, size: 24),
+          // ),
           actions: [
             IconButton(
               onPressed: () {

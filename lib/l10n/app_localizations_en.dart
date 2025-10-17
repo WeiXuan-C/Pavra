@@ -322,6 +322,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get camera_submitReport => 'Submit Report';
 
   @override
+  String get camera_burstModeActive => 'Burst Mode Active';
+
+  @override
+  String get camera_captureInstructions =>
+      'Tap to capture • Long press for burst mode';
+
+  @override
+  String camera_burstModeInstructions(String burstMode) {
+    return '$burstMode • Tap to capture • Long press to exit';
+  }
+
+  @override
+  String get time_justNow => 'Just now';
+
+  @override
+  String time_minutesAgo(int minutes) {
+    return '${minutes}m ago';
+  }
+
+  @override
+  String time_hoursAgo(int hours) {
+    return '${hours}h ago';
+  }
+
+  @override
+  String time_daysAgo(int days) {
+    return '${days}d ago';
+  }
+
+  @override
   String get map_title => 'Map View';
 
   @override
