@@ -45,31 +45,21 @@ class PLog {
 
 /// ✅ Entry point of the Pavra Serverpod backend.
 void run(List<String> args) async {
-  print('🔧 Starting Pavra Server...');
-
   final pod = Serverpod(args, Protocol(), Endpoints());
 
   // 1️⃣ Start core server (HTTP, database)
-  print('1️⃣ Starting Serverpod core...');
   await pod.start();
-  print('✅ Serverpod core started');
 
   // 2️⃣ Initialize Redis connection (Railway)
-  print('2️⃣ Initializing Redis...');
   await _initializeRedis(pod);
 
   // 3️⃣ Initialize Supabase connection
-  print('3️⃣ Initializing Supabase...');
   await _initializeSupabase(pod);
 
   // 4️⃣ Start background task: Action Log Sync
-  print('4️⃣ Initializing Action Log Sync...');
-  // ⚠️ Temporarily disabled - we're using Redis → Supabase direct sync instead
-  // await initializeActionLogSync(pod);
-  print('⚠️ Action Log Sync disabled (using Redis queue instead)');
+  await initializeActionLogSync(pod);
 
   // 5️⃣ Setup web routes
-  print('5️⃣ Setting up web routes...');
   pod.webServer.addRoute(RouteRoot(), '/');
   pod.webServer.addRoute(RouteRoot(), '/index.html');
   pod.webServer.addRoute(
@@ -78,8 +68,6 @@ void run(List<String> args) async {
   );
 
   // ✅ Final log
-  print('🚀 Pavra Server started successfully!');
-  print('📡 Server listening on port ${pod.config.apiServer.port}');
   PLog.info('🚀 Pavra Server started successfully!');
 }
 
@@ -88,25 +76,35 @@ Future<void> _initializeRedis(Serverpod pod) async {
   try {
     final config = pod.config;
 
-    // Check if Redis is enabled in config
+    // Check if Redis is enabled
     if (config.redis?.enabled != true) {
-      PLog.warn('⚠️ Redis is disabled in configuration.');
+      PLog.warn('Redis is disabled in configuration (check your config file).');
       return;
     }
 
-    // Get Redis configuration from config file (which loads from environment variables)
-    final redisHost = config.redis?.host;
-    final redisPort = config.redis?.port ?? 6379;
-    final redisPassword = config.redis?.password;
+    // Railway sets REDIS_URL in this format:
+    // redis://default:<password>@<host>:<port>
+    final redisUrl = Platform.environment['REDIS_URL'];
+    String? redisHost = config.redis?.host;
+    int redisPort = config.redis?.port ?? 6379;
+    String? redisPassword = config.redis?.password;
+
+    if (redisUrl != null && redisUrl.startsWith('redis://')) {
+      final uri = Uri.parse(redisUrl);
+      redisHost = uri.host;
+      redisPort = uri.port;
+      redisPassword = uri.userInfo.split(':').length > 1
+          ? uri.userInfo.split(':')[1]
+          : null;
+      PLog.info('Detected Railway Redis URL -> $redisHost:$redisPort');
+    }
 
     if (redisHost == null || redisHost.isEmpty) {
-      PLog.error('❌ Redis host not configured. Check your .env file.');
-      PLog.info(
-          '   Required: REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_USER');
+      PLog.error('Redis host not configured or missing.');
       return;
     }
 
-    // Connect to Redis using our custom RedisService
+    // Connect Redis
     PLog.info('🔌 Connecting to Redis at $redisHost:$redisPort...');
     await RedisService.initialize(
       host: redisHost,
@@ -123,14 +121,13 @@ Future<void> _initializeRedis(Serverpod pod) async {
     final result = await redis.get(testKey);
 
     if (result == testValue) {
-      PLog.info('✅ Redis connection verified successfully!');
+      PLog.info('✅ Redis connection verified (Railway OK).');
       await redis.delete(testKey);
     } else {
-      PLog.warn('⚠️ Redis test read/write failed. Check credentials.');
+      PLog.warn('⚠️ Redis test read/write failed. Check Railway credentials.');
     }
   } catch (e, stack) {
-    PLog.error('❌ Failed to connect to Redis.', e, stack);
-    PLog.warn('⚠️ Action logging will be disabled without Redis.');
+    PLog.error('❌ Failed to initialize Redis.', e, stack);
   }
 }
 

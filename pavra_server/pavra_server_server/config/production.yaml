@@ -28,7 +28,7 @@ webServer:
 
 # Database - Railway PostgreSQL (dummy, not used, all data via Supabase REST API)
 database:
-  host: ${PGHOST}
+  host: postgres.railway.internal
   port: 5432
   name: postgres
   user: ${PGUSER}
