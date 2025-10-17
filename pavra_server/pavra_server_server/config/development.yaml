@@ -37,10 +37,12 @@ webServer:
   #isUnixSocket: true # defaults to false
 
 # This is the setup for Redis.
+# For Railway Redis, set REDIS_URL environment variable
+# Format: redis://default:password@host:port
 redis:
-  enabled: false
+  enabled: true
   host: localhost
-  port: 8091
+  port: 6379
   #user: # defaults to empty
   #requireSsl: true # defaults to false
 

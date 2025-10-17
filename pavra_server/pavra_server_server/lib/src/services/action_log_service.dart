@@ -14,7 +14,7 @@ class ActionLogService {
 
   /// Log a user action to Redis queue
   Future<void> logAction({
-    required String userId,
+    String? userId, // Made optional to support logs without user context
     required String action,
     String? targetId,
     String? targetTable,
@@ -22,14 +22,15 @@ class ActionLogService {
     Map<String, dynamic>? metadata,
   }) async {
     try {
-      final logEntry = {
-        'user_id': userId,
-        'action': action,
-        'target_id': targetId,
-        'target_table': targetTable,
-        'description': description,
+      final logEntry = <String, dynamic>{
+        if (userId != null) 'user_id': userId, // Only include if provided
+        'action_type': action, // Changed from 'action' to 'action_type'
+        if (targetId != null) 'target_id': targetId,
+        if (targetTable != null) 'target_table': targetTable,
+        if (description != null) 'description': description,
         'metadata': metadata ?? {},
         'created_at': DateTime.now().toIso8601String(),
+        'is_synced': false,
       };
 
       // Push to Redis queue using LPUSH (list push)
@@ -38,7 +39,8 @@ class ActionLogService {
 
       await redis.lpush(queueKey, logJson);
 
-      PLog.info('Action logged to Redis: $action by user $userId');
+      PLog.info(
+          'Action logged to Redis: $action${userId != null ? ' by user $userId' : ''}');
     } catch (e, stack) {
       PLog.error('Failed to log action to Redis', e, stack);
     }
@@ -68,13 +70,16 @@ class ActionLogService {
 
         // Insert to Supabase
         try {
+          // Mark as synced before inserting
+          log['is_synced'] = true;
           await supabase.insert('action_log', [log]);
           syncedCount++;
-          PLog.info('Log synced to Supabase: ${log['action']}');
+          PLog.info('Log synced to Supabase: ${log['action_type']}');
         } catch (e) {
           PLog.error('Failed to sync log to Supabase, re-queuing', e);
-          // Re-queue the failed log
-          await redis.lpush(queueKey, logJson);
+          // Re-queue the failed log (with is_synced = false)
+          log['is_synced'] = false;
+          await redis.lpush(queueKey, jsonEncode(log));
           break; // Stop processing to avoid cascading failures
         }
       }
