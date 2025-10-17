@@ -31,7 +31,7 @@ database:
   host: postgres.railway.internal
   port: 5432
   name: postgres
-  user: ${PGUSER}
+  user: postgres
   password: ${PGPASSWORD}
 
 # This is the setup for Redis (Railway)
