@@ -4,27 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../supabase/auth_service.dart';
 import '../models/user_model.dart';
+import '../services/action_log_client.dart';
 
 /// Authentication Provider
 /// Manages authentication state and provides methods for auth operations
 /// Uses ChangeNotifier for state management with Provider pattern
 class AuthProvider with ChangeNotifier {
   final AuthService _authService = AuthService();
+  final ActionLogClient _actionLog = ActionLogClient();
 
   // State variables
   User? _user;
   UserProfile? _userProfile;
-  bool _isInitializing = true;  // For app initialization
-  bool _isLoading = false;       // For operations (sendOtp, verifyOtp, etc.)
+  bool _isInitializing = true; // For app initialization
+  bool _isLoading = false; // For operations (sendOtp, verifyOtp, etc.)
   String? _errorMessage;
   StreamSubscription<AuthState>? _authSubscription;
-
 
   // Getters
   User? get user => _user;
   UserProfile? get userProfile => _userProfile;
-  bool get isInitializing => _isInitializing;  // Used by RouteGuard
-  bool get isLoading => _isLoading;            // Used by UI components
+  bool get isInitializing => _isInitializing; // Used by RouteGuard
+  bool get isLoading => _isLoading; // Used by UI components
   bool get isAuthenticated => _user != null;
   String? get errorMessage => _errorMessage;
 
@@ -70,8 +71,23 @@ class AuthProvider with ChangeNotifier {
         // Ensure profile exists (fallback if trigger fails)
         await _authService.createProfileIfNotExists(_user!);
         await _loadUserProfile();
+
+        // 🔥 Log sign-in action to backend
+        _actionLog.logSignIn(
+          userId: _user!.id,
+          email: _user!.email ?? 'unknown',
+          metadata: {
+            'provider': _user!.appMetadata['provider'] ?? 'email',
+            'platform': 'flutter_app',
+          },
+        );
       }
     } else if (event == AuthChangeEvent.signedOut) {
+      // 🔥 Log sign-out action to backend
+      if (_user != null) {
+        _actionLog.logSignOut(userId: _user!.id, email: _user!.email);
+      }
+
       _user = null;
       _userProfile = null;
     } else if (event == AuthChangeEvent.userUpdated) {
@@ -99,19 +115,30 @@ class AuthProvider with ChangeNotifier {
   Future<bool> sendOtp(String email) async {
     developer.log('=== AuthProvider: sendOtp called ===', name: 'AuthProvider');
     developer.log('Email: $email', name: 'AuthProvider');
-    
+
     _setLoading(true);
     _clearError();
 
     try {
-      developer.log('Calling AuthService.sendEmailOtp...', name: 'AuthProvider');
+      developer.log(
+        'Calling AuthService.sendEmailOtp...',
+        name: 'AuthProvider',
+      );
       await _authService.sendEmailOtp(email: email);
-      developer.log('✅ AuthProvider: OTP sent successfully', name: 'AuthProvider');
+      developer.log(
+        '✅ AuthProvider: OTP sent successfully',
+        name: 'AuthProvider',
+      );
       _setLoading(false);
       return true;
     } catch (e, stackTrace) {
       final errorMsg = 'Failed to send OTP: ${e.toString()}';
-      developer.log('❌ AuthProvider: $errorMsg', name: 'AuthProvider', error: e, stackTrace: stackTrace);
+      developer.log(
+        '❌ AuthProvider: $errorMsg',
+        name: 'AuthProvider',
+        error: e,
+        stackTrace: stackTrace,
+      );
       _setError(errorMsg);
       _setLoading(false);
       return false;
@@ -131,6 +158,26 @@ class AuthProvider with ChangeNotifier {
 
       if (response.user != null) {
         _user = response.user;
+
+        // 🔥 Check if this is a new user (sign-up) or existing user (sign-in)
+        // New users created within the last minute are considered sign-ups
+        final user = response.session?.user;
+        final createdAt = user?.createdAt;
+        final isNewUser =
+            createdAt != null &&
+            DateTime.now().difference(DateTime.parse(createdAt)).inMinutes < 1;
+
+        if (isNewUser) {
+          // Log as sign-up
+          _actionLog.logSignUp(
+            userId: _user!.id,
+            email: email,
+            username: email.split('@')[0],
+            metadata: {'auth_method': 'email_otp', 'platform': 'flutter_app'},
+          );
+        }
+        // Note: sign-in is logged in _handleAuthStateChange
+
         // Profile creation is handled by auth state change listener
         _setLoading(false);
         return true;
@@ -193,10 +240,7 @@ class AuthProvider with ChangeNotifier {
   // ========== PROFILE METHODS ==========
 
   /// Update user profile
-  Future<bool> updateProfile({
-    String? username,
-    String? avatarUrl,
-  }) async {
+  Future<bool> updateProfile({String? username, String? avatarUrl}) async {
     if (_user == null) return false;
 
     _setLoading(true);
