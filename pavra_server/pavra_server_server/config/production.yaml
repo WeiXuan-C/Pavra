@@ -47,7 +47,7 @@ maxRequestSize: 524288 # The maximum size of requests allowed in bytes
 
 sessionLogs:
   consoleEnabled: false
-  persistentEnabled: true
+  persistentEnabled: false
 # consoleLogFormat: json # Defaults to "json", options are "text" or "json"
 
 futureCallExecutionEnabled: true #defaults to true

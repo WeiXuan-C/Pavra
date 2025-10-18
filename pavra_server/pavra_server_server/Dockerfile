@@ -53,9 +53,12 @@ PWDEOF
 
 echo "=== Replacing environment variables in production.yaml ==="
 
-# 使用 envsubst 替换 production.yaml 中的环境变量
-envsubst < /app/config/production.yaml > /app/config/production.yaml.tmp
-mv /app/config/production.yaml.tmp /app/config/production.yaml
+# 只替换特定的环境变量，避免破坏 YAML 格式
+# 使用 sed 替换特定变量
+sed -i "s|\${PUBLIC_HOST}|${PUBLIC_HOST}|g" /app/config/production.yaml
+sed -i "s|\${PGPASSWORD}|${PGPASSWORD}|g" /app/config/production.yaml
+sed -i "s|\${REDIS_PASSWORD}|${REDIS_PASSWORD}|g" /app/config/production.yaml
+sed -i "s|\${SERVICE_SECRET}|${SERVICE_SECRET}|g" /app/config/production.yaml
 
 echo "=== Applying database migrations ==="
 
