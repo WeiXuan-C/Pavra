@@ -70,6 +70,9 @@ fi
 # 应用数据库迁移
 PGPASSWORD="${PGPASSWORD}" psql -h postgres.railway.internal -U postgres -d postgres -f /app/migrations/20251013093515748/migration.sql || echo "Migration may have already been applied"
 
+# 初始化 runtime settings（如果不存在）
+PGPASSWORD="${PGPASSWORD}" psql -h postgres.railway.internal -U postgres -d postgres -f /app/migrations/init_runtime_settings.sql || echo "Runtime settings already initialized"
+
 echo "=== Starting Serverpod server ==="
 
 # 启动服务器
