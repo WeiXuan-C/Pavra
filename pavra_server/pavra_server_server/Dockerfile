@@ -57,6 +57,16 @@ echo "=== Replacing environment variables in production.yaml ==="
 envsubst < /app/config/production.yaml > /app/config/production.yaml.tmp
 mv /app/config/production.yaml.tmp /app/config/production.yaml
 
+echo "=== Applying database migrations ==="
+
+# 安装 PostgreSQL 客户端（如果需要）
+if ! command -v psql > /dev/null 2>&1; then
+    apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/apt/lists/*
+fi
+
+# 应用数据库迁移
+PGPASSWORD="${PGPASSWORD}" psql -h postgres.railway.internal -U postgres -d postgres -f /app/migrations/20251013093515748/migration.sql || echo "Migration may have already been applied"
+
 echo "=== Starting Serverpod server ==="
 
 # 启动服务器
