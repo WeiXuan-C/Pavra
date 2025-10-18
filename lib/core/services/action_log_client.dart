@@ -25,7 +25,10 @@ class ActionLogClient {
     // 如果是标准端口（80/443），不需要显示端口号
     final portSuffix = (port == '80' || port == '443') ? '' : ':$port';
 
-    return '$scheme://$host$portSuffix';
+    final url = '$scheme://$host$portSuffix';
+    developer.log('  Final URL: $url', name: 'ActionLog');
+
+    return url;
   }
 
   // 🔥 检测是否为开发/测试环境
@@ -67,8 +70,7 @@ class ActionLogClient {
           'metadata': {
             'email': email,
             'timestamp': DateTime.now().toIso8601String(),
-            'is_test': true,
-            'environment': 'development',
+            ..._environmentMetadata,
             ...?metadata,
           },
         },
@@ -102,8 +104,7 @@ class ActionLogClient {
             'username': username,
             'timestamp': DateTime.now().toIso8601String(),
             'registration_source': 'mobile_app',
-            'is_test': true,
-            'environment': 'development',
+            ..._environmentMetadata,
             ...?metadata,
           },
         },
@@ -129,8 +130,7 @@ class ActionLogClient {
           'metadata': {
             if (email != null) 'email': email,
             'timestamp': DateTime.now().toIso8601String(),
-            'is_test': true,
-            'environment': 'development',
+            ..._environmentMetadata,
           },
         },
       );
