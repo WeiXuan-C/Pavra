@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../core/models/notification_model.dart';
 import '../../core/providers/auth_provider.dart';
 import '../../l10n/app_localizations.dart';
+import 'notification_form_screen.dart';
 import 'notification_provider.dart';
 import 'widgets/notification_item_widget.dart';
 import 'widgets/notification_skeleton.dart';
@@ -77,6 +78,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 );
               }
               return const SizedBox.shrink();
+            },
+          ),
+          // Create notification button
+          IconButton(
+            icon: const Icon(Icons.add),
+            tooltip: l10n.notification_create,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationFormScreen(),
+                ),
+              );
             },
           ),
           // Delete all button
@@ -197,6 +211,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 return NotificationItemWidget(
                   notification: notification,
                   onTap: () => _handleNotificationTap(notification),
+                  onEdit: () => _handleEdit(notification),
                   onDelete: () => _handleDelete(notification.id),
                 );
               },
@@ -213,6 +228,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
     if (!notification.isRead) {
       await context.read<NotificationProvider>().markAsRead(notification.id);
     }
+  }
+
+  /// Handle notification edit
+  void _handleEdit(NotificationModel notification) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            NotificationFormScreen(notification: notification),
+      ),
+    );
   }
 
   /// Handle notification delete

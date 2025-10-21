@@ -1204,5 +1204,185 @@
   "notification_typeInfo": "信息",
   "@notification_typeInfo": {
     "description": "信息通知类型标签"
+  },
+  "notification_create": "创建通知",
+  "@notification_create": {
+    "description": "创建通知按钮和屏幕标题"
+  },
+  "notification_edit": "编辑通知",
+  "@notification_edit": {
+    "description": "编辑通知屏幕标题"
+  },
+  "notification_titleLabel": "标题",
+  "@notification_titleLabel": {
+    "description": "通知标题字段标签"
+  },
+  "notification_titleHint": "输入通知标题",
+  "@notification_titleHint": {
+    "description": "通知标题字段提示"
+  },
+  "notification_titleRequired": "标题为必填项",
+  "@notification_titleRequired": {
+    "description": "标题必填验证消息"
+  },
+  "notification_titleTooLong": "标题过长（最多100个字符）",
+  "@notification_titleTooLong": {
+    "description": "标题过长验证消息"
+  },
+  "notification_messageLabel": "消息",
+  "@notification_messageLabel": {
+    "description": "通知消息字段标签"
+  },
+  "notification_messageHint": "输入通知消息",
+  "@notification_messageHint": {
+    "description": "通知消息字段提示"
+  },
+  "notification_messageRequired": "消息为必填项",
+  "@notification_messageRequired": {
+    "description": "消息必填验证消息"
+  },
+  "notification_messageTooLong": "消息过长（最多500个字符）",
+  "@notification_messageTooLong": {
+    "description": "消息过长验证消息"
+  },
+  "notification_typeLabel": "类型",
+  "@notification_typeLabel": {
+    "description": "通知类型字段标签"
+  },
+  "notification_relatedActionLabel": "相关操作（可选）",
+  "@notification_relatedActionLabel": {
+    "description": "相关操作字段标签"
+  },
+  "notification_relatedActionHint": "例如：/reports/123",
+  "@notification_relatedActionHint": {
+    "description": "相关操作字段提示"
+  },
+  "notification_preview": "预览",
+  "@notification_preview": {
+    "description": "预览部分标题"
+  },
+  "notification_update": "更新通知",
+  "@notification_update": {
+    "description": "更新通知按钮文本"
+  },
+  "notification_createSuccess": "通知创建成功",
+  "@notification_createSuccess": {
+    "description": "通知创建成功消息"
+  },
+  "notification_createError": "创建通知失败",
+  "@notification_createError": {
+    "description": "通知创建失败消息"
+  },
+  "notification_updateSuccess": "通知更新成功",
+  "@notification_updateSuccess": {
+    "description": "通知更新成功消息"
+  },
+  "notification_updateError": "更新通知失败",
+  "@notification_updateError": {
+    "description": "通知更新失败消息"
+  },
+  "notification_type_success": "成功",
+  "@notification_type_success": {
+    "description": "下拉列表中的成功类型标签"
+  },
+  "notification_type_warning": "警告",
+  "@notification_type_warning": {
+    "description": "下拉列表中的警告类型标签"
+  },
+  "notification_type_alert": "警报",
+  "@notification_type_alert": {
+    "description": "下拉列表中的警报类型标签"
+  },
+  "notification_type_system": "系统",
+  "@notification_type_system": {
+    "description": "下拉列表中的系统类型标签"
+  },
+  "notification_type_user": "用户",
+  "@notification_type_user": {
+    "description": "下拉列表中的用户类型标签"
+  },
+  "notification_type_report": "报告",
+  "@notification_type_report": {
+    "description": "下拉列表中的报告类型标签"
+  },
+  "notification_type_location_alert": "位置警报",
+  "@notification_type_location_alert": {
+    "description": "下拉列表中的位置警报类型标签"
+  },
+  "notification_type_submission_status": "提交状态",
+  "@notification_type_submission_status": {
+    "description": "下拉列表中的提交状态类型标签"
+  },
+  "notification_type_promotion": "推广",
+  "@notification_type_promotion": {
+    "description": "下拉列表中的推广类型标签"
+  },
+  "notification_type_reminder": "提醒",
+  "@notification_type_reminder": {
+    "description": "下拉列表中的提醒类型标签"
+  },
+  "notification_type_info": "信息",
+  "@notification_type_info": {
+    "description": "下拉列表中的信息类型标签"
+  },
+  "report_newReport": "新建报告",
+  "@report_newReport": {
+    "description": "新建报告标签页标签"
+  },
+  "report_myReports": "我的报告",
+  "@report_myReports": {
+    "description": "我的报告标签页标签"
+  },
+  "report_allReports": "所有报告",
+  "@report_allReports": {
+    "description": "所有报告标签页标签"
+  },
+  "report_noReports": "暂无报告",
+  "@report_noReports": {
+    "description": "无报告空状态标题"
+  },
+  "report_noReportsMessage": "您还没有提交任何报告",
+  "@report_noReportsMessage": {
+    "description": "无报告空状态消息"
+  },
+  "report_sortBy": "排序：",
+  "@report_sortBy": {
+    "description": "排序标签"
+  },
+  "report_sortDate": "日期",
+  "@report_sortDate": {
+    "description": "按日期排序选项"
+  },
+  "report_sortSeverity": "严重程度",
+  "@report_sortSeverity": {
+    "description": "按严重程度排序选项"
+  },
+  "report_sortStatus": "状态",
+  "@report_sortStatus": {
+    "description": "按状态排序选项"
+  },
+  "report_mine": "我的",
+  "@report_mine": {
+    "description": "我的报告徽章"
+  },
+  "report_statusReported": "已报告",
+  "@report_statusReported": {
+    "description": "已报告状态标签"
+  },
+  "report_statusInProgress": "处理中",
+  "@report_statusInProgress": {
+    "description": "处理中状态标签"
+  },
+  "report_statusResolved": "已解决",
+  "@report_statusResolved": {
+    "description": "已解决状态标签"
+  },
+  "map_viewAlerts": "查看警报",
+  "@map_viewAlerts": {
+    "description": "地图上的查看警报按钮"
+  },
+  "profile_settings": "设置",
+  "@profile_settings": {
+    "description": "个人资料上的设置按钮"
   }
 }

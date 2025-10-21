@@ -126,7 +126,7 @@ class NotificationRepository {
     }
   }
 
-  /// Create a new notification (usually called by backend)
+  /// Create a new notification
   Future<NotificationModel> createNotification({
     required String userId,
     required String title,
@@ -152,6 +152,40 @@ class NotificationRepository {
       return NotificationModel.fromJson(response);
     } catch (e) {
       print('❌ Error creating notification: $e');
+      rethrow;
+    }
+  }
+
+  /// Update an existing notification
+  Future<NotificationModel> updateNotification({
+    required String notificationId,
+    String? title,
+    String? message,
+    String? type,
+    String? relatedAction,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      final updateData = <String, dynamic>{
+        'updated_at': DateTime.now().toIso8601String(),
+      };
+
+      if (title != null) updateData['title'] = title;
+      if (message != null) updateData['message'] = message;
+      if (type != null) updateData['type'] = type;
+      if (relatedAction != null) updateData['related_action'] = relatedAction;
+      if (data != null) updateData['data'] = data;
+
+      final response = await _supabase
+          .from('notifications')
+          .update(updateData)
+          .eq('id', notificationId)
+          .select()
+          .single();
+
+      return NotificationModel.fromJson(response);
+    } catch (e) {
+      print('❌ Error updating notification: $e');
       rethrow;
     }
   }

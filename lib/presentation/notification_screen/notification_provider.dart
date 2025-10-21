@@ -105,4 +105,70 @@ class NotificationProvider extends ChangeNotifier {
   Future<void> refresh(String userId) async {
     await loadNotifications(userId);
   }
+
+  /// Create a new notification
+  Future<NotificationModel> createNotification({
+    required String userId,
+    required String title,
+    required String message,
+    String type = 'info',
+    String? relatedAction,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      final notification = await _repository.createNotification(
+        userId: userId,
+        title: title,
+        message: message,
+        type: type,
+        relatedAction: relatedAction,
+        data: data,
+      );
+
+      // Add to local state
+      _notifications.insert(0, notification);
+      if (!notification.isRead) {
+        _unreadCount++;
+      }
+      notifyListeners();
+
+      return notification;
+    } catch (e) {
+      _logger.e('Error creating notification', error: e);
+      rethrow;
+    }
+  }
+
+  /// Update an existing notification
+  Future<NotificationModel> updateNotification({
+    required String notificationId,
+    String? title,
+    String? message,
+    String? type,
+    String? relatedAction,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      final updatedNotification = await _repository.updateNotification(
+        notificationId: notificationId,
+        title: title,
+        message: message,
+        type: type,
+        relatedAction: relatedAction,
+        data: data,
+      );
+
+      // Update local state
+      final index = _notifications.indexWhere((n) => n.id == notificationId);
+      if (index != -1) {
+        _notifications[index] = updatedNotification;
+        notifyListeners();
+      }
+
+      return updatedNotification;
+    } catch (e) {
+      _logger.e('Error updating notification', error: e);
+      rethrow;
+    }
+  }
 }

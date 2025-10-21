@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../../core/app_export.dart';
 import '../../l10n/app_localizations.dart';
-import '../camera_detection_screen/camera_detection_screen.dart';
 import '../map_view_screen/map_view_screen.dart';
-import '../report_submission_screen/report_submission_screen.dart';
-import '../safety_alerts_screen/safety_alerts_screen.dart';
+import '../report_screen/report_screen.dart';
 import '../notification_screen/notification_screen.dart';
 import '../profile_screen/profile_screen.dart';
 
 /// Main Layout
-/// Provides centralized navigation bar for all main app screens (except authentication)
-/// Displays a bottom navigation bar with access to Camera, Map, Report, Alerts, and Profile
+/// Provides centralized navigation bar for all main app screens
+/// Displays a bottom navigation bar with access to Map, Report, Notification, and Profile
 class MainLayout extends StatefulWidget {
   final int initialIndex;
 
@@ -27,10 +25,8 @@ class _MainLayoutState extends State<MainLayout> {
 
   // List of main screens
   final List<Widget> _screens = [
-    const CameraDetectionScreen(),
     const MapViewScreen(),
-    const ReportSubmissionScreen(),
-    const SafetyAlertsScreen(),
+    const ReportScreen(),
     const NotificationScreen(),
     const ProfileScreen(),
   ];
@@ -88,24 +84,11 @@ class _MainLayoutState extends State<MainLayout> {
         selectedFontSize: 12,
         unselectedFontSize: 11,
         items: [
-          // Camera
-          BottomNavigationBarItem(
-            icon: CustomIconWidget(
-              iconName: 'camera_alt',
-              color: _currentIndex == 0
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.6),
-              size: 6.w,
-            ),
-            label: l10n.nav_camera,
-          ),
           // Map
           BottomNavigationBarItem(
             icon: CustomIconWidget(
               iconName: 'map',
-              color: _currentIndex == 1
+              color: _currentIndex == 0
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(
                       context,
@@ -118,7 +101,7 @@ class _MainLayoutState extends State<MainLayout> {
           BottomNavigationBarItem(
             icon: CustomIconWidget(
               iconName: 'report',
-              color: _currentIndex == 2
+              color: _currentIndex == 1
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(
                       context,
@@ -127,24 +110,11 @@ class _MainLayoutState extends State<MainLayout> {
             ),
             label: l10n.nav_report,
           ),
-          // Alerts
-          BottomNavigationBarItem(
-            icon: CustomIconWidget(
-              iconName: 'notifications',
-              color: _currentIndex == 3
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.6),
-              size: 6.w,
-            ),
-            label: l10n.nav_alerts,
-          ),
           // Notifications
           BottomNavigationBarItem(
             icon: CustomIconWidget(
               iconName: 'notifications_active',
-              color: _currentIndex == 4
+              color: _currentIndex == 2
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(
                       context,
@@ -157,7 +127,7 @@ class _MainLayoutState extends State<MainLayout> {
           BottomNavigationBarItem(
             icon: CustomIconWidget(
               iconName: 'person',
-              color: _currentIndex == 5
+              color: _currentIndex == 3
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(
                       context,

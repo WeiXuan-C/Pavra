@@ -19,10 +19,6 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   // Notification settings
-  bool _roadDamageNotifications = true;
-  bool _constructionZonesNotifications = true;
-  bool _weatherHazardsNotifications = false;
-  bool _trafficIncidentsNotifications = true;
   bool _soundEnabled = true;
   bool _vibrationEnabled = true;
   bool _pushNotificationsEnabled = true;
@@ -31,11 +27,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    
+
     return Scaffold(
-      appBar: HeaderLayout(
-        title: l10n.home_settings,
-      ),
+      appBar: HeaderLayout(title: l10n.home_settings),
       body: Consumer2<LocaleProvider, ThemeProvider>(
         builder: (context, localeProvider, themeProvider, child) {
           return SingleChildScrollView(
@@ -56,11 +50,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       children: [
                         Text(
                           l10n.home_appearance,
-                          style: theme.textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 16),
-                        
+
                         // Theme Mode
                         Row(
                           children: [
@@ -100,9 +95,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                           ],
                         ),
-                        
+
                         const Divider(height: 24),
-                        
+
                         // Language
                         Row(
                           children: [
@@ -158,11 +153,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       children: [
                         Text(
                           l10n.settings_notifications,
-                          style: theme.textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 16),
-                        
+
                         // Push Notifications
                         SwitchListTile(
                           title: Text(l10n.settings_pushNotifications),
@@ -181,77 +177,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         // Alert Type Notifications
                         Text(
                           l10n.settings_alertTypes,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-
-                        // Road Damage
-                        SwitchListTile(
-                          title: Text(l10n.settings_roadDamage),
-                          subtitle: Text(l10n.settings_roadDamageDesc),
-                          value: _roadDamageNotifications,
-                          onChanged: _pushNotificationsEnabled
-                              ? (value) {
-                                  setState(() {
-                                    _roadDamageNotifications = value;
-                                  });
-                                }
-                              : null,
-                          contentPadding: EdgeInsets.zero,
-                        ),
-
-                        // Construction Zones
-                        SwitchListTile(
-                          title: Text(l10n.settings_constructionZones),
-                          subtitle: Text(l10n.settings_constructionZonesDesc),
-                          value: _constructionZonesNotifications,
-                          onChanged: _pushNotificationsEnabled
-                              ? (value) {
-                                  setState(() {
-                                    _constructionZonesNotifications = value;
-                                  });
-                                }
-                              : null,
-                          contentPadding: EdgeInsets.zero,
-                        ),
-
-                        // Weather Hazards
-                        SwitchListTile(
-                          title: Text(l10n.settings_weatherHazards),
-                          subtitle: Text(l10n.settings_weatherHazardsDesc),
-                          value: _weatherHazardsNotifications,
-                          onChanged: _pushNotificationsEnabled
-                              ? (value) {
-                                  setState(() {
-                                    _weatherHazardsNotifications = value;
-                                  });
-                                }
-                              : null,
-                          contentPadding: EdgeInsets.zero,
-                        ),
-
-                        // Traffic Incidents
-                        SwitchListTile(
-                          title: Text(l10n.settings_trafficIncidents),
-                          subtitle: Text(l10n.settings_trafficIncidentsDesc),
-                          value: _trafficIncidentsNotifications,
-                          onChanged: _pushNotificationsEnabled
-                              ? (value) {
-                                  setState(() {
-                                    _trafficIncidentsNotifications = value;
-                                  });
-                                }
-                              : null,
-                          contentPadding: EdgeInsets.zero,
-                        ),
-
-                        const Divider(height: 24),
-
-                        // Notification Behavior
-                        Text(
-                          l10n.settings_notificationBehavior,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),

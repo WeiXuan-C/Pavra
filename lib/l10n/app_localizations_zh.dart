@@ -903,4 +903,139 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get notification_typeInfo => '信息';
+
+  @override
+  String get notification_create => '创建通知';
+
+  @override
+  String get notification_edit => '编辑通知';
+
+  @override
+  String get notification_titleLabel => '标题';
+
+  @override
+  String get notification_titleHint => '输入通知标题';
+
+  @override
+  String get notification_titleRequired => '标题为必填项';
+
+  @override
+  String get notification_titleTooLong => '标题过长（最多100个字符）';
+
+  @override
+  String get notification_messageLabel => '消息';
+
+  @override
+  String get notification_messageHint => '输入通知消息';
+
+  @override
+  String get notification_messageRequired => '消息为必填项';
+
+  @override
+  String get notification_messageTooLong => '消息过长（最多500个字符）';
+
+  @override
+  String get notification_typeLabel => '类型';
+
+  @override
+  String get notification_relatedActionLabel => '相关操作（可选）';
+
+  @override
+  String get notification_relatedActionHint => '例如：/reports/123';
+
+  @override
+  String get notification_preview => '预览';
+
+  @override
+  String get notification_update => '更新通知';
+
+  @override
+  String get notification_createSuccess => '通知创建成功';
+
+  @override
+  String get notification_createError => '创建通知失败';
+
+  @override
+  String get notification_updateSuccess => '通知更新成功';
+
+  @override
+  String get notification_updateError => '更新通知失败';
+
+  @override
+  String get notification_type_success => '成功';
+
+  @override
+  String get notification_type_warning => '警告';
+
+  @override
+  String get notification_type_alert => '警报';
+
+  @override
+  String get notification_type_system => '系统';
+
+  @override
+  String get notification_type_user => '用户';
+
+  @override
+  String get notification_type_report => '报告';
+
+  @override
+  String get notification_type_location_alert => '位置警报';
+
+  @override
+  String get notification_type_submission_status => '提交状态';
+
+  @override
+  String get notification_type_promotion => '推广';
+
+  @override
+  String get notification_type_reminder => '提醒';
+
+  @override
+  String get notification_type_info => '信息';
+
+  @override
+  String get report_newReport => '新建报告';
+
+  @override
+  String get report_myReports => '我的报告';
+
+  @override
+  String get report_allReports => '所有报告';
+
+  @override
+  String get report_noReports => '暂无报告';
+
+  @override
+  String get report_noReportsMessage => '您还没有提交任何报告';
+
+  @override
+  String get report_sortBy => '排序：';
+
+  @override
+  String get report_sortDate => '日期';
+
+  @override
+  String get report_sortSeverity => '严重程度';
+
+  @override
+  String get report_sortStatus => '状态';
+
+  @override
+  String get report_mine => '我的';
+
+  @override
+  String get report_statusReported => '已报告';
+
+  @override
+  String get report_statusInProgress => '处理中';
+
+  @override
+  String get report_statusResolved => '已解决';
+
+  @override
+  String get map_viewAlerts => '查看警报';
+
+  @override
+  String get profile_settings => '设置';
 }

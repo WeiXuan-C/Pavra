@@ -1873,6 +1873,276 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Info'**
   String get notification_typeInfo;
+
+  /// Create notification button and screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Create Notification'**
+  String get notification_create;
+
+  /// Edit notification screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Notification'**
+  String get notification_edit;
+
+  /// Notification title field label
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get notification_titleLabel;
+
+  /// Notification title field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter notification title'**
+  String get notification_titleHint;
+
+  /// Title required validation message
+  ///
+  /// In en, this message translates to:
+  /// **'Title is required'**
+  String get notification_titleRequired;
+
+  /// Title too long validation message
+  ///
+  /// In en, this message translates to:
+  /// **'Title is too long (max 100 characters)'**
+  String get notification_titleTooLong;
+
+  /// Notification message field label
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get notification_messageLabel;
+
+  /// Notification message field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter notification message'**
+  String get notification_messageHint;
+
+  /// Message required validation message
+  ///
+  /// In en, this message translates to:
+  /// **'Message is required'**
+  String get notification_messageRequired;
+
+  /// Message too long validation message
+  ///
+  /// In en, this message translates to:
+  /// **'Message is too long (max 500 characters)'**
+  String get notification_messageTooLong;
+
+  /// Notification type field label
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get notification_typeLabel;
+
+  /// Related action field label
+  ///
+  /// In en, this message translates to:
+  /// **'Related Action (Optional)'**
+  String get notification_relatedActionLabel;
+
+  /// Related action field hint
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., /reports/123'**
+  String get notification_relatedActionHint;
+
+  /// Preview section title
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get notification_preview;
+
+  /// Update notification button text
+  ///
+  /// In en, this message translates to:
+  /// **'Update Notification'**
+  String get notification_update;
+
+  /// Success message when notification is created
+  ///
+  /// In en, this message translates to:
+  /// **'Notification created successfully'**
+  String get notification_createSuccess;
+
+  /// Error message when notification creation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create notification'**
+  String get notification_createError;
+
+  /// Success message when notification is updated
+  ///
+  /// In en, this message translates to:
+  /// **'Notification updated successfully'**
+  String get notification_updateSuccess;
+
+  /// Error message when notification update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update notification'**
+  String get notification_updateError;
+
+  /// Success type label in dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get notification_type_success;
+
+  /// Warning type label in dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get notification_type_warning;
+
+  /// Alert type label in dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Alert'**
+  String get notification_type_alert;
+
+  /// System type label in dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get notification_type_system;
+
+  /// User type label in dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get notification_type_user;
+
+  /// Report type label in dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get notification_type_report;
+
+  /// Location alert type label in dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Location Alert'**
+  String get notification_type_location_alert;
+
+  /// Submission status type label in dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Submission Status'**
+  String get notification_type_submission_status;
+
+  /// Promotion type label in dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Promotion'**
+  String get notification_type_promotion;
+
+  /// Reminder type label in dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder'**
+  String get notification_type_reminder;
+
+  /// Info type label in dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get notification_type_info;
+
+  /// New report tab label
+  ///
+  /// In en, this message translates to:
+  /// **'New Report'**
+  String get report_newReport;
+
+  /// My reports tab label
+  ///
+  /// In en, this message translates to:
+  /// **'My Reports'**
+  String get report_myReports;
+
+  /// All reports tab label
+  ///
+  /// In en, this message translates to:
+  /// **'All Reports'**
+  String get report_allReports;
+
+  /// No reports empty state title
+  ///
+  /// In en, this message translates to:
+  /// **'No Reports'**
+  String get report_noReports;
+
+  /// No reports empty state message
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t submitted any reports yet'**
+  String get report_noReportsMessage;
+
+  /// Sort by label
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by:'**
+  String get report_sortBy;
+
+  /// Sort by date option
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get report_sortDate;
+
+  /// Sort by severity option
+  ///
+  /// In en, this message translates to:
+  /// **'Severity'**
+  String get report_sortSeverity;
+
+  /// Sort by status option
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get report_sortStatus;
+
+  /// My report badge
+  ///
+  /// In en, this message translates to:
+  /// **'Mine'**
+  String get report_mine;
+
+  /// Reported status label
+  ///
+  /// In en, this message translates to:
+  /// **'Reported'**
+  String get report_statusReported;
+
+  /// In progress status label
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get report_statusInProgress;
+
+  /// Resolved status label
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get report_statusResolved;
+
+  /// View alerts button on map
+  ///
+  /// In en, this message translates to:
+  /// **'View Alerts'**
+  String get map_viewAlerts;
+
+  /// Settings button on profile
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get profile_settings;
 }
 
 class _AppLocalizationsDelegate

@@ -149,9 +149,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
       }
 
       _currentPosition = await Geolocator.getCurrentPosition(
-        locationSettings: LocationSettings(
-          accuracy: LocationAccuracy.high,
-        ),
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
       );
 
       // Circle will be created in _buildLocationCircle() during build
@@ -480,20 +478,26 @@ class _MapViewScreenState extends State<MapViewScreen> {
                   ),
                 ),
 
-                // Add report button
+                // View Alerts button
                 Positioned(
                   right: 4.w,
                   bottom: 15.h,
-                  child: FloatingActionButton(
-                    heroTag: 'add_report',
+                  child: FloatingActionButton.extended(
+                    heroTag: 'view_alerts',
                     onPressed: () {
-                      Navigator.pushNamed(context, '/report-submission-screen');
+                      Navigator.pushNamed(context, '/safety-alerts-screen');
                     },
                     backgroundColor: theme.colorScheme.secondary,
-                    child: CustomIconWidget(
-                      iconName: 'add',
+                    icon: CustomIconWidget(
+                      iconName: 'notifications',
                       color: theme.colorScheme.onSecondary,
-                      size: 28,
+                      size: 20,
+                    ),
+                    label: Text(
+                      'Alerts',
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: theme.colorScheme.onSecondary,
+                      ),
                     ),
                   ),
                 ),

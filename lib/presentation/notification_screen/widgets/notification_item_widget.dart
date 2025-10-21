@@ -7,12 +7,14 @@ import '../../../l10n/app_localizations.dart';
 class NotificationItemWidget extends StatelessWidget {
   final NotificationModel notification;
   final VoidCallback onTap;
+  final VoidCallback? onEdit;
   final VoidCallback onDelete;
 
   const NotificationItemWidget({
     super.key,
     required this.notification,
     required this.onTap,
+    this.onEdit,
     required this.onDelete,
   });
 
@@ -54,6 +56,7 @@ class NotificationItemWidget extends StatelessWidget {
       onDismissed: (direction) => onDelete(),
       child: InkWell(
         onTap: onTap,
+        onLongPress: onEdit,
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -170,6 +173,16 @@ class NotificationItemWidget extends StatelessWidget {
                   ],
                 ),
               ),
+
+              // Edit button
+              if (onEdit != null)
+                IconButton(
+                  icon: const Icon(Icons.edit, size: 20),
+                  onPressed: onEdit,
+                  tooltip: AppLocalizations.of(context).notification_edit,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
             ],
           ),
         ),

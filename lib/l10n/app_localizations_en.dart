@@ -923,4 +923,142 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notification_typeInfo => 'Info';
+
+  @override
+  String get notification_create => 'Create Notification';
+
+  @override
+  String get notification_edit => 'Edit Notification';
+
+  @override
+  String get notification_titleLabel => 'Title';
+
+  @override
+  String get notification_titleHint => 'Enter notification title';
+
+  @override
+  String get notification_titleRequired => 'Title is required';
+
+  @override
+  String get notification_titleTooLong =>
+      'Title is too long (max 100 characters)';
+
+  @override
+  String get notification_messageLabel => 'Message';
+
+  @override
+  String get notification_messageHint => 'Enter notification message';
+
+  @override
+  String get notification_messageRequired => 'Message is required';
+
+  @override
+  String get notification_messageTooLong =>
+      'Message is too long (max 500 characters)';
+
+  @override
+  String get notification_typeLabel => 'Type';
+
+  @override
+  String get notification_relatedActionLabel => 'Related Action (Optional)';
+
+  @override
+  String get notification_relatedActionHint => 'e.g., /reports/123';
+
+  @override
+  String get notification_preview => 'Preview';
+
+  @override
+  String get notification_update => 'Update Notification';
+
+  @override
+  String get notification_createSuccess => 'Notification created successfully';
+
+  @override
+  String get notification_createError => 'Failed to create notification';
+
+  @override
+  String get notification_updateSuccess => 'Notification updated successfully';
+
+  @override
+  String get notification_updateError => 'Failed to update notification';
+
+  @override
+  String get notification_type_success => 'Success';
+
+  @override
+  String get notification_type_warning => 'Warning';
+
+  @override
+  String get notification_type_alert => 'Alert';
+
+  @override
+  String get notification_type_system => 'System';
+
+  @override
+  String get notification_type_user => 'User';
+
+  @override
+  String get notification_type_report => 'Report';
+
+  @override
+  String get notification_type_location_alert => 'Location Alert';
+
+  @override
+  String get notification_type_submission_status => 'Submission Status';
+
+  @override
+  String get notification_type_promotion => 'Promotion';
+
+  @override
+  String get notification_type_reminder => 'Reminder';
+
+  @override
+  String get notification_type_info => 'Info';
+
+  @override
+  String get report_newReport => 'New Report';
+
+  @override
+  String get report_myReports => 'My Reports';
+
+  @override
+  String get report_allReports => 'All Reports';
+
+  @override
+  String get report_noReports => 'No Reports';
+
+  @override
+  String get report_noReportsMessage =>
+      'You haven\'t submitted any reports yet';
+
+  @override
+  String get report_sortBy => 'Sort by:';
+
+  @override
+  String get report_sortDate => 'Date';
+
+  @override
+  String get report_sortSeverity => 'Severity';
+
+  @override
+  String get report_sortStatus => 'Status';
+
+  @override
+  String get report_mine => 'Mine';
+
+  @override
+  String get report_statusReported => 'Reported';
+
+  @override
+  String get report_statusInProgress => 'In Progress';
+
+  @override
+  String get report_statusResolved => 'Resolved';
+
+  @override
+  String get map_viewAlerts => 'View Alerts';
+
+  @override
+  String get profile_settings => 'Settings';
 }

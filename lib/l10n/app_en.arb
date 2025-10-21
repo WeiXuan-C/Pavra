@@ -1220,5 +1220,185 @@
   "notification_typeInfo": "Info",
   "@notification_typeInfo": {
     "description": "Info notification type label"
+  },
+  "notification_create": "Create Notification",
+  "@notification_create": {
+    "description": "Create notification button and screen title"
+  },
+  "notification_edit": "Edit Notification",
+  "@notification_edit": {
+    "description": "Edit notification screen title"
+  },
+  "notification_titleLabel": "Title",
+  "@notification_titleLabel": {
+    "description": "Notification title field label"
+  },
+  "notification_titleHint": "Enter notification title",
+  "@notification_titleHint": {
+    "description": "Notification title field hint"
+  },
+  "notification_titleRequired": "Title is required",
+  "@notification_titleRequired": {
+    "description": "Title required validation message"
+  },
+  "notification_titleTooLong": "Title is too long (max 100 characters)",
+  "@notification_titleTooLong": {
+    "description": "Title too long validation message"
+  },
+  "notification_messageLabel": "Message",
+  "@notification_messageLabel": {
+    "description": "Notification message field label"
+  },
+  "notification_messageHint": "Enter notification message",
+  "@notification_messageHint": {
+    "description": "Notification message field hint"
+  },
+  "notification_messageRequired": "Message is required",
+  "@notification_messageRequired": {
+    "description": "Message required validation message"
+  },
+  "notification_messageTooLong": "Message is too long (max 500 characters)",
+  "@notification_messageTooLong": {
+    "description": "Message too long validation message"
+  },
+  "notification_typeLabel": "Type",
+  "@notification_typeLabel": {
+    "description": "Notification type field label"
+  },
+  "notification_relatedActionLabel": "Related Action (Optional)",
+  "@notification_relatedActionLabel": {
+    "description": "Related action field label"
+  },
+  "notification_relatedActionHint": "e.g., /reports/123",
+  "@notification_relatedActionHint": {
+    "description": "Related action field hint"
+  },
+  "notification_preview": "Preview",
+  "@notification_preview": {
+    "description": "Preview section title"
+  },
+  "notification_update": "Update Notification",
+  "@notification_update": {
+    "description": "Update notification button text"
+  },
+  "notification_createSuccess": "Notification created successfully",
+  "@notification_createSuccess": {
+    "description": "Success message when notification is created"
+  },
+  "notification_createError": "Failed to create notification",
+  "@notification_createError": {
+    "description": "Error message when notification creation fails"
+  },
+  "notification_updateSuccess": "Notification updated successfully",
+  "@notification_updateSuccess": {
+    "description": "Success message when notification is updated"
+  },
+  "notification_updateError": "Failed to update notification",
+  "@notification_updateError": {
+    "description": "Error message when notification update fails"
+  },
+  "notification_type_success": "Success",
+  "@notification_type_success": {
+    "description": "Success type label in dropdown"
+  },
+  "notification_type_warning": "Warning",
+  "@notification_type_warning": {
+    "description": "Warning type label in dropdown"
+  },
+  "notification_type_alert": "Alert",
+  "@notification_type_alert": {
+    "description": "Alert type label in dropdown"
+  },
+  "notification_type_system": "System",
+  "@notification_type_system": {
+    "description": "System type label in dropdown"
+  },
+  "notification_type_user": "User",
+  "@notification_type_user": {
+    "description": "User type label in dropdown"
+  },
+  "notification_type_report": "Report",
+  "@notification_type_report": {
+    "description": "Report type label in dropdown"
+  },
+  "notification_type_location_alert": "Location Alert",
+  "@notification_type_location_alert": {
+    "description": "Location alert type label in dropdown"
+  },
+  "notification_type_submission_status": "Submission Status",
+  "@notification_type_submission_status": {
+    "description": "Submission status type label in dropdown"
+  },
+  "notification_type_promotion": "Promotion",
+  "@notification_type_promotion": {
+    "description": "Promotion type label in dropdown"
+  },
+  "notification_type_reminder": "Reminder",
+  "@notification_type_reminder": {
+    "description": "Reminder type label in dropdown"
+  },
+  "notification_type_info": "Info",
+  "@notification_type_info": {
+    "description": "Info type label in dropdown"
+  },
+  "report_newReport": "New Report",
+  "@report_newReport": {
+    "description": "New report tab label"
+  },
+  "report_myReports": "My Reports",
+  "@report_myReports": {
+    "description": "My reports tab label"
+  },
+  "report_allReports": "All Reports",
+  "@report_allReports": {
+    "description": "All reports tab label"
+  },
+  "report_noReports": "No Reports",
+  "@report_noReports": {
+    "description": "No reports empty state title"
+  },
+  "report_noReportsMessage": "You haven't submitted any reports yet",
+  "@report_noReportsMessage": {
+    "description": "No reports empty state message"
+  },
+  "report_sortBy": "Sort by:",
+  "@report_sortBy": {
+    "description": "Sort by label"
+  },
+  "report_sortDate": "Date",
+  "@report_sortDate": {
+    "description": "Sort by date option"
+  },
+  "report_sortSeverity": "Severity",
+  "@report_sortSeverity": {
+    "description": "Sort by severity option"
+  },
+  "report_sortStatus": "Status",
+  "@report_sortStatus": {
+    "description": "Sort by status option"
+  },
+  "report_mine": "Mine",
+  "@report_mine": {
+    "description": "My report badge"
+  },
+  "report_statusReported": "Reported",
+  "@report_statusReported": {
+    "description": "Reported status label"
+  },
+  "report_statusInProgress": "In Progress",
+  "@report_statusInProgress": {
+    "description": "In progress status label"
+  },
+  "report_statusResolved": "Resolved",
+  "@report_statusResolved": {
+    "description": "Resolved status label"
+  },
+  "map_viewAlerts": "View Alerts",
+  "@map_viewAlerts": {
+    "description": "View alerts button on map"
+  },
+  "profile_settings": "Settings",
+  "@profile_settings": {
+    "description": "Settings button on profile"
   }
 }
