@@ -1,11 +1,12 @@
 import 'package:serverpod/serverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:dotenv/dotenv.dart';
 import 'dart:io';
 import 'package:pavra_server_server/src/web/routes/root.dart';
 import 'src/generated/protocol.dart';
 import 'src/generated/endpoints.dart';
-import 'src/services/redis_service.dart';
 import 'src/services/supabase_service.dart';
+import 'src/services/upstash_redis_service.dart';
 import 'src/tasks/sync_action_logs.dart';
 
 /// ✅ Declare all future calls here to avoid undefined reference issues.
@@ -45,16 +46,25 @@ class PLog {
 
 /// ✅ Entry point of the Pavra Serverpod backend.
 void run(List<String> args) async {
+  // 0️⃣ Load environment variables from .env file (development)
+  DotEnv? dotenv;
+  try {
+    dotenv = DotEnv()..load();
+    PLog.info('✅ Loaded .env file successfully');
+  } catch (e) {
+    PLog.warn('⚠️ No .env file found, using system environment variables');
+  }
+
   final pod = Serverpod(args, Protocol(), Endpoints());
 
   // 1️⃣ Start core server (HTTP, database)
   await pod.start();
 
-  // 2️⃣ Initialize Redis connection (Railway)
-  await _initializeRedis(pod);
+  // 2️⃣ Initialize Upstash Redis REST API
+  await _initializeUpstashRedis(dotenv);
 
   // 3️⃣ Initialize Supabase connection
-  await _initializeSupabase(pod);
+  await _initializeSupabase(pod, dotenv);
 
   // 4️⃣ Start background task: Action Log Sync
   await initializeActionLogSync(pod);
@@ -71,72 +81,44 @@ void run(List<String> args) async {
   PLog.info('🚀 Pavra Server started successfully!');
 }
 
-/// ✅ Redis initialization (auto-loads Railway environment variables)
-Future<void> _initializeRedis(Serverpod pod) async {
+/// ✅ Upstash Redis REST API initialization
+Future<void> _initializeUpstashRedis(DotEnv? dotenv) async {
   try {
-    final config = pod.config;
+    // Get Upstash REST API credentials from environment or .env file
+    final restUrl = Platform.environment['UPSTASH_REDIS_REST_URL'] ??
+        dotenv?['UPSTASH_REDIS_REST_URL'];
+    final restToken = Platform.environment['UPSTASH_REDIS_REST_TOKEN'] ??
+        dotenv?['UPSTASH_REDIS_REST_TOKEN'];
 
-    // Check if Redis is enabled
-    if (config.redis?.enabled != true) {
-      PLog.warn('Redis is disabled in configuration (check your config file).');
+    if (restUrl == null || restToken == null) {
+      PLog.warn(
+          '⚠️ Upstash Redis REST API credentials not found. Action log caching will be disabled.');
+      PLog.warn(
+          '   Please set: UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN');
       return;
     }
 
-    // Railway sets REDIS_URL in this format:
-    // redis://default:<password>@<host>:<port>
-    final redisUrl = Platform.environment['REDIS_URL'];
-    String? redisHost = config.redis?.host;
-    int redisPort = config.redis?.port ?? 6379;
-    String? redisPassword = config.redis?.password;
+    PLog.info('🔌 Initializing Upstash Redis REST API...');
 
-    if (redisUrl != null && redisUrl.startsWith('redis://')) {
-      final uri = Uri.parse(redisUrl);
-      redisHost = uri.host;
-      redisPort = uri.port;
-      redisPassword = uri.userInfo.split(':').length > 1
-          ? uri.userInfo.split(':')[1]
-          : null;
-      PLog.info('Detected Railway Redis URL -> $redisHost:$redisPort');
-    }
-
-    if (redisHost == null || redisHost.isEmpty) {
-      PLog.error('Redis host not configured or missing.');
-      return;
-    }
-
-    // Connect Redis
-    PLog.info('🔌 Connecting to Redis at $redisHost:$redisPort...');
-    await RedisService.initialize(
-      host: redisHost,
-      port: redisPort,
-      password: redisPassword,
+    UpstashRedisService.initialize(
+      restUrl: restUrl,
+      restToken: restToken,
     );
 
-    // ✅ Verify Redis connection
-    final redis = RedisService.instance;
-    const testKey = 'pavra:test:connection';
-    const testValue = 'connected';
-
-    await redis.set(testKey, testValue);
-    final result = await redis.get(testKey);
-
-    if (result == testValue) {
-      PLog.info('✅ Redis connection verified (Railway OK).');
-      await redis.delete(testKey);
-    } else {
-      PLog.warn('⚠️ Redis test read/write failed. Check Railway credentials.');
-    }
+    PLog.info('✅ Upstash Redis REST API initialized successfully');
   } catch (e, stack) {
-    PLog.error('❌ Failed to initialize Redis.', e, stack);
+    PLog.error('❌ Failed to initialize Upstash Redis REST API.', e, stack);
   }
 }
 
 /// ✅ Supabase initialization
-Future<void> _initializeSupabase(Serverpod pod) async {
+Future<void> _initializeSupabase(Serverpod pod, DotEnv? dotenv) async {
   try {
-    final supabaseUrl =
-        Platform.environment['SUPABASE_URL'] ?? pod.getPassword('SUPABASE_URL');
+    final supabaseUrl = Platform.environment['SUPABASE_URL'] ??
+        dotenv?['SUPABASE_URL'] ??
+        pod.getPassword('SUPABASE_URL');
     final supabaseKey = Platform.environment['SUPABASE_SERVICE_ROLE_KEY'] ??
+        dotenv?['SUPABASE_SERVICE_ROLE_KEY'] ??
         pod.getPassword('SUPABASE_SERVICE_ROLE_KEY');
 
     if (supabaseUrl == null || supabaseKey == null) {

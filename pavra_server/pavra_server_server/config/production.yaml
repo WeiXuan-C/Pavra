@@ -34,13 +34,12 @@ database:
   user: postgres
   password: ${PGPASSWORD}
 
-# This is the setup for Redis (Railway)
+# This is the setup for Redis (Railway Redis)
 redis:
-  enabled: true
+  enabled: false  # Set to true when you have Railway Redis
   host: redis.railway.internal
   port: 6379
   password: ${REDIS_PASSWORD}
-  user: default
   requireSsl: false
 
 maxRequestSize: 524288 # The maximum size of requests allowed in bytes

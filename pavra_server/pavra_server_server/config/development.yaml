@@ -38,11 +38,12 @@ database:
   isUnixSocket: false
 
 # This is the setup for Redis.
-# Disabled for local development - enable when Redis is available
+# Using Railway Redis (plain TCP - works with Serverpod)
 redis:
-  enabled: false
-  host: localhost
+  enabled: false  # Set to true when you have Railway Redis
+  host: redis.railway.internal
   port: 6379
+  password: your-railway-redis-password
   requireSsl: false
 
 maxRequestSize: 524288 # The maximum size of requests allowed in bytes

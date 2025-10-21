@@ -7,7 +7,8 @@ import '../../server.dart'; // 用于 PLog 日志打印
 /// Handles Redis connection, reconnection, and common operations.
 ///
 /// Works for both:
-/// - Railway Redis (with password)
+/// - Railway Redis (plain TCP, with password)
+/// - Upstash Redis (TLS-secured TCP, with password)
 /// - Local Redis (no password)
 class RedisService {
   static RedisService? _instance;
@@ -21,19 +22,21 @@ class RedisService {
     return _instance!;
   }
 
-  late RedisConnection _connection;
-  late Command _command;
+  RedisConnection? _connection;
+  Command? _command;
   bool _isConnected = false;
 
   final String host;
   final int port;
   final String? password;
+  final bool useTls;
   final Session? session;
 
   RedisService._({
     required this.host,
     required this.port,
     this.password,
+    this.useTls = false,
     this.session,
   });
 
@@ -42,6 +45,7 @@ class RedisService {
     required String host,
     required int port,
     String? password,
+    bool useTls = false,
     Session? session,
   }) async {
     if (_instance != null) {
@@ -53,6 +57,7 @@ class RedisService {
       host: host,
       port: port,
       password: password,
+      useTls: useTls,
       session: session,
     );
 
@@ -61,15 +66,40 @@ class RedisService {
   }
 
   /// Connect to Redis and authenticate if needed.
+  /// Supports both plain TCP and TLS connections.
   Future<void> _connect() async {
     try {
-      PLog.info('Connecting to Redis at $host:$port...');
-      _connection = RedisConnection();
-      _command = await _connection.connect(host, port);
+      PLog.info('Connecting to Redis at $host:$port (TLS: $useTls)...');
 
+      _connection = RedisConnection();
+
+      if (useTls) {
+        // For TLS connections (Upstash), the redis package doesn't support it directly
+        // We'll skip custom RedisService and use Serverpod's built-in Redis instead
+        PLog.warn(
+            'TLS Redis connections should use Serverpod built-in Redis (pod.redis)');
+        PLog.warn(
+            'Custom RedisService does not support TLS - skipping initialization');
+        throw UnsupportedError(
+            'RedisService does not support TLS. Use Serverpod built-in Redis instead.');
+      } else {
+        // Plain TCP connection (Railway Redis or local)
+        _command = await _connection!.connect(host, port);
+      }
+
+      // Authenticate if password is provided
       if (password != null && password!.isNotEmpty) {
-        final authResult = await _command.send_object(['AUTH', password!]);
-        PLog.info('Redis AUTH result: $authResult');
+        try {
+          // Try AUTH with username (Redis 6+)
+          final authResult =
+              await _command!.send_object(['AUTH', 'default', password!]);
+          PLog.info('Redis AUTH result: $authResult');
+        } catch (e) {
+          // Fallback to AUTH without username (older Redis or Upstash)
+          PLog.warn('AUTH with username failed, trying without username...');
+          final authResult = await _command!.send_object(['AUTH', password!]);
+          PLog.info('Redis AUTH result: $authResult');
+        }
       }
 
       _isConnected = true;
@@ -93,7 +123,7 @@ class RedisService {
   Future<bool> ping() async {
     try {
       await _ensureConnected();
-      final response = await _command.send_object(['PING']);
+      final response = await _command!.send_object(['PING']);
       final ok = response == 'PONG';
       PLog.info(
           ok ? '✅ Redis PING successful.' : '⚠️ Redis PING failed: $response');
@@ -109,9 +139,9 @@ class RedisService {
   Future<void> set(String key, String value, {int? expireSeconds}) async {
     try {
       await _ensureConnected();
-      await _command.send_object(['SET', key, value]);
+      await _command!.send_object(['SET', key, value]);
       if (expireSeconds != null) {
-        await _command.send_object(['EXPIRE', key, expireSeconds.toString()]);
+        await _command!.send_object(['EXPIRE', key, expireSeconds.toString()]);
       }
       PLog.info('Set Redis key: $key');
     } catch (e, stack) {
@@ -124,7 +154,7 @@ class RedisService {
   Future<String?> get(String key) async {
     try {
       await _ensureConnected();
-      final result = await _command.send_object(['GET', key]);
+      final result = await _command!.send_object(['GET', key]);
       return result?.toString();
     } catch (e, stack) {
       _isConnected = false;
@@ -137,7 +167,7 @@ class RedisService {
   Future<void> delete(String key) async {
     try {
       await _ensureConnected();
-      await _command.send_object(['DEL', key]);
+      await _command!.send_object(['DEL', key]);
       PLog.info('Deleted Redis key: $key');
     } catch (e, stack) {
       _isConnected = false;
@@ -149,7 +179,7 @@ class RedisService {
   Future<void> lpush(String key, String value) async {
     try {
       await _ensureConnected();
-      await _command.send_object(['LPUSH', key, value]);
+      await _command!.send_object(['LPUSH', key, value]);
       PLog.info('LPUSH to Redis key: $key');
     } catch (e, stack) {
       _isConnected = false;
@@ -162,7 +192,7 @@ class RedisService {
   Future<String?> rpop(String key) async {
     try {
       await _ensureConnected();
-      final result = await _command.send_object(['RPOP', key]);
+      final result = await _command!.send_object(['RPOP', key]);
       return result?.toString();
     } catch (e, stack) {
       _isConnected = false;
@@ -187,8 +217,8 @@ class RedisService {
         if (metadata != null) 'metadata': metadata,
       };
       final key = 'user:$userId:actions';
-      await _command.send_object(['LPUSH', key, logEntry.toString()]);
-      await _command.send_object(['LTRIM', key, '0', '${maxLogs - 1}']);
+      await _command!.send_object(['LPUSH', key, logEntry.toString()]);
+      await _command!.send_object(['LTRIM', key, '0', '${maxLogs - 1}']);
       PLog.info('Action logged for user $userId: $action');
     } catch (e, stack) {
       _isConnected = false;
@@ -205,7 +235,7 @@ class RedisService {
       await _ensureConnected();
       final key = 'user:$userId:actions';
       final result =
-          await _command.send_object(['LRANGE', key, '0', '${limit - 1}']);
+          await _command!.send_object(['LRANGE', key, '0', '${limit - 1}']);
       if (result is List) {
         return result.map((e) => e.toString()).toList();
       }
@@ -220,8 +250,8 @@ class RedisService {
   /// Close Redis connection safely.
   Future<void> close() async {
     try {
-      if (_isConnected) {
-        await _connection.close();
+      if (_isConnected && _connection != null) {
+        await _connection!.close();
         _isConnected = false;
         PLog.info('Redis connection closed.');
       }

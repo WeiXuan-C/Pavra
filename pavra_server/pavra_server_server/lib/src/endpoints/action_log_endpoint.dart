@@ -1,19 +1,19 @@
 import 'package:serverpod/serverpod.dart';
 import '../services/action_log_service.dart';
 
-/// Endpoint for logging user actions to Redis → Supabase
+/// Endpoint for logging user actions to Upstash Redis → Supabase
 ///
 /// This endpoint handles:
-/// - Logging actions to Redis queue (instant)
+/// - Logging actions to Upstash Redis queue (instant)
 /// - Retrieving action history from Supabase
-/// - Manual flush of Redis queue to Supabase
-/// - Health checks for Redis and Supabase
+/// - Manual flush of Upstash Redis queue to Supabase
+/// - Health checks for Upstash Redis and Supabase
 class ActionLogEndpoint extends Endpoint {
   final ActionLogService _actionLogService = ActionLogService();
 
-  /// Log a user action to Redis queue
+  /// Log a user action to Upstash Redis queue
   ///
-  /// Actions are queued in Redis and automatically synced to Supabase every 10 minutes.
+  /// Actions are queued in Upstash Redis and automatically synced to Supabase every minute.
   ///
   /// Example:
   /// ```dart
@@ -68,7 +68,7 @@ class ActionLogEndpoint extends Endpoint {
     }
   }
 
-  /// Manually trigger flush of Redis logs to Supabase
+  /// Manually trigger flush of Upstash Redis logs to Supabase
   Future<int> flushLogs(Session session, {int batchSize = 100}) async {
     try {
       final count = await _actionLogService.flushLogsToSupabase(
@@ -82,7 +82,7 @@ class ActionLogEndpoint extends Endpoint {
     }
   }
 
-  /// Health check for Redis and Supabase
+  /// Health check for Upstash Redis and Supabase
   Future<Map<String, bool>> healthCheck(Session session) async {
     return await _actionLogService.healthCheck();
   }

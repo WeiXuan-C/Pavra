@@ -1,16 +1,16 @@
 import 'dart:convert';
 import '../../server.dart';
-import 'redis_service.dart';
+import 'upstash_redis_service.dart';
 import 'supabase_service.dart';
 
-/// Action Log Service - Handles logging user actions to Redis and syncing to Supabase
+/// Action Log Service - Handles logging user actions to Upstash Redis and syncing to Supabase
 class ActionLogService {
   final SupabaseService supabase;
-  final RedisService redis;
+  final UpstashRedisService redis;
 
   ActionLogService()
       : supabase = SupabaseService.instance,
-        redis = RedisService.instance;
+        redis = UpstashRedisService.instance;
 
   /// Log a user action to Redis queue
   Future<void> logAction({
@@ -33,16 +33,16 @@ class ActionLogService {
         'is_synced': false,
       };
 
-      // Push to Redis queue using LPUSH (list push)
+      // Push to Upstash Redis queue using LPUSH (list push)
       final queueKey = 'action_logs:queue';
       final logJson = jsonEncode(logEntry);
 
       await redis.lpush(queueKey, logJson);
 
       PLog.info(
-          'Action logged to Redis: $action${userId != null ? ' by user $userId' : ''}');
+          'Action logged to Upstash Redis: $action${userId != null ? ' by user $userId' : ''}');
     } catch (e, stack) {
-      PLog.error('Failed to log action to Redis', e, stack);
+      PLog.error('Failed to log action to Upstash Redis', e, stack);
     }
   }
 
@@ -113,15 +113,15 @@ class ActionLogService {
     }
   }
 
-  /// Health check - verify both Redis and Supabase connections
+  /// Health check - verify both Upstash Redis and Supabase connections
   Future<Map<String, bool>> healthCheck() async {
     final health = <String, bool>{};
 
-    // Check Redis
+    // Check Upstash Redis
     try {
-      health['redis'] = await redis.ping();
+      health['upstash_redis'] = await redis.ping();
     } catch (e) {
-      health['redis'] = false;
+      health['upstash_redis'] = false;
     }
 
     // Check Supabase

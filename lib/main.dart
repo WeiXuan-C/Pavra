@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import '../core/app_export.dart';
@@ -16,42 +17,93 @@ import 'l10n/app_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // 🚨 CRITICAL: Load environment variables from .env file
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    // Show initialization error and prevent app from starting
+    runApp(
+      MaterialApp(
+        home: Scaffold(
+          backgroundColor: Colors.red[900],
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Environment Configuration Error',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Failed to load .env file: ${e.toString()}',
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    return; // Stop execution
+  }
+
   // 🚨 CRITICAL: Initialize Supabase - DO NOT REMOVE
   try {
     await SupabaseService.initialize();
   } catch (e) {
     // Show initialization error and prevent app from starting
-    runApp(MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.red[900],
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error_outline, size: 64, color: Colors.white),
-                const SizedBox(height: 24),
-                const Text(
-                  'Initialization Error',
-                  style: TextStyle(
+    runApp(
+      MaterialApp(
+        home: Scaffold(
+          backgroundColor: Colors.red[900],
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    size: 64,
                     color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
                   ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  e.toString(),
-                  style: const TextStyle(color: Colors.white, fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Initialization Error',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    e.toString(),
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ));
+    );
     return; // Stop execution
   }
 
@@ -73,9 +125,7 @@ void main() async {
   };
 
   // 🚨 CRITICAL: Device orientation lock - DO NOT REMOVE
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   // 🚨 CRITICAL: Run app AFTER all initialization is complete
   runApp(
@@ -112,10 +162,7 @@ class MyApp extends StatelessWidget {
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              supportedLocales: const [
-                Locale('en'),
-                Locale('zh'),
-              ],
+              supportedLocales: const [Locale('en'), Locale('zh')],
               // 🚨 CRITICAL: NEVER REMOVE OR MODIFY
               builder: (context, child) {
                 return MediaQuery(
