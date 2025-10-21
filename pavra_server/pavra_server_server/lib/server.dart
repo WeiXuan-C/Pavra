@@ -46,13 +46,19 @@ class PLog {
 
 /// ✅ Entry point of the Pavra Serverpod backend.
 void run(List<String> args) async {
-  // 0️⃣ Load environment variables from .env file (development)
+  // 0️⃣ Load environment variables from .env file (development only)
   DotEnv? dotenv;
-  try {
-    dotenv = DotEnv()..load();
-    PLog.info('✅ Loaded .env file successfully');
-  } catch (e) {
-    PLog.warn('⚠️ No .env file found, using system environment variables');
+  final envFile = File('.env');
+  if (envFile.existsSync()) {
+    try {
+      dotenv = DotEnv()..load();
+      PLog.info('✅ Loaded .env file successfully');
+    } catch (e) {
+      PLog.warn('⚠️ Failed to load .env file: $e');
+    }
+  } else {
+    PLog.info(
+        'ℹ️ No .env file found, using system environment variables (production mode)');
   }
 
   final pod = Serverpod(args, Protocol(), Endpoints());
@@ -66,10 +72,13 @@ void run(List<String> args) async {
   // 3️⃣ Initialize Supabase connection
   await _initializeSupabase(pod, dotenv);
 
-  // 4️⃣ Start background task: Action Log Sync
+  // 4️⃣ Initialize OneSignal credentials
+  _initializeOneSignal(pod, dotenv);
+
+  // 5️⃣ Start background task: Action Log Sync
   await initializeActionLogSync(pod);
 
-  // 5️⃣ Setup web routes
+  // 6️⃣ Setup web routes
   pod.webServer.addRoute(RouteRoot(), '/');
   pod.webServer.addRoute(RouteRoot(), '/index.html');
   pod.webServer.addRoute(
@@ -136,5 +145,27 @@ Future<void> _initializeSupabase(Serverpod pod, DotEnv? dotenv) async {
     PLog.info('✅ Supabase initialized successfully.');
   } catch (e, stack) {
     PLog.error('❌ Failed to initialize Supabase.', e, stack);
+  }
+}
+
+/// ✅ OneSignal credentials initialization
+void _initializeOneSignal(Serverpod pod, DotEnv? dotenv) {
+  try {
+    final appId =
+        Platform.environment['ONESIGNAL_APP_ID'] ?? dotenv?['ONESIGNAL_APP_ID'];
+    final apiKey = Platform.environment['ONESIGNAL_API_KEY'] ??
+        dotenv?['ONESIGNAL_API_KEY'];
+
+    if (appId == null || apiKey == null) {
+      PLog.warn(
+          '⚠️ OneSignal credentials not found. Push notifications will be disabled.');
+      PLog.warn('   Please set: ONESIGNAL_APP_ID and ONESIGNAL_API_KEY');
+      return;
+    }
+
+    PLog.info('✅ OneSignal credentials loaded successfully');
+    PLog.info('   App ID: ${appId.substring(0, 8)}...');
+  } catch (e, stack) {
+    PLog.error('❌ Failed to initialize OneSignal credentials.', e, stack);
   }
 }

@@ -8,9 +8,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import '../core/app_export.dart';
 import '../widgets/custom_error_widget.dart';
 import 'core/supabase/supabase_client.dart';
+import 'core/services/onesignal_service.dart';
 import 'core/providers/auth_provider.dart';
 import 'core/providers/locale_provider.dart';
 import 'core/providers/theme_provider.dart';
+import 'presentation/notification_screen/notification_provider.dart';
 import 'core/middleware/route_guard.dart';
 import 'l10n/app_localizations.dart';
 
@@ -107,6 +109,14 @@ void main() async {
     return; // Stop execution
   }
 
+  // 🔔 Initialize OneSignal for push notifications
+  try {
+    await OneSignalService().initialize();
+  } catch (e) {
+    print('⚠️ OneSignal initialization failed: $e');
+    // Don't block app startup if OneSignal fails
+  }
+
   bool hasShownError = false;
 
   // 🚨 CRITICAL: Custom error handling - DO NOT REMOVE
@@ -134,6 +144,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
       child: MyApp(),
     ),

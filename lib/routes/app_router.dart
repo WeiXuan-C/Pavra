@@ -5,6 +5,7 @@ import '../presentation/camera_detection_screen/camera_detection_screen.dart';
 import '../presentation/map_view_screen/map_view_screen.dart';
 import '../presentation/report_submission_screen/report_submission_screen.dart';
 import '../presentation/safety_alerts_screen/safety_alerts_screen.dart';
+import '../presentation/notification_screen/notification_screen.dart';
 import '../presentation/profile_screen/profile_screen.dart';
 import '../presentation/settings_screen/settings_screen.dart';
 import 'app_routes.dart';
@@ -18,6 +19,7 @@ class AppRouter {
     AppRoutes.mapView: (context) => const MapViewScreen(),
     AppRoutes.reportSubmission: (context) => const ReportSubmissionScreen(),
     AppRoutes.safetyAlerts: (context) => const SafetyAlertsScreen(),
+    AppRoutes.notifications: (context) => const NotificationScreen(),
     AppRoutes.profile: (context) => const ProfileScreen(),
     AppRoutes.settings: (context) => const SettingsScreen(),
   };

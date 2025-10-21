@@ -9,7 +9,6 @@ DECLARE
   v_provider_user_id TEXT;
   v_username TEXT;
   v_email TEXT;
-  v_device_token TEXT;
 BEGIN
   -- Determine provider
   v_provider := COALESCE(
@@ -42,14 +41,11 @@ BEGIN
     'user_' || substring(NEW.id::text, 1, 8)
   );
 
-  v_device_token := NEW.raw_user_meta_data->>'device_token';
-
-  -- Insert profile (NO recovery_code to avoid digest() error)
   BEGIN
     INSERT INTO public.profiles (
       id, username, email, avatar_url, provider, provider_user_id,
-      recovery_code, role, language, theme_mode, reports_count,
-      reputation_score, notifications_enabled, device_token
+      role, language, theme_mode, reports_count,
+      reputation_score, notifications_enabled
     )
     VALUES (
       NEW.id,
@@ -58,14 +54,12 @@ BEGIN
       COALESCE(NEW.raw_user_meta_data->>'avatar_url', ''),
       v_provider,
       v_provider_user_id,
-      NULL,  -- No recovery code (避免 digest() 错误)
       'user',
       'en',
       'dark',
       0,
       100,
-      true,
-      v_device_token
+      true
     )
     ON CONFLICT (id) DO NOTHING;
 
@@ -78,8 +72,8 @@ BEGIN
       
       INSERT INTO public.profiles (
         id, username, email, avatar_url, provider, provider_user_id,
-        recovery_code, role, language, theme_mode, reports_count,
-        reputation_score, notifications_enabled, device_token
+        role, language, theme_mode, reports_count,
+        reputation_score, notifications_enabled
       )
       VALUES (
         NEW.id,
@@ -88,14 +82,12 @@ BEGIN
         COALESCE(NEW.raw_user_meta_data->>'avatar_url', ''),
         v_provider,
         v_provider_user_id,
-        NULL,
         'user',
         'en',
         'dark',
         0,
         100,
-        true,
-        v_device_token
+        true
       )
       ON CONFLICT (id) DO NOTHING;
       

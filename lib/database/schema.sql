@@ -8,14 +8,12 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   avatar_url TEXT,
   provider TEXT CHECK (provider IN ('email', 'google', 'github', 'facebook', 'discord', 'otp')),
   provider_user_id TEXT,
-  recovery_code TEXT,
   role TEXT CHECK (role IN ('user', 'authority', 'developer')),  -- reporter / reviewer / dev
   language TEXT,
   theme_mode TEXT,
   reports_count INT DEFAULT 0,
   reputation_score INT DEFAULT 0,
   notifications_enabled BOOLEAN DEFAULT TRUE,
-  device_token TEXT,
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   CONSTRAINT unique_provider_user UNIQUE (provider, provider_user_id)
 );
@@ -44,7 +42,13 @@ CREATE TABLE IF NOT EXISTS public.notifications (
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   message TEXT NOT NULL,
-  type TEXT DEFAULT 'info' CHECK (type IN ('success', 'warning', 'alert', 'info')),
+  type TEXT DEFAULT 'info' CHECK (
+    type IN (
+      'success', 'warning', 'alert', 'info',
+      'system', 'user', 'report', 'location_alert',
+      'submission_status', 'promotion', 'reminder'
+    )
+  ),
   is_read BOOLEAN DEFAULT FALSE,
   is_deleted BOOLEAN DEFAULT FALSE,
   related_action UUID REFERENCES action_log(id) ON DELETE SET NULL,
