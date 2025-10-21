@@ -6,6 +6,7 @@ import '../camera_detection_screen/camera_detection_screen.dart';
 import '../map_view_screen/map_view_screen.dart';
 import '../report_submission_screen/report_submission_screen.dart';
 import '../safety_alerts_screen/safety_alerts_screen.dart';
+import '../notification_screen/notification_screen.dart';
 import '../profile_screen/profile_screen.dart';
 
 /// Main Layout
@@ -30,6 +31,7 @@ class _MainLayoutState extends State<MainLayout> {
     const MapViewScreen(),
     const ReportSubmissionScreen(),
     const SafetyAlertsScreen(),
+    const NotificationScreen(),
     const ProfileScreen(),
   ];
 
@@ -64,7 +66,7 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    
+
     return Scaffold(
       body: PageView(
         controller: _pageController,
@@ -138,11 +140,24 @@ class _MainLayoutState extends State<MainLayout> {
             ),
             label: l10n.nav_alerts,
           ),
+          // Notifications
+          BottomNavigationBarItem(
+            icon: CustomIconWidget(
+              iconName: 'notifications_active',
+              color: _currentIndex == 4
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.6),
+              size: 6.w,
+            ),
+            label: l10n.notification_title,
+          ),
           // Profile
           BottomNavigationBarItem(
             icon: CustomIconWidget(
               iconName: 'person',
-              color: _currentIndex == 4
+              color: _currentIndex == 5
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(
                       context,

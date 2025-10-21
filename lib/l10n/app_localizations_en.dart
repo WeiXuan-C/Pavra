@@ -848,4 +848,79 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get report_suggestions => 'Suggestions';
+
+  @override
+  String get notification_title => 'Notifications';
+
+  @override
+  String get notification_markAllAsRead => 'Mark all as read';
+
+  @override
+  String get notification_deleteAll => 'Delete all';
+
+  @override
+  String get notification_allMarkedAsRead => 'All notifications marked as read';
+
+  @override
+  String get notification_allDeleted => 'All notifications deleted';
+
+  @override
+  String get notification_errorLoading => 'Error loading notifications';
+
+  @override
+  String get notification_empty => 'No notifications yet';
+
+  @override
+  String get notification_emptyMessage =>
+      'You\'ll see notifications here when you receive them';
+
+  @override
+  String get notification_delete => 'Delete notification';
+
+  @override
+  String get notification_deleteConfirm =>
+      'Are you sure you want to delete this notification?';
+
+  @override
+  String get notification_deleteAllTitle => 'Delete all notifications';
+
+  @override
+  String get notification_deleteAllConfirm =>
+      'Are you sure you want to delete all notifications? This action cannot be undone.';
+
+  @override
+  String get notification_deleted => 'Notification deleted';
+
+  @override
+  String get notification_typeSuccess => 'Success';
+
+  @override
+  String get notification_typeWarning => 'Warning';
+
+  @override
+  String get notification_typeAlert => 'Alert';
+
+  @override
+  String get notification_typeSystem => 'System';
+
+  @override
+  String get notification_typeUser => 'User';
+
+  @override
+  String get notification_typeReport => 'Report';
+
+  @override
+  String get notification_typeLocation => 'Location';
+
+  @override
+  String get notification_typeStatus => 'Status';
+
+  @override
+  String get notification_typePromotion => 'Promotion';
+
+  @override
+  String get notification_typeReminder => 'Reminder';
+
+  @override
+  String get notification_typeInfo => 'Info';
 }

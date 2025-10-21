@@ -831,4 +831,76 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get report_suggestions => '建议';
+
+  @override
+  String get notification_title => '通知';
+
+  @override
+  String get notification_markAllAsRead => '全部标记为已读';
+
+  @override
+  String get notification_deleteAll => '删除全部';
+
+  @override
+  String get notification_allMarkedAsRead => '所有通知已标记为已读';
+
+  @override
+  String get notification_allDeleted => '所有通知已删除';
+
+  @override
+  String get notification_errorLoading => '加载通知时出错';
+
+  @override
+  String get notification_empty => '暂无通知';
+
+  @override
+  String get notification_emptyMessage => '收到通知时会显示在这里';
+
+  @override
+  String get notification_delete => '删除通知';
+
+  @override
+  String get notification_deleteConfirm => '您确定要删除此通知吗？';
+
+  @override
+  String get notification_deleteAllTitle => '删除所有通知';
+
+  @override
+  String get notification_deleteAllConfirm => '您确定要删除所有通知吗？此操作无法撤销。';
+
+  @override
+  String get notification_deleted => '通知已删除';
+
+  @override
+  String get notification_typeSuccess => '成功';
+
+  @override
+  String get notification_typeWarning => '警告';
+
+  @override
+  String get notification_typeAlert => '提醒';
+
+  @override
+  String get notification_typeSystem => '系统';
+
+  @override
+  String get notification_typeUser => '用户';
+
+  @override
+  String get notification_typeReport => '报告';
+
+  @override
+  String get notification_typeLocation => '位置';
+
+  @override
+  String get notification_typeStatus => '状态';
+
+  @override
+  String get notification_typePromotion => '推广';
+
+  @override
+  String get notification_typeReminder => '提醒';
+
+  @override
+  String get notification_typeInfo => '信息';
 }

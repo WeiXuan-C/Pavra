@@ -1729,6 +1729,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Suggestions'**
   String get report_suggestions;
+
+  /// Notifications screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notification_title;
+
+  /// Mark all notifications as read button
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as read'**
+  String get notification_markAllAsRead;
+
+  /// Delete all notifications button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all'**
+  String get notification_deleteAll;
+
+  /// Success message when all notifications are marked as read
+  ///
+  /// In en, this message translates to:
+  /// **'All notifications marked as read'**
+  String get notification_allMarkedAsRead;
+
+  /// Success message when all notifications are deleted
+  ///
+  /// In en, this message translates to:
+  /// **'All notifications deleted'**
+  String get notification_allDeleted;
+
+  /// Error message when loading notifications fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading notifications'**
+  String get notification_errorLoading;
+
+  /// Empty state title
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet'**
+  String get notification_empty;
+
+  /// Empty state message
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll see notifications here when you receive them'**
+  String get notification_emptyMessage;
+
+  /// Delete notification dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete notification'**
+  String get notification_delete;
+
+  /// Delete notification confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this notification?'**
+  String get notification_deleteConfirm;
+
+  /// Delete all notifications dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all notifications'**
+  String get notification_deleteAllTitle;
+
+  /// Delete all notifications confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete all notifications? This action cannot be undone.'**
+  String get notification_deleteAllConfirm;
+
+  /// Success message when notification is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Notification deleted'**
+  String get notification_deleted;
+
+  /// Success notification type label
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get notification_typeSuccess;
+
+  /// Warning notification type label
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get notification_typeWarning;
+
+  /// Alert notification type label
+  ///
+  /// In en, this message translates to:
+  /// **'Alert'**
+  String get notification_typeAlert;
+
+  /// System notification type label
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get notification_typeSystem;
+
+  /// User notification type label
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get notification_typeUser;
+
+  /// Report notification type label
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get notification_typeReport;
+
+  /// Location notification type label
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get notification_typeLocation;
+
+  /// Status notification type label
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get notification_typeStatus;
+
+  /// Promotion notification type label
+  ///
+  /// In en, this message translates to:
+  /// **'Promotion'**
+  String get notification_typePromotion;
+
+  /// Reminder notification type label
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder'**
+  String get notification_typeReminder;
+
+  /// Info notification type label
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get notification_typeInfo;
 }
 
 class _AppLocalizationsDelegate

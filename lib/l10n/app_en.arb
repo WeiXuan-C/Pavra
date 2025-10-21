@@ -1123,5 +1123,102 @@
   "report_suggestions": "Suggestions",
   "@report_suggestions": {
     "description": "Suggestions section title"
+  },
+  
+  "notification_title": "Notifications",
+  "@notification_title": {
+    "description": "Notifications screen title"
+  },
+  "notification_markAllAsRead": "Mark all as read",
+  "@notification_markAllAsRead": {
+    "description": "Mark all notifications as read button"
+  },
+  "notification_deleteAll": "Delete all",
+  "@notification_deleteAll": {
+    "description": "Delete all notifications button"
+  },
+  "notification_allMarkedAsRead": "All notifications marked as read",
+  "@notification_allMarkedAsRead": {
+    "description": "Success message when all notifications are marked as read"
+  },
+  "notification_allDeleted": "All notifications deleted",
+  "@notification_allDeleted": {
+    "description": "Success message when all notifications are deleted"
+  },
+  "notification_errorLoading": "Error loading notifications",
+  "@notification_errorLoading": {
+    "description": "Error message when loading notifications fails"
+  },
+  "notification_empty": "No notifications yet",
+  "@notification_empty": {
+    "description": "Empty state title"
+  },
+  "notification_emptyMessage": "You'll see notifications here when you receive them",
+  "@notification_emptyMessage": {
+    "description": "Empty state message"
+  },
+  "notification_delete": "Delete notification",
+  "@notification_delete": {
+    "description": "Delete notification dialog title"
+  },
+  "notification_deleteConfirm": "Are you sure you want to delete this notification?",
+  "@notification_deleteConfirm": {
+    "description": "Delete notification confirmation message"
+  },
+  "notification_deleteAllTitle": "Delete all notifications",
+  "@notification_deleteAllTitle": {
+    "description": "Delete all notifications dialog title"
+  },
+  "notification_deleteAllConfirm": "Are you sure you want to delete all notifications? This action cannot be undone.",
+  "@notification_deleteAllConfirm": {
+    "description": "Delete all notifications confirmation message"
+  },
+  "notification_deleted": "Notification deleted",
+  "@notification_deleted": {
+    "description": "Success message when notification is deleted"
+  },
+  "notification_typeSuccess": "Success",
+  "@notification_typeSuccess": {
+    "description": "Success notification type label"
+  },
+  "notification_typeWarning": "Warning",
+  "@notification_typeWarning": {
+    "description": "Warning notification type label"
+  },
+  "notification_typeAlert": "Alert",
+  "@notification_typeAlert": {
+    "description": "Alert notification type label"
+  },
+  "notification_typeSystem": "System",
+  "@notification_typeSystem": {
+    "description": "System notification type label"
+  },
+  "notification_typeUser": "User",
+  "@notification_typeUser": {
+    "description": "User notification type label"
+  },
+  "notification_typeReport": "Report",
+  "@notification_typeReport": {
+    "description": "Report notification type label"
+  },
+  "notification_typeLocation": "Location",
+  "@notification_typeLocation": {
+    "description": "Location notification type label"
+  },
+  "notification_typeStatus": "Status",
+  "@notification_typeStatus": {
+    "description": "Status notification type label"
+  },
+  "notification_typePromotion": "Promotion",
+  "@notification_typePromotion": {
+    "description": "Promotion notification type label"
+  },
+  "notification_typeReminder": "Reminder",
+  "@notification_typeReminder": {
+    "description": "Reminder notification type label"
+  },
+  "notification_typeInfo": "Info",
+  "@notification_typeInfo": {
+    "description": "Info notification type label"
   }
 }

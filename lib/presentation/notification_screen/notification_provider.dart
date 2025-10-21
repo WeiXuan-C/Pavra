@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import '../../core/models/notification_model.dart';
 import '../../data/repositories/notification_repository.dart';
 
 /// Provider for notification screen state management
 class NotificationProvider extends ChangeNotifier {
   final _repository = NotificationRepository();
+  final _logger = Logger();
 
   List<NotificationModel> _notifications = [];
   bool _isLoading = false;
@@ -28,7 +30,7 @@ class NotificationProvider extends ChangeNotifier {
       _error = null;
     } catch (e) {
       _error = e.toString();
-      print('❌ Error loading notifications: $e');
+      _logger.e('Error loading notifications', error: e);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -48,7 +50,7 @@ class NotificationProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print('❌ Error marking as read: $e');
+      _logger.e('Error marking notification as read', error: e);
       rethrow;
     }
   }
@@ -65,7 +67,7 @@ class NotificationProvider extends ChangeNotifier {
       _unreadCount = 0;
       notifyListeners();
     } catch (e) {
-      print('❌ Error marking all as read: $e');
+      _logger.e('Error marking all notifications as read', error: e);
       rethrow;
     }
   }
@@ -79,7 +81,7 @@ class NotificationProvider extends ChangeNotifier {
       _notifications.removeWhere((n) => n.id == notificationId);
       notifyListeners();
     } catch (e) {
-      print('❌ Error deleting notification: $e');
+      _logger.e('Error deleting notification', error: e);
       rethrow;
     }
   }
@@ -94,7 +96,7 @@ class NotificationProvider extends ChangeNotifier {
       _unreadCount = 0;
       notifyListeners();
     } catch (e) {
-      print('❌ Error deleting all notifications: $e');
+      _logger.e('Error deleting all notifications', error: e);
       rethrow;
     }
   }

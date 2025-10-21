@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../../../core/models/notification_model.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Widget for displaying a single notification item
 class NotificationItemWidget extends StatelessWidget {
@@ -30,22 +31,21 @@ class NotificationItemWidget extends StatelessWidget {
         child: const Icon(Icons.delete, color: Colors.white),
       ),
       confirmDismiss: (direction) async {
+        final l10n = AppLocalizations.of(context);
         return await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Delete notification'),
-            content: const Text(
-              'Are you sure you want to delete this notification?',
-            ),
+            title: Text(l10n.notification_delete),
+            content: Text(l10n.notification_deleteConfirm),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
+                child: Text(l10n.common_cancel),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, true),
                 style: TextButton.styleFrom(foregroundColor: Colors.red),
-                child: const Text('Delete'),
+                child: Text(l10n.common_delete),
               ),
             ],
           ),
@@ -58,7 +58,7 @@ class NotificationItemWidget extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isUnread
-                ? theme.colorScheme.primaryContainer.withOpacity(0.1)
+                ? theme.colorScheme.primaryContainer.withValues(alpha: 0.1)
                 : Colors.transparent,
             border: Border(
               left: BorderSide(
@@ -74,7 +74,9 @@ class NotificationItemWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: _getTypeColor(notification.type).withOpacity(0.1),
+                  color: _getTypeColor(
+                    notification.type,
+                  ).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -152,11 +154,11 @@ class NotificationItemWidget extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: _getTypeColor(
                               notification.type,
-                            ).withOpacity(0.1),
+                            ).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            _getTypeLabel(notification.type),
+                            _getTypeLabel(context, notification.type),
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: _getTypeColor(notification.type),
                               fontWeight: FontWeight.w500,
@@ -232,30 +234,31 @@ class NotificationItemWidget extends StatelessWidget {
   }
 
   /// Get label based on notification type
-  String _getTypeLabel(String type) {
+  String _getTypeLabel(BuildContext context, String type) {
+    final l10n = AppLocalizations.of(context);
     switch (type) {
       case 'success':
-        return 'Success';
+        return l10n.notification_typeSuccess;
       case 'warning':
-        return 'Warning';
+        return l10n.notification_typeWarning;
       case 'alert':
-        return 'Alert';
+        return l10n.notification_typeAlert;
       case 'system':
-        return 'System';
+        return l10n.notification_typeSystem;
       case 'user':
-        return 'User';
+        return l10n.notification_typeUser;
       case 'report':
-        return 'Report';
+        return l10n.notification_typeReport;
       case 'location_alert':
-        return 'Location';
+        return l10n.notification_typeLocation;
       case 'submission_status':
-        return 'Status';
+        return l10n.notification_typeStatus;
       case 'promotion':
-        return 'Promotion';
+        return l10n.notification_typePromotion;
       case 'reminder':
-        return 'Reminder';
+        return l10n.notification_typeReminder;
       default:
-        return 'Info';
+        return l10n.notification_typeInfo;
     }
   }
 }

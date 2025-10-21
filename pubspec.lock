@@ -90,7 +90,7 @@ packages:
     source: hosted
     version: "0.11.2"
   camera_android_camerax:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: camera_android_camerax
       sha256: a3b96427f89fe5a7e0253f51f02d93e104a3ec51993a928963a5d2e1be71850d
@@ -98,7 +98,7 @@ packages:
     source: hosted
     version: "0.6.23+3"
   camera_avfoundation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: camera_avfoundation
       sha256: "397f44f8a63c8c0a474668d500f9739d4f2bc45ac2b21801194b7d29260f03ee"
@@ -637,6 +637,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
+  logger:
+    dependency: "direct main"
+    description:
+      name: logger
+      sha256: a7967e31b703831a893bbc3c3dd11db08126fe5f369b5c648a36f821979f5be3
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.6.2"
   logging:
     dependency: transitive
     description:
@@ -965,6 +973,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
+  shimmer:
+    dependency: "direct main"
+    description:
+      name: shimmer
+      sha256: "5f88c883a22e9f9f299e5ba0e4f7e6054857224976a5d9f839d4ebdc94a14ac9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   sizer:
     dependency: "direct main"
     description:

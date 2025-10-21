@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/models/notification_model.dart';
 import '../../core/providers/auth_provider.dart';
+import '../../l10n/app_localizations.dart';
 import 'notification_provider.dart';
 import 'widgets/notification_item_widget.dart';
+import 'widgets/notification_skeleton.dart';
 
 /// Notification screen displaying user notifications
 ///
@@ -42,10 +44,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     final userId = authProvider.user?.id;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: Text(l10n.notification_title),
         actions: [
           // Mark all as read button
           Consumer<NotificationProvider>(
@@ -53,15 +56,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
               if (provider.unreadCount > 0) {
                 return IconButton(
                   icon: const Icon(Icons.done_all),
-                  tooltip: 'Mark all as read',
+                  tooltip: l10n.notification_markAllAsRead,
                   onPressed: () async {
                     if (userId != null) {
+                      final messenger = ScaffoldMessenger.of(context);
+                      final localizations = AppLocalizations.of(context);
                       await provider.markAllAsRead(userId);
                       if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('All notifications marked as read'),
-                            duration: Duration(seconds: 2),
+                        messenger.showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              localizations.notification_allMarkedAsRead,
+                            ),
+                            duration: const Duration(seconds: 2),
                           ),
                         );
                       }
@@ -76,16 +83,20 @@ class _NotificationScreenState extends State<NotificationScreen> {
           PopupMenuButton<String>(
             onSelected: (value) async {
               if (value == 'delete_all' && userId != null) {
+                // Capture context values before any async operation
+                if (!mounted) return;
+                final messenger = ScaffoldMessenger.of(context);
+                final localizations = AppLocalizations.of(context);
+                final provider = context.read<NotificationProvider>();
+
                 final confirmed = await _showDeleteAllDialog();
                 if (confirmed == true && mounted) {
-                  await context
-                      .read<NotificationProvider>()
-                      .deleteAllNotifications(userId);
+                  await provider.deleteAllNotifications(userId);
                   if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('All notifications deleted'),
-                        duration: Duration(seconds: 2),
+                    messenger.showSnackBar(
+                      SnackBar(
+                        content: Text(localizations.notification_allDeleted),
+                        duration: const Duration(seconds: 2),
                       ),
                     );
                   }
@@ -93,13 +104,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
               }
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'delete_all',
                 child: Row(
                   children: [
-                    Icon(Icons.delete_sweep, color: Colors.red),
-                    SizedBox(width: 8),
-                    Text('Delete all'),
+                    const Icon(Icons.delete_sweep, color: Colors.red),
+                    const SizedBox(width: 8),
+                    Text(l10n.notification_deleteAll),
                   ],
                 ),
               ),
@@ -109,9 +120,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
       ),
       body: Consumer<NotificationProvider>(
         builder: (context, provider, _) {
-          // Loading state
+          // Loading state with skeleton
           if (provider.isLoading && provider.notifications.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
+            return const NotificationSkeleton();
           }
 
           // Error state
@@ -123,7 +134,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   const Icon(Icons.error_outline, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
                   Text(
-                    'Error loading notifications',
+                    l10n.notification_errorLoading,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 8),
@@ -136,7 +147,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ElevatedButton.icon(
                     onPressed: _loadNotifications,
                     icon: const Icon(Icons.refresh),
-                    label: const Text('Retry'),
+                    label: Text(l10n.common_retry),
                   ),
                 ],
               ),
@@ -156,12 +167,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No notifications yet',
+                    l10n.notification_empty,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'You\'ll see notifications here when you receive them',
+                    l10n.notification_emptyMessage,
                     style: Theme.of(context).textTheme.bodyMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -202,26 +213,24 @@ class _NotificationScreenState extends State<NotificationScreen> {
     if (!notification.isRead) {
       await context.read<NotificationProvider>().markAsRead(notification.id);
     }
-
-    // TODO: Navigate based on notification type and data
-    // Example:
-    // if (notification.type == 'report' && notification.data?['report_id'] != null) {
-    //   Navigator.pushNamed(context, '/report/${notification.data!['report_id']}');
-    // }
   }
 
   /// Handle notification delete
   Future<void> _handleDelete(String notificationId) async {
+    // Capture context values before any async operation
+    if (!mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    final localizations = AppLocalizations.of(context);
+    final provider = context.read<NotificationProvider>();
+
     final confirmed = await _showDeleteDialog();
     if (confirmed == true && mounted) {
-      await context.read<NotificationProvider>().deleteNotification(
-        notificationId,
-      );
+      await provider.deleteNotification(notificationId);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Notification deleted'),
-            duration: Duration(seconds: 2),
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(localizations.notification_deleted),
+            duration: const Duration(seconds: 2),
           ),
         );
       }
@@ -230,22 +239,21 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   /// Show delete confirmation dialog
   Future<bool?> _showDeleteDialog() {
+    final l10n = AppLocalizations.of(context);
     return showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete notification'),
-        content: const Text(
-          'Are you sure you want to delete this notification?',
-        ),
+        title: Text(l10n.notification_delete),
+        content: Text(l10n.notification_deleteConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.common_cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text(l10n.common_delete),
           ),
         ],
       ),
@@ -254,22 +262,21 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   /// Show delete all confirmation dialog
   Future<bool?> _showDeleteAllDialog() {
+    final l10n = AppLocalizations.of(context);
     return showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete all notifications'),
-        content: const Text(
-          'Are you sure you want to delete all notifications? This action cannot be undone.',
-        ),
+        title: Text(l10n.notification_deleteAllTitle),
+        content: Text(l10n.notification_deleteAllConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.common_cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete all'),
+            child: Text(l10n.notification_deleteAll),
           ),
         ],
       ),

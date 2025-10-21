@@ -1107,5 +1107,102 @@
   "report_suggestions": "建议",
   "@report_suggestions": {
     "description": "建议部分标题"
+  },
+  
+  "notification_title": "通知",
+  "@notification_title": {
+    "description": "通知屏幕标题"
+  },
+  "notification_markAllAsRead": "全部标记为已读",
+  "@notification_markAllAsRead": {
+    "description": "全部标记为已读按钮"
+  },
+  "notification_deleteAll": "删除全部",
+  "@notification_deleteAll": {
+    "description": "删除全部通知按钮"
+  },
+  "notification_allMarkedAsRead": "所有通知已标记为已读",
+  "@notification_allMarkedAsRead": {
+    "description": "所有通知标记为已读成功消息"
+  },
+  "notification_allDeleted": "所有通知已删除",
+  "@notification_allDeleted": {
+    "description": "所有通知删除成功消息"
+  },
+  "notification_errorLoading": "加载通知时出错",
+  "@notification_errorLoading": {
+    "description": "加载通知失败错误消息"
+  },
+  "notification_empty": "暂无通知",
+  "@notification_empty": {
+    "description": "空状态标题"
+  },
+  "notification_emptyMessage": "收到通知时会显示在这里",
+  "@notification_emptyMessage": {
+    "description": "空状态消息"
+  },
+  "notification_delete": "删除通知",
+  "@notification_delete": {
+    "description": "删除通知对话框标题"
+  },
+  "notification_deleteConfirm": "您确定要删除此通知吗？",
+  "@notification_deleteConfirm": {
+    "description": "删除通知确认消息"
+  },
+  "notification_deleteAllTitle": "删除所有通知",
+  "@notification_deleteAllTitle": {
+    "description": "删除所有通知对话框标题"
+  },
+  "notification_deleteAllConfirm": "您确定要删除所有通知吗？此操作无法撤销。",
+  "@notification_deleteAllConfirm": {
+    "description": "删除所有通知确认消息"
+  },
+  "notification_deleted": "通知已删除",
+  "@notification_deleted": {
+    "description": "通知删除成功消息"
+  },
+  "notification_typeSuccess": "成功",
+  "@notification_typeSuccess": {
+    "description": "成功通知类型标签"
+  },
+  "notification_typeWarning": "警告",
+  "@notification_typeWarning": {
+    "description": "警告通知类型标签"
+  },
+  "notification_typeAlert": "提醒",
+  "@notification_typeAlert": {
+    "description": "提醒通知类型标签"
+  },
+  "notification_typeSystem": "系统",
+  "@notification_typeSystem": {
+    "description": "系统通知类型标签"
+  },
+  "notification_typeUser": "用户",
+  "@notification_typeUser": {
+    "description": "用户通知类型标签"
+  },
+  "notification_typeReport": "报告",
+  "@notification_typeReport": {
+    "description": "报告通知类型标签"
+  },
+  "notification_typeLocation": "位置",
+  "@notification_typeLocation": {
+    "description": "位置通知类型标签"
+  },
+  "notification_typeStatus": "状态",
+  "@notification_typeStatus": {
+    "description": "状态通知类型标签"
+  },
+  "notification_typePromotion": "推广",
+  "@notification_typePromotion": {
+    "description": "推广通知类型标签"
+  },
+  "notification_typeReminder": "提醒",
+  "@notification_typeReminder": {
+    "description": "提醒通知类型标签"
+  },
+  "notification_typeInfo": "信息",
+  "@notification_typeInfo": {
+    "description": "信息通知类型标签"
   }
 }
