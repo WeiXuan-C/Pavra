@@ -13,7 +13,6 @@ dependencies:
   logging: any
   supabase: ^2.3.5
   dotenv: ^4.2.0
-  onesignal_flutter: ^5.3.4
 
 dev_dependencies:
   lints: '>=3.0.0 <7.0.0'
