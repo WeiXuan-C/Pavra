@@ -11,6 +11,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
 import '../../l10n/app_localizations.dart';
+import '../layouts/header_layout.dart';
 import './widgets/camera_controls_widget.dart';
 import './widgets/camera_preview_widget.dart';
 import './widgets/detection_history_panel.dart';
@@ -319,11 +320,9 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
 
         if (mounted) {
           final l10n = AppLocalizations.of(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(l10n.camera_imageProcessed),
-            ),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.camera_imageProcessed)));
         }
       }
     } catch (e) {
@@ -373,7 +372,9 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          _isBurstMode ? l10n.camera_burstModeActivated : l10n.camera_burstModeDeactivated,
+          _isBurstMode
+              ? l10n.camera_burstModeActivated
+              : l10n.camera_burstModeDeactivated,
         ),
         duration: Duration(seconds: 1),
       ),
@@ -396,7 +397,9 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('${l10n.camera_type}: ${detection['type']}'),
-            Text('${l10n.camera_confidence}: ${(detection['confidence'] * 100).toInt()}%'),
+            Text(
+              '${l10n.camera_confidence}: ${(detection['confidence'] * 100).toInt()}%',
+            ),
             Text('${l10n.camera_location}: ${detection['location']}'),
             Text('${l10n.camera_time}: ${detection['timestamp']}'),
           ],
@@ -429,184 +432,194 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Main Content
-            Expanded(
-              child: Stack(
-                children: [
-                  Column(
-                    children: [
-                      // Status Bar
-                      Padding(
-                        padding: EdgeInsets.all(4.w),
-                        child: StatusBarWidget(
-                          isGpsActive: _isGpsActive,
-                          gpsAccuracy: _gpsAccuracy,
+      appBar: HeaderLayout(
+        title: l10n.camera_title,
+        centerTitle: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: Column(
+        children: [
+          // Main Content
+          Expanded(
+            child: Stack(
+              children: [
+                Column(
+                  children: [
+                    // Status Bar
+                    Padding(
+                      padding: EdgeInsets.all(4.w),
+                      child: StatusBarWidget(
+                        isGpsActive: _isGpsActive,
+                        gpsAccuracy: _gpsAccuracy,
+                        isDetectionActive: _isDetectionActive,
+                        onDetectionToggle: _toggleDetection,
+                      ),
+                    ),
+
+                    // Camera Preview
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4.w),
+                        child: CameraPreviewWidget(
+                          cameraController: _cameraController,
                           isDetectionActive: _isDetectionActive,
-                          onDetectionToggle: _toggleDetection,
+                          detectedIssues: _detectedIssues,
+                          onCrosshairTap: _onCrosshairTap,
                         ),
                       ),
+                    ),
 
-                      // Camera Preview
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 4.w),
-                          child: CameraPreviewWidget(
-                            cameraController: _cameraController,
-                            isDetectionActive: _isDetectionActive,
-                            detectedIssues: _detectedIssues,
-                            onCrosshairTap: _onCrosshairTap,
-                          ),
-                        ),
-                      ),
+                    // Camera Controls
+                    CameraControlsWidget(
+                      onCapturePressed: _capturePhoto,
+                      onGalleryPressed: _openGallery,
+                      onFlashToggle: _toggleFlash,
+                      isFlashOn: _isFlashOn,
+                      isCapturing: _isCapturing,
+                      isBurstMode: _isBurstMode,
+                      onBurstModeToggle: _toggleBurstMode,
+                    ),
+                  ],
+                ),
 
-                      // Camera Controls
-                      CameraControlsWidget(
-                        onCapturePressed: _capturePhoto,
-                        onGalleryPressed: _openGallery,
-                        onFlashToggle: _toggleFlash,
-                        isFlashOn: _isFlashOn,
-                        isCapturing: _isCapturing,
-                        isBurstMode: _isBurstMode,
-                        onBurstModeToggle: _toggleBurstMode,
-                      ),
-                    ],
-                  ),
-
-                  // History Panel Button
-                  Positioned(
-                    right: 4.w,
-                    top: 20.h,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isHistoryPanelOpen = !_isHistoryPanelOpen;
-                        });
-                      },
-                      child: AnimatedBuilder(
-                        animation: _pulseAnimation!,
-                        builder: (context, child) {
-                          return Transform.scale(
-                            scale: _recentDetections.isNotEmpty
-                                ? _pulseAnimation!.value
-                                : 1.0,
-                            child: Container(
-                              padding: EdgeInsets.all(3.w),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.primary,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: theme.colorScheme.shadow,
-                                    blurRadius: 8,
-                                    offset: Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Stack(
-                                children: [
-                                  CustomIconWidget(
-                                    iconName: 'history',
-                                    color: theme.colorScheme.onPrimary,
-                                    size: 24,
-                                  ),
-                                  if (_recentDetections.isNotEmpty)
-                                    Positioned(
-                                      top: -1,
-                                      right: -1,
-                                      child: Container(
-                                        width: 5.w,
-                                        height: 5.w,
-                                        decoration: BoxDecoration(
-                                          color: theme.colorScheme.error,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            '${_recentDetections.length > 9 ? '9+' : _recentDetections.length}',
-                                            style: theme.textTheme.labelSmall?.copyWith(
-                                              color: theme.colorScheme.onError,
-                                              fontSize: 8.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
+                // History Panel Button
+                Positioned(
+                  right: 4.w,
+                  top: 20.h,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isHistoryPanelOpen = !_isHistoryPanelOpen;
+                      });
+                    },
+                    child: AnimatedBuilder(
+                      animation: _pulseAnimation!,
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: _recentDetections.isNotEmpty
+                              ? _pulseAnimation!.value
+                              : 1.0,
+                          child: Container(
+                            padding: EdgeInsets.all(3.w),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: theme.colorScheme.shadow,
+                                  blurRadius: 8,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Stack(
+                              children: [
+                                CustomIconWidget(
+                                  iconName: 'history',
+                                  color: theme.colorScheme.onPrimary,
+                                  size: 24,
+                                ),
+                                if (_recentDetections.isNotEmpty)
+                                  Positioned(
+                                    top: -1,
+                                    right: -1,
+                                    child: Container(
+                                      width: 5.w,
+                                      height: 5.w,
+                                      decoration: BoxDecoration(
+                                        color: theme.colorScheme.error,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          '${_recentDetections.length > 9 ? '9+' : _recentDetections.length}',
+                                          style: theme.textTheme.labelSmall
+                                              ?.copyWith(
+                                                color:
+                                                    theme.colorScheme.onError,
+                                                fontSize: 8.sp,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                         ),
                                       ),
                                     ),
-                                ],
-                              ),
+                                  ),
+                              ],
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-
-                  // Metrics Button
-                  Positioned(
-                    right: 4.w,
-                    top: 30.h,
-                    child: GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) => DetectionMetricsSheet(
-                            detectionHistory: _recentDetections,
-                            detectionStats: _detectionStats,
-                            onClose: () {
-                              Navigator.of(context).pop();
-                            },
                           ),
                         );
                       },
-                      child: Container(
-                        padding: EdgeInsets.all(3.w),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.secondary,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.shadow,
-                              blurRadius: 8,
-                              offset: Offset(0, 4),
-                            ),
-                          ],
+                    ),
+                  ),
+                ),
+
+                // Metrics Button
+                Positioned(
+                  right: 4.w,
+                  top: 30.h,
+                  child: GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => DetectionMetricsSheet(
+                          detectionHistory: _recentDetections,
+                          detectionStats: _detectionStats,
+                          onClose: () {
+                            Navigator.of(context).pop();
+                          },
                         ),
-                        child: CustomIconWidget(
-                          iconName: 'analytics',
-                          color: theme.colorScheme.onSecondary,
-                          size: 24,
-                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(3.w),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.secondary,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: theme.colorScheme.shadow,
+                            blurRadius: 8,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: CustomIconWidget(
+                        iconName: 'analytics',
+                        color: theme.colorScheme.onSecondary,
+                        size: 24,
                       ),
                     ),
                   ),
+                ),
 
-                  // History Panel
-                  if (_isHistoryPanelOpen)
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      bottom: 0,
-                      child: DetectionHistoryPanel(
-                        recentDetections: _recentDetections,
-                        onClose: () {
-                          setState(() {
-                            _isHistoryPanelOpen = false;
-                          });
-                        },
-                        onDetectionTap: _onDetectionTap,
-                      ),
+                // History Panel
+                if (_isHistoryPanelOpen)
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    child: DetectionHistoryPanel(
+                      recentDetections: _recentDetections,
+                      onClose: () {
+                        setState(() {
+                          _isHistoryPanelOpen = false;
+                        });
+                      },
+                      onDetectionTap: _onDetectionTap,
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -1400,5 +1400,85 @@
   "profile_settings": "Settings",
   "@profile_settings": {
     "description": "Settings button on profile"
+  },
+  "report_openCamera": "Open Camera Detection",
+  "@report_openCamera": {
+    "description": "Button to open camera detection screen"
+  },
+  "report_aiDetectionReady": "AI detection ready to scan road issues",
+  "@report_aiDetectionReady": {
+    "description": "Description for camera detection feature"
+  },
+  "report_quickReportTitle": "Quick Report Road Issues",
+  "@report_quickReportTitle": {
+    "description": "Quick report section title"
+  },
+  "report_selectMethodBelow": "Select a method below to start reporting",
+  "@report_selectMethodBelow": {
+    "description": "Instruction text for report methods"
+  },
+  "report_reportMethods": "Report Methods",
+  "@report_reportMethods": {
+    "description": "Report methods section title"
+  },
+  "report_aiSmartDetection": "AI Smart Detection",
+  "@report_aiSmartDetection": {
+    "description": "AI detection card title"
+  },
+  "report_useCameraAutoDetect": "Use camera to automatically detect road issues",
+  "@report_useCameraAutoDetect": {
+    "description": "AI detection card subtitle"
+  },
+  "report_manualReport": "Manual Report",
+  "@report_manualReport": {
+    "description": "Manual report card title"
+  },
+  "report_fillFormReport": "Fill form to report",
+  "@report_fillFormReport": {
+    "description": "Manual report card subtitle"
+  },
+  "report_selectFromGallery": "Select from Gallery",
+  "@report_selectFromGallery": {
+    "description": "Gallery selection card title"
+  },
+  "report_aiAnalyzePhoto": "AI analyze photo",
+  "@report_aiAnalyzePhoto": {
+    "description": "Gallery selection card subtitle"
+  },
+  "report_myContribution": "My Contribution",
+  "@report_myContribution": {
+    "description": "Stats section title"
+  },
+  "report_totalReports": "Total Reports",
+  "@report_totalReports": {
+    "description": "Total reports stat label"
+  },
+  "report_resolved": "Resolved",
+  "@report_resolved": {
+    "description": "Resolved reports stat label"
+  },
+  "report_inProgress": "In Progress",
+  "@report_inProgress": {
+    "description": "In progress reports stat label"
+  },
+  "report_recentReports": "Recent Reports",
+  "@report_recentReports": {
+    "description": "Recent reports section title"
+  },
+  "report_viewAll": "View All",
+  "@report_viewAll": {
+    "description": "View all button text"
+  },
+  "report_filterMenuSubtitleHome": "Quick report road issues",
+  "@report_filterMenuSubtitleHome": {
+    "description": "Filter menu subtitle for home"
+  },
+  "report_filterMenuSubtitleMy": "View my submitted reports",
+  "@report_filterMenuSubtitleMy": {
+    "description": "Filter menu subtitle for my reports"
+  },
+  "report_filterMenuSubtitleAll": "Browse all user reports",
+  "@report_filterMenuSubtitleAll": {
+    "description": "Filter menu subtitle for all reports"
   }
 }

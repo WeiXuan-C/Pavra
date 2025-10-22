@@ -319,7 +319,7 @@ class AppTheme {
 
     // Tab bar theme for navigation
     tabBarTheme: TabBarThemeData(
-      labelColor: onPrimaryLight,  // Dark text on yellow AppBar
+      labelColor: onPrimaryLight, // Dark text on yellow AppBar
       unselectedLabelColor: onPrimaryLight.withValues(alpha: 0.6),
       indicatorColor: onPrimaryLight,
       indicatorSize: TabBarIndicatorSize.tab,
@@ -406,10 +406,13 @@ class AppTheme {
     cardColor: cardDark,
     dividerColor: dividerDark,
     appBarTheme: AppBarTheme(
-      backgroundColor: surfaceDark,
+      backgroundColor: const Color(
+        0xFF2C2C2C,
+      ), // Lighter than surface (#202020) for clear distinction
       foregroundColor: onSurfaceDark,
-      elevation: 2.0,
-      shadowColor: shadowDark,
+      elevation: 0,
+      shadowColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
       titleTextStyle: GoogleFonts.inter(
         fontSize: 20,
         fontWeight: FontWeight.w600,
@@ -574,9 +577,9 @@ class AppTheme {
       trackHeight: 4.0,
     ),
     tabBarTheme: TabBarThemeData(
-      labelColor: onSurfaceDark,  // White text on dark AppBar
+      labelColor: onSurfaceDark, // White text on dark AppBar
       unselectedLabelColor: onSurfaceDark.withValues(alpha: 0.6),
-      indicatorColor: primaryDark,  // Yellow indicator
+      indicatorColor: primaryDark, // Yellow indicator
       indicatorSize: TabBarIndicatorSize.tab,
       labelStyle: GoogleFonts.inter(
         fontSize: 14,

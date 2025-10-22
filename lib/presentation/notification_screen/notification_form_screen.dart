@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/models/notification_model.dart';
 import '../../core/providers/auth_provider.dart';
+import '../../core/supabase/supabase_client.dart';
 import '../../l10n/app_localizations.dart';
 import 'notification_provider.dart';
 
@@ -19,9 +20,12 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _titleController;
   late TextEditingController _messageController;
-  late TextEditingController _relatedActionController;
+  late TextEditingController _dataController;
+  String? _selectedActionLogId;
   late String _selectedType;
   bool _isSubmitting = false;
+  bool _isLoadingActionLogs = false;
+  List<Map<String, dynamic>> _actionLogs = [];
 
   final List<String> _notificationTypes = [
     'info',
@@ -44,17 +48,80 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
     _messageController = TextEditingController(
       text: widget.notification?.message,
     );
-    _relatedActionController = TextEditingController(
-      text: widget.notification?.relatedAction,
+    _dataController = TextEditingController(
+      text: widget.notification?.data != null
+          ? _formatJsonForDisplay(widget.notification!.data!)
+          : '',
     );
+    _selectedActionLogId = widget.notification?.relatedAction;
     _selectedType = widget.notification?.type ?? 'info';
+    _loadActionLogs();
+  }
+
+  String _formatJsonForDisplay(Map<String, dynamic> json) {
+    // Format JSON for display in text field
+    return json.entries.map((e) => '${e.key}: ${e.value}').join('\n');
+  }
+
+  Map<String, dynamic>? _parseDataInput(String input) {
+    if (input.trim().isEmpty) return null;
+
+    try {
+      // Parse simple key:value format
+      final Map<String, dynamic> data = {};
+      final lines = input.split('\n');
+      for (final line in lines) {
+        if (line.trim().isEmpty) continue;
+        final parts = line.split(':');
+        if (parts.length >= 2) {
+          final key = parts[0].trim();
+          final value = parts.sublist(1).join(':').trim();
+          data[key] = value;
+        }
+      }
+      return data.isEmpty ? null : data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> _loadActionLogs() async {
+    setState(() {
+      _isLoadingActionLogs = true;
+    });
+
+    try {
+      final authProvider = context.read<AuthProvider>();
+      final userId = authProvider.user?.id;
+
+      if (userId != null) {
+        // Load action logs from Supabase
+        final response = await supabase
+            .from('action_log')
+            .select('id, action_type, description, created_at')
+            .eq('user_id', userId)
+            .order('created_at', ascending: false)
+            .limit(50);
+
+        setState(() {
+          _actionLogs = List<Map<String, dynamic>>.from(response);
+        });
+      }
+    } catch (e) {
+      // Handle error silently or show a message
+      debugPrint('Error loading action logs: $e');
+    } finally {
+      setState(() {
+        _isLoadingActionLogs = false;
+      });
+    }
   }
 
   @override
   void dispose() {
     _titleController.dispose();
     _messageController.dispose();
-    _relatedActionController.dispose();
+    _dataController.dispose();
     super.dispose();
   }
 
@@ -123,7 +190,7 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
 
             // Type dropdown
             DropdownButtonFormField<String>(
-              value: _selectedType,
+              initialValue: _selectedType,
               decoration: InputDecoration(
                 labelText: l10n.notification_typeLabel,
                 border: const OutlineInputBorder(),
@@ -151,16 +218,77 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Related action field (optional)
-            TextFormField(
-              controller: _relatedActionController,
+            // Related action dropdown (optional)
+            DropdownButtonFormField<String>(
+              initialValue: _selectedActionLogId,
               decoration: InputDecoration(
                 labelText: l10n.notification_relatedActionLabel,
-                hintText: l10n.notification_relatedActionHint,
+                hintText: 'Select an action log (optional)',
                 border: const OutlineInputBorder(),
                 prefixIcon: const Icon(Icons.link),
+                suffixIcon: _isLoadingActionLogs
+                    ? const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      )
+                    : null,
               ),
-              maxLength: 200,
+              items: [
+                const DropdownMenuItem<String>(
+                  value: null,
+                  child: Text('None'),
+                ),
+                ..._actionLogs.map((log) {
+                  return DropdownMenuItem<String>(
+                    value: log['id'] as String,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          log['action_type'] as String? ?? 'Unknown',
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        if (log['description'] != null)
+                          Text(
+                            log['description'] as String,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                      ],
+                    ),
+                  );
+                }),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedActionLogId = value;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // Data field (optional JSON data)
+            TextFormField(
+              controller: _dataController,
+              decoration: InputDecoration(
+                labelText: 'Additional Data (Optional)',
+                hintText: 'key1: value1\nkey2: value2',
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.data_object),
+                alignLabelWithHint: true,
+                helperText: 'Enter key-value pairs, one per line',
+              ),
+              maxLines: 4,
+              maxLength: 500,
             ),
             const SizedBox(height: 24),
 
@@ -329,6 +457,8 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
 
       final provider = context.read<NotificationProvider>();
 
+      final parsedData = _parseDataInput(_dataController.text);
+
       if (isEditing) {
         // Update existing notification
         await provider.updateNotification(
@@ -336,9 +466,8 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
           title: _titleController.text.trim(),
           message: _messageController.text.trim(),
           type: _selectedType,
-          relatedAction: _relatedActionController.text.trim().isEmpty
-              ? null
-              : _relatedActionController.text.trim(),
+          relatedAction: _selectedActionLogId,
+          data: parsedData,
         );
       } else {
         // Create new notification
@@ -347,9 +476,8 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
           title: _titleController.text.trim(),
           message: _messageController.text.trim(),
           type: _selectedType,
-          relatedAction: _relatedActionController.text.trim().isEmpty
-              ? null
-              : _relatedActionController.text.trim(),
+          relatedAction: _selectedActionLogId,
+          data: parsedData,
         );
       }
 

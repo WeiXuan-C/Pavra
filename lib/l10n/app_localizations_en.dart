@@ -1061,4 +1061,67 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profile_settings => 'Settings';
+
+  @override
+  String get report_openCamera => 'Open Camera Detection';
+
+  @override
+  String get report_aiDetectionReady =>
+      'AI detection ready to scan road issues';
+
+  @override
+  String get report_quickReportTitle => 'Quick Report Road Issues';
+
+  @override
+  String get report_selectMethodBelow =>
+      'Select a method below to start reporting';
+
+  @override
+  String get report_reportMethods => 'Report Methods';
+
+  @override
+  String get report_aiSmartDetection => 'AI Smart Detection';
+
+  @override
+  String get report_useCameraAutoDetect =>
+      'Use camera to automatically detect road issues';
+
+  @override
+  String get report_manualReport => 'Manual Report';
+
+  @override
+  String get report_fillFormReport => 'Fill form to report';
+
+  @override
+  String get report_selectFromGallery => 'Select from Gallery';
+
+  @override
+  String get report_aiAnalyzePhoto => 'AI analyze photo';
+
+  @override
+  String get report_myContribution => 'My Contribution';
+
+  @override
+  String get report_totalReports => 'Total Reports';
+
+  @override
+  String get report_resolved => 'Resolved';
+
+  @override
+  String get report_inProgress => 'In Progress';
+
+  @override
+  String get report_recentReports => 'Recent Reports';
+
+  @override
+  String get report_viewAll => 'View All';
+
+  @override
+  String get report_filterMenuSubtitleHome => 'Quick report road issues';
+
+  @override
+  String get report_filterMenuSubtitleMy => 'View my submitted reports';
+
+  @override
+  String get report_filterMenuSubtitleAll => 'Browse all user reports';
 }

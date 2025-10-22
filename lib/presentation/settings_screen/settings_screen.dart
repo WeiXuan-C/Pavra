@@ -175,12 +175,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         const Divider(height: 8),
 
                         // Alert Type Notifications
-                        Text(
-                          l10n.settings_alertTypes,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
                         const SizedBox(height: 8),
 
                         // Sound

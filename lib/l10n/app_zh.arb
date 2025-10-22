@@ -1108,7 +1108,6 @@
   "@report_suggestions": {
     "description": "建议部分标题"
   },
-  
   "notification_title": "通知",
   "@notification_title": {
     "description": "通知屏幕标题"
@@ -1384,5 +1383,85 @@
   "profile_settings": "设置",
   "@profile_settings": {
     "description": "个人资料上的设置按钮"
+  },
+  "report_openCamera": "打开相机检测",
+  "@report_openCamera": {
+    "description": "打开相机检测屏幕按钮"
+  },
+  "report_aiDetectionReady": "AI检测已就绪，可扫描道路问题",
+  "@report_aiDetectionReady": {
+    "description": "相机检测功能描述"
+  },
+  "report_quickReportTitle": "快速报告道路问题",
+  "@report_quickReportTitle": {
+    "description": "快速报告部分标题"
+  },
+  "report_selectMethodBelow": "选择下方方式开始报告",
+  "@report_selectMethodBelow": {
+    "description": "报告方式说明文字"
+  },
+  "report_reportMethods": "报告方式",
+  "@report_reportMethods": {
+    "description": "报告方式部分标题"
+  },
+  "report_aiSmartDetection": "AI 智能检测",
+  "@report_aiSmartDetection": {
+    "description": "AI检测卡片标题"
+  },
+  "report_useCameraAutoDetect": "使用相机自动识别道路问题",
+  "@report_useCameraAutoDetect": {
+    "description": "AI检测卡片副标题"
+  },
+  "report_manualReport": "手动报告",
+  "@report_manualReport": {
+    "description": "手动报告卡片标题"
+  },
+  "report_fillFormReport": "填写表单报告",
+  "@report_fillFormReport": {
+    "description": "手动报告卡片副标题"
+  },
+  "report_selectFromGallery": "从相册选择",
+  "@report_selectFromGallery": {
+    "description": "相册选择卡片标题"
+  },
+  "report_aiAnalyzePhoto": "AI 分析照片",
+  "@report_aiAnalyzePhoto": {
+    "description": "相册选择卡片副标题"
+  },
+  "report_myContribution": "我的贡献",
+  "@report_myContribution": {
+    "description": "统计部分标题"
+  },
+  "report_totalReports": "总报告",
+  "@report_totalReports": {
+    "description": "总报告统计标签"
+  },
+  "report_resolved": "已解决",
+  "@report_resolved": {
+    "description": "已解决报告统计标签"
+  },
+  "report_inProgress": "处理中",
+  "@report_inProgress": {
+    "description": "处理中报告统计标签"
+  },
+  "report_recentReports": "最近报告",
+  "@report_recentReports": {
+    "description": "最近报告部分标题"
+  },
+  "report_viewAll": "查看全部",
+  "@report_viewAll": {
+    "description": "查看全部按钮文字"
+  },
+  "report_filterMenuSubtitleHome": "快速报告道路问题",
+  "@report_filterMenuSubtitleHome": {
+    "description": "筛选菜单首页副标题"
+  },
+  "report_filterMenuSubtitleMy": "查看我提交的报告",
+  "@report_filterMenuSubtitleMy": {
+    "description": "筛选菜单我的报告副标题"
+  },
+  "report_filterMenuSubtitleAll": "浏览所有用户的报告",
+  "@report_filterMenuSubtitleAll": {
+    "description": "筛选菜单所有报告副标题"
   }
 }

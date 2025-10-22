@@ -190,11 +190,6 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
     });
   }
 
-  void _showNotificationSettings() {
-    // Navigate to settings screen
-    Navigator.pushNamed(context, '/settings');
-  }
-
   List<Map<String, dynamic>> get _filteredAlerts {
     return _alerts.where((alert) {
       final hazardType = (alert['hazardType'] as String).toLowerCase();
@@ -220,12 +215,7 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
     return Scaffold(
       appBar: HeaderLayout(
         title: l10n.alerts_title,
-        actions: [
-          IconButton(
-            onPressed: _showNotificationSettings,
-            icon: Icon(Icons.settings, size: 24),
-          ),
-        ],
+        centerTitle: false,
         bottom: TabBar(
           controller: _tabController,
           tabs: [
@@ -363,10 +353,14 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
                   margin: EdgeInsets.symmetric(horizontal: 4.w),
                   padding: EdgeInsets.all(4.w),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withAlpha(26), // 0.1 * 255 ≈ 26
+                    color: theme.colorScheme.primary.withAlpha(
+                      26,
+                    ), // 0.1 * 255 ≈ 26
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: theme.colorScheme.primary.withAlpha(51), // 0.2 * 255 ≈ 51
+                      color: theme.colorScheme.primary.withAlpha(
+                        51,
+                      ), // 0.2 * 255 ≈ 51
                     ),
                   ),
                   child: Column(

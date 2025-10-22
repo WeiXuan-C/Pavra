@@ -2143,6 +2143,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get profile_settings;
+
+  /// Button to open camera detection screen
+  ///
+  /// In en, this message translates to:
+  /// **'Open Camera Detection'**
+  String get report_openCamera;
+
+  /// Description for camera detection feature
+  ///
+  /// In en, this message translates to:
+  /// **'AI detection ready to scan road issues'**
+  String get report_aiDetectionReady;
+
+  /// Quick report section title
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Report Road Issues'**
+  String get report_quickReportTitle;
+
+  /// Instruction text for report methods
+  ///
+  /// In en, this message translates to:
+  /// **'Select a method below to start reporting'**
+  String get report_selectMethodBelow;
+
+  /// Report methods section title
+  ///
+  /// In en, this message translates to:
+  /// **'Report Methods'**
+  String get report_reportMethods;
+
+  /// AI detection card title
+  ///
+  /// In en, this message translates to:
+  /// **'AI Smart Detection'**
+  String get report_aiSmartDetection;
+
+  /// AI detection card subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Use camera to automatically detect road issues'**
+  String get report_useCameraAutoDetect;
+
+  /// Manual report card title
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Report'**
+  String get report_manualReport;
+
+  /// Manual report card subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Fill form to report'**
+  String get report_fillFormReport;
+
+  /// Gallery selection card title
+  ///
+  /// In en, this message translates to:
+  /// **'Select from Gallery'**
+  String get report_selectFromGallery;
+
+  /// Gallery selection card subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'AI analyze photo'**
+  String get report_aiAnalyzePhoto;
+
+  /// Stats section title
+  ///
+  /// In en, this message translates to:
+  /// **'My Contribution'**
+  String get report_myContribution;
+
+  /// Total reports stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Reports'**
+  String get report_totalReports;
+
+  /// Resolved reports stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get report_resolved;
+
+  /// In progress reports stat label
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get report_inProgress;
+
+  /// Recent reports section title
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Reports'**
+  String get report_recentReports;
+
+  /// View all button text
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get report_viewAll;
+
+  /// Filter menu subtitle for home
+  ///
+  /// In en, this message translates to:
+  /// **'Quick report road issues'**
+  String get report_filterMenuSubtitleHome;
+
+  /// Filter menu subtitle for my reports
+  ///
+  /// In en, this message translates to:
+  /// **'View my submitted reports'**
+  String get report_filterMenuSubtitleMy;
+
+  /// Filter menu subtitle for all reports
+  ///
+  /// In en, this message translates to:
+  /// **'Browse all user reports'**
+  String get report_filterMenuSubtitleAll;
 }
 
 class _AppLocalizationsDelegate

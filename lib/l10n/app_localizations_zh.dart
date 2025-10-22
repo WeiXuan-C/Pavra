@@ -1038,4 +1038,64 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get profile_settings => '设置';
+
+  @override
+  String get report_openCamera => '打开相机检测';
+
+  @override
+  String get report_aiDetectionReady => 'AI检测已就绪，可扫描道路问题';
+
+  @override
+  String get report_quickReportTitle => '快速报告道路问题';
+
+  @override
+  String get report_selectMethodBelow => '选择下方方式开始报告';
+
+  @override
+  String get report_reportMethods => '报告方式';
+
+  @override
+  String get report_aiSmartDetection => 'AI 智能检测';
+
+  @override
+  String get report_useCameraAutoDetect => '使用相机自动识别道路问题';
+
+  @override
+  String get report_manualReport => '手动报告';
+
+  @override
+  String get report_fillFormReport => '填写表单报告';
+
+  @override
+  String get report_selectFromGallery => '从相册选择';
+
+  @override
+  String get report_aiAnalyzePhoto => 'AI 分析照片';
+
+  @override
+  String get report_myContribution => '我的贡献';
+
+  @override
+  String get report_totalReports => '总报告';
+
+  @override
+  String get report_resolved => '已解决';
+
+  @override
+  String get report_inProgress => '处理中';
+
+  @override
+  String get report_recentReports => '最近报告';
+
+  @override
+  String get report_viewAll => '查看全部';
+
+  @override
+  String get report_filterMenuSubtitleHome => '快速报告道路问题';
+
+  @override
+  String get report_filterMenuSubtitleMy => '查看我提交的报告';
+
+  @override
+  String get report_filterMenuSubtitleAll => '浏览所有用户的报告';
 }

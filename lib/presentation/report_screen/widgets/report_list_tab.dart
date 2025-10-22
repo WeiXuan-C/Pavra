@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../../../l10n/app_localizations.dart';
+import './report_skeleton.dart';
 
 enum ReportFilterType { myReports, allReports }
 
@@ -160,9 +161,7 @@ class _ReportListTabState extends State<ReportListTab> {
     final theme = Theme.of(context);
 
     if (_isLoading) {
-      return Center(
-        child: CircularProgressIndicator(color: theme.colorScheme.primary),
-      );
+      return const ReportSkeleton(itemCount: 5);
     }
 
     if (_reports.isEmpty) {
@@ -241,16 +240,35 @@ class _ReportListTabState extends State<ReportListTab> {
 
   Widget _buildSortChip(String label, String value, ThemeData theme) {
     final isSelected = _sortBy == value;
+    final isDark = theme.brightness == Brightness.dark;
+
     return FilterChip(
-      label: Text(label),
+      label: Text(
+        label,
+        style: TextStyle(
+          color: isSelected
+              ? theme.colorScheme.primary
+              : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+        ),
+      ),
       selected: isSelected,
       onSelected: (selected) {
         if (selected) {
           _sortReports(value);
         }
       },
-      selectedColor: theme.colorScheme.primary.withValues(alpha: 0.2),
+      backgroundColor: isDark
+          ? theme.colorScheme.surface
+          : theme.colorScheme.surfaceContainerHighest,
+      selectedColor: theme.colorScheme.primary.withValues(alpha: 0.15),
       checkmarkColor: theme.colorScheme.primary,
+      side: BorderSide(
+        color: isSelected
+            ? theme.colorScheme.primary
+            : theme.colorScheme.outline.withValues(alpha: 0.3),
+        width: isSelected ? 1.5 : 1,
+      ),
     );
   }
 

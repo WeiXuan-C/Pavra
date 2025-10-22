@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../core/models/notification_model.dart';
 import '../../core/providers/auth_provider.dart';
 import '../../l10n/app_localizations.dart';
+import '../layouts/header_layout.dart';
 import 'notification_form_screen.dart';
 import 'notification_provider.dart';
 import 'widgets/notification_item_widget.dart';
@@ -48,8 +49,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.notification_title),
+      appBar: HeaderLayout(
+        title: l10n.notification_title,
+        centerTitle: false,
         actions: [
           // Mark all as read button
           Consumer<NotificationProvider>(
@@ -241,7 +243,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
-  /// Handle notification delete
+  /// Handle notification delete (called after Dismissible confirmation)
   Future<void> _handleDelete(String notificationId) async {
     // Capture context values before any async operation
     if (!mounted) return;
@@ -249,41 +251,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
     final localizations = AppLocalizations.of(context);
     final provider = context.read<NotificationProvider>();
 
-    final confirmed = await _showDeleteDialog();
-    if (confirmed == true && mounted) {
-      await provider.deleteNotification(notificationId);
-      if (mounted) {
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text(localizations.notification_deleted),
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      }
+    // No need to show dialog here - Dismissible already confirmed
+    await provider.deleteNotification(notificationId);
+    if (mounted) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(localizations.notification_deleted),
+          duration: const Duration(seconds: 2),
+        ),
+      );
     }
-  }
-
-  /// Show delete confirmation dialog
-  Future<bool?> _showDeleteDialog() {
-    final l10n = AppLocalizations.of(context);
-    return showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.notification_delete),
-        content: Text(l10n.notification_deleteConfirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.common_cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text(l10n.common_delete),
-          ),
-        ],
-      ),
-    );
   }
 
   /// Show delete all confirmation dialog

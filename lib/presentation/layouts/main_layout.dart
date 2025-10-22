@@ -23,10 +23,13 @@ class _MainLayoutState extends State<MainLayout> {
   late int _currentIndex;
   late PageController _pageController;
 
+  // Report screen filter type: 0 = Home, 1 = My Reports, 2 = All Reports
+  int _reportFilterType = 0;
+
   // List of main screens
-  final List<Widget> _screens = [
+  List<Widget> get _screens => [
     const MapViewScreen(),
-    const ReportScreen(),
+    ReportScreen(filterType: _reportFilterType),
     const NotificationScreen(),
     const ProfileScreen(),
   ];
@@ -46,6 +49,12 @@ class _MainLayoutState extends State<MainLayout> {
 
   /// Handle navigation bar tap
   void _onNavBarTap(int index) {
+    // If tapping on Report tab (index 1), show dropdown menu
+    if (index == 1 && _currentIndex == 1) {
+      _showReportFilterMenu();
+      return;
+    }
+
     setState(() {
       _currentIndex = index;
     });
@@ -57,6 +66,140 @@ class _MainLayoutState extends State<MainLayout> {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  /// Show report filter dropdown menu
+  void _showReportFilterMenu() {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: theme.cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: 2.h),
+            Container(
+              width: 10.w,
+              height: 0.5.h,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            SizedBox(height: 2.h),
+            _buildFilterOption(
+              icon: Icons.home_outlined,
+              title: l10n.report_title,
+              subtitle: l10n.report_filterMenuSubtitleHome,
+              isSelected: _reportFilterType == 0,
+              onTap: () {
+                Navigator.pop(context);
+                setState(() => _reportFilterType = 0);
+              },
+            ),
+            Divider(height: 1),
+            _buildFilterOption(
+              icon: Icons.person_outline,
+              title: l10n.report_myReports,
+              subtitle: l10n.report_filterMenuSubtitleMy,
+              isSelected: _reportFilterType == 1,
+              onTap: () {
+                Navigator.pop(context);
+                setState(() => _reportFilterType = 1);
+              },
+            ),
+            Divider(height: 1),
+            _buildFilterOption(
+              icon: Icons.public,
+              title: l10n.report_allReports,
+              subtitle: l10n.report_filterMenuSubtitleAll,
+              isSelected: _reportFilterType == 2,
+              onTap: () {
+                Navigator.pop(context);
+                setState(() => _reportFilterType = 2);
+              },
+            ),
+            SizedBox(height: 2.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build filter option item
+  Widget _buildFilterOption({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(2.w),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                    : theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                icon,
+                color: isSelected
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                size: 6.w,
+              ),
+            ),
+            SizedBox(width: 4.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.normal,
+                      color: isSelected
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  SizedBox(height: 0.3.h),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              Icon(
+                Icons.check_circle,
+                color: theme.colorScheme.primary,
+                size: 5.w,
+              ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -97,16 +240,31 @@ class _MainLayoutState extends State<MainLayout> {
             ),
             label: l10n.nav_map,
           ),
-          // Report
+          // Report (with dropdown indicator)
           BottomNavigationBarItem(
-            icon: CustomIconWidget(
-              iconName: 'report',
-              color: _currentIndex == 1
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.6),
-              size: 6.w,
+            icon: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                CustomIconWidget(
+                  iconName: 'report',
+                  color: _currentIndex == 1
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.6),
+                  size: 6.w,
+                ),
+                if (_currentIndex == 1)
+                  Positioned(
+                    right: -2.w,
+                    top: -1.h,
+                    child: Icon(
+                      Icons.arrow_drop_down,
+                      size: 4.w,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+              ],
             ),
             label: l10n.nav_report,
           ),

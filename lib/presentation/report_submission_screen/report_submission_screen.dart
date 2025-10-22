@@ -15,7 +15,9 @@ import './widgets/severity_slider_widget.dart';
 import './widgets/submission_actions_widget.dart';
 
 class ReportSubmissionScreen extends StatefulWidget {
-  const ReportSubmissionScreen({super.key});
+  final VoidCallback? onOpenCamera;
+
+  const ReportSubmissionScreen({super.key, this.onOpenCamera});
 
   @override
   State<ReportSubmissionScreen> createState() => _ReportSubmissionScreenState();
@@ -424,30 +426,84 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
     }
   }
 
+  Widget _buildCameraContainer(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    return InkWell(
+      onTap: widget.onOpenCamera,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(5.w),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              theme.colorScheme.primary,
+              theme.colorScheme.primary.withValues(alpha: 0.7),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: theme.colorScheme.primary.withValues(alpha: 0.3),
+              blurRadius: 12,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(3.w),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.camera_alt, size: 32, color: Colors.white),
+            ),
+            SizedBox(width: 4.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.report_openCamera,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 0.5.h),
+                  Text(
+                    l10n.report_aiDetectionReady,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.9),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: _handlePopInvoked,
       child: Scaffold(
-        appBar: HeaderLayout(
-          title: l10n.report_title,
-          // leading: IconButton(
-          //   onPressed: () {
-          //     Navigator.of(context).pop();
-          //   },
-          //   icon: Icon(Icons.arrow_back, size: 24),
-          // ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/safety-alerts-screen');
-              },
-              icon: Icon(Icons.notifications, size: 24),
-            ),
-          ],
-        ),
+        appBar: HeaderLayout(title: l10n.report_title),
         body: Column(
           children: [
             // Scrollable content
@@ -457,6 +513,12 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Camera Container Button
+                    if (widget.onOpenCamera != null)
+                      _buildCameraContainer(context, theme, l10n),
+
+                    if (widget.onOpenCamera != null) SizedBox(height: 3.h),
+
                     // Image preview with AI detection
                     ImagePreviewWidget(
                       imageUrl: _capturedImageUrl,
