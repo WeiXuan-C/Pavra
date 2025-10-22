@@ -9,6 +9,20 @@ class NotificationModel {
   final bool isDeleted;
   final String? relatedAction;
   final Map<String, dynamic>? data;
+
+  // Scheduling fields
+  final String status; // draft, scheduled, sent, failed
+  final DateTime? scheduledAt;
+  final DateTime? sentAt;
+
+  // Target audience fields
+  final String targetType; // single, all, role, custom
+  final List<String>? targetRoles;
+  final List<String>? targetUserIds;
+
+  // Admin metadata
+  final String? createdBy;
+
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime? deletedAt;
@@ -23,6 +37,13 @@ class NotificationModel {
     required this.isDeleted,
     this.relatedAction,
     this.data,
+    this.status = 'sent',
+    this.scheduledAt,
+    this.sentAt,
+    this.targetType = 'single',
+    this.targetRoles,
+    this.targetUserIds,
+    this.createdBy,
     required this.createdAt,
     required this.updatedAt,
     this.deletedAt,
@@ -40,6 +61,21 @@ class NotificationModel {
       isDeleted: json['is_deleted'] as bool? ?? false,
       relatedAction: json['related_action'] as String?,
       data: json['data'] as Map<String, dynamic>?,
+      status: json['status'] as String? ?? 'sent',
+      scheduledAt: json['scheduled_at'] != null
+          ? DateTime.parse(json['scheduled_at'] as String)
+          : null,
+      sentAt: json['sent_at'] != null
+          ? DateTime.parse(json['sent_at'] as String)
+          : null,
+      targetType: json['target_type'] as String? ?? 'single',
+      targetRoles: json['target_roles'] != null
+          ? List<String>.from(json['target_roles'] as List)
+          : null,
+      targetUserIds: json['target_user_ids'] != null
+          ? List<String>.from(json['target_user_ids'] as List)
+          : null,
+      createdBy: json['created_by'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
       deletedAt: json['deleted_at'] != null

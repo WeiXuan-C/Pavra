@@ -169,18 +169,18 @@ class _ReportScreenState extends State<ReportScreen> {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(16),
       child: Container(
-        height: 180,
-        padding: EdgeInsets.all(5.w),
+        height: 140, // Fixed height to match compact card
+        padding: EdgeInsets.all(3.w),
         decoration: BoxDecoration(
           gradient: gradient,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
               color: theme.colorScheme.primary.withValues(alpha: 0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
+              blurRadius: 15,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
@@ -188,24 +188,27 @@ class _ReportScreenState extends State<ReportScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.all(4.w),
+              padding: EdgeInsets.all(2.5.w),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, size: 48, color: Colors.white),
+              child: Icon(icon, size: 32, color: Colors.white),
             ),
-            SizedBox(height: 2.h),
+            SizedBox(height: 1.5.h),
             Text(
               title,
-              style: theme.textTheme.titleLarge?.copyWith(
+              style: theme.textTheme.titleSmall?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
+                fontSize: 14,
               ),
               textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
             SizedBox(height: 1.h),
-            Icon(Icons.arrow_forward, color: Colors.white, size: 24),
+            Icon(Icons.arrow_forward, color: Colors.white, size: 18),
           ],
         ),
       ),
@@ -224,8 +227,8 @@ class _ReportScreenState extends State<ReportScreen> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
-        height: 180, // Match the height of primary card
-        padding: EdgeInsets.all(4.w),
+        height: 140, // Fixed height to match primary card
+        padding: EdgeInsets.all(2.w),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
@@ -235,23 +238,26 @@ class _ReportScreenState extends State<ReportScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.all(4.w),
+              padding: EdgeInsets.all(2.w),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, size: 40, color: color),
+              child: Icon(icon, size: 28, color: color),
             ),
-            SizedBox(height: 2.h),
+            SizedBox(height: 1.h),
             Text(
               title,
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
+                fontSize: 12,
               ),
               textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 1.h),
-            Icon(Icons.arrow_forward, color: color, size: 20),
+            SizedBox(height: 0.8.h),
+            Icon(Icons.arrow_forward, color: color, size: 16),
           ],
         ),
       ),

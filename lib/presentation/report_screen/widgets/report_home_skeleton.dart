@@ -52,10 +52,10 @@ class ReportHomeSkeleton extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: Container(
-                    height: 180,
+                    height: 140,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                   ),
                 ),
@@ -64,7 +64,7 @@ class ReportHomeSkeleton extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: Container(
-                    height: 180,
+                    height: 140,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),

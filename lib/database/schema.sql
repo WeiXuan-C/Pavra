@@ -53,6 +53,17 @@ CREATE TABLE IF NOT EXISTS public.notifications (
   is_deleted BOOLEAN DEFAULT FALSE,
   related_action UUID REFERENCES action_log(id) ON DELETE SET NULL,
   data JSONB DEFAULT '{}',
+  status TEXT DEFAULT 'sent' CHECK (
+    status IN ('draft', 'scheduled', 'sent', 'failed')
+  ),
+  scheduled_at TIMESTAMPTZ, 
+  sent_at TIMESTAMPTZ,
+  target_type TEXT DEFAULT 'single' CHECK (
+    target_type IN ('single', 'all', 'role', 'custom')
+  ),
+  target_roles TEXT[],        -- Array of roles: ['user', 'authority', 'developer']
+  target_user_ids UUID[],     -- Array of specific user IDs for custom targeting
+  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,  -- Admin who created it
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now(),
   deleted_at TIMESTAMPTZ
@@ -106,6 +117,10 @@ CREATE INDEX IF NOT EXISTS idx_notifications_related_action ON public.notificati
 CREATE INDEX IF NOT EXISTS idx_notifications_is_read ON public.notifications(is_read);
 CREATE INDEX IF NOT EXISTS idx_notifications_is_deleted ON public.notifications(is_deleted);
 CREATE INDEX IF NOT EXISTS idx_notifications_created_at ON public.notifications(created_at);
+CREATE INDEX IF NOT EXISTS idx_notifications_status ON public.notifications(status);
+CREATE INDEX IF NOT EXISTS idx_notifications_scheduled_at ON public.notifications(scheduled_at) WHERE status = 'scheduled';
+CREATE INDEX IF NOT EXISTS idx_notifications_target_type ON public.notifications(target_type);
+CREATE INDEX IF NOT EXISTS idx_notifications_created_by ON public.notifications(created_by);
 
 -- =====================================
 -- OPTIONAL: COMPOSITE INDEXES (for filtering + ordering)
