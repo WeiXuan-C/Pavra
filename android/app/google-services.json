@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "551658542983",
+    "project_id": "pavra-47e29",
+    "storage_bucket": "pavra-47e29.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:551658542983:android:94d3d8d70284077b5ca522",
+        "android_client_info": {
+          "package_name": "com.pavra.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC93aPXmqnVHgQ2y2zbPcV0PgvgLVGAcu8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
