@@ -102,11 +102,38 @@ class AuthProvider with ChangeNotifier {
   Future<void> _loadUserProfile() async {
     if (_user == null) return;
 
+    developer.log('=== Loading User Profile ===', name: 'AuthProvider');
+    developer.log('User ID: ${_user!.id}', name: 'AuthProvider');
+    developer.log('User Email: ${_user!.email}', name: 'AuthProvider');
+
     try {
       _userProfile = await _authService.getUserProfile(_user!.id);
+
+      if (_userProfile != null) {
+        developer.log('✅ Profile loaded successfully', name: 'AuthProvider');
+        developer.log(
+          'Username: ${_userProfile!.username}',
+          name: 'AuthProvider',
+        );
+        developer.log('Role: ${_userProfile!.role}', name: 'AuthProvider');
+        developer.log('Email: ${_userProfile!.email}', name: 'AuthProvider');
+      } else {
+        developer.log('⚠️ Profile is NULL after query', name: 'AuthProvider');
+        developer.log(
+          'This means the query returned null',
+          name: 'AuthProvider',
+        );
+      }
     } catch (e) {
       _errorMessage = 'Error loading user profile: $e';
+      developer.log(
+        '❌ Error loading profile: $e',
+        name: 'AuthProvider',
+        error: e,
+      );
     }
+
+    developer.log('===========================', name: 'AuthProvider');
   }
 
   // ========== AUTHENTICATION METHODS ==========
@@ -284,6 +311,14 @@ class AuthProvider with ChangeNotifier {
   void clearError() {
     _clearError();
     notifyListeners();
+  }
+
+  /// Manually reload user profile (useful for debugging or forcing refresh)
+  Future<void> reloadUserProfile() async {
+    if (_user != null) {
+      await _loadUserProfile();
+      notifyListeners();
+    }
   }
 
   @override

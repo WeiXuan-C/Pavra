@@ -1480,5 +1480,117 @@
   "report_filterMenuSubtitleAll": "Browse all user reports",
   "@report_filterMenuSubtitleAll": {
     "description": "Filter menu subtitle for all reports"
+  },
+  
+  "notification_filterAll": "All",
+  "@notification_filterAll": {
+    "description": "Filter tab label for all notifications"
+  },
+  "notification_filterUnread": "Unread",
+  "@notification_filterUnread": {
+    "description": "Filter tab label for unread notifications"
+  },
+  "notification_filterRead": "Read",
+  "@notification_filterRead": {
+    "description": "Filter tab label for read notifications"
+  },
+  "notification_filterEmpty": "No notifications",
+  "@notification_filterEmpty": {
+    "description": "Empty state title for filtered view"
+  },
+  "notification_filterEmptyMessage": "No notifications match the selected filter",
+  "@notification_filterEmptyMessage": {
+    "description": "Empty state message for filtered view"
+  },
+  "notification_clearFilter": "Clear Filter",
+  "@notification_clearFilter": {
+    "description": "Button to clear current filter"
+  },
+  "notification_selectFilter": "Select Filter",
+  "@notification_selectFilter": {
+    "description": "Title for filter selection menu"
+  },
+  "notification_filterActive": "filter active",
+  "@notification_filterActive": {
+    "description": "Singular form for active filter count"
+  },
+  "notification_filtersActive": "filters active",
+  "@notification_filtersActive": {
+    "description": "Plural form for active filters count"
+  },
+  "notification_results": "results",
+  "@notification_results": {
+    "description": "Label for results count"
+  },
+  "notification_cannotDelete": "Cannot delete this notification",
+  "@notification_cannotDelete": {
+    "description": "Error message when user cannot delete notification"
+  },
+  "notification_deletePermissionDenied": "Only the creator can delete notifications within 30 days",
+  "@notification_deletePermissionDenied": {
+    "description": "Permission denied message for delete"
+  },
+  "notification_expired": "Expired",
+  "@notification_expired": {
+    "description": "Label for expired notifications"
+  },
+  
+  "profile_username": "Username",
+  "@profile_username": {
+    "description": "Username label in profile"
+  },
+  "profile_language": "Language",
+  "@profile_language": {
+    "description": "Language label in profile"
+  },
+  "profile_role": "Role",
+  "@profile_role": {
+    "description": "Role label in profile"
+  },
+  "profile_roleDeveloper": "Developer",
+  "@profile_roleDeveloper": {
+    "description": "Developer role label"
+  },
+  "profile_roleAuthority": "Authority",
+  "@profile_roleAuthority": {
+    "description": "Authority role label"
+  },
+  "profile_roleUser": "User",
+  "@profile_roleUser": {
+    "description": "User role label"
+  },
+  "profile_statistics": "Statistics",
+  "@profile_statistics": {
+    "description": "Statistics section title"
+  },
+  "profile_totalReports": "Total Reports",
+  "@profile_totalReports": {
+    "description": "Total reports label"
+  },
+  "profile_reputation": "Reputation",
+  "@profile_reputation": {
+    "description": "Reputation score label"
+  },
+  
+  "notification_filter": "Filter",
+  "@notification_filter": {
+    "description": "Filter label"
+  },
+  "notification_toggleFilter": "Toggle filter menu",
+  "@notification_toggleFilter": {
+    "description": "Toggle filter menu tooltip"
+  },
+  "notification_filterSentByMe": "Sent by Me",
+  "@notification_filterSentByMe": {
+    "description": "Filter for notifications sent by current user"
+  },
+  "notification_filterSentToMe": "Sent to Me",
+  "@notification_filterSentToMe": {
+    "description": "Filter for notifications sent to current user"
+  },
+  "notification_filterAllUsers": "All Users",
+  "@notification_filterAllUsers": {
+    "description": "Filter for all users' notifications (developer only)"
   }
+
 }

@@ -113,13 +113,13 @@ class _ReportScreenState extends State<ReportScreen> {
           ),
           SizedBox(height: 2.h),
 
-          // Report Methods Row - AI (2/3) + Manual (1/3)
+          // Report Methods Row - AI (5/9) + Manual (4/9)
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // AI Camera Detection - Primary (2/3 width)
+              // AI Camera Detection - Primary (5/9 width)
               Expanded(
-                flex: 2,
+                flex: 5,
                 child: _buildSimplePrimaryCard(
                   context,
                   theme,
@@ -136,9 +136,9 @@ class _ReportScreenState extends State<ReportScreen> {
               ),
               SizedBox(width: 3.w),
 
-              // Manual Report - Secondary (1/3 width)
+              // Manual Report - Secondary (4/9 width)
               Expanded(
-                flex: 1,
+                flex: 4,
                 child: _buildCompactActionCard(
                   context,
                   theme,
@@ -176,11 +176,15 @@ class _ReportScreenState extends State<ReportScreen> {
         decoration: BoxDecoration(
           gradient: gradient,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+            width: 1.5,
+          ),
           boxShadow: [
             BoxShadow(
-              color: theme.colorScheme.primary.withValues(alpha: 0.3),
-              blurRadius: 15,
-              offset: const Offset(0, 6),
+              color: theme.colorScheme.primary.withValues(alpha: 0.2),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -193,7 +197,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, size: 32, color: Colors.white),
+              child: Icon(icon, size: 30, color: Colors.white),
             ),
             SizedBox(height: 1.5.h),
             Text(
@@ -201,14 +205,14 @@ class _ReportScreenState extends State<ReportScreen> {
               style: theme.textTheme.titleSmall?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: 13,
               ),
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
             SizedBox(height: 1.h),
-            Icon(Icons.arrow_forward, color: Colors.white, size: 18),
+            Icon(Icons.arrow_forward, color: Colors.white, size: 16),
           ],
         ),
       ),
@@ -238,25 +242,25 @@ class _ReportScreenState extends State<ReportScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.all(2.w),
+              padding: EdgeInsets.all(2.5.w),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, size: 28, color: color),
+              child: Icon(icon, size: 30, color: color),
             ),
-            SizedBox(height: 1.h),
+            SizedBox(height: 1.5.h),
             Text(
               title,
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
-                fontSize: 12,
+                fontSize: 13,
               ),
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            SizedBox(height: 0.8.h),
+            SizedBox(height: 1.h),
             Icon(Icons.arrow_forward, color: color, size: 16),
           ],
         ),

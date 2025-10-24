@@ -87,12 +87,6 @@ class OneSignalService {
     final targetId = data['target_id'] as String?;
 
     print('Notification data: type=$type, targetId=$targetId');
-
-    // TODO: Implement navigation logic based on your app's routing
-    // Example:
-    // if (type == 'report') {
-    //   navigatorKey.currentState?.pushNamed('/report/$targetId');
-    // }
   }
 
   /// Set external user ID (link OneSignal with your user ID)

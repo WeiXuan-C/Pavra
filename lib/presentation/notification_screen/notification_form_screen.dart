@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/models/notification_model.dart';
 import '../../core/providers/auth_provider.dart';
-import '../../core/supabase/supabase_client.dart';
+import '../../data/repositories/notification_repository.dart';
 import '../../l10n/app_localizations.dart';
 import 'notification_provider.dart';
 
@@ -18,6 +18,7 @@ class NotificationFormScreen extends StatefulWidget {
 
 class _NotificationFormScreenState extends State<NotificationFormScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _repository = NotificationRepository(); // 使用 Repository
   late TextEditingController _titleController;
   late TextEditingController _messageController;
   late TextEditingController _dataController;
@@ -33,6 +34,10 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
   bool _isLoadingUsers = false;
   List<Map<String, dynamic>> _actionLogs = [];
   List<Map<String, dynamic>> _users = [];
+
+  // Search and UI state
+  String _userSearchQuery = '';
+  bool _isUserListExpanded = false;
 
   final List<String> _notificationTypes = [
     'info',
@@ -70,6 +75,11 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
     _selectedType = widget.notification?.type ?? 'info';
     _selectedStatus = 'sent'; // Default to sent for immediate notifications
     _selectedTargetType = 'single'; // Default to single user
+
+    // 如果是 single 或 custom，默认展开用户列表
+    _isUserListExpanded =
+        _selectedTargetType == 'single' || _selectedTargetType == 'custom';
+
     _loadActionLogs();
     _loadUsers();
   }
@@ -80,17 +90,23 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
     });
 
     try {
-      // Load users from Supabase
-      final response = await supabase
-          .from('profiles')
-          .select('id, username, email, role')
-          .order('username', ascending: true);
+      // 通过 Repository 加载用户
+      final users = await _repository.getUsers();
+      debugPrint('Loaded ${users.length} users from profiles table');
 
       setState(() {
-        _users = List<Map<String, dynamic>>.from(response);
+        _users = users;
       });
     } catch (e) {
       debugPrint('Error loading users: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load users: $e'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
     } finally {
       setState(() {
         _isLoadingUsers = false;
@@ -131,29 +147,23 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
     });
 
     try {
-      // Load action logs with user information
-      final response = await supabase
-          .from('action_log')
-          .select('''
-            id, 
-            action_type, 
-            description, 
-            created_at,
-            user_id,
-            profiles!action_log_user_id_fkey (
-              username,
-              email
-            )
-          ''')
-          .order('created_at', ascending: false)
-          .limit(50);
+      // 通过 Repository 加载 action logs
+      final logs = await _repository.getActionLogs(limit: 50);
+      debugPrint('Loaded ${logs.length} action logs from action_log table');
 
       setState(() {
-        _actionLogs = List<Map<String, dynamic>>.from(response);
+        _actionLogs = logs;
       });
     } catch (e) {
-      // Handle error silently or show a message
       debugPrint('Error loading action logs: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load action logs: $e'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
     } finally {
       setState(() {
         _isLoadingActionLogs = false;
@@ -170,6 +180,22 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
   }
 
   bool get isEditing => widget.notification != null;
+
+  // 过滤 users
+  List<Map<String, dynamic>> get _filteredUsers {
+    if (_userSearchQuery.isEmpty) return _users;
+
+    final query = _userSearchQuery.toLowerCase();
+    return _users.where((user) {
+      final username = (user['username'] as String? ?? '').toLowerCase();
+      final email = (user['email'] as String? ?? '').toLowerCase();
+      final role = (user['role'] as String? ?? '').toLowerCase();
+
+      return username.contains(query) ||
+          email.contains(query) ||
+          role.contains(query);
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -271,104 +297,102 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
             // ===== ADDITIONAL OPTIONS =====
             _buildSectionHeader('Additional Options', Icons.settings_outlined),
 
-            // Related action dropdown (optional)
-            DropdownButtonFormField<String>(
-              initialValue: _selectedActionLogId,
-              decoration: InputDecoration(
-                labelText: l10n.notification_relatedActionLabel,
-                hintText: 'Select an action log (optional)',
-                border: const OutlineInputBorder(),
-                prefixIcon: const Icon(Icons.link),
-                suffixIcon: _isLoadingActionLogs
-                    ? const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                      )
-                    : null,
-              ),
-              items: [
-                const DropdownMenuItem<String>(
-                  value: null,
-                  child: Text('None'),
-                ),
-                ..._actionLogs.map((log) {
-                  final actionType = log['action_type'] as String? ?? 'Unknown';
-                  final description = log['description'] as String?;
-                  final profiles = log['profiles'] as Map<String, dynamic>?;
-                  final username =
-                      profiles?['username'] as String? ?? 'Unknown User';
-                  final email = profiles?['email'] as String? ?? '';
+            // Related action dropdown (optional) with search
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Dropdown with search info
+                DropdownButtonFormField<String>(
+                  initialValue: _selectedActionLogId,
+                  decoration: InputDecoration(
+                    labelText: l10n.notification_relatedActionLabel,
+                    hintText: _actionLogs.isEmpty
+                        ? 'No action logs available'
+                        : 'Select an action log (optional)',
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.link),
 
-                  return DropdownMenuItem<String>(
-                    value: log['id'] as String,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              _getActionTypeIcon(actionType),
-                              size: 16,
-                              color: Colors.blue,
+                    suffixIcon: _isLoadingActionLogs
+                        ? const Padding(
+                            padding: EdgeInsets.all(12),
+                            child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
                             ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
+                          )
+                        : null,
+                  ),
+                  isExpanded: true,
+                  menuMaxHeight: 400,
+                  // 自定义选中项的显示（只显示 action type）
+                  selectedItemBuilder: (BuildContext context) {
+                    return [
+                      const Text('None'),
+                      ..._actionLogs.map((log) {
+                        final actionType =
+                            log['action_type'] as String? ?? 'Unknown';
+                        return Text(
+                          actionType,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontSize: 14),
+                        );
+                      }),
+                    ];
+                  },
+                  items: [
+                    const DropdownMenuItem<String>(
+                      value: null,
+                      child: Text('None'),
+                    ),
+                    ..._actionLogs.map((log) {
+                      final actionType =
+                          log['action_type'] as String? ?? 'Unknown';
+                      final profiles = log['profiles'] as Map<String, dynamic>?;
+                      final username =
+                          profiles?['username'] as String? ?? 'Unknown User';
+                      final email = profiles?['email'] as String? ?? '';
+
+                      return DropdownMenuItem<String>(
+                        value: log['id'] as String,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
                                 actionType,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 14,
+                                  fontSize: 13,
                                 ),
                                 overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            Icon(Icons.person, size: 12, color: Colors.grey),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
+                              const SizedBox(height: 2),
+                              Text(
                                 '$username${email.isNotEmpty ? " • $email" : ""}',
                                 style: const TextStyle(
-                                  fontSize: 11,
+                                  fontSize: 10,
                                   color: Colors.grey,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                          ],
-                        ),
-                        if (description != null && description.isNotEmpty) ...[
-                          const SizedBox(height: 2),
-                          Text(
-                            description,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            ],
                           ),
-                        ],
-                      ],
-                    ),
-                  );
-                }),
+                        ),
+                      );
+                    }),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedActionLogId = value;
+                    });
+                  },
+                ),
               ],
-              onChanged: (value) {
-                setState(() {
-                  _selectedActionLogId = value;
-                });
-              },
             ),
             const SizedBox(height: 16),
 
@@ -494,6 +518,9 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
                   setState(() {
                     _selectedTargetType = value;
                     _selectedRoles = [];
+                    // 自动展开用户列表（如果是 single 或 custom）
+                    _isUserListExpanded =
+                        value == 'single' || value == 'custom';
                   });
                 }
               },
@@ -509,10 +536,24 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
+                runSpacing: 8,
                 children: _roleOptions.map((role) {
                   final isSelected = _selectedRoles.contains(role);
+                  final theme = Theme.of(context);
+                  final primaryColor = theme.colorScheme.primary;
+
                   return FilterChip(
-                    label: Text(role.toUpperCase()),
+                    label: Text(
+                      role.toUpperCase(),
+                      style: TextStyle(
+                        color: isSelected
+                            ? Colors.white
+                            : theme.colorScheme.onSurface,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.normal,
+                      ),
+                    ),
                     selected: isSelected,
                     onSelected: (selected) {
                       setState(() {
@@ -523,10 +564,20 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
                         }
                       });
                     },
-                    selectedColor: Theme.of(
-                      context,
-                    ).colorScheme.primary.withAlpha(51),
-                    checkmarkColor: Theme.of(context).colorScheme.primary,
+                    selectedColor: primaryColor,
+                    backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                    checkmarkColor: Colors.white,
+                    side: BorderSide(
+                      color: isSelected
+                          ? primaryColor
+                          : theme.colorScheme.outline,
+                      width: isSelected ? 2 : 1,
+                    ),
+                    elevation: isSelected ? 2 : 0,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                   );
                 }).toList(),
               ),
@@ -536,78 +587,175 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
             // User selection (show for both single and custom)
             if (_selectedTargetType == 'single' ||
                 _selectedTargetType == 'custom') ...[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    _selectedTargetType == 'single'
-                        ? 'Select User'
-                        : 'Select Users',
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  if (_selectedUserIds.isNotEmpty)
-                    Text(
-                      _selectedTargetType == 'single'
-                          ? '1 selected'
-                          : '${_selectedUserIds.length} selected',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              if (_isLoadingUsers)
-                const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              else
-                Container(
-                  constraints: const BoxConstraints(maxHeight: 300),
+              // Header with expand/collapse button
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    _isUserListExpanded = !_isUserListExpanded;
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade300),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: _users.length,
-                    itemBuilder: (context, index) {
-                      final user = _users[index];
-                      final userId = user['id'] as String;
-                      final username = user['username'] as String? ?? 'Unknown';
-                      final email = user['email'] as String? ?? '';
-                      final role = user['role'] as String? ?? 'user';
-                      final isSelected = _selectedUserIds.contains(userId);
-
-                      return CheckboxListTile(
-                        value: isSelected,
-                        onChanged: (selected) {
-                          setState(() {
-                            if (selected == true) {
-                              if (_selectedTargetType == 'single') {
-                                // For single user, replace the selection
-                                _selectedUserIds = [userId];
-                              } else {
-                                // For custom list, add to selection
-                                _selectedUserIds.add(userId);
-                              }
-                            } else {
-                              _selectedUserIds.remove(userId);
-                            }
-                          });
-                        },
-                        title: Text(username),
-                        subtitle: Text('$email • $role'),
-                        secondary: CircleAvatar(
-                          child: Text(username[0].toUpperCase()),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            _isUserListExpanded
+                                ? Icons.expand_less
+                                : Icons.expand_more,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            _selectedTargetType == 'single'
+                                ? 'Select User'
+                                : 'Select Users',
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                      if (_selectedUserIds.isNotEmpty)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            _selectedTargetType == 'single'
+                                ? '1 selected'
+                                : '${_selectedUserIds.length} selected',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ),
-                      );
-                    },
+                    ],
                   ),
                 ),
+              ),
+              const SizedBox(height: 8),
+
+              // Expandable user list
+              if (_isUserListExpanded) ...[
+                // Search field
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Search Users',
+                    hintText: 'Search by username, email, or role',
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: _userSearchQuery.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              setState(() {
+                                _userSearchQuery = '';
+                              });
+                            },
+                          )
+                        : null,
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _userSearchQuery = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 8),
+
+                // User list
+                if (_isLoadingUsers)
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                else if (_filteredUsers.isEmpty)
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.search_off,
+                            size: 48,
+                            color: Colors.grey.shade400,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'No users found',
+                            style: TextStyle(color: Colors.grey.shade600),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  Container(
+                    constraints: const BoxConstraints(maxHeight: 300),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _filteredUsers.length,
+                      itemBuilder: (context, index) {
+                        final user = _filteredUsers[index];
+                        final userId = user['id'] as String;
+                        final username =
+                            user['username'] as String? ?? 'Unknown';
+                        final email = user['email'] as String? ?? '';
+                        final role = user['role'] as String? ?? 'user';
+                        final isSelected = _selectedUserIds.contains(userId);
+
+                        return CheckboxListTile(
+                          value: isSelected,
+                          onChanged: (selected) {
+                            setState(() {
+                              if (selected == true) {
+                                if (_selectedTargetType == 'single') {
+                                  // For single user, replace the selection
+                                  _selectedUserIds = [userId];
+                                } else {
+                                  // For custom list, add to selection
+                                  _selectedUserIds.add(userId);
+                                }
+                              } else {
+                                _selectedUserIds.remove(userId);
+                              }
+                            });
+                          },
+                          title: Text(username),
+                          subtitle: Text('$email • $role'),
+                          secondary: CircleAvatar(
+                            child: Text(username[0].toUpperCase()),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+              ],
               const SizedBox(height: 16),
             ],
 
@@ -842,29 +990,6 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
     }
   }
 
-  IconData _getActionTypeIcon(String actionType) {
-    final type = actionType.toLowerCase();
-    if (type.contains('report')) return Icons.report;
-    if (type.contains('login')) return Icons.login;
-    if (type.contains('logout')) return Icons.logout;
-    if (type.contains('create')) return Icons.add_circle;
-    if (type.contains('update')) return Icons.edit;
-    if (type.contains('delete')) return Icons.delete;
-    if (type.contains('submit')) return Icons.send;
-    if (type.contains('approve')) return Icons.check_circle;
-    if (type.contains('reject')) return Icons.cancel;
-    if (type.contains('comment')) return Icons.comment;
-    if (type.contains('like')) return Icons.favorite;
-    if (type.contains('share')) return Icons.share;
-    if (type.contains('view')) return Icons.visibility;
-    if (type.contains('download')) return Icons.download;
-    if (type.contains('upload')) return Icons.upload;
-    if (type.contains('achievement')) return Icons.emoji_events;
-    if (type.contains('reward')) return Icons.card_giftcard;
-    if (type.contains('point')) return Icons.stars;
-    return Icons.history;
-  }
-
   Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -904,9 +1029,14 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
         // Create new notification
         await provider.createNotification(
           userId: userId,
+          createdBy: userId, // 记录创建者
           title: _titleController.text.trim(),
           message: _messageController.text.trim(),
           type: _selectedType,
+          status: _selectedStatus,
+          scheduledAt: _selectedStatus == 'scheduled'
+              ? _scheduledDateTime
+              : null,
           relatedAction: _selectedActionLogId,
           data: parsedData,
         );

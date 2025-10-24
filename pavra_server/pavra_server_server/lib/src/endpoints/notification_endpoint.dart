@@ -400,6 +400,145 @@ class NotificationEndpoint extends Endpoint {
     }
   }
 
+  /// Handle notification created from Flutter client
+  ///
+  /// This is called when a notification is created via the Flutter app
+  /// It sends the push notification based on target_type
+  Future<Map<String, dynamic>> handleNotificationCreated(
+    Session session, {
+    required String notificationId,
+  }) async {
+    try {
+      // 1. Get notification from Supabase
+      final notifications = await _supabase.select(
+        'notifications',
+        filters: {'id': notificationId},
+      );
+
+      if (notifications.isEmpty) {
+        throw Exception('Notification not found: $notificationId');
+      }
+
+      final notification = notifications.first;
+      final status = notification['status'] as String;
+
+      // 2. Only send if status is 'sent'
+      if (status != 'sent') {
+        return {
+          'success': true,
+          'message': 'Notification is not ready to send (status: $status)',
+        };
+      }
+
+      final oneSignal = _getOneSignalService(session);
+      final targetType = notification['target_type'] as String? ?? 'single';
+      final title = notification['title'] as String;
+      final message = notification['message'] as String;
+      final type = notification['type'] as String;
+      final data = notification['data'] as Map<String, dynamic>?;
+
+      // 3. Send based on target_type
+      switch (targetType) {
+        case 'single':
+          // Send to single user
+          final userId = notification['user_id'] as String;
+          await oneSignal.sendToUser(
+            userId: userId,
+            title: title,
+            message: message,
+            data: {
+              'notification_id': notificationId,
+              'type': type,
+              ...?data,
+            },
+          );
+          break;
+
+        case 'all':
+          // Send to all users
+          await oneSignal.sendToAll(
+            title: title,
+            message: message,
+            data: {
+              'notification_id': notificationId,
+              'type': type,
+              ...?data,
+            },
+          );
+          break;
+
+        case 'role':
+          // Send to users with specific roles
+          final targetRoles = notification['target_roles'] as List?;
+          if (targetRoles != null && targetRoles.isNotEmpty) {
+            // Get users with these roles
+            final users = await _supabase.select('profiles');
+            final filteredUsers = users.where((user) {
+              final role = user['role'] as String?;
+              return role != null && targetRoles.contains(role);
+            }).toList();
+
+            final userIds =
+                filteredUsers.map((user) => user['id'] as String).toList();
+
+            if (userIds.isNotEmpty) {
+              // Update target_user_ids in database for RLS policy
+              await _supabase.update(
+                'notifications',
+                {'target_user_ids': userIds},
+                filters: {'id': notificationId},
+              );
+
+              await oneSignal.sendToUsers(
+                userIds: userIds,
+                title: title,
+                message: message,
+                data: {
+                  'notification_id': notificationId,
+                  'type': type,
+                  ...?data,
+                },
+              );
+            }
+          }
+          break;
+
+        case 'custom':
+          // Send to custom list of users
+          final targetUserIds = notification['target_user_ids'] as List?;
+          if (targetUserIds != null && targetUserIds.isNotEmpty) {
+            final userIds = targetUserIds.cast<String>();
+            await oneSignal.sendToUsers(
+              userIds: userIds,
+              title: title,
+              message: message,
+              data: {
+                'notification_id': notificationId,
+                'type': type,
+                ...?data,
+              },
+            );
+          }
+          break;
+      }
+
+      session.log('✓ Push notification sent for: $notificationId',
+          level: LogLevel.info);
+
+      return {
+        'success': true,
+        'notification_id': notificationId,
+        'target_type': targetType,
+      };
+    } catch (e) {
+      session.log('❌ Error handling notification: $e', level: LogLevel.error);
+      return {
+        'success': false,
+        'error': e.toString(),
+      };
+    }
+  }
+
   /// Process scheduled notifications (called by cron job or task)
   ///
   /// This should be called periodically to check for and send scheduled notifications

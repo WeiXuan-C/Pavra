@@ -1,231 +1,125 @@
-import '../../models/notification_model.dart';
-import '../../supabase/supabase_client.dart';
+import '../../supabase/database_service.dart';
 
-/// Notification API
-/// Handles all notification-related API calls to Supabase
+/// Notification API - 通知相关的业务逻辑
 class NotificationApi {
-  /// Get notifications for a user
-  Future<List<NotificationModel>> getNotifications({
-    required String userId,
-    bool? isRead,
-    int limit = 50,
-  }) async {
-    try {
-      dynamic query = supabase
-          .from('notifications')
-          .select()
-          .eq('user_id', userId)
-          .eq('is_deleted', false);
+  final DatabaseService _db = DatabaseService();
 
-      if (isRead != null) {
-        query = query.eq('is_read', isRead);
-      }
-
-      query = query.order('created_at', ascending: false).limit(limit);
-
-      final response = await query;
-      return (response as List)
-          .map((json) => NotificationModel.fromJson(json))
-          .toList();
-    } catch (e) {
-      throw Exception('Failed to fetch notifications: $e');
-    }
+  /// 获取所有用户列表
+  Future<List<Map<String, dynamic>>> getUsers() async {
+    return await _db.selectAdvanced(
+      table: 'profiles',
+      columns: 'id, username, email, role',
+      orderBy: 'username',
+      ascending: true,
+    );
   }
 
-  /// Create a new notification
-  Future<NotificationModel> createNotification({
+  /// 获取 Action Logs 列表（带用户信息）
+  Future<List<Map<String, dynamic>>> getActionLogs({int limit = 50}) async {
+    // 先获取 action logs
+    final logs = await _db.selectAdvanced(
+      table: 'action_log',
+      columns: 'id, action_type, description, created_at, user_id',
+      orderBy: 'created_at',
+      ascending: false,
+      limit: limit,
+    );
+
+    // 如果没有 logs，直接返回
+    if (logs.isEmpty) return logs;
+
+    // 获取所有相关的 user_ids
+    final userIds = logs
+        .map((log) => log['user_id'] as String?)
+        .where((id) => id != null)
+        .toSet()
+        .toList();
+
+    // 如果没有 user_ids，返回原始 logs
+    if (userIds.isEmpty) return logs;
+
+    // 批量获取用户信息
+    final users = await _db.selectAll(
+      table: 'profiles',
+      columns: 'id, username, email',
+    );
+
+    // 创建 user_id -> user 的映射
+    final userMap = <String, Map<String, dynamic>>{};
+    for (final user in users) {
+      final userId = user['id'] as String?;
+      if (userId != null && userIds.contains(userId)) {
+        userMap[userId] = user;
+      }
+    }
+
+    // 将用户信息附加到 logs
+    return logs.map((log) {
+      final userId = log['user_id'] as String?;
+      final user = userId != null ? userMap[userId] : null;
+
+      return {
+        ...log,
+        'profiles': user ?? {'username': 'Unknown User', 'email': ''},
+      };
+    }).toList();
+  }
+
+  /// 创建通知
+  Future<Map<String, dynamic>> createNotification({
     required String userId,
+    required String createdBy,
+    required String title,
+    required String message,
+    required String type,
+    String status = 'sent',
+    DateTime? scheduledAt,
+    String? relatedAction,
+    Map<String, dynamic>? data,
+  }) async {
+    final now = DateTime.now();
+
+    final result = await _db.insert<Map<String, dynamic>>(
+      table: 'notifications',
+      data: {
+        'user_id': userId,
+        'created_by': createdBy,
+        'title': title,
+        'message': message,
+        'type': type,
+        'status': status,
+        'scheduled_at': scheduledAt?.toIso8601String(),
+        'sent_at': status == 'sent' ? now.toIso8601String() : null,
+        'related_action': relatedAction,
+        'data': data,
+        'is_read': false,
+        'is_deleted': false,
+      },
+    );
+    return result;
+  }
+
+  /// 更新通知
+  Future<Map<String, dynamic>> updateNotification({
+    required String notificationId,
     required String title,
     required String message,
     required String type,
     String? relatedAction,
     Map<String, dynamic>? data,
-    String? status,
-    DateTime? scheduledAt,
-    String? targetType,
-    List<String>? targetRoles,
-    List<String>? targetUserIds,
-    String? createdBy,
   }) async {
-    try {
-      final notificationData = {
-        'user_id': userId,
+    final result = await _db.update(
+      table: 'notifications',
+      data: {
         'title': title,
         'message': message,
         'type': type,
         'related_action': relatedAction,
-        'data': data ?? {},
-        'status': status ?? 'sent',
-        'scheduled_at': scheduledAt?.toIso8601String(),
-        'target_type': targetType ?? 'single',
-        'target_roles': targetRoles,
-        'target_user_ids': targetUserIds,
-        'created_by': createdBy,
-        'is_read': false,
-        'is_deleted': false,
-      };
-
-      final response = await supabase
-          .from('notifications')
-          .insert(notificationData)
-          .select()
-          .single();
-
-      return NotificationModel.fromJson(response);
-    } catch (e) {
-      throw Exception('Failed to create notification: $e');
-    }
-  }
-
-  /// Update notification
-  Future<NotificationModel> updateNotification({
-    required String notificationId,
-    String? title,
-    String? message,
-    String? type,
-    String? relatedAction,
-    Map<String, dynamic>? data,
-    String? status,
-    DateTime? scheduledAt,
-    String? targetType,
-    List<String>? targetRoles,
-    List<String>? targetUserIds,
-  }) async {
-    try {
-      final updateData = <String, dynamic>{};
-
-      if (title != null) updateData['title'] = title;
-      if (message != null) updateData['message'] = message;
-      if (type != null) updateData['type'] = type;
-      if (relatedAction != null) updateData['related_action'] = relatedAction;
-      if (data != null) updateData['data'] = data;
-      if (status != null) updateData['status'] = status;
-      if (scheduledAt != null) {
-        updateData['scheduled_at'] = scheduledAt.toIso8601String();
-      }
-      if (targetType != null) updateData['target_type'] = targetType;
-      if (targetRoles != null) updateData['target_roles'] = targetRoles;
-      if (targetUserIds != null) updateData['target_user_ids'] = targetUserIds;
-
-      final response = await supabase
-          .from('notifications')
-          .update(updateData)
-          .eq('id', notificationId)
-          .select()
-          .single();
-
-      return NotificationModel.fromJson(response);
-    } catch (e) {
-      throw Exception('Failed to update notification: $e');
-    }
-  }
-
-  /// Mark notification as read
-  Future<void> markAsRead(String notificationId) async {
-    try {
-      await supabase
-          .from('notifications')
-          .update({'is_read': true})
-          .eq('id', notificationId);
-    } catch (e) {
-      throw Exception('Failed to mark notification as read: $e');
-    }
-  }
-
-  /// Mark all notifications as read for a user
-  Future<void> markAllAsRead(String userId) async {
-    try {
-      await supabase
-          .from('notifications')
-          .update({'is_read': true})
-          .eq('user_id', userId)
-          .eq('is_read', false);
-    } catch (e) {
-      throw Exception('Failed to mark all notifications as read: $e');
-    }
-  }
-
-  /// Delete notification (soft delete)
-  Future<void> deleteNotification(String notificationId) async {
-    try {
-      await supabase
-          .from('notifications')
-          .update({
-            'is_deleted': true,
-            'deleted_at': DateTime.now().toIso8601String(),
-          })
-          .eq('id', notificationId);
-    } catch (e) {
-      throw Exception('Failed to delete notification: $e');
-    }
-  }
-
-  /// Delete all notifications for a user
-  Future<void> deleteAllNotifications(String userId) async {
-    try {
-      await supabase
-          .from('notifications')
-          .update({
-            'is_deleted': true,
-            'deleted_at': DateTime.now().toIso8601String(),
-          })
-          .eq('user_id', userId);
-    } catch (e) {
-      throw Exception('Failed to delete all notifications: $e');
-    }
-  }
-
-  /// Get scheduled notifications (for admin)
-  Future<List<NotificationModel>> getScheduledNotifications() async {
-    try {
-      final response = await supabase
-          .from('notifications')
-          .select()
-          .eq('status', 'scheduled')
-          .order('scheduled_at', ascending: true);
-
-      return (response as List)
-          .map((json) => NotificationModel.fromJson(json))
-          .toList();
-    } catch (e) {
-      throw Exception('Failed to fetch scheduled notifications: $e');
-    }
-  }
-
-  /// Get draft notifications (for admin)
-  Future<List<NotificationModel>> getDraftNotifications(
-    String createdBy,
-  ) async {
-    try {
-      final response = await supabase
-          .from('notifications')
-          .select()
-          .eq('status', 'draft')
-          .eq('created_by', createdBy)
-          .order('created_at', ascending: false);
-
-      return (response as List)
-          .map((json) => NotificationModel.fromJson(json))
-          .toList();
-    } catch (e) {
-      throw Exception('Failed to fetch draft notifications: $e');
-    }
-  }
-
-  /// Get unread count
-  Future<int> getUnreadCount(String userId) async {
-    try {
-      final response = await supabase
-          .from('notifications')
-          .select('id')
-          .eq('user_id', userId)
-          .eq('is_read', false)
-          .eq('is_deleted', false)
-          .count();
-
-      return response.count;
-    } catch (e) {
-      throw Exception('Failed to get unread count: $e');
-    }
+        'data': data,
+      },
+      matchColumn: 'id',
+      matchValue: notificationId,
+    );
+    return result.first;
   }
 }

@@ -8,14 +8,16 @@ class NotificationItemWidget extends StatelessWidget {
   final NotificationModel notification;
   final VoidCallback onTap;
   final VoidCallback? onEdit;
-  final VoidCallback onDelete;
+  final VoidCallback? onDelete;
+  final bool canDelete;
 
   const NotificationItemWidget({
     super.key,
     required this.notification,
     required this.onTap,
     this.onEdit,
-    required this.onDelete,
+    this.onDelete,
+    this.canDelete = false,
   });
 
   @override
@@ -23,38 +25,7 @@ class NotificationItemWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final isUnread = !notification.isRead;
 
-    return Dismissible(
-      key: Key(notification.id),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 16),
-        color: Colors.red,
-        child: const Icon(Icons.delete, color: Colors.white),
-      ),
-      confirmDismiss: (direction) async {
-        final l10n = AppLocalizations.of(context);
-        return await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(l10n.notification_delete),
-            content: Text(l10n.notification_deleteConfirm),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: Text(l10n.common_cancel),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
-                child: Text(l10n.common_delete),
-              ),
-            ],
-          ),
-        );
-      },
-      onDismissed: (direction) => onDelete(),
-      child: InkWell(
+    final child = InkWell(
         onTap: onTap,
         onLongPress: onEdit,
         child: Container(
@@ -186,8 +157,46 @@ class NotificationItemWidget extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
+      );
+
+    // Only wrap with Dismissible if user can delete
+    if (canDelete && onDelete != null) {
+      return Dismissible(
+        key: Key(notification.id),
+        direction: DismissDirection.endToStart,
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 16),
+          color: Colors.red,
+          child: const Icon(Icons.delete, color: Colors.white),
+        ),
+        confirmDismiss: (direction) async {
+          final l10n = AppLocalizations.of(context);
+          return await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(l10n.notification_delete),
+              content: Text(l10n.notification_deleteConfirm),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: Text(l10n.common_cancel),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  style: TextButton.styleFrom(foregroundColor: Colors.red),
+                  child: Text(l10n.common_delete),
+                ),
+              ],
+            ),
+          );
+        },
+        onDismissed: (direction) => onDelete!(),
+        child: child,
+      );
+    }
+
+    return child;
   }
 
   /// Get icon based on notification type

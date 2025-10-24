@@ -19,13 +19,20 @@ class NotificationProvider extends ChangeNotifier {
   int get unreadCount => _unreadCount;
 
   /// Load notifications for a user
-  Future<void> loadNotifications(String userId) async {
+  /// For developers: loads ALL notifications
+  /// For others: loads only notifications sent to them
+  Future<void> loadNotifications(String userId, {String? userRole}) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      _notifications = await _repository.getUserNotifications(userId: userId);
+      // Developer can see all notifications (RLS policy allows this)
+      if (userRole?.toLowerCase() == 'developer') {
+        _notifications = await _repository.getAllNotifications();
+      } else {
+        _notifications = await _repository.getUserNotifications(userId: userId);
+      }
       _unreadCount = await _repository.getUnreadCount(userId);
       _error = null;
     } catch (e) {
@@ -102,25 +109,31 @@ class NotificationProvider extends ChangeNotifier {
   }
 
   /// Refresh notifications
-  Future<void> refresh(String userId) async {
-    await loadNotifications(userId);
+  Future<void> refresh(String userId, {String? userRole}) async {
+    await loadNotifications(userId, userRole: userRole);
   }
 
   /// Create a new notification
   Future<NotificationModel> createNotification({
     required String userId,
+    required String createdBy,
     required String title,
     required String message,
     String type = 'info',
+    String status = 'sent',
+    DateTime? scheduledAt,
     String? relatedAction,
     Map<String, dynamic>? data,
   }) async {
     try {
       final notification = await _repository.createNotification(
         userId: userId,
+        createdBy: createdBy,
         title: title,
         message: message,
         type: type,
+        status: status,
+        scheduledAt: scheduledAt,
         relatedAction: relatedAction,
         data: data,
       );

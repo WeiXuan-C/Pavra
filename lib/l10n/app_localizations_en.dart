@@ -1124,4 +1124,87 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get report_filterMenuSubtitleAll => 'Browse all user reports';
+
+  @override
+  String get notification_filterAll => 'All';
+
+  @override
+  String get notification_filterUnread => 'Unread';
+
+  @override
+  String get notification_filterRead => 'Read';
+
+  @override
+  String get notification_filterEmpty => 'No notifications';
+
+  @override
+  String get notification_filterEmptyMessage =>
+      'No notifications match the selected filter';
+
+  @override
+  String get notification_clearFilter => 'Clear Filter';
+
+  @override
+  String get notification_selectFilter => 'Select Filter';
+
+  @override
+  String get notification_filterActive => 'filter active';
+
+  @override
+  String get notification_filtersActive => 'filters active';
+
+  @override
+  String get notification_results => 'results';
+
+  @override
+  String get notification_cannotDelete => 'Cannot delete this notification';
+
+  @override
+  String get notification_deletePermissionDenied =>
+      'Only the creator can delete notifications within 30 days';
+
+  @override
+  String get notification_expired => 'Expired';
+
+  @override
+  String get profile_username => 'Username';
+
+  @override
+  String get profile_language => 'Language';
+
+  @override
+  String get profile_role => 'Role';
+
+  @override
+  String get profile_roleDeveloper => 'Developer';
+
+  @override
+  String get profile_roleAuthority => 'Authority';
+
+  @override
+  String get profile_roleUser => 'User';
+
+  @override
+  String get profile_statistics => 'Statistics';
+
+  @override
+  String get profile_totalReports => 'Total Reports';
+
+  @override
+  String get profile_reputation => 'Reputation';
+
+  @override
+  String get notification_filter => 'Filter';
+
+  @override
+  String get notification_toggleFilter => 'Toggle filter menu';
+
+  @override
+  String get notification_filterSentByMe => 'Sent by Me';
+
+  @override
+  String get notification_filterSentToMe => 'Sent to Me';
+
+  @override
+  String get notification_filterAllUsers => 'All Users';
 }

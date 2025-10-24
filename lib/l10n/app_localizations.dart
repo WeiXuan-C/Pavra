@@ -2263,6 +2263,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Browse all user reports'**
   String get report_filterMenuSubtitleAll;
+
+  /// Filter tab label for all notifications
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get notification_filterAll;
+
+  /// Filter tab label for unread notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Unread'**
+  String get notification_filterUnread;
+
+  /// Filter tab label for read notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get notification_filterRead;
+
+  /// Empty state title for filtered view
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications'**
+  String get notification_filterEmpty;
+
+  /// Empty state message for filtered view
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications match the selected filter'**
+  String get notification_filterEmptyMessage;
+
+  /// Button to clear current filter
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Filter'**
+  String get notification_clearFilter;
+
+  /// Title for filter selection menu
+  ///
+  /// In en, this message translates to:
+  /// **'Select Filter'**
+  String get notification_selectFilter;
+
+  /// Singular form for active filter count
+  ///
+  /// In en, this message translates to:
+  /// **'filter active'**
+  String get notification_filterActive;
+
+  /// Plural form for active filters count
+  ///
+  /// In en, this message translates to:
+  /// **'filters active'**
+  String get notification_filtersActive;
+
+  /// Label for results count
+  ///
+  /// In en, this message translates to:
+  /// **'results'**
+  String get notification_results;
+
+  /// Error message when user cannot delete notification
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot delete this notification'**
+  String get notification_cannotDelete;
+
+  /// Permission denied message for delete
+  ///
+  /// In en, this message translates to:
+  /// **'Only the creator can delete notifications within 30 days'**
+  String get notification_deletePermissionDenied;
+
+  /// Label for expired notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get notification_expired;
+
+  /// Username label in profile
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get profile_username;
+
+  /// Language label in profile
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get profile_language;
+
+  /// Role label in profile
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get profile_role;
+
+  /// Developer role label
+  ///
+  /// In en, this message translates to:
+  /// **'Developer'**
+  String get profile_roleDeveloper;
+
+  /// Authority role label
+  ///
+  /// In en, this message translates to:
+  /// **'Authority'**
+  String get profile_roleAuthority;
+
+  /// User role label
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get profile_roleUser;
+
+  /// Statistics section title
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get profile_statistics;
+
+  /// Total reports label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Reports'**
+  String get profile_totalReports;
+
+  /// Reputation score label
+  ///
+  /// In en, this message translates to:
+  /// **'Reputation'**
+  String get profile_reputation;
+
+  /// Filter label
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get notification_filter;
+
+  /// Toggle filter menu tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle filter menu'**
+  String get notification_toggleFilter;
+
+  /// Filter for notifications sent by current user
+  ///
+  /// In en, this message translates to:
+  /// **'Sent by Me'**
+  String get notification_filterSentByMe;
+
+  /// Filter for notifications sent to current user
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to Me'**
+  String get notification_filterSentToMe;
+
+  /// Filter for all users' notifications (developer only)
+  ///
+  /// In en, this message translates to:
+  /// **'All Users'**
+  String get notification_filterAllUsers;
 }
 
 class _AppLocalizationsDelegate

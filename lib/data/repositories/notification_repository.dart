@@ -1,127 +1,171 @@
-import 'package:logger/logger.dart';
 import '../../core/api/notification/notification_api.dart';
-import '../../core/api/notification/notification_backend_api.dart';
 import '../../core/models/notification_model.dart';
-import '../../core/supabase/supabase_client.dart';
+import '../../core/supabase/database_service.dart';
 
-/// Repository for notification data operations
-///
-/// Handles CRUD operations for notifications using NotificationApi
-/// and backend operations via NotificationBackendApi
+/// Notification Repository - 数据仓库层
+/// 负责调用 API 并转换为 Model
 class NotificationRepository {
-  final _api = NotificationApi();
-  final _backendApi = NotificationBackendApi();
-  final _logger = Logger();
+  final NotificationApi _api = NotificationApi();
+  final DatabaseService _db = DatabaseService();
 
-  /// Get all notifications for a user
-  ///
-  /// [userId] - User ID to fetch notifications for
-  /// [isRead] - Filter by read status (null = all)
-  /// [limit] - Maximum number of notifications to fetch
+  /// 获取所有用户列表
+  Future<List<Map<String, dynamic>>> getUsers() async {
+    try {
+      return await _api.getUsers();
+    } catch (e) {
+      throw Exception('Failed to load users: $e');
+    }
+  }
+
+  /// 获取 Action Logs 列表
+  Future<List<Map<String, dynamic>>> getActionLogs({int limit = 50}) async {
+    try {
+      return await _api.getActionLogs(limit: limit);
+    } catch (e) {
+      throw Exception('Failed to load action logs: $e');
+    }
+  }
+
+  /// 获取所有通知列表（仅供 Developer 使用，RLS 策略会自动控制权限）
+  Future<List<NotificationModel>> getAllNotifications() async {
+    try {
+      final data = await _db.selectAdvanced(
+        table: 'notifications',
+        columns: '*',
+        filters: {
+          'is_deleted': false, // 只显示未删除的通知
+        },
+        orderBy: 'created_at',
+        ascending: false,
+      );
+      return data.map((json) => NotificationModel.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to load all notifications: $e');
+    }
+  }
+
+  /// 获取用户的通知列表（排除已删除的）
   Future<List<NotificationModel>> getUserNotifications({
     required String userId,
-    bool? isRead,
-    int limit = 50,
   }) async {
     try {
-      return await _api.getNotifications(
-        userId: userId,
-        isRead: isRead,
-        limit: limit,
+      final data = await _db.selectAdvanced(
+        table: 'notifications',
+        columns: '*',
+        filters: {
+          'user_id': userId,
+          'is_deleted': false, // 只显示未删除的通知
+        },
+        orderBy: 'created_at',
+        ascending: false,
       );
+      return data.map((json) => NotificationModel.fromJson(json)).toList();
     } catch (e) {
-      _logger.e('Error fetching notifications', error: e);
-      rethrow;
+      throw Exception('Failed to load notifications: $e');
     }
   }
 
-  /// Get unread notification count
+  /// 获取未读通知数量
   Future<int> getUnreadCount(String userId) async {
     try {
-      return await _api.getUnreadCount(userId);
+      final data = await _db.selectAdvanced(
+        table: 'notifications',
+        columns: 'id',
+        filters: {'user_id': userId, 'is_read': false, 'is_deleted': false},
+      );
+      return data.length;
     } catch (e) {
-      _logger.e('Error fetching unread count', error: e);
-      return 0;
+      throw Exception('Failed to get unread count: $e');
     }
   }
 
-  /// Mark notification as read
+  /// 标记为已读
   Future<void> markAsRead(String notificationId) async {
     try {
-      await _api.markAsRead(notificationId);
+      await _db.update(
+        table: 'notifications',
+        data: {'is_read': true},
+        matchColumn: 'id',
+        matchValue: notificationId,
+      );
     } catch (e) {
-      _logger.e('Error marking notification as read', error: e);
-      rethrow;
+      throw Exception('Failed to mark as read: $e');
     }
   }
 
-  /// Mark all notifications as read for a user
+  /// 标记所有为已读
   Future<void> markAllAsRead(String userId) async {
     try {
-      await _api.markAllAsRead(userId);
+      await _db.update(
+        table: 'notifications',
+        data: {'is_read': true},
+        matchColumn: 'user_id',
+        matchValue: userId,
+      );
     } catch (e) {
-      _logger.e('Error marking all as read', error: e);
-      rethrow;
+      throw Exception('Failed to mark all as read: $e');
     }
   }
 
-  /// Soft delete notification
+  /// 删除通知
   Future<void> deleteNotification(String notificationId) async {
     try {
-      await _api.deleteNotification(notificationId);
+      await _db.update(
+        table: 'notifications',
+        data: {'is_deleted': true},
+        matchColumn: 'id',
+        matchValue: notificationId,
+      );
     } catch (e) {
-      _logger.e('Error deleting notification', error: e);
-      rethrow;
+      throw Exception('Failed to delete notification: $e');
     }
   }
 
-  /// Delete all notifications for a user (soft delete)
+  /// 删除所有通知
   Future<void> deleteAllNotifications(String userId) async {
     try {
-      await _api.deleteAllNotifications(userId);
+      await _db.update(
+        table: 'notifications',
+        data: {'is_deleted': true},
+        matchColumn: 'user_id',
+        matchValue: userId,
+      );
     } catch (e) {
-      _logger.e('Error deleting all notifications', error: e);
-      rethrow;
+      throw Exception('Failed to delete all notifications: $e');
     }
   }
 
-  /// Create a new notification
+  /// 创建通知
   Future<NotificationModel> createNotification({
     required String userId,
+    required String createdBy,
     required String title,
     required String message,
-    String type = 'info',
+    required String type,
+    String status = 'sent',
+    DateTime? scheduledAt,
     String? relatedAction,
     Map<String, dynamic>? data,
-    String? status,
-    DateTime? scheduledAt,
-    String? targetType,
-    List<String>? targetRoles,
-    List<String>? targetUserIds,
-    String? createdBy,
   }) async {
     try {
-      return await _api.createNotification(
+      final result = await _api.createNotification(
         userId: userId,
+        createdBy: createdBy,
         title: title,
         message: message,
         type: type,
-        relatedAction: relatedAction,
-        data: data,
         status: status,
         scheduledAt: scheduledAt,
-        targetType: targetType,
-        targetRoles: targetRoles,
-        targetUserIds: targetUserIds,
-        createdBy: createdBy,
+        relatedAction: relatedAction,
+        data: data,
       );
+      return NotificationModel.fromJson(result);
     } catch (e) {
-      _logger.e('Error creating notification', error: e);
-      rethrow;
+      throw Exception('Failed to create notification: $e');
     }
   }
 
-  /// Update an existing notification
+  /// 更新通知
   Future<NotificationModel> updateNotification({
     required String notificationId,
     String? title,
@@ -129,219 +173,25 @@ class NotificationRepository {
     String? type,
     String? relatedAction,
     Map<String, dynamic>? data,
-    String? status,
-    DateTime? scheduledAt,
-    String? targetType,
-    List<String>? targetRoles,
-    List<String>? targetUserIds,
   }) async {
     try {
-      return await _api.updateNotification(
-        notificationId: notificationId,
-        title: title,
-        message: message,
-        type: type,
-        relatedAction: relatedAction,
-        data: data,
-        status: status,
-        scheduledAt: scheduledAt,
-        targetType: targetType,
-        targetRoles: targetRoles,
-        targetUserIds: targetUserIds,
+      // 只更新提供的字段
+      final updateData = <String, dynamic>{};
+      if (title != null) updateData['title'] = title;
+      if (message != null) updateData['message'] = message;
+      if (type != null) updateData['type'] = type;
+      if (relatedAction != null) updateData['related_action'] = relatedAction;
+      if (data != null) updateData['data'] = data;
+
+      final result = await _db.update(
+        table: 'notifications',
+        data: updateData,
+        matchColumn: 'id',
+        matchValue: notificationId,
       );
+      return NotificationModel.fromJson(result.first);
     } catch (e) {
-      _logger.e('Error updating notification', error: e);
-      rethrow;
-    }
-  }
-
-  /// Get scheduled notifications (for admin)
-  Future<List<NotificationModel>> getScheduledNotifications() async {
-    try {
-      return await _api.getScheduledNotifications();
-    } catch (e) {
-      _logger.e('Error fetching scheduled notifications', error: e);
-      rethrow;
-    }
-  }
-
-  /// Get draft notifications (for admin)
-  Future<List<NotificationModel>> getDraftNotifications(
-    String createdBy,
-  ) async {
-    try {
-      return await _api.getDraftNotifications(createdBy);
-    } catch (e) {
-      _logger.e('Error fetching draft notifications', error: e);
-      rethrow;
-    }
-  }
-
-  /// Subscribe to real-time notification updates
-  Stream<List<NotificationModel>> subscribeToNotifications(String userId) {
-    try {
-      return supabase
-          .from('notifications')
-          .stream(primaryKey: ['id'])
-          .order('created_at')
-          .map((data) {
-            // Filter in memory since stream doesn't support eq
-            final filtered = data.where((json) {
-              return json['user_id'] == userId && json['is_deleted'] == false;
-            }).toList();
-            return filtered
-                .map((json) => NotificationModel.fromJson(json))
-                .toList();
-          });
-    } catch (e) {
-      _logger.e('Error subscribing to notifications', error: e);
-      rethrow;
-    }
-  }
-
-  // ========== Backend API Methods ==========
-
-  /// Send notification via backend (includes push notification)
-  Future<Map<String, dynamic>> sendNotificationViaBackend({
-    required String userId,
-    required String title,
-    required String message,
-    String type = 'info',
-    String? relatedAction,
-    Map<String, dynamic>? data,
-  }) async {
-    try {
-      return await _backendApi.sendToUser(
-        userId: userId,
-        title: title,
-        message: message,
-        type: type,
-        relatedAction: relatedAction,
-        data: data,
-      );
-    } catch (e) {
-      _logger.e('Error sending notification via backend', error: e);
-      rethrow;
-    }
-  }
-
-  /// Send notification to multiple users via backend
-  Future<Map<String, dynamic>> sendNotificationToUsersViaBackend({
-    required List<String> userIds,
-    required String title,
-    required String message,
-    String type = 'info',
-    String? relatedAction,
-    Map<String, dynamic>? data,
-  }) async {
-    try {
-      return await _backendApi.sendToUsers(
-        userIds: userIds,
-        title: title,
-        message: message,
-        type: type,
-        relatedAction: relatedAction,
-        data: data,
-      );
-    } catch (e) {
-      _logger.e('Error sending notifications via backend', error: e);
-      rethrow;
-    }
-  }
-
-  /// Send broadcast notification via backend
-  Future<Map<String, dynamic>> sendBroadcastViaBackend({
-    required String title,
-    required String message,
-    String type = 'system',
-    Map<String, dynamic>? data,
-  }) async {
-    try {
-      return await _backendApi.sendToAll(
-        title: title,
-        message: message,
-        type: type,
-        data: data,
-      );
-    } catch (e) {
-      _logger.e('Error sending broadcast via backend', error: e);
-      rethrow;
-    }
-  }
-
-  /// Schedule notification via backend
-  Future<Map<String, dynamic>> scheduleNotificationViaBackend({
-    required String userId,
-    required String title,
-    required String message,
-    required DateTime scheduledAt,
-    String type = 'info',
-    String? relatedAction,
-    Map<String, dynamic>? data,
-    String? targetType,
-    List<String>? targetRoles,
-    List<String>? targetUserIds,
-    String? createdBy,
-  }) async {
-    try {
-      return await _backendApi.scheduleNotification(
-        userId: userId,
-        title: title,
-        message: message,
-        scheduledAt: scheduledAt,
-        type: type,
-        relatedAction: relatedAction,
-        data: data,
-        targetType: targetType,
-        targetRoles: targetRoles,
-        targetUserIds: targetUserIds,
-        createdBy: createdBy,
-      );
-    } catch (e) {
-      _logger.e('Error scheduling notification via backend', error: e);
-      rethrow;
-    }
-  }
-
-  /// Schedule notification for multiple users via backend
-  Future<Map<String, dynamic>> scheduleNotificationForUsersViaBackend({
-    required List<String> userIds,
-    required String title,
-    required String message,
-    required DateTime scheduledAt,
-    String type = 'info',
-    String? relatedAction,
-    Map<String, dynamic>? data,
-    String? createdBy,
-  }) async {
-    try {
-      return await _backendApi.scheduleNotificationForUsers(
-        userIds: userIds,
-        title: title,
-        message: message,
-        scheduledAt: scheduledAt,
-        type: type,
-        relatedAction: relatedAction,
-        data: data,
-        createdBy: createdBy,
-      );
-    } catch (e) {
-      _logger.e('Error scheduling notifications via backend', error: e);
-      rethrow;
-    }
-  }
-
-  /// Cancel scheduled notification via backend
-  Future<Map<String, dynamic>> cancelScheduledNotificationViaBackend({
-    required String notificationId,
-  }) async {
-    try {
-      return await _backendApi.cancelScheduledNotification(
-        notificationId: notificationId,
-      );
-    } catch (e) {
-      _logger.e('Error cancelling notification via backend', error: e);
-      rethrow;
+      throw Exception('Failed to update notification: $e');
     }
   }
 }

@@ -44,13 +44,12 @@ class AuthService {
   Future<AuthResponse> signUpWithPassword({
     required String email,
     required String password,
-    required String deviceToken,
     Map<String, dynamic>? data,
   }) async {
     return await supabase.auth.signUp(
       email: email,
       password: password,
-      data: {'device_token': deviceToken, ...?data},
+      data: data,
     );
   }
 
@@ -246,7 +245,8 @@ class AuthService {
         // Profile doesn't exist, create it
         await _userRepository.createProfile(
           userId: user.id,
-          username: user.email?.split('@')[0] ?? 'user_${user.id.substring(0, 8)}',
+          username:
+              user.email?.split('@')[0] ?? 'user_${user.id.substring(0, 8)}',
           email: user.email,
           avatarUrl: user.userMetadata?['avatar_url'] as String?,
         );
@@ -265,12 +265,27 @@ class AuthService {
   /// Returns UserProfile model
   Future<UserProfile?> getUserProfile(String userId) async {
     try {
-      return await _userRepository.getProfileById(userId);
-    } catch (e) {
+      developer.log('=== AuthService.getUserProfile ===', name: 'AuthService');
+      developer.log('Fetching profile for: $userId', name: 'AuthService');
+
+      final profile = await _userRepository.getProfileById(userId);
+
+      if (profile != null) {
+        developer.log('✅ Profile mapped successfully', name: 'AuthService');
+        developer.log('Username: ${profile.username}', name: 'AuthService');
+        developer.log('Role: ${profile.role}', name: 'AuthService');
+      } else {
+        developer.log('⚠️ Profile is null after mapping', name: 'AuthService');
+      }
+
+      developer.log('===================================', name: 'AuthService');
+      return profile;
+    } catch (e, stackTrace) {
       developer.log(
-        'Error fetching profile: $e',
+        '❌ Error fetching/mapping profile: $e',
         name: 'AuthService',
         error: e,
+        stackTrace: stackTrace,
       );
       return null;
     }
@@ -286,7 +301,6 @@ class AuthService {
     String? language,
     String? themeMode,
     bool? notificationsEnabled,
-    String? deviceToken,
   }) async {
     try {
       return await _userRepository.updateProfile(
@@ -297,7 +311,6 @@ class AuthService {
         language: language,
         themeMode: themeMode,
         notificationsEnabled: notificationsEnabled,
-        deviceToken: deviceToken,
       );
     } catch (e) {
       developer.log(

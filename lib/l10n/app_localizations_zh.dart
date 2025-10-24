@@ -1098,4 +1098,85 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get report_filterMenuSubtitleAll => '浏览所有用户的报告';
+
+  @override
+  String get notification_filterAll => '全部';
+
+  @override
+  String get notification_filterUnread => '未读';
+
+  @override
+  String get notification_filterRead => '已读';
+
+  @override
+  String get notification_filterEmpty => '没有通知';
+
+  @override
+  String get notification_filterEmptyMessage => '没有符合所选过滤条件的通知';
+
+  @override
+  String get notification_clearFilter => '清除过滤';
+
+  @override
+  String get notification_selectFilter => '选择过滤条件';
+
+  @override
+  String get notification_filterActive => '个过滤条件';
+
+  @override
+  String get notification_filtersActive => '个过滤条件';
+
+  @override
+  String get notification_results => '条结果';
+
+  @override
+  String get notification_cannotDelete => '无法删除此通知';
+
+  @override
+  String get notification_deletePermissionDenied => '只有创建者可以在30天内删除通知';
+
+  @override
+  String get notification_expired => '已过期';
+
+  @override
+  String get profile_username => '用户名';
+
+  @override
+  String get profile_language => '语言';
+
+  @override
+  String get profile_role => '身份';
+
+  @override
+  String get profile_roleDeveloper => '开发者';
+
+  @override
+  String get profile_roleAuthority => '管理员';
+
+  @override
+  String get profile_roleUser => '用户';
+
+  @override
+  String get profile_statistics => '统计信息';
+
+  @override
+  String get profile_totalReports => '总报告数';
+
+  @override
+  String get profile_reputation => '声誉值';
+
+  @override
+  String get notification_filter => '筛选';
+
+  @override
+  String get notification_toggleFilter => '切换筛选菜单';
+
+  @override
+  String get notification_filterSentByMe => '我发布的';
+
+  @override
+  String get notification_filterSentToMe => '发给我的';
+
+  @override
+  String get notification_filterAllUsers => '所有人的';
 }

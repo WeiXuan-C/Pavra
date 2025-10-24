@@ -40,11 +40,11 @@ class DatabaseService {
     dynamic matchValue,
   }) async {
     var query = supabase.from(table).update(data);
-    
+
     if (matchColumn != null && matchValue != null) {
       query = query.eq(matchColumn, matchValue);
     }
-    
+
     final response = await query.select();
     return response as List<T>;
   }
@@ -55,10 +55,10 @@ class DatabaseService {
     required dynamic data,
     List<String>? onConflict,
   }) async {
-    final response = await supabase.from(table).upsert(
-      data,
-      onConflict: onConflict?.join(','),
-    ).select();
+    final response = await supabase
+        .from(table)
+        .upsert(data, onConflict: onConflict?.join(','))
+        .select();
     return response as List<T>;
   }
 
@@ -69,11 +69,11 @@ class DatabaseService {
     dynamic matchValue,
   }) async {
     var query = supabase.from(table).delete();
-    
+
     if (matchColumn != null && matchValue != null) {
       query = query.eq(matchColumn, matchValue);
     }
-    
+
     await query;
   }
 
@@ -93,11 +93,11 @@ class DatabaseService {
     dynamic filterValue,
   }) async {
     var query = supabase.from(table).select(columns);
-    
+
     if (filterColumn != null && filterValue != null) {
       query = query.eq(filterColumn, filterValue);
     }
-    
+
     return await query;
   }
 
@@ -108,11 +108,26 @@ class DatabaseService {
     required String filterColumn,
     required dynamic filterValue,
   }) async {
+    print('=== DatabaseService.selectSingle ===');
+    print('Table: $table');
+    print('Filter: $filterColumn = $filterValue');
+    print('Columns: $columns');
+
     final response = await supabase
         .from(table)
         .select(columns)
         .eq(filterColumn, filterValue)
         .maybeSingle();
+
+    if (response != null) {
+      print('✅ Query successful, record found');
+      print('Response keys: ${response.keys.toList()}');
+    } else {
+      print('⚠️ Query successful, but NO record found');
+      print('This means no row matches the filter');
+    }
+
+    print('=====================================');
     return response;
   }
 
@@ -123,11 +138,11 @@ class DatabaseService {
     dynamic filterValue,
   }) async {
     var query = supabase.from(table).select('*');
-    
+
     if (filterColumn != null && filterValue != null) {
       query = query.eq(filterColumn, filterValue);
     }
-    
+
     final response = await query;
     return response.length;
   }
@@ -151,14 +166,14 @@ class DatabaseService {
   }) async {
     final from = (page - 1) * pageSize;
     final to = from + pageSize - 1;
-    
-    var query = supabase.from(table).select(columns).range(from, to);
-    
+
+    dynamic query = supabase.from(table).select(columns).range(from, to);
+
     if (orderBy != null) {
-      query = query.order(orderBy, ascending: ascending) as PostgrestFilterBuilder<PostgrestList>;
+      query = query.order(orderBy, ascending: ascending);
     }
-    
-    return await query;
+
+    return await query as List<Map<String, dynamic>>;
   }
 
   /// Select with multiple filters and ordering
@@ -170,26 +185,26 @@ class DatabaseService {
     bool ascending = true,
     int? limit,
   }) async {
-    PostgrestFilterBuilder<PostgrestList> query = supabase.from(table).select(columns);
-    
+    dynamic query = supabase.from(table).select(columns);
+
     // Apply filters
     if (filters != null) {
       filters.forEach((key, value) {
         query = query.eq(key, value);
       });
     }
-    
+
     // Apply ordering
     if (orderBy != null) {
-      query = query.order(orderBy, ascending: ascending) as PostgrestFilterBuilder<PostgrestList>;
+      query = query.order(orderBy, ascending: ascending);
     }
-    
+
     // Apply limit
     if (limit != null) {
-      query = query.limit(limit) as PostgrestFilterBuilder<PostgrestList>;
+      query = query.limit(limit);
     }
-    
-    return await query;
+
+    return await query as List<Map<String, dynamic>>;
   }
 
   /// Search records using full-text search

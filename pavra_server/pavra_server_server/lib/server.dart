@@ -8,6 +8,7 @@ import 'src/generated/endpoints.dart';
 import 'src/services/supabase_service.dart';
 import 'src/services/upstash_redis_service.dart';
 import 'src/tasks/sync_action_logs.dart';
+import 'src/tasks/scheduled_notification_task.dart';
 
 /// ✅ Declare all future calls here to avoid undefined reference issues.
 enum FutureCallNames { birthdayReminder, actionLogSync }
@@ -78,7 +79,10 @@ void run(List<String> args) async {
   // 5️⃣ Start background task: Action Log Sync
   await initializeActionLogSync(pod);
 
-  // 6️⃣ Setup web routes
+  // 6️⃣ Start background task: Scheduled Notifications
+  await _initializeScheduledNotifications(pod);
+
+  // 7️⃣ Setup web routes
   pod.webServer.addRoute(RouteRoot(), '/');
   pod.webServer.addRoute(RouteRoot(), '/index.html');
   pod.webServer.addRoute(
@@ -167,5 +171,16 @@ void _initializeOneSignal(Serverpod pod, DotEnv? dotenv) {
     PLog.info('   App ID: ${appId.substring(0, 8)}...');
   } catch (e, stack) {
     PLog.error('❌ Failed to initialize OneSignal credentials.', e, stack);
+  }
+}
+
+/// ✅ Initialize scheduled notification task
+Future<void> _initializeScheduledNotifications(Serverpod pod) async {
+  try {
+    PLog.info('🔔 Initializing scheduled notification task...');
+    await initializeScheduledNotificationTask(pod);
+    PLog.info('✅ Scheduled notification task initialized successfully');
+  } catch (e, stack) {
+    PLog.error('❌ Failed to initialize scheduled notification task.', e, stack);
   }
 }

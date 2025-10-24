@@ -1463,5 +1463,117 @@
   "report_filterMenuSubtitleAll": "浏览所有用户的报告",
   "@report_filterMenuSubtitleAll": {
     "description": "筛选菜单所有报告副标题"
+  },
+  
+  "notification_filterAll": "全部",
+  "@notification_filterAll": {
+    "description": "全部通知过滤标签"
+  },
+  "notification_filterUnread": "未读",
+  "@notification_filterUnread": {
+    "description": "未读通知过滤标签"
+  },
+  "notification_filterRead": "已读",
+  "@notification_filterRead": {
+    "description": "已读通知过滤标签"
+  },
+  "notification_filterEmpty": "没有通知",
+  "@notification_filterEmpty": {
+    "description": "过滤视图空状态标题"
+  },
+  "notification_filterEmptyMessage": "没有符合所选过滤条件的通知",
+  "@notification_filterEmptyMessage": {
+    "description": "过滤视图空状态消息"
+  },
+  "notification_clearFilter": "清除过滤",
+  "@notification_clearFilter": {
+    "description": "清除当前过滤条件的按钮"
+  },
+  "notification_selectFilter": "选择过滤条件",
+  "@notification_selectFilter": {
+    "description": "过滤选择菜单的标题"
+  },
+  "notification_filterActive": "个过滤条件",
+  "@notification_filterActive": {
+    "description": "活动过滤条件数量的单数形式"
+  },
+  "notification_filtersActive": "个过滤条件",
+  "@notification_filtersActive": {
+    "description": "活动过滤条件数量的复数形式"
+  },
+  "notification_results": "条结果",
+  "@notification_results": {
+    "description": "结果数量标签"
+  },
+  "notification_cannotDelete": "无法删除此通知",
+  "@notification_cannotDelete": {
+    "description": "用户无法删除通知时的错误消息"
+  },
+  "notification_deletePermissionDenied": "只有创建者可以在30天内删除通知",
+  "@notification_deletePermissionDenied": {
+    "description": "删除权限被拒绝的消息"
+  },
+  "notification_expired": "已过期",
+  "@notification_expired": {
+    "description": "已过期通知的标签"
+  },
+  
+  "profile_username": "用户名",
+  "@profile_username": {
+    "description": "个人资料中的用户名标签"
+  },
+  "profile_language": "语言",
+  "@profile_language": {
+    "description": "个人资料中的语言标签"
+  },
+  "profile_role": "身份",
+  "@profile_role": {
+    "description": "个人资料中的角色标签"
+  },
+  "profile_roleDeveloper": "开发者",
+  "@profile_roleDeveloper": {
+    "description": "开发者角色标签"
+  },
+  "profile_roleAuthority": "管理员",
+  "@profile_roleAuthority": {
+    "description": "管理员角色标签"
+  },
+  "profile_roleUser": "用户",
+  "@profile_roleUser": {
+    "description": "用户角色标签"
+  },
+  "profile_statistics": "统计信息",
+  "@profile_statistics": {
+    "description": "统计信息部分标题"
+  },
+  "profile_totalReports": "总报告数",
+  "@profile_totalReports": {
+    "description": "总报告数标签"
+  },
+  "profile_reputation": "声誉值",
+  "@profile_reputation": {
+    "description": "声誉分数标签"
+  },
+  
+  "notification_filter": "筛选",
+  "@notification_filter": {
+    "description": "筛选标签"
+  },
+  "notification_toggleFilter": "切换筛选菜单",
+  "@notification_toggleFilter": {
+    "description": "切换筛选菜单提示"
+  },
+  "notification_filterSentByMe": "我发布的",
+  "@notification_filterSentByMe": {
+    "description": "当前用户发送的通知筛选"
+  },
+  "notification_filterSentToMe": "发给我的",
+  "@notification_filterSentToMe": {
+    "description": "发送给当前用户的通知筛选"
+  },
+  "notification_filterAllUsers": "所有人的",
+  "@notification_filterAllUsers": {
+    "description": "所有用户的通知筛选（仅开发者）"
   }
+
 }
