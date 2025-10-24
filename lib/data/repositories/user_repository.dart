@@ -105,6 +105,7 @@ class UserRepository {
     String? avatarUrl,
     String? language,
     String? themeMode,
+    String? role,
     bool? notificationsEnabled,
   }) async {
     final jsonList = await _userApi.updateProfile(
@@ -114,6 +115,7 @@ class UserRepository {
       avatarUrl: avatarUrl,
       language: language,
       themeMode: themeMode,
+      role: role,
       notificationsEnabled: notificationsEnabled,
     );
 

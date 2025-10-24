@@ -760,7 +760,84 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_roadDamage => 'Road Damage';
 
   @override
-  String get settings_roadDamageDesc => 'Potholes, cracks, and surface issues';
+  String get settings_version => 'Version';
+
+  @override
+  String get settings_developerMode => 'Developer Mode';
+
+  @override
+  String get settings_exitDeveloperMode => 'Exit Developer Mode';
+
+  @override
+  String get settings_enterAccessCode => 'Enter Access Code';
+
+  @override
+  String get settings_accessCodeHint => 'Enter access code';
+
+  @override
+  String get settings_accessCodeIncorrect => 'Incorrect access code';
+
+  @override
+  String get settings_developerModeEnabled => 'Developer mode enabled';
+
+  @override
+  String get settings_developerModeDisabled => 'Developer mode disabled';
+
+  @override
+  String get settings_authorityWarning => 'Authority Warning';
+
+  @override
+  String get settings_authorityWarningMessage =>
+      'If you switch to developer mode, you can only switch back to regular user role. Your authority status will be permanently removed. Are you sure you want to continue?';
+
+  @override
+  String get settings_requestAuthority => 'Request Authority Role';
+
+  @override
+  String get settings_requestAuthorityMessage =>
+      'Your request to become an authority has been submitted for review.';
+
+  @override
+  String get settings_requestAuthorityConfirm =>
+      'Submit a request to become an authority user? This request will be reviewed by administrators.';
+
+  @override
+  String get settings_exitDeveloperModeMessage =>
+      'Are you sure you want to exit developer mode? You will be switched back to regular user role.';
+
+  @override
+  String get settings_appInformation => 'App Information';
+
+  @override
+  String get profile_username => 'Username';
+
+  @override
+  String get profile_language => 'Language';
+
+  @override
+  String get profile_role => 'Role';
+
+  @override
+  String get profile_roleUser => 'User';
+
+  @override
+  String get profile_roleAuthority => 'Authority';
+
+  @override
+  String get profile_roleDeveloper => 'Developer';
+
+  @override
+  String get profile_statistics => 'Statistics';
+
+  @override
+  String get profile_totalReports => 'Total Reports';
+
+  @override
+  String get profile_reputation => 'Reputation';
+
+  @override
+  String get settings_roadDamageDesc =>
+      'Potholes, cracks, and road surface issues';
 
   @override
   String get settings_constructionZones => 'Construction Zones';
@@ -1165,33 +1242,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notification_expired => 'Expired';
-
-  @override
-  String get profile_username => 'Username';
-
-  @override
-  String get profile_language => 'Language';
-
-  @override
-  String get profile_role => 'Role';
-
-  @override
-  String get profile_roleDeveloper => 'Developer';
-
-  @override
-  String get profile_roleAuthority => 'Authority';
-
-  @override
-  String get profile_roleUser => 'User';
-
-  @override
-  String get profile_statistics => 'Statistics';
-
-  @override
-  String get profile_totalReports => 'Total Reports';
-
-  @override
-  String get profile_reputation => 'Reputation';
 
   @override
   String get notification_filter => 'Filter';

@@ -1556,10 +1556,154 @@ abstract class AppLocalizations {
   /// **'Road Damage'**
   String get settings_roadDamage;
 
+  /// App version label
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get settings_version;
+
+  /// Developer mode label
+  ///
+  /// In en, this message translates to:
+  /// **'Developer Mode'**
+  String get settings_developerMode;
+
+  /// Exit developer mode button
+  ///
+  /// In en, this message translates to:
+  /// **'Exit Developer Mode'**
+  String get settings_exitDeveloperMode;
+
+  /// Enter access code dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Access Code'**
+  String get settings_enterAccessCode;
+
+  /// Access code input hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter access code'**
+  String get settings_accessCodeHint;
+
+  /// Incorrect access code error message
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect access code'**
+  String get settings_accessCodeIncorrect;
+
+  /// Developer mode enabled success message
+  ///
+  /// In en, this message translates to:
+  /// **'Developer mode enabled'**
+  String get settings_developerModeEnabled;
+
+  /// Developer mode disabled success message
+  ///
+  /// In en, this message translates to:
+  /// **'Developer mode disabled'**
+  String get settings_developerModeDisabled;
+
+  /// Authority warning dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Authority Warning'**
+  String get settings_authorityWarning;
+
+  /// Authority warning message
+  ///
+  /// In en, this message translates to:
+  /// **'If you switch to developer mode, you can only switch back to regular user role. Your authority status will be permanently removed. Are you sure you want to continue?'**
+  String get settings_authorityWarningMessage;
+
+  /// Request authority role button
+  ///
+  /// In en, this message translates to:
+  /// **'Request Authority Role'**
+  String get settings_requestAuthority;
+
+  /// Request authority success message
+  ///
+  /// In en, this message translates to:
+  /// **'Your request to become an authority has been submitted for review.'**
+  String get settings_requestAuthorityMessage;
+
+  /// Request authority confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Submit a request to become an authority user? This request will be reviewed by administrators.'**
+  String get settings_requestAuthorityConfirm;
+
+  /// Exit developer mode confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to exit developer mode? You will be switched back to regular user role.'**
+  String get settings_exitDeveloperModeMessage;
+
+  /// App information section title
+  ///
+  /// In en, this message translates to:
+  /// **'App Information'**
+  String get settings_appInformation;
+
+  /// Username label
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get profile_username;
+
+  /// Language label
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get profile_language;
+
+  /// Role label
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get profile_role;
+
+  /// User role label
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get profile_roleUser;
+
+  /// Authority role label
+  ///
+  /// In en, this message translates to:
+  /// **'Authority'**
+  String get profile_roleAuthority;
+
+  /// Developer role label
+  ///
+  /// In en, this message translates to:
+  /// **'Developer'**
+  String get profile_roleDeveloper;
+
+  /// Statistics section title
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get profile_statistics;
+
+  /// Total reports label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Reports'**
+  String get profile_totalReports;
+
+  /// Reputation label
+  ///
+  /// In en, this message translates to:
+  /// **'Reputation'**
+  String get profile_reputation;
+
   /// Road damage description
   ///
   /// In en, this message translates to:
-  /// **'Potholes, cracks, and surface issues'**
+  /// **'Potholes, cracks, and road surface issues'**
   String get settings_roadDamageDesc;
 
   /// Construction zones notification type
@@ -2341,60 +2485,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Expired'**
   String get notification_expired;
-
-  /// Username label in profile
-  ///
-  /// In en, this message translates to:
-  /// **'Username'**
-  String get profile_username;
-
-  /// Language label in profile
-  ///
-  /// In en, this message translates to:
-  /// **'Language'**
-  String get profile_language;
-
-  /// Role label in profile
-  ///
-  /// In en, this message translates to:
-  /// **'Role'**
-  String get profile_role;
-
-  /// Developer role label
-  ///
-  /// In en, this message translates to:
-  /// **'Developer'**
-  String get profile_roleDeveloper;
-
-  /// Authority role label
-  ///
-  /// In en, this message translates to:
-  /// **'Authority'**
-  String get profile_roleAuthority;
-
-  /// User role label
-  ///
-  /// In en, this message translates to:
-  /// **'User'**
-  String get profile_roleUser;
-
-  /// Statistics section title
-  ///
-  /// In en, this message translates to:
-  /// **'Statistics'**
-  String get profile_statistics;
-
-  /// Total reports label
-  ///
-  /// In en, this message translates to:
-  /// **'Total Reports'**
-  String get profile_totalReports;
-
-  /// Reputation score label
-  ///
-  /// In en, this message translates to:
-  /// **'Reputation'**
-  String get profile_reputation;
 
   /// Filter label
   ///

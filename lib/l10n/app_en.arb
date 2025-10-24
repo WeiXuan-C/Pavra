@@ -1,6 +1,5 @@
 {
   "@@locale": "en",
-  
   "appName": "Pavra",
   "@appName": {
     "description": "Application name"
@@ -9,7 +8,6 @@
   "@appTitle": {
     "description": "Application title"
   },
-  
   "common_ok": "OK",
   "@common_ok": {
     "description": "Common button text for OK"
@@ -66,7 +64,6 @@
   "@common_submit": {
     "description": "Common button text for Submit"
   },
-  
   "auth_welcomeTitle": "Welcome to Pavra",
   "@auth_welcomeTitle": {
     "description": "Welcome screen title"
@@ -147,7 +144,6 @@
   "@auth_orContinueWith": {
     "description": "Text separator for alternative sign in methods"
   },
-  
   "home_title": "Home",
   "@home_title": {
     "description": "Home screen title"
@@ -220,7 +216,6 @@
   "@home_settings": {
     "description": "Settings menu item"
   },
-  
   "camera_title": "Camera Detection",
   "@camera_title": {
     "description": "Camera detection screen title"
@@ -438,7 +433,6 @@
       }
     }
   },
-  
   "time_justNow": "Just now",
   "@time_justNow": {
     "description": "Timestamp for very recent activity"
@@ -470,7 +464,6 @@
       }
     }
   },
-  
   "map_title": "Map View",
   "@map_title": {
     "description": "Map view screen title"
@@ -571,7 +564,6 @@
   "@map_away": {
     "description": "Distance away suffix"
   },
-  
   "report_title": "Report Issue",
   "@report_title": {
     "description": "Report issue screen title"
@@ -728,7 +720,6 @@
   "@report_gpsAccuracy": {
     "description": "GPS accuracy label"
   },
-  
   "alerts_title": "Safety Alerts",
   "@alerts_title": {
     "description": "Safety alerts screen title"
@@ -953,7 +944,6 @@
   "@report_obstacle": {
     "description": "Obstacle issue type"
   },
-  
   "nav_camera": "Camera",
   "@nav_camera": {
     "description": "Navigation bar label for camera screen"
@@ -974,7 +964,6 @@
   "@nav_profile": {
     "description": "Navigation bar label for profile screen"
   },
-  
   "language_english": "English",
   "@language_english": {
     "description": "English language option"
@@ -983,7 +972,6 @@
   "@language_chinese": {
     "description": "Chinese language option"
   },
-  
   "settings_notifications": "Notifications",
   "@settings_notifications": {
     "description": "Notifications section title"
@@ -1004,7 +992,103 @@
   "@settings_roadDamage": {
     "description": "Road damage notification type"
   },
-  "settings_roadDamageDesc": "Potholes, cracks, and surface issues",
+  "settings_version": "Version",
+  "@settings_version": {
+    "description": "App version label"
+  },
+  "settings_developerMode": "Developer Mode",
+  "@settings_developerMode": {
+    "description": "Developer mode label"
+  },
+  "settings_exitDeveloperMode": "Exit Developer Mode",
+  "@settings_exitDeveloperMode": {
+    "description": "Exit developer mode button"
+  },
+  "settings_enterAccessCode": "Enter Access Code",
+  "@settings_enterAccessCode": {
+    "description": "Enter access code dialog title"
+  },
+  "settings_accessCodeHint": "Enter access code",
+  "@settings_accessCodeHint": {
+    "description": "Access code input hint"
+  },
+  "settings_accessCodeIncorrect": "Incorrect access code",
+  "@settings_accessCodeIncorrect": {
+    "description": "Incorrect access code error message"
+  },
+  "settings_developerModeEnabled": "Developer mode enabled",
+  "@settings_developerModeEnabled": {
+    "description": "Developer mode enabled success message"
+  },
+  "settings_developerModeDisabled": "Developer mode disabled",
+  "@settings_developerModeDisabled": {
+    "description": "Developer mode disabled success message"
+  },
+  "settings_authorityWarning": "Authority Warning",
+  "@settings_authorityWarning": {
+    "description": "Authority warning dialog title"
+  },
+  "settings_authorityWarningMessage": "If you switch to developer mode, you can only switch back to regular user role. Your authority status will be permanently removed. Are you sure you want to continue?",
+  "@settings_authorityWarningMessage": {
+    "description": "Authority warning message"
+  },
+  "settings_requestAuthority": "Request Authority Role",
+  "@settings_requestAuthority": {
+    "description": "Request authority role button"
+  },
+  "settings_requestAuthorityMessage": "Your request to become an authority has been submitted for review.",
+  "@settings_requestAuthorityMessage": {
+    "description": "Request authority success message"
+  },
+  "settings_requestAuthorityConfirm": "Submit a request to become an authority user? This request will be reviewed by administrators.",
+  "@settings_requestAuthorityConfirm": {
+    "description": "Request authority confirmation message"
+  },
+  "settings_exitDeveloperModeMessage": "Are you sure you want to exit developer mode? You will be switched back to regular user role.",
+  "@settings_exitDeveloperModeMessage": {
+    "description": "Exit developer mode confirmation message"
+  },
+  "settings_appInformation": "App Information",
+  "@settings_appInformation": {
+    "description": "App information section title"
+  },
+  "profile_username": "Username",
+  "@profile_username": {
+    "description": "Username label"
+  },
+  "profile_language": "Language",
+  "@profile_language": {
+    "description": "Language label"
+  },
+  "profile_role": "Role",
+  "@profile_role": {
+    "description": "Role label"
+  },
+  "profile_roleUser": "User",
+  "@profile_roleUser": {
+    "description": "User role label"
+  },
+  "profile_roleAuthority": "Authority",
+  "@profile_roleAuthority": {
+    "description": "Authority role label"
+  },
+  "profile_roleDeveloper": "Developer",
+  "@profile_roleDeveloper": {
+    "description": "Developer role label"
+  },
+  "profile_statistics": "Statistics",
+  "@profile_statistics": {
+    "description": "Statistics section title"
+  },
+  "profile_totalReports": "Total Reports",
+  "@profile_totalReports": {
+    "description": "Total reports label"
+  },
+  "profile_reputation": "Reputation",
+  "@profile_reputation": {
+    "description": "Reputation label"
+  },
+  "settings_roadDamageDesc": "Potholes, cracks, and road surface issues",
   "@settings_roadDamageDesc": {
     "description": "Road damage description"
   },
@@ -1052,7 +1136,6 @@
   "@settings_vibrationDesc": {
     "description": "Vibration setting description"
   },
-  
   "alerts_miles": "miles",
   "@alerts_miles": {
     "description": "Miles unit (plural)"
@@ -1061,7 +1144,6 @@
   "@alerts_mile": {
     "description": "Mile unit (singular)"
   },
-  
   "alerts_routeMonitoringTitle": "Route Monitoring",
   "@alerts_routeMonitoringTitle": {
     "description": "Route monitoring section title"
@@ -1070,7 +1152,6 @@
   "@alerts_noSavedRoutes": {
     "description": "Message when no routes are saved"
   },
-  
   "severity_minor": "Minor",
   "@severity_minor": {
     "description": "Minor severity level"
@@ -1111,7 +1192,6 @@
   "@severity_criticalDesc": {
     "description": "Critical severity description"
   },
-  
   "report_descriptionPlaceholder": "Describe the road condition, traffic impact, or any other relevant details...",
   "@report_descriptionPlaceholder": {
     "description": "Description input placeholder text"
@@ -1124,7 +1204,6 @@
   "@report_suggestions": {
     "description": "Suggestions section title"
   },
-  
   "notification_title": "Notifications",
   "@notification_title": {
     "description": "Notifications screen title"
@@ -1481,7 +1560,6 @@
   "@report_filterMenuSubtitleAll": {
     "description": "Filter menu subtitle for all reports"
   },
-  
   "notification_filterAll": "All",
   "@notification_filterAll": {
     "description": "Filter tab label for all notifications"
@@ -1534,44 +1612,6 @@
   "@notification_expired": {
     "description": "Label for expired notifications"
   },
-  
-  "profile_username": "Username",
-  "@profile_username": {
-    "description": "Username label in profile"
-  },
-  "profile_language": "Language",
-  "@profile_language": {
-    "description": "Language label in profile"
-  },
-  "profile_role": "Role",
-  "@profile_role": {
-    "description": "Role label in profile"
-  },
-  "profile_roleDeveloper": "Developer",
-  "@profile_roleDeveloper": {
-    "description": "Developer role label"
-  },
-  "profile_roleAuthority": "Authority",
-  "@profile_roleAuthority": {
-    "description": "Authority role label"
-  },
-  "profile_roleUser": "User",
-  "@profile_roleUser": {
-    "description": "User role label"
-  },
-  "profile_statistics": "Statistics",
-  "@profile_statistics": {
-    "description": "Statistics section title"
-  },
-  "profile_totalReports": "Total Reports",
-  "@profile_totalReports": {
-    "description": "Total reports label"
-  },
-  "profile_reputation": "Reputation",
-  "@profile_reputation": {
-    "description": "Reputation score label"
-  },
-  
   "notification_filter": "Filter",
   "@notification_filter": {
     "description": "Filter label"
@@ -1592,5 +1632,4 @@
   "@notification_filterAllUsers": {
     "description": "Filter for all users' notifications (developer only)"
   }
-
 }

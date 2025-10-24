@@ -1040,6 +1040,102 @@
   "@settings_vibrationDesc": {
     "description": "振动设置描述"
   },
+  "settings_version": "版本",
+  "@settings_version": {
+    "description": "应用版本标签"
+  },
+  "settings_developerMode": "开发者模式",
+  "@settings_developerMode": {
+    "description": "开发者模式标签"
+  },
+  "settings_exitDeveloperMode": "退出开发者模式",
+  "@settings_exitDeveloperMode": {
+    "description": "退出开发者模式按钮"
+  },
+  "settings_enterAccessCode": "输入访问代码",
+  "@settings_enterAccessCode": {
+    "description": "输入访问代码对话框标题"
+  },
+  "settings_accessCodeHint": "输入访问代码",
+  "@settings_accessCodeHint": {
+    "description": "访问代码输入提示"
+  },
+  "settings_accessCodeIncorrect": "访问代码不正确",
+  "@settings_accessCodeIncorrect": {
+    "description": "访问代码错误消息"
+  },
+  "settings_developerModeEnabled": "开发者模式已启用",
+  "@settings_developerModeEnabled": {
+    "description": "开发者模式启用成功消息"
+  },
+  "settings_developerModeDisabled": "开发者模式已禁用",
+  "@settings_developerModeDisabled": {
+    "description": "开发者模式禁用成功消息"
+  },
+  "settings_authorityWarning": "权限警告",
+  "@settings_authorityWarning": {
+    "description": "权限警告对话框标题"
+  },
+  "settings_authorityWarningMessage": "如果您切换到开发者模式，您只能切换回普通用户角色。您的权限身份将被永久删除。您确定要继续吗？",
+  "@settings_authorityWarningMessage": {
+    "description": "权限警告消息"
+  },
+  "settings_requestAuthority": "申请成为权限用户",
+  "@settings_requestAuthority": {
+    "description": "申请权限角色按钮"
+  },
+  "settings_requestAuthorityMessage": "您申请成为权限用户的请求已提交审核。",
+  "@settings_requestAuthorityMessage": {
+    "description": "申请权限成功消息"
+  },
+  "settings_requestAuthorityConfirm": "提交申请成为权限用户？此请求将由管理员审核。",
+  "@settings_requestAuthorityConfirm": {
+    "description": "申请权限确认消息"
+  },
+  "settings_exitDeveloperModeMessage": "您确定要退出开发者模式吗？您将切换回普通用户角色。",
+  "@settings_exitDeveloperModeMessage": {
+    "description": "退出开发者模式确认消息"
+  },
+  "settings_appInformation": "应用信息",
+  "@settings_appInformation": {
+    "description": "应用信息部分标题"
+  },
+  "profile_username": "用户名",
+  "@profile_username": {
+    "description": "用户名标签"
+  },
+  "profile_language": "语言",
+  "@profile_language": {
+    "description": "语言标签"
+  },
+  "profile_role": "角色",
+  "@profile_role": {
+    "description": "角色标签"
+  },
+  "profile_roleUser": "用户",
+  "@profile_roleUser": {
+    "description": "用户角色标签"
+  },
+  "profile_roleAuthority": "权限用户",
+  "@profile_roleAuthority": {
+    "description": "权限角色标签"
+  },
+  "profile_roleDeveloper": "开发者",
+  "@profile_roleDeveloper": {
+    "description": "开发者角色标签"
+  },
+  "profile_statistics": "统计",
+  "@profile_statistics": {
+    "description": "统计部分标题"
+  },
+  "profile_totalReports": "总报告数",
+  "@profile_totalReports": {
+    "description": "总报告数标签"
+  },
+  "profile_reputation": "声誉",
+  "@profile_reputation": {
+    "description": "声誉标签"
+  },
   "alerts_miles": "英里",
   "@alerts_miles": {
     "description": "英里单位（复数）"
@@ -1517,44 +1613,6 @@
   "@notification_expired": {
     "description": "已过期通知的标签"
   },
-  
-  "profile_username": "用户名",
-  "@profile_username": {
-    "description": "个人资料中的用户名标签"
-  },
-  "profile_language": "语言",
-  "@profile_language": {
-    "description": "个人资料中的语言标签"
-  },
-  "profile_role": "身份",
-  "@profile_role": {
-    "description": "个人资料中的角色标签"
-  },
-  "profile_roleDeveloper": "开发者",
-  "@profile_roleDeveloper": {
-    "description": "开发者角色标签"
-  },
-  "profile_roleAuthority": "管理员",
-  "@profile_roleAuthority": {
-    "description": "管理员角色标签"
-  },
-  "profile_roleUser": "用户",
-  "@profile_roleUser": {
-    "description": "用户角色标签"
-  },
-  "profile_statistics": "统计信息",
-  "@profile_statistics": {
-    "description": "统计信息部分标题"
-  },
-  "profile_totalReports": "总报告数",
-  "@profile_totalReports": {
-    "description": "总报告数标签"
-  },
-  "profile_reputation": "声誉值",
-  "@profile_reputation": {
-    "description": "声誉分数标签"
-  },
-  
   "notification_filter": "筛选",
   "@notification_filter": {
     "description": "筛选标签"

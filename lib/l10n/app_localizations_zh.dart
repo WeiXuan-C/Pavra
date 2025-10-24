@@ -746,6 +746,79 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings_roadDamage => '路面损坏';
 
   @override
+  String get settings_version => '版本';
+
+  @override
+  String get settings_developerMode => '开发者模式';
+
+  @override
+  String get settings_exitDeveloperMode => '退出开发者模式';
+
+  @override
+  String get settings_enterAccessCode => '输入访问代码';
+
+  @override
+  String get settings_accessCodeHint => '输入访问代码';
+
+  @override
+  String get settings_accessCodeIncorrect => '访问代码不正确';
+
+  @override
+  String get settings_developerModeEnabled => '开发者模式已启用';
+
+  @override
+  String get settings_developerModeDisabled => '开发者模式已禁用';
+
+  @override
+  String get settings_authorityWarning => '权限警告';
+
+  @override
+  String get settings_authorityWarningMessage =>
+      '如果您切换到开发者模式，您只能切换回普通用户角色。您的权限身份将被永久删除。您确定要继续吗？';
+
+  @override
+  String get settings_requestAuthority => '申请成为权限用户';
+
+  @override
+  String get settings_requestAuthorityMessage => '您申请成为权限用户的请求已提交审核。';
+
+  @override
+  String get settings_requestAuthorityConfirm => '提交申请成为权限用户？此请求将由管理员审核。';
+
+  @override
+  String get settings_exitDeveloperModeMessage => '您确定要退出开发者模式吗？您将切换回普通用户角色。';
+
+  @override
+  String get settings_appInformation => '应用信息';
+
+  @override
+  String get profile_username => '用户名';
+
+  @override
+  String get profile_language => '语言';
+
+  @override
+  String get profile_role => '角色';
+
+  @override
+  String get profile_roleUser => '用户';
+
+  @override
+  String get profile_roleAuthority => '权限用户';
+
+  @override
+  String get profile_roleDeveloper => '开发者';
+
+  @override
+  String get profile_statistics => '统计';
+
+  @override
+  String get profile_totalReports => '总报告数';
+
+  @override
+  String get profile_reputation => '声誉';
+
+  @override
   String get settings_roadDamageDesc => '坑洞、裂缝和路面问题';
 
   @override
@@ -1137,33 +1210,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get notification_expired => '已过期';
-
-  @override
-  String get profile_username => '用户名';
-
-  @override
-  String get profile_language => '语言';
-
-  @override
-  String get profile_role => '身份';
-
-  @override
-  String get profile_roleDeveloper => '开发者';
-
-  @override
-  String get profile_roleAuthority => '管理员';
-
-  @override
-  String get profile_roleUser => '用户';
-
-  @override
-  String get profile_statistics => '统计信息';
-
-  @override
-  String get profile_totalReports => '总报告数';
-
-  @override
-  String get profile_reputation => '声誉值';
 
   @override
   String get notification_filter => '筛选';

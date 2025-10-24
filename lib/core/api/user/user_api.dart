@@ -165,6 +165,7 @@ class UserApi {
     String? avatarUrl,
     String? language,
     String? themeMode,
+    String? role,
     bool? notificationsEnabled,
   }) async {
     final updates = <String, dynamic>{};
@@ -173,6 +174,7 @@ class UserApi {
     if (avatarUrl != null) updates['avatar_url'] = avatarUrl;
     if (language != null) updates['language'] = language;
     if (themeMode != null) updates['theme_mode'] = themeMode;
+    if (role != null) updates['role'] = role;
     if (notificationsEnabled != null) {
       updates['notifications_enabled'] = notificationsEnabled;
     }
