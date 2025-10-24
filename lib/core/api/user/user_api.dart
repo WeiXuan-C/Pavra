@@ -21,7 +21,6 @@ class UserApi {
     String? avatarUrl,
     String? provider,
     String? providerUserId,
-    String? deviceToken,
   }) async {
     try {
       final data = {
@@ -31,7 +30,6 @@ class UserApi {
         if (avatarUrl != null) 'avatar_url': avatarUrl,
         if (provider != null) 'provider': provider,
         if (providerUserId != null) 'provider_user_id': providerUserId,
-        if (deviceToken != null) 'device_token': deviceToken,
       };
 
       return await _db.insert<Map<String, dynamic>>(
@@ -49,13 +47,30 @@ class UserApi {
   /// 获取用户 profile by ID
   Future<Map<String, dynamic>?> getProfileById(String userId) async {
     try {
-      return await _db.selectSingle(
+      developer.log('=== UserApi.getProfileById ===', name: 'UserApi');
+      developer.log('Querying profiles table for ID: $userId', name: 'UserApi');
+
+      final result = await _db.selectSingle(
         table: _tableName,
         filterColumn: 'id',
         filterValue: userId,
       );
+
+      if (result != null) {
+        developer.log('✅ Profile found', name: 'UserApi');
+        developer.log('Username: ${result['username']}', name: 'UserApi');
+        developer.log('Role: ${result['role']}', name: 'UserApi');
+      } else {
+        developer.log(
+          '⚠️ Profile NOT found (query returned null)',
+          name: 'UserApi',
+        );
+      }
+
+      developer.log('=============================', name: 'UserApi');
+      return result;
     } catch (e) {
-      developer.log('Error fetching profile: $e', name: 'UserApi', error: e);
+      developer.log('❌ Error fetching profile: $e', name: 'UserApi', error: e);
       return null;
     }
   }
@@ -151,7 +166,6 @@ class UserApi {
     String? language,
     String? themeMode,
     bool? notificationsEnabled,
-    String? deviceToken,
   }) async {
     final updates = <String, dynamic>{};
     if (username != null) updates['username'] = username;
@@ -162,7 +176,6 @@ class UserApi {
     if (notificationsEnabled != null) {
       updates['notifications_enabled'] = notificationsEnabled;
     }
-    if (deviceToken != null) updates['device_token'] = deviceToken;
 
     if (updates.isEmpty) {
       throw ArgumentError('No fields to update');
@@ -223,7 +236,6 @@ class UserApi {
     String? avatarUrl,
     String? provider,
     String? providerUserId,
-    String? deviceToken,
   }) async {
     final data = {
       'id': userId,
@@ -232,7 +244,6 @@ class UserApi {
       if (avatarUrl != null) 'avatar_url': avatarUrl,
       if (provider != null) 'provider': provider,
       if (providerUserId != null) 'provider_user_id': providerUserId,
-      if (deviceToken != null) 'device_token': deviceToken,
     };
 
     return await _db.upsert<Map<String, dynamic>>(

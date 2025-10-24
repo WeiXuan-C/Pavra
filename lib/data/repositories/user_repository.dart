@@ -18,7 +18,6 @@ class UserRepository {
     String? avatarUrl,
     String? provider,
     String? providerUserId,
-    String? deviceToken,
   }) async {
     final json = await _userApi.createProfile(
       userId: userId,
@@ -27,7 +26,6 @@ class UserRepository {
       avatarUrl: avatarUrl,
       provider: provider,
       providerUserId: providerUserId,
-      deviceToken: deviceToken,
     );
 
     return UserProfile.fromJson(json);
@@ -86,10 +84,7 @@ class UserRepository {
     String searchTerm, {
     int limit = 10,
   }) async {
-    final jsonList = await _userApi.searchByUsername(
-      searchTerm,
-      limit: limit,
-    );
+    final jsonList = await _userApi.searchByUsername(searchTerm, limit: limit);
 
     return jsonList.map((json) => UserProfile.fromJson(json)).toList();
   }
@@ -111,7 +106,6 @@ class UserRepository {
     String? language,
     String? themeMode,
     bool? notificationsEnabled,
-    String? deviceToken,
   }) async {
     final jsonList = await _userApi.updateProfile(
       userId: userId,
@@ -121,7 +115,6 @@ class UserRepository {
       language: language,
       themeMode: themeMode,
       notificationsEnabled: notificationsEnabled,
-      deviceToken: deviceToken,
     );
 
     // update 返回 list，取第一个
@@ -155,7 +148,6 @@ class UserRepository {
     String? avatarUrl,
     String? provider,
     String? providerUserId,
-    String? deviceToken,
   }) async {
     final jsonList = await _userApi.upsertProfile(
       userId: userId,
@@ -164,7 +156,6 @@ class UserRepository {
       avatarUrl: avatarUrl,
       provider: provider,
       providerUserId: providerUserId,
-      deviceToken: deviceToken,
     );
 
     return UserProfile.fromJson(jsonList.first);
