@@ -60,27 +60,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   /// Check if user can delete a notification
+  /// 规则：所有用户都可以删除（软删除自己的 user_notifications 记录）
   bool _canDeleteNotification(NotificationModel notification) {
-    final authProvider = context.read<AuthProvider>();
-    final currentUserId = authProvider.user?.id;
-    final userRole = authProvider.userProfile?.role.toLowerCase();
-
-    // Only developer or authority can delete
-    if (userRole != 'developer' && userRole != 'authority') {
-      return false;
-    }
-
-    // Must be the creator
-    if (notification.createdBy != currentUserId) {
-      return false;
-    }
-
-    // Check if notification is not expired (sent within last 30 days)
-    final now = DateTime.now();
-    final sentAt = notification.sentAt ?? notification.createdAt;
-    final daysSinceSent = now.difference(sentAt).inDays;
-
-    return daysSinceSent <= 30;
+    // 所有用户都可以删除通知（软删除）
+    return true;
   }
 
   /// Get available filters based on user role
@@ -140,9 +123,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
   ) {
     switch (filter) {
       case NotificationFilter.unread:
-        return !notification.isRead;
+        return !notification.isRead; // ✅ 现在是 non-nullable
       case NotificationFilter.read:
-        return notification.isRead;
+        return notification.isRead; // ✅ 现在是 non-nullable
       case NotificationFilter.sentByMe:
         return notification.createdBy == currentUserId;
       case NotificationFilter.sentToMe:
@@ -622,9 +605,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   /// Handle notification tap
   void _handleNotificationTap(NotificationModel notification) async {
+    final authProvider = context.read<AuthProvider>();
+    final userId = authProvider.user?.id;
+
+    if (userId == null) return;
+
     // Mark as read if unread
     if (!notification.isRead) {
-      await context.read<NotificationProvider>().markAsRead(notification.id);
+      await context.read<NotificationProvider>().markAsRead(
+        notification.id,
+        userId,
+      );
     }
   }
 
@@ -646,9 +637,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
     final messenger = ScaffoldMessenger.of(context);
     final localizations = AppLocalizations.of(context);
     final provider = context.read<NotificationProvider>();
+    final authProvider = context.read<AuthProvider>();
+    final userId = authProvider.user?.id;
 
-    // No need to show dialog here - Dismissible already confirmed
-    await provider.deleteNotification(notificationId);
+    if (userId == null) return;
+
+    // User-level soft delete
+    await provider.deleteNotificationForUser(notificationId, userId);
     if (mounted) {
       messenger.showSnackBar(
         SnackBar(

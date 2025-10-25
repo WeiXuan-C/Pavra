@@ -1,4 +1,10 @@
-CREATE OR REPLACE FUNCTION public.handle_new_user() -- handle_new_oauth_user, handle_confirmed_user
+-- =====================================
+-- FUNCTION: handle_new_user
+-- =====================================
+-- 自动为新用户创建 profile 记录
+-- 触发器：当 auth.users 插入新记录时自动执行
+
+CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -101,8 +107,11 @@ BEGIN
 END;
 $$;
 
+-- 绑定触发器
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW
   EXECUTE FUNCTION public.handle_new_user();
+
+COMMENT ON FUNCTION public.handle_new_user IS '自动为新用户创建 profile 记录';

@@ -38,18 +38,21 @@ class NotificationEndpoint extends Endpoint {
     String type = 'info',
     String? relatedAction,
     Map<String, dynamic>? data,
+    String? createdBy,
   }) async {
     try {
       final oneSignal = _getOneSignalService(session);
 
       // 1. Create notification record in Supabase
       final notificationData = {
-        'user_id': userId,
         'title': title,
         'message': message,
         'type': type,
         'related_action': relatedAction,
         'data': data,
+        'target_type': 'single',
+        'target_user_ids': [userId],
+        'created_by': createdBy,
       };
 
       final notifications =
@@ -96,24 +99,25 @@ class NotificationEndpoint extends Endpoint {
     String type = 'info',
     String? relatedAction,
     Map<String, dynamic>? data,
+    String? createdBy,
   }) async {
     try {
       final oneSignal = _getOneSignalService(session);
 
-      // 1. Create notification records in Supabase for each user
-      final notificationDataList = userIds
-          .map((userId) => {
-                'user_id': userId,
-                'title': title,
-                'message': message,
-                'type': type,
-                'related_action': relatedAction,
-                'data': data,
-              })
-          .toList();
+      // 1. Create single notification record with target_user_ids array
+      final notificationData = {
+        'title': title,
+        'message': message,
+        'type': type,
+        'related_action': relatedAction,
+        'data': data,
+        'target_type': 'custom',
+        'target_user_ids': userIds,
+        'created_by': createdBy,
+      };
 
       final notifications =
-          await _supabase.insert('notifications', notificationDataList);
+          await _supabase.insert('notifications', [notificationData]);
 
       // 2. Send push notification via OneSignal
       try {
@@ -122,6 +126,7 @@ class NotificationEndpoint extends Endpoint {
           title: title,
           message: message,
           data: {
+            'notification_id': notifications.first['id'],
             'type': type,
             ...?data,
           },
@@ -133,8 +138,8 @@ class NotificationEndpoint extends Endpoint {
 
       return {
         'success': true,
-        'count': notifications.length,
-        'notifications': notifications,
+        'count': userIds.length,
+        'notification': notifications.first,
       };
     } catch (e) {
       session.log('❌ Error sending notifications: $e', level: LogLevel.error);
@@ -250,14 +255,13 @@ class NotificationEndpoint extends Endpoint {
   /// and stores in Redis for processing
   Future<Map<String, dynamic>> scheduleNotification(
     Session session, {
-    required String userId,
     required String title,
     required String message,
     required DateTime scheduledAt,
     String type = 'info',
     String? relatedAction,
     Map<String, dynamic>? data,
-    String? targetType,
+    String targetType = 'single',
     List<String>? targetRoles,
     List<String>? targetUserIds,
     String? createdBy,
@@ -265,7 +269,6 @@ class NotificationEndpoint extends Endpoint {
     try {
       // 1. Create notification record in Supabase with 'scheduled' status
       final notificationData = {
-        'user_id': userId,
         'title': title,
         'message': message,
         'type': type,
@@ -273,7 +276,7 @@ class NotificationEndpoint extends Endpoint {
         'data': data,
         'status': 'scheduled',
         'scheduled_at': scheduledAt.toIso8601String(),
-        'target_type': targetType ?? 'single',
+        'target_type': targetType,
         'target_roles': targetRoles,
         'target_user_ids': targetUserIds,
         'created_by': createdBy,
@@ -288,11 +291,12 @@ class NotificationEndpoint extends Endpoint {
           'scheduled_notification:${scheduledAt.millisecondsSinceEpoch}:${notification['id']}';
       final scheduleData = jsonEncode({
         'notification_id': notification['id'],
-        'user_id': userId,
         'title': title,
         'message': message,
         'type': type,
         'data': data,
+        'target_type': targetType,
+        'target_user_ids': targetUserIds,
         'scheduled_at': scheduledAt.toIso8601String(),
       });
 
@@ -330,30 +334,21 @@ class NotificationEndpoint extends Endpoint {
     String? createdBy,
   }) async {
     try {
-      final results = <Map<String, dynamic>>[];
+      // Create single notification with target_user_ids array
+      final result = await scheduleNotification(
+        session,
+        title: title,
+        message: message,
+        scheduledAt: scheduledAt,
+        type: type,
+        relatedAction: relatedAction,
+        data: data,
+        targetType: 'custom',
+        targetUserIds: userIds,
+        createdBy: createdBy,
+      );
 
-      for (final userId in userIds) {
-        final result = await scheduleNotification(
-          session,
-          userId: userId,
-          title: title,
-          message: message,
-          scheduledAt: scheduledAt,
-          type: type,
-          relatedAction: relatedAction,
-          data: data,
-          targetType: 'custom',
-          targetUserIds: userIds,
-          createdBy: createdBy,
-        );
-        results.add(result);
-      }
-
-      return {
-        'success': true,
-        'count': results.length,
-        'results': results,
-      };
+      return result;
     } catch (e) {
       session.log('❌ Error scheduling notifications: $e',
           level: LogLevel.error);
@@ -440,18 +435,21 @@ class NotificationEndpoint extends Endpoint {
       // 3. Send based on target_type
       switch (targetType) {
         case 'single':
-          // Send to single user
-          final userId = notification['user_id'] as String;
-          await oneSignal.sendToUser(
-            userId: userId,
-            title: title,
-            message: message,
-            data: {
-              'notification_id': notificationId,
-              'type': type,
-              ...?data,
-            },
-          );
+          // Send to single user (get from target_user_ids array)
+          final targetUserIds = notification['target_user_ids'] as List?;
+          if (targetUserIds != null && targetUserIds.isNotEmpty) {
+            final userId = targetUserIds.first as String;
+            await oneSignal.sendToUser(
+              userId: userId,
+              title: title,
+              message: message,
+              data: {
+                'notification_id': notificationId,
+                'type': type,
+                ...?data,
+              },
+            );
+          }
           break;
 
         case 'all':
@@ -565,18 +563,47 @@ class NotificationEndpoint extends Endpoint {
       for (final notification in filteredNotifications) {
         try {
           final oneSignal = _getOneSignalService(session);
+          final targetType = notification['target_type'] as String? ?? 'single';
+          final targetUserIds = notification['target_user_ids'] as List?;
 
-          // Send push notification
-          await oneSignal.sendToUser(
-            userId: notification['user_id'],
-            title: notification['title'],
-            message: notification['message'],
-            data: {
-              'notification_id': notification['id'],
-              'type': notification['type'],
-              ...?notification['data'],
-            },
-          );
+          // Send push notification based on target_type
+          if (targetType == 'single' &&
+              targetUserIds != null &&
+              targetUserIds.isNotEmpty) {
+            await oneSignal.sendToUser(
+              userId: targetUserIds.first as String,
+              title: notification['title'],
+              message: notification['message'],
+              data: {
+                'notification_id': notification['id'],
+                'type': notification['type'],
+                ...?notification['data'],
+              },
+            );
+          } else if (targetType == 'custom' &&
+              targetUserIds != null &&
+              targetUserIds.isNotEmpty) {
+            await oneSignal.sendToUsers(
+              userIds: targetUserIds.cast<String>(),
+              title: notification['title'],
+              message: notification['message'],
+              data: {
+                'notification_id': notification['id'],
+                'type': notification['type'],
+                ...?notification['data'],
+              },
+            );
+          } else if (targetType == 'all') {
+            await oneSignal.sendToAll(
+              title: notification['title'],
+              message: notification['message'],
+              data: {
+                'notification_id': notification['id'],
+                'type': notification['type'],
+                ...?notification['data'],
+              },
+            );
+          }
 
           // Update notification status
           await _supabase.update(

@@ -27,6 +27,7 @@ class NotificationBackendApi {
     String type = 'info',
     String? relatedAction,
     Map<String, dynamic>? data,
+    String? createdBy,
   }) async {
     try {
       final response = await http.post(
@@ -39,6 +40,7 @@ class NotificationBackendApi {
           'type': type,
           'relatedAction': relatedAction,
           'data': data,
+          'createdBy': createdBy,
         }),
       );
 

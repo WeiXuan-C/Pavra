@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../supabase/auth_service.dart';
 import '../models/user_model.dart';
 import '../services/action_log_client.dart';
+import '../services/onesignal_service.dart';
 
 /// Authentication Provider
 /// Manages authentication state and provides methods for auth operations
@@ -72,6 +73,20 @@ class AuthProvider with ChangeNotifier {
         await _authService.createProfileIfNotExists(_user!);
         await _loadUserProfile();
 
+        // 🔔 Set OneSignal External User ID
+        try {
+          await OneSignalService().setExternalUserId(_user!.id);
+          developer.log(
+            '✓ OneSignal External User ID set: ${_user!.id}',
+            name: 'AuthProvider',
+          );
+        } catch (e) {
+          developer.log(
+            '⚠️ Failed to set OneSignal External User ID: $e',
+            name: 'AuthProvider',
+          );
+        }
+
         // 🔥 Log sign-in action to backend
         _actionLog.logSignIn(
           userId: _user!.id,
@@ -86,6 +101,20 @@ class AuthProvider with ChangeNotifier {
       // 🔥 Log sign-out action to backend
       if (_user != null) {
         _actionLog.logSignOut(userId: _user!.id, email: _user!.email);
+      }
+
+      // 🔔 Remove OneSignal External User ID
+      try {
+        await OneSignalService().removeExternalUserId();
+        developer.log(
+          '✓ OneSignal External User ID removed',
+          name: 'AuthProvider',
+        );
+      } catch (e) {
+        developer.log(
+          '⚠️ Failed to remove OneSignal External User ID: $e',
+          name: 'AuthProvider',
+        );
       }
 
       _user = null;

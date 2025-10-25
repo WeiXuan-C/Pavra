@@ -73,8 +73,11 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
     );
     _selectedActionLogId = widget.notification?.relatedAction;
     _selectedType = widget.notification?.type ?? 'info';
-    _selectedStatus = 'sent'; // Default to sent for immediate notifications
-    _selectedTargetType = 'single'; // Default to single user
+    _selectedStatus = widget.notification?.status ?? 'sent';
+    _selectedTargetType = widget.notification?.targetType ?? 'single';
+    _selectedRoles = widget.notification?.targetRoles ?? [];
+    _selectedUserIds = widget.notification?.targetUserIds ?? [];
+    _scheduledDateTime = widget.notification?.scheduledAt;
 
     // 如果是 single 或 custom，默认展开用户列表
     _isUserListExpanded =
@@ -1028,7 +1031,6 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
       } else {
         // Create new notification
         await provider.createNotification(
-          userId: userId,
           createdBy: userId, // 记录创建者
           title: _titleController.text.trim(),
           message: _messageController.text.trim(),
@@ -1039,6 +1041,9 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
               : null,
           relatedAction: _selectedActionLogId,
           data: parsedData,
+          targetType: _selectedTargetType,
+          targetRoles: _selectedRoles.isNotEmpty ? _selectedRoles : null,
+          targetUserIds: _selectedUserIds.isNotEmpty ? _selectedUserIds : null,
         );
       }
 

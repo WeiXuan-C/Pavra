@@ -23,141 +23,136 @@ class NotificationItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isUnread = !notification.isRead;
+    final isUnread = !notification.isRead; // ✅ 现在是 non-nullable
 
     final child = InkWell(
-        onTap: onTap,
-        onLongPress: onEdit,
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: isUnread
-                ? theme.colorScheme.primaryContainer.withValues(alpha: 0.1)
-                : Colors.transparent,
-            border: Border(
-              left: BorderSide(
-                color: _getTypeColor(notification.type),
-                width: 4,
-              ),
-            ),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Icon
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _getTypeColor(
-                    notification.type,
-                  ).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  _getTypeIcon(notification.type),
-                  color: _getTypeColor(notification.type),
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 12),
-
-              // Content
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            notification.title,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: isUnread
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (isUnread)
-                          Container(
-                            width: 8,
-                            height: 8,
-                            margin: const EdgeInsets.only(left: 8),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-
-                    // Message
-                    Text(
-                      notification.message,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.textTheme.bodySmall?.color,
-                      ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-
-                    // Time and type
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.access_time,
-                          size: 14,
-                          color: theme.textTheme.bodySmall?.color,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          timeago.format(notification.createdAt),
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        const SizedBox(width: 12),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _getTypeColor(
-                              notification.type,
-                            ).withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            _getTypeLabel(context, notification.type),
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: _getTypeColor(notification.type),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              // Edit button
-              if (onEdit != null)
-                IconButton(
-                  icon: const Icon(Icons.edit, size: 20),
-                  onPressed: onEdit,
-                  tooltip: AppLocalizations.of(context).notification_edit,
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-            ],
+      onTap: onTap,
+      onLongPress: onEdit,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isUnread
+              ? theme.colorScheme.primaryContainer.withValues(alpha: 0.1)
+              : Colors.transparent,
+          border: Border(
+            left: BorderSide(color: _getTypeColor(notification.type), width: 4),
           ),
         ),
-      );
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Icon
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: _getTypeColor(notification.type).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                _getTypeIcon(notification.type),
+                color: _getTypeColor(notification.type),
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+
+            // Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          notification.title,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: isUnread
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      if (isUnread)
+                        Container(
+                          width: 8,
+                          height: 8,
+                          margin: const EdgeInsets.only(left: 8),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+
+                  // Message
+                  Text(
+                    notification.message,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.textTheme.bodySmall?.color,
+                    ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Time and type
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.access_time,
+                        size: 14,
+                        color: theme.textTheme.bodySmall?.color,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        timeago.format(notification.createdAt),
+                        style: theme.textTheme.bodySmall,
+                      ),
+                      const SizedBox(width: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _getTypeColor(
+                            notification.type,
+                          ).withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          _getTypeLabel(context, notification.type),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: _getTypeColor(notification.type),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // Edit button
+            if (onEdit != null)
+              IconButton(
+                icon: const Icon(Icons.edit, size: 20),
+                onPressed: onEdit,
+                tooltip: AppLocalizations.of(context).notification_edit,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+          ],
+        ),
+      ),
+    );
 
     // Only wrap with Dismissible if user can delete
     if (canDelete && onDelete != null) {

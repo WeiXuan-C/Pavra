@@ -19,20 +19,15 @@ class NotificationProvider extends ChangeNotifier {
   int get unreadCount => _unreadCount;
 
   /// Load notifications for a user
-  /// For developers: loads ALL notifications
-  /// For others: loads only notifications sent to them
+  /// 所有用户都通过 user_notifications 表查询
   Future<void> loadNotifications(String userId, {String? userRole}) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      // Developer can see all notifications (RLS policy allows this)
-      if (userRole?.toLowerCase() == 'developer') {
-        _notifications = await _repository.getAllNotifications();
-      } else {
-        _notifications = await _repository.getUserNotifications(userId: userId);
-      }
+      // 所有用户都使用相同的查询（通过 user_notifications）
+      _notifications = await _repository.getUserNotifications(userId: userId);
       _unreadCount = await _repository.getUnreadCount(userId);
       _error = null;
     } catch (e) {
@@ -45,14 +40,20 @@ class NotificationProvider extends ChangeNotifier {
   }
 
   /// Mark notification as read
-  Future<void> markAsRead(String notificationId) async {
+  Future<void> markAsRead(String notificationId, String userId) async {
     try {
-      await _repository.markAsRead(notificationId);
+      await _repository.markAsRead(
+        notificationId: notificationId,
+        userId: userId,
+      );
 
       // Update local state
       final index = _notifications.indexWhere((n) => n.id == notificationId);
       if (index != -1) {
-        _notifications[index] = _notifications[index].copyWith(isRead: true);
+        _notifications[index] = _notifications[index].copyWith(
+          isRead: true,
+          readAt: DateTime.now(),
+        );
         _unreadCount = (_unreadCount - 1).clamp(0, double.infinity).toInt();
         notifyListeners();
       }
@@ -69,7 +70,7 @@ class NotificationProvider extends ChangeNotifier {
 
       // Update local state
       _notifications = _notifications
-          .map((n) => n.copyWith(isRead: true))
+          .map((n) => n.copyWith(isRead: true, readAt: DateTime.now()))
           .toList();
       _unreadCount = 0;
       notifyListeners();
@@ -79,10 +80,16 @@ class NotificationProvider extends ChangeNotifier {
     }
   }
 
-  /// Delete notification
-  Future<void> deleteNotification(String notificationId) async {
+  /// Delete notification for user (soft delete)
+  Future<void> deleteNotificationForUser(
+    String notificationId,
+    String userId,
+  ) async {
     try {
-      await _repository.deleteNotification(notificationId);
+      await _repository.deleteNotificationForUser(
+        notificationId: notificationId,
+        userId: userId,
+      );
 
       // Remove from local state
       _notifications.removeWhere((n) => n.id == notificationId);
@@ -93,17 +100,16 @@ class NotificationProvider extends ChangeNotifier {
     }
   }
 
-  /// Delete all notifications
-  Future<void> deleteAllNotifications(String userId) async {
+  /// Delete notification (admin - hard delete)
+  Future<void> deleteNotification(String notificationId) async {
     try {
-      await _repository.deleteAllNotifications(userId);
+      await _repository.deleteNotification(notificationId: notificationId);
 
-      // Clear local state
-      _notifications.clear();
-      _unreadCount = 0;
+      // Remove from local state
+      _notifications.removeWhere((n) => n.id == notificationId);
       notifyListeners();
     } catch (e) {
-      _logger.e('Error deleting all notifications', error: e);
+      _logger.e('Error deleting notification', error: e);
       rethrow;
     }
   }
@@ -115,7 +121,6 @@ class NotificationProvider extends ChangeNotifier {
 
   /// Create a new notification
   Future<NotificationModel> createNotification({
-    required String userId,
     required String createdBy,
     required String title,
     required String message,
@@ -124,10 +129,12 @@ class NotificationProvider extends ChangeNotifier {
     DateTime? scheduledAt,
     String? relatedAction,
     Map<String, dynamic>? data,
+    String targetType = 'single',
+    List<String>? targetRoles,
+    List<String>? targetUserIds,
   }) async {
     try {
       final notification = await _repository.createNotification(
-        userId: userId,
         createdBy: createdBy,
         title: title,
         message: message,
@@ -136,6 +143,9 @@ class NotificationProvider extends ChangeNotifier {
         scheduledAt: scheduledAt,
         relatedAction: relatedAction,
         data: data,
+        targetType: targetType,
+        targetRoles: targetRoles,
+        targetUserIds: targetUserIds,
       );
 
       // Add to local state
@@ -155,9 +165,9 @@ class NotificationProvider extends ChangeNotifier {
   /// Update an existing notification
   Future<NotificationModel> updateNotification({
     required String notificationId,
-    String? title,
-    String? message,
-    String? type,
+    required String title,
+    required String message,
+    required String type,
     String? relatedAction,
     Map<String, dynamic>? data,
   }) async {
