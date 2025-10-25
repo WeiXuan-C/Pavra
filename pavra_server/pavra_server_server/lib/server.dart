@@ -155,12 +155,21 @@ Future<void> _initializeSupabase(Serverpod pod, DotEnv? dotenv) async {
 /// ✅ OneSignal credentials initialization
 void _initializeOneSignal(Serverpod pod, DotEnv? dotenv) {
   try {
-    final appId =
-        Platform.environment['ONESIGNAL_APP_ID'] ?? dotenv?['ONESIGNAL_APP_ID'];
-    final apiKey = Platform.environment['ONESIGNAL_API_KEY'] ??
-        dotenv?['ONESIGNAL_API_KEY'];
+    // Try to get from passwords.yaml first, then fall back to environment variables
+    var appId = pod.getPassword('oneSignalAppId');
+    var apiKey = pod.getPassword('oneSignalApiKey');
 
-    if (appId == null || apiKey == null) {
+    // If not in passwords.yaml, try environment variables
+    if (appId == null || appId.isEmpty || appId.startsWith('\${')) {
+      appId = Platform.environment['ONESIGNAL_APP_ID'] ??
+          dotenv?['ONESIGNAL_APP_ID'];
+    }
+    if (apiKey == null || apiKey.isEmpty || apiKey.startsWith('\${')) {
+      apiKey = Platform.environment['ONESIGNAL_API_KEY'] ??
+          dotenv?['ONESIGNAL_API_KEY'];
+    }
+
+    if (appId == null || apiKey == null || appId.isEmpty || apiKey.isEmpty) {
       PLog.warn(
           '⚠️ OneSignal credentials not found. Push notifications will be disabled.');
       PLog.warn('   Please set: ONESIGNAL_APP_ID and ONESIGNAL_API_KEY');
@@ -169,6 +178,7 @@ void _initializeOneSignal(Serverpod pod, DotEnv? dotenv) {
 
     PLog.info('✅ OneSignal credentials loaded successfully');
     PLog.info('   App ID: ${appId.substring(0, 8)}...');
+    PLog.info('   API Key: ${apiKey.substring(0, 10)}...');
   } catch (e, stack) {
     PLog.error('❌ Failed to initialize OneSignal credentials.', e, stack);
   }

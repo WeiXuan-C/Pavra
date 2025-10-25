@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:serverpod/serverpod.dart';
 import '../services/upstash_redis_service.dart';
 import '../services/supabase_service.dart';
@@ -198,8 +199,23 @@ class ScheduledNotificationTask extends FutureCall {
 
   /// Get OneSignal service instance
   OneSignalService _getOneSignalService(Session session) {
-    final appId = session.serverpod.getPassword('oneSignalAppId') ?? '';
-    final apiKey = session.serverpod.getPassword('oneSignalApiKey') ?? '';
+    // Try to get from passwords.yaml first
+    var appId = session.serverpod.getPassword('oneSignalAppId');
+    var apiKey = session.serverpod.getPassword('oneSignalApiKey');
+
+    // If not in passwords.yaml or contains placeholder, try environment variables
+    if (appId == null || appId.isEmpty || appId.startsWith('\${')) {
+      appId = Platform.environment['ONESIGNAL_APP_ID'] ?? '';
+    }
+    if (apiKey == null || apiKey.isEmpty || apiKey.startsWith('\${')) {
+      apiKey = Platform.environment['ONESIGNAL_API_KEY'] ?? '';
+    }
+
+    if (appId.isEmpty || apiKey.isEmpty) {
+      PLog.warn(
+        '⚠️ OneSignal credentials not configured. Push notifications will not be sent.',
+      );
+    }
 
     return OneSignalService(
       appId: appId,

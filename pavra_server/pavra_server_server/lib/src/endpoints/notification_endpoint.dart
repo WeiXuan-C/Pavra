@@ -1,8 +1,9 @@
+import 'dart:io';
+import 'dart:convert';
 import 'package:serverpod/serverpod.dart';
 import '../services/onesignal_service.dart';
 import '../services/supabase_service.dart';
 import '../services/upstash_redis_service.dart';
-import 'dart:convert';
 
 /// Endpoint for notification operations
 ///
@@ -12,8 +13,24 @@ import 'dart:convert';
 class NotificationEndpoint extends Endpoint {
   /// Get OneSignal service instance with credentials from server
   OneSignalService _getOneSignalService(Session session) {
-    final appId = session.serverpod.getPassword('oneSignalAppId') ?? '';
-    final apiKey = session.serverpod.getPassword('oneSignalApiKey') ?? '';
+    // Try to get from passwords.yaml first
+    var appId = session.serverpod.getPassword('oneSignalAppId');
+    var apiKey = session.serverpod.getPassword('oneSignalApiKey');
+
+    // If not in passwords.yaml or contains placeholder, try environment variables
+    if (appId == null || appId.isEmpty || appId.startsWith('\${')) {
+      appId = Platform.environment['ONESIGNAL_APP_ID'] ?? '';
+    }
+    if (apiKey == null || apiKey.isEmpty || apiKey.startsWith('\${')) {
+      apiKey = Platform.environment['ONESIGNAL_API_KEY'] ?? '';
+    }
+
+    if (appId.isEmpty || apiKey.isEmpty) {
+      session.log(
+        '⚠️ OneSignal credentials not configured. Push notifications will not be sent.',
+        level: LogLevel.warning,
+      );
+    }
 
     return OneSignalService(
       appId: appId,
