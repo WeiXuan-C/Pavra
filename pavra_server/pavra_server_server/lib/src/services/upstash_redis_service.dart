@@ -7,14 +7,9 @@ import '../../server.dart';
 class UpstashRedisService {
   static UpstashRedisService? _instance;
 
-  static UpstashRedisService get instance {
-    if (_instance == null) {
-      throw StateError(
-        'UpstashRedisService not initialized. Call UpstashRedisService.initialize() first.',
-      );
-    }
-    return _instance!;
-  }
+  static UpstashRedisService? get instance => _instance;
+
+  static bool get isInitialized => _instance != null;
 
   final String restUrl;
   final String restToken;

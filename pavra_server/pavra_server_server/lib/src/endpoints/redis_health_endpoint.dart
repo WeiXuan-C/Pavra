@@ -22,8 +22,17 @@ class RedisHealthEndpoint extends Endpoint {
     };
 
     try {
+      final redis = UpstashRedisService.instance;
+
+      if (redis == null) {
+        result['error'] =
+            'UpstashRedisService not initialized. Check credentials.';
+        session.log('Upstash Redis not initialized', level: LogLevel.warning);
+        return result;
+      }
+
       // Test PING
-      final pingResult = await UpstashRedisService.instance.ping();
+      final pingResult = await redis.ping();
       result['connected'] = pingResult;
 
       if (!result['connected']) {
@@ -35,16 +44,15 @@ class RedisHealthEndpoint extends Endpoint {
       final testKey = 'health_check:${DateTime.now().millisecondsSinceEpoch}';
       final testValue = 'test_value';
 
-      await UpstashRedisService.instance
-          .set(testKey, testValue, expireSeconds: 10);
+      await redis.set(testKey, testValue, expireSeconds: 10);
       result['writeTest'] = true;
 
       // Test read operation
-      final readValue = await UpstashRedisService.instance.get(testKey);
+      final readValue = await redis.get(testKey);
       result['readTest'] = readValue == testValue;
 
       // Clean up
-      await UpstashRedisService.instance.delete(testKey);
+      await redis.delete(testKey);
 
       session.log('Upstash Redis health check passed');
     } catch (e) {
@@ -58,10 +66,21 @@ class RedisHealthEndpoint extends Endpoint {
 
   /// Get Upstash Redis connection info (without sensitive data).
   Future<Map<String, dynamic>> info(Session session) async {
+    final redis = UpstashRedisService.instance;
+
+    if (redis == null) {
+      return {
+        'type': 'Upstash Redis REST API',
+        'initialized': false,
+        'error': 'Service not initialized',
+      };
+    }
+
     return {
       'type': 'Upstash Redis REST API',
-      'restUrl': UpstashRedisService.instance.restUrl,
-      'hasToken': UpstashRedisService.instance.restToken.isNotEmpty,
+      'initialized': true,
+      'restUrl': redis.restUrl,
+      'hasToken': redis.restToken.isNotEmpty,
     };
   }
 }

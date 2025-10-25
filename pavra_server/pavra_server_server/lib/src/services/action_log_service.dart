@@ -6,7 +6,7 @@ import 'supabase_service.dart';
 /// Action Log Service - Handles logging user actions to Upstash Redis and syncing to Supabase
 class ActionLogService {
   final SupabaseService supabase;
-  final UpstashRedisService redis;
+  final UpstashRedisService? redis;
 
   ActionLogService()
       : supabase = SupabaseService.instance,
@@ -21,6 +21,12 @@ class ActionLogService {
     String? description,
     Map<String, dynamic>? metadata,
   }) async {
+    if (redis == null) {
+      PLog.warn(
+          'UpstashRedisService not initialized. Action logging is disabled.');
+      return;
+    }
+
     try {
       final logEntry = <String, dynamic>{
         if (userId != null) 'user_id': userId, // Only include if provided
@@ -37,7 +43,7 @@ class ActionLogService {
       final queueKey = 'action_logs:queue';
       final logJson = jsonEncode(logEntry);
 
-      await redis.lpush(queueKey, logJson);
+      await redis!.lpush(queueKey, logJson);
 
       PLog.info(
           'Action logged to Upstash Redis: $action${userId != null ? ' by user $userId' : ''}');
@@ -48,6 +54,12 @@ class ActionLogService {
 
   /// Flush logs from Redis to Supabase
   Future<int> flushLogsToSupabase({int batchSize = 100}) async {
+    if (redis == null) {
+      PLog.warn(
+          'UpstashRedisService not initialized. Cannot flush logs to Supabase.');
+      return 0;
+    }
+
     int syncedCount = 0;
 
     try {
@@ -57,7 +69,7 @@ class ActionLogService {
 
       for (int i = 0; i < batchSize; i++) {
         // Pop from the right side of the list (FIFO queue)
-        final logJson = await redis.rpop(queueKey);
+        final logJson = await redis!.rpop(queueKey);
         if (logJson == null) break;
 
         Map<String, dynamic> log;
@@ -79,7 +91,7 @@ class ActionLogService {
           PLog.error('Failed to sync log to Supabase, re-queuing', e);
           // Re-queue the failed log (with is_synced = false)
           log['is_synced'] = false;
-          await redis.lpush(queueKey, jsonEncode(log));
+          await redis!.lpush(queueKey, jsonEncode(log));
           break; // Stop processing to avoid cascading failures
         }
       }
@@ -118,9 +130,13 @@ class ActionLogService {
     final health = <String, bool>{};
 
     // Check Upstash Redis
-    try {
-      health['upstash_redis'] = await redis.ping();
-    } catch (e) {
+    if (redis != null) {
+      try {
+        health['upstash_redis'] = await redis!.ping();
+      } catch (e) {
+        health['upstash_redis'] = false;
+      }
+    } else {
       health['upstash_redis'] = false;
     }
 
