@@ -100,6 +100,99 @@ CREATE TABLE IF NOT EXISTS public.user_notifications (
 );
 
 -- =====================================
+-- REPORT ISSUES TABLE 
+-- =====================================
+
+CREATE TABLE IF NOT EXISTS public.report_issues (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT,                                  -- 由AI或用户生成的标题
+  description TEXT,                            -- 用户描述，可为空
+  issue_type_ids UUID[] DEFAULT '{}',          -- 多选的 issue type ID
+  severity TEXT CHECK (
+    severity IN ('minor', 'low', 'moderate', 'high', 'critical')
+  ) DEFAULT 'moderate',
+  address TEXT,                                -- 详细地址
+  latitude DOUBLE PRECISION,
+  longitude DOUBLE PRECISION,
+  status TEXT DEFAULT 'draft' CHECK (
+    status IN ('draft', 'submitted', 'reviewed', 'spam', 'discard')
+  ),
+  reviewed_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,  -- Authority 审核人
+  reviewed_comment TEXT,                     -- Authority 备注
+  reviewed_at TIMESTAMPTZ,    
+  verified_votes INT DEFAULT 0,              -- 用户确认“报告真实”的票数
+  spam_votes INT DEFAULT 0,    
+  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  deleted_at TIMESTAMPTZ,
+  is_deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS public.issue_photos (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  issue_id UUID REFERENCES report_issues(id) ON DELETE CASCADE,
+  photo_url TEXT NOT NULL,                     -- Supabase Storage 路径或公开URL
+  photo_type TEXT DEFAULT 'main' CHECK (
+    photo_type IN ('main', 'additional', 'reviewed', 'ai_reference')
+  ),                                           -- 区分主图、附图、审核图、AI图
+  is_primary BOOLEAN DEFAULT FALSE,            -- 是否主图（用户上传的首图）
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  deleted_at TIMESTAMPTZ,
+  is_deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS public.issue_types (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT UNIQUE NOT NULL,
+  description TEXT,
+  icon_url TEXT,                         -- 可选：用于前端展示
+  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  deleted_at TIMESTAMPTZ,
+  is_deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS public.issue_votes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  issue_id UUID REFERENCES report_issues(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  vote_type TEXT CHECK (vote_type IN ('verify', 'spam')),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(issue_id, user_id, vote_type)
+);
+
+CREATE TABLE IF NOT EXISTS public.ai_detection (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  issue_id UUID REFERENCES report_issues(id) ON DELETE CASCADE,
+  model_name TEXT,
+  detected_objects JSONB DEFAULT '{}',       -- 检测到的物体与置信度
+  confidence_score DOUBLE PRECISION,
+  analyzed_at TIMESTAMPTZ DEFAULT now(),
+  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  deleted_at TIMESTAMPTZ,
+  is_deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS public.ai_descriptions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  issue_id UUID REFERENCES report_issues(id) ON DELETE CASCADE,
+  model_name TEXT,                            -- 用哪个 AI 模型生成 (e.g. "GPT-5", "Gemini-2")
+  generated_description JSONB DEFAULT '{}',        -- 生成的完整文字描述
+  confidence_score DOUBLE PRECISION,          -- 模型生成的自信度（可选）
+  language TEXT DEFAULT 'en',                 -- 支持多语言输出（en, zh 等）
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  deleted_at TIMESTAMPTZ,
+  is_deleted BOOLEAN DEFAULT FALSE
+);
+
+-- =====================================
 -- INDEXES
 -- =====================================
 
@@ -127,6 +220,13 @@ CREATE INDEX IF NOT EXISTS idx_notifications_is_deleted ON public.notifications(
 CREATE INDEX IF NOT EXISTS idx_user_notifications_user_id ON public.user_notifications(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_notifications_notification_id ON public.user_notifications(notification_id);
 CREATE INDEX IF NOT EXISTS idx_user_notifications_unread ON public.user_notifications(user_id, is_read) WHERE is_deleted = FALSE;
+
+CREATE INDEX IF NOT EXISTS idx_report_issues_status ON public.report_issues(status);
+CREATE INDEX IF NOT EXISTS idx_report_issues_severity ON public.report_issues(severity);
+CREATE INDEX IF NOT EXISTS idx_report_issues_created_by ON public.report_issues(created_by);
+CREATE INDEX IF NOT EXISTS idx_report_issues_reviewed_by ON public.report_issues(reviewed_by);
+CREATE INDEX IF NOT EXISTS idx_report_issues_location ON public.report_issues(latitude, longitude);
+CREATE INDEX IF NOT EXISTS idx_report_issues_issue_type_ids ON public.report_issues USING GIN(issue_type_ids);
 
 -- =====================================
 -- 说明

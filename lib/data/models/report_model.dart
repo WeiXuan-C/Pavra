@@ -1,5 +1,8 @@
 import '../../core/models/user_model.dart';
 
+/// Legacy Report Model - Deprecated
+/// Use ReportIssueModel instead
+@Deprecated('Use ReportIssueModel from data/models/report_issue_model.dart')
 class ReportModel {
   final String id;
   final UserModel reporter;
