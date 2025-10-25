@@ -2515,6 +2515,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All Users'**
   String get notification_filterAllUsers;
+
+  /// Notifications that you personally created.
+  ///
+  /// In en, this message translates to:
+  /// **'Created by Me'**
+  String get notification_createdByMe;
+
+  /// Notification is still being prepared and not yet sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get notification_statusDraft;
+
+  /// Notification has been scheduled for future delivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get notification_statusScheduled;
+
+  /// Notification failed to send due to an error.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get notification_statusFailed;
+
+  /// Notification has been successfully sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get notification_statusSent;
 }
 
 class _AppLocalizationsDelegate

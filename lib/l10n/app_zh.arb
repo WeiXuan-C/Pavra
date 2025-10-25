@@ -1632,6 +1632,25 @@
   "notification_filterAllUsers": "所有人的",
   "@notification_filterAllUsers": {
     "description": "所有用户的通知筛选（仅开发者）"
+  },
+  "notification_createdByMe": "我创建的",
+  "@notification_createdByMe": {
+    "description": "由你亲自创建的通知。"
+  },
+  "notification_statusDraft": "草稿",
+  "@notification_statusDraft": {
+    "description": "通知仍在编辑中，尚未发送。"
+  },
+  "notification_statusScheduled": "已排程",
+  "@notification_statusScheduled": {
+    "description": "通知已设定将在未来时间发送。"
+  },
+  "notification_statusFailed": "发送失败",
+  "@notification_statusFailed": {
+    "description": "通知因错误而未能发送。"
+  },
+  "notification_statusSent": "已发送",
+  "@notification_statusSent": {
+    "description": "通知已成功发送给收件人。"
   }
-
 }

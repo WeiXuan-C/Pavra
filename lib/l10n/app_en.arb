@@ -1631,5 +1631,25 @@
   "notification_filterAllUsers": "All Users",
   "@notification_filterAllUsers": {
     "description": "Filter for all users' notifications (developer only)"
+  },
+  "notification_createdByMe": "Created by Me",
+  "@notification_createdByMe": {
+    "description": "Notifications that you personally created."
+  },
+  "notification_statusDraft": "Draft",
+  "@notification_statusDraft": {
+    "description": "Notification is still being prepared and not yet sent."
+  },
+  "notification_statusScheduled": "Scheduled",
+  "@notification_statusScheduled": {
+    "description": "Notification has been scheduled for future delivery."
+  },
+  "notification_statusFailed": "Failed",
+  "@notification_statusFailed": {
+    "description": "Notification failed to send due to an error."
+  },
+  "notification_statusSent": "Sent",
+  "@notification_statusSent": {
+    "description": "Notification has been successfully sent."
   }
 }

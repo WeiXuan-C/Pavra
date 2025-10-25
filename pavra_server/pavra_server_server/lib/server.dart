@@ -7,8 +7,8 @@ import 'src/generated/protocol.dart';
 import 'src/generated/endpoints.dart';
 import 'src/services/supabase_service.dart';
 import 'src/services/upstash_redis_service.dart';
+import 'src/services/qstash_service.dart';
 import 'src/tasks/sync_action_logs.dart';
-import 'src/tasks/scheduled_notification_task.dart';
 
 /// ✅ Declare all future calls here to avoid undefined reference issues.
 enum FutureCallNames { birthdayReminder, actionLogSync }
@@ -79,8 +79,8 @@ void run(List<String> args) async {
   // 5️⃣ Start background task: Action Log Sync
   await initializeActionLogSync(pod);
 
-  // 6️⃣ Start background task: Scheduled Notifications
-  await _initializeScheduledNotifications(pod);
+  // 6️⃣ Initialize QStash service
+  await _initializeQStash(dotenv);
 
   // 7️⃣ Setup web routes
   pod.webServer.addRoute(RouteRoot(), '/');
@@ -184,13 +184,30 @@ void _initializeOneSignal(Serverpod pod, DotEnv? dotenv) {
   }
 }
 
-/// ✅ Initialize scheduled notification task
-Future<void> _initializeScheduledNotifications(Serverpod pod) async {
+/// ✅ Initialize QStash service
+Future<void> _initializeQStash(DotEnv? dotenv) async {
   try {
-    PLog.info('🔔 Initializing scheduled notification task...');
-    await initializeScheduledNotificationTask(pod);
-    PLog.info('✅ Scheduled notification task initialized successfully');
+    final qstashUrl =
+        Platform.environment['QSTASH_URL'] ?? dotenv?['QSTASH_URL'];
+    final qstashToken =
+        Platform.environment['QSTASH_TOKEN'] ?? dotenv?['QSTASH_TOKEN'];
+
+    if (qstashUrl == null || qstashToken == null || qstashToken.isEmpty) {
+      PLog.warn(
+          '⚠️ QStash credentials not found. Scheduled notifications will be disabled.');
+      PLog.warn('   Please set: QSTASH_URL and QSTASH_TOKEN');
+      return;
+    }
+
+    PLog.info('🔔 Initializing QStash service...');
+    // QStash service is initialized via singleton pattern
+    QStashService.instance;
+    PLog.info('✅ QStash service initialized successfully');
+    PLog.info('   URL: $qstashUrl');
+    PLog.info('   Token: ${qstashToken.substring(0, 10)}...');
+    PLog.info(
+        '   Webhook endpoint: /qstashWebhook/processScheduledNotification');
   } catch (e, stack) {
-    PLog.error('❌ Failed to initialize scheduled notification task.', e, stack);
+    PLog.error('❌ Failed to initialize QStash service.', e, stack);
   }
 }

@@ -45,20 +45,24 @@ BEGIN
   -- 根据 target_type 确定目标用户列表
   CASE NEW.target_type
     WHEN 'single', 'custom' THEN
-      -- 直接使用指定的用户 ID 列表
-      user_ids := NEW.target_user_ids;
+      -- 直接使用指定的用户 ID 列表，但排除创建者本人
+      SELECT ARRAY_AGG(id) INTO user_ids
+      FROM UNNEST(NEW.target_user_ids) AS id
+      WHERE id != NEW.created_by OR NEW.created_by IS NULL;
       
     WHEN 'role' THEN
-      -- 查询指定角色的所有用户
+      -- 查询指定角色的所有用户，但排除创建者本人
       SELECT ARRAY_AGG(id) INTO user_ids
       FROM auth.users u
       JOIN public.profiles p ON u.id = p.id
-      WHERE p.role = ANY(NEW.target_roles);
+      WHERE p.role = ANY(NEW.target_roles)
+        AND (u.id != NEW.created_by OR NEW.created_by IS NULL);
       
     WHEN 'all' THEN
-      -- 获取所有用户
+      -- 获取所有用户，但排除创建者本人
       SELECT ARRAY_AGG(id) INTO user_ids
-      FROM auth.users;
+      FROM auth.users
+      WHERE id != NEW.created_by OR NEW.created_by IS NULL;
       
     ELSE
       -- 未知类型，不创建记录

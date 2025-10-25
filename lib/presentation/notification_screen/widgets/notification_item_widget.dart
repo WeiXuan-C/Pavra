@@ -10,6 +10,7 @@ class NotificationItemWidget extends StatelessWidget {
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
   final bool canDelete;
+  final String? currentUserId;
 
   const NotificationItemWidget({
     super.key,
@@ -18,12 +19,17 @@ class NotificationItemWidget extends StatelessWidget {
     this.onEdit,
     this.onDelete,
     this.canDelete = false,
+    this.currentUserId,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isUnread = !notification.isRead; // ✅ 现在是 non-nullable
+    // 只有来自 user_notifications 的通知才显示未读状态
+    // 来自 notifications 表的通知（我创建的）不显示未读小黄点
+    final isUnread =
+        notification.source == NotificationSource.userNotifications &&
+        !notification.isRead;
 
     final child = InkWell(
       onTap: onTap,
@@ -101,20 +107,27 @@ class NotificationItemWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
 
-                  // Time and type
-                  Row(
+                  // Time, type, and creator badge
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      Icon(
-                        Icons.access_time,
-                        size: 14,
-                        color: theme.textTheme.bodySmall?.color,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.access_time,
+                            size: 14,
+                            color: theme.textTheme.bodySmall?.color,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            timeago.format(notification.createdAt),
+                            style: theme.textTheme.bodySmall,
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 4),
-                      Text(
-                        timeago.format(notification.createdAt),
-                        style: theme.textTheme.bodySmall,
-                      ),
-                      const SizedBox(width: 12),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
@@ -134,6 +147,68 @@ class NotificationItemWidget extends StatelessWidget {
                           ),
                         ),
                       ),
+                      // Creator badge
+                      if (_isCreatedByMe())
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.secondary.withValues(
+                              alpha: 0.1,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: theme.colorScheme.secondary.withValues(
+                                alpha: 0.3,
+                              ),
+                              width: 1,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.person,
+                                size: 12,
+                                color: theme.colorScheme.secondary,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                AppLocalizations.of(
+                                  context,
+                                ).notification_createdByMe,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.secondary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      // Status badge (draft/scheduled)
+                      if (notification.status != 'sent' &&
+                          notification.status != 'failed')
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _getStatusColor(
+                              notification.status,
+                            ).withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            _getStatusLabel(context, notification.status),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: _getStatusColor(notification.status),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ],
@@ -276,6 +351,43 @@ class NotificationItemWidget extends StatelessWidget {
         return l10n.notification_typeReminder;
       default:
         return l10n.notification_typeInfo;
+    }
+  }
+
+  /// Check if notification was created by current user
+  bool _isCreatedByMe() {
+    if (currentUserId == null || notification.createdBy == null) {
+      return false;
+    }
+    return notification.createdBy == currentUserId;
+  }
+
+  /// Get color based on notification status
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'draft':
+        return Colors.grey;
+      case 'scheduled':
+        return Colors.blue;
+      case 'failed':
+        return Colors.red;
+      default:
+        return Colors.green;
+    }
+  }
+
+  /// Get label based on notification status
+  String _getStatusLabel(BuildContext context, String status) {
+    final l10n = AppLocalizations.of(context);
+    switch (status) {
+      case 'draft':
+        return l10n.notification_statusDraft;
+      case 'scheduled':
+        return l10n.notification_statusScheduled;
+      case 'failed':
+        return l10n.notification_statusFailed;
+      default:
+        return l10n.notification_statusSent;
     }
   }
 }

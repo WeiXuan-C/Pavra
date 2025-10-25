@@ -1,9 +1,8 @@
 import 'dart:io';
-import 'dart:convert';
 import 'package:serverpod/serverpod.dart';
 import '../services/onesignal_service.dart';
 import '../services/supabase_service.dart';
-import '../services/upstash_redis_service.dart';
+import '../tasks/scheduled_notification_task.dart';
 
 /// Endpoint for notification operations
 ///
@@ -40,9 +39,6 @@ class NotificationEndpoint extends Endpoint {
 
   /// Get Supabase service instance
   SupabaseService get _supabase => SupabaseService.instance;
-
-  /// Get Upstash Redis service instance
-  UpstashRedisService get _redis => UpstashRedisService.instance;
 
   /// Send notification to a specific user
   ///
@@ -269,7 +265,7 @@ class NotificationEndpoint extends Endpoint {
   /// Schedule a notification to be sent at a specific time
   ///
   /// Creates notification record in Supabase with 'scheduled' status
-  /// and stores in Redis for processing
+  /// and schedules via QStash for processing
   Future<Map<String, dynamic>> scheduleNotification(
     Session session, {
     required String title,
@@ -302,22 +298,35 @@ class NotificationEndpoint extends Endpoint {
       final notifications =
           await _supabase.insert('notifications', [notificationData]);
       final notification = notifications.first;
+      final notificationId = notification['id'] as String;
 
-      // 2. Store in Redis for scheduled processing
-      final scheduleKey =
-          'scheduled_notification:${scheduledAt.millisecondsSinceEpoch}:${notification['id']}';
-      final scheduleData = jsonEncode({
-        'notification_id': notification['id'],
-        'title': title,
-        'message': message,
-        'type': type,
-        'data': data,
-        'target_type': targetType,
-        'target_user_ids': targetUserIds,
-        'scheduled_at': scheduledAt.toIso8601String(),
-      });
+      // 2. Schedule via QStash
+      // 构建回调 URL（使用 PUBLIC_HOST）
+      final publicHost = Platform.environment['PUBLIC_HOST'] ??
+          session.serverpod.getPassword('publicHost') ??
+          'localhost:8080';
+      final apiPort = Platform.environment['API_PORT'] ?? '443';
+      final useHttps = apiPort == '443' || apiPort == '8443';
+      final protocol = useHttps ? 'https' : 'http';
 
-      await _redis.set(scheduleKey, scheduleData);
+      // QStash webhook endpoint
+      final callbackUrl =
+          '$protocol://$publicHost/qstashWebhook/processScheduledNotification';
+
+      session.log(
+        '📤 Scheduling notification via QStash: $notificationId',
+        level: LogLevel.info,
+      );
+      session.log(
+        '   Callback URL: $callbackUrl',
+        level: LogLevel.info,
+      );
+
+      final qstashResult = await ScheduledNotificationTask.scheduleNotification(
+        notificationId: notificationId,
+        scheduledAt: scheduledAt,
+        callbackUrl: callbackUrl,
+      );
 
       session.log(
         '✓ Notification scheduled for ${scheduledAt.toIso8601String()}',
@@ -328,9 +337,12 @@ class NotificationEndpoint extends Endpoint {
         'success': true,
         'notification': notification,
         'scheduled_at': scheduledAt.toIso8601String(),
+        'qstash_message_id': qstashResult['messageId'],
       };
-    } catch (e) {
+    } catch (e, stackTrace) {
       session.log('❌ Error scheduling notification: $e', level: LogLevel.error);
+      session.log(stackTrace.toString(), level: LogLevel.error);
+
       return {
         'success': false,
         'error': e.toString(),

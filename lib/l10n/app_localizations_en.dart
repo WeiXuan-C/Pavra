@@ -1257,4 +1257,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notification_filterAllUsers => 'All Users';
+
+  @override
+  String get notification_createdByMe => 'Created by Me';
+
+  @override
+  String get notification_statusDraft => 'Draft';
+
+  @override
+  String get notification_statusScheduled => 'Scheduled';
+
+  @override
+  String get notification_statusFailed => 'Failed';
+
+  @override
+  String get notification_statusSent => 'Sent';
 }

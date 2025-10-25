@@ -1,108 +1,81 @@
 import 'dart:io';
 import 'package:serverpod/serverpod.dart';
-import '../services/upstash_redis_service.dart';
+import 'package:serverpod/protocol.dart';
+import '../services/qstash_service.dart';
 import '../services/supabase_service.dart';
 import '../services/onesignal_service.dart';
-import '../../server.dart';
 
-/// Task that processes scheduled notifications from Upstash Redis
+/// Handler for processing scheduled notifications triggered by QStash
 ///
-/// This task runs periodically (every minute) to check for and send scheduled notifications
-class ScheduledNotificationTask extends FutureCall {
-  static const Duration _checkInterval = Duration(minutes: 1);
-  static const String _redisKeyPrefix = 'scheduled_notification:';
-
-  @override
-  Future<void> invoke(Session session, SerializableModel? object) async {
+/// This is called by QStash webhook when a scheduled notification is due
+class ScheduledNotificationTask {
+  /// Process a single scheduled notification from QStash webhook
+  static Future<Map<String, dynamic>> processNotification({
+    required Session session,
+    required String notificationId,
+  }) async {
     try {
-      PLog.info('🔔 Running scheduled notification task...');
+      session.log('🔔 Processing scheduled notification: $notificationId');
 
-      final result = await _processScheduledNotifications(session);
-
-      if (result['success'] == true) {
-        PLog.info(
-          '✓ Scheduled notification task completed: ${result['processed']} notifications processed',
-        );
-      } else {
-        PLog.error('❌ Scheduled notification task failed: ${result['error']}');
-      }
-    } catch (e, stackTrace) {
-      PLog.error('❌ Error in scheduled notification task', e, stackTrace);
-    } finally {
-      // Schedule next check
-      _scheduleNextCheck(session);
-    }
-  }
-
-  /// Process scheduled notifications from Redis
-  Future<Map<String, dynamic>> _processScheduledNotifications(
-      Session session) async {
-    try {
-      final redis = UpstashRedisService.instance;
       final supabase = SupabaseService.instance;
-      final now = DateTime.now();
 
-      // Get all scheduled notifications from Supabase
+      // Get notification from Supabase
       final notifications = await supabase.select(
         'notifications',
-        filters: {'status': 'scheduled'},
+        filters: {'id': notificationId},
       );
 
-      // Filter notifications that are due
-      final dueNotifications = notifications.where((notification) {
-        final scheduledAt = notification['scheduled_at'];
-        if (scheduledAt == null) return false;
-
-        final scheduledTime = DateTime.parse(scheduledAt);
-        return scheduledTime.isBefore(now) ||
-            scheduledTime.isAtSameMomentAs(now);
-      }).toList();
-
-      PLog.info('Found ${dueNotifications.length} due notifications');
-
-      // Process each due notification
-      for (final notification in dueNotifications) {
-        try {
-          await _sendScheduledNotification(session, notification);
-
-          // Update notification status in Supabase
-          await supabase.update(
-            'notifications',
-            {
-              'status': 'sent',
-              'sent_at': now.toIso8601String(),
-              'updated_at': now.toIso8601String(),
-            },
-            filters: {'id': notification['id']},
-          );
-
-          // Remove from Redis if exists
-          final redisKey =
-              '$_redisKeyPrefix${notification['scheduled_at']}:${notification['id']}';
-          await redis.delete(redisKey);
-
-          PLog.info('✓ Sent scheduled notification: ${notification['id']}');
-        } catch (e) {
-          PLog.error('❌ Failed to send notification ${notification['id']}: $e');
-
-          // Mark as failed in Supabase
-          await supabase.update(
-            'notifications',
-            {
-              'status': 'failed',
-              'updated_at': now.toIso8601String(),
-            },
-            filters: {'id': notification['id']},
-          );
-        }
+      if (notifications.isEmpty) {
+        throw Exception('Notification not found: $notificationId');
       }
+
+      final notification = notifications.first;
+      final status = notification['status'] as String?;
+
+      // Check if already sent
+      if (status == 'sent') {
+        session.log('⚠️ Notification already sent: $notificationId');
+        return {'success': true, 'message': 'Already sent'};
+      }
+
+      // Send the notification
+      await _sendScheduledNotification(session, notification);
+
+      // Update notification status in Supabase
+      final now = DateTime.now();
+      await supabase.update(
+        'notifications',
+        {
+          'status': 'sent',
+          'sent_at': now.toIso8601String(),
+          'updated_at': now.toIso8601String(),
+        },
+        filters: {'id': notificationId},
+      );
+
+      session.log('✓ Sent scheduled notification: $notificationId');
 
       return {
         'success': true,
-        'processed': dueNotifications.length,
+        'notificationId': notificationId,
       };
-    } catch (e, stackTrace) {
-      PLog.error('❌ Error processing scheduled notifications', e, stackTrace);
+    } catch (e) {
+      session.log('❌ Error processing scheduled notification: $e',
+          level: LogLevel.error);
+
+      // Mark as failed in Supabase
+      try {
+        final supabase = SupabaseService.instance;
+        await supabase.update(
+          'notifications',
+          {
+            'status': 'failed',
+            'updated_at': DateTime.now().toIso8601String(),
+          },
+          filters: {'id': notificationId},
+        );
+      } catch (_) {}
+
       return {
         'success': false,
         'error': e.toString(),
@@ -111,7 +84,7 @@ class ScheduledNotificationTask extends FutureCall {
   }
 
   /// Send a scheduled notification via OneSignal
-  Future<void> _sendScheduledNotification(
+  static Future<void> _sendScheduledNotification(
     Session session,
     Map<String, dynamic> notification,
   ) async {
@@ -198,7 +171,7 @@ class ScheduledNotificationTask extends FutureCall {
   }
 
   /// Get OneSignal service instance
-  OneSignalService _getOneSignalService(Session session) {
+  static OneSignalService _getOneSignalService(Session session) {
     // Try to get from passwords.yaml first
     var appId = session.serverpod.getPassword('oneSignalAppId');
     var apiKey = session.serverpod.getPassword('oneSignalApiKey');
@@ -212,7 +185,7 @@ class ScheduledNotificationTask extends FutureCall {
     }
 
     if (appId.isEmpty || apiKey.isEmpty) {
-      PLog.warn(
+      stderr.writeln(
         '⚠️ OneSignal credentials not configured. Push notifications will not be sent.',
       );
     }
@@ -223,30 +196,37 @@ class ScheduledNotificationTask extends FutureCall {
     );
   }
 
-  /// Schedules the next notification check
-  void _scheduleNextCheck(Session session) {
-    session.serverpod.futureCallAtTime(
-      'scheduledNotificationCheck',
-      null,
-      DateTime.now().add(_checkInterval),
-    );
+  /// Schedule a notification using QStash
+  static Future<Map<String, dynamic>> scheduleNotification({
+    required String notificationId,
+    required DateTime scheduledAt,
+    required String callbackUrl,
+  }) async {
+    try {
+      final qstash = QStashService.instance;
+
+      final result = await qstash.scheduleNotification(
+        notificationId: notificationId,
+        scheduledAt: scheduledAt,
+        callbackUrl: callbackUrl,
+      );
+
+      stdout.writeln('✓ Scheduled notification via QStash: $notificationId');
+      return result;
+    } catch (e) {
+      stderr.writeln('❌ Failed to schedule notification: $e');
+      rethrow;
+    }
   }
-}
 
-/// Initialize the scheduled notification task
-Future<void> initializeScheduledNotificationTask(Serverpod pod) async {
-  try {
-    await pod.futureCallWithDelay(
-      'scheduledNotificationCheck',
-      null,
-      const Duration(minutes: 1),
-    );
-
-    PLog.info('✓ Scheduled notification task registered.');
-  } catch (e) {
-    PLog.warn('⚠️ Failed to register scheduled notification task: $e');
-    PLog.warn(
-      '   Scheduled notifications will not be automatically sent.',
-    );
+  /// Cancel a scheduled notification
+  static Future<bool> cancelScheduledNotification(String messageId) async {
+    try {
+      final qstash = QStashService.instance;
+      return await qstash.cancelScheduledNotification(messageId);
+    } catch (e) {
+      stderr.writeln('❌ Failed to cancel scheduled notification: $e');
+      return false;
+    }
   }
 }

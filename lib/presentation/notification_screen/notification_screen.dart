@@ -12,11 +12,11 @@ import 'widgets/notification_skeleton.dart';
 /// Notification filter type
 enum NotificationFilter {
   all, // All notifications
-  unread, // Unread notifications (user/authority/developer)
-  read, // Read notifications (user/authority/developer)
-  sentByMe, // Sent by me (authority/developer)
-  sentToMe, // Sent to me (authority/developer)
-  allUsers, // All users' notifications (developer only)
+  unread, // Unread notifications
+  read, // Read notifications
+  sentByMe, // Deprecated - kept for backwards compatibility
+  sentToMe, // Notifications targeted to me (single/custom target)
+  allUsers, // Notifications sent to all users or by role
 }
 
 /// Notification screen displaying user notifications
@@ -62,8 +62,27 @@ class _NotificationScreenState extends State<NotificationScreen> {
   /// Check if user can delete a notification
   /// 规则：所有用户都可以删除（软删除自己的 user_notifications 记录）
   bool _canDeleteNotification(NotificationModel notification) {
-    // 所有用户都可以删除通知（软删除）
+    // 所有用户都可以删除通知（软删除 user_notifications）
     return true;
+  }
+
+  /// Check if user can edit a notification
+  /// 规则：只有创建者可以编辑，且状态必须是 draft
+  bool _canEditNotification(
+    NotificationModel notification,
+    String? currentUserId,
+  ) {
+    return notification.canEdit(currentUserId);
+  }
+
+  /// Check if user can admin delete a notification
+  /// 规则：只有创建者可以删除，且状态必须是 draft 或 scheduled
+  /// This is for deleting from notifications table (not user_notifications)
+  bool _canAdminDeleteNotification(
+    NotificationModel notification,
+    String? currentUserId,
+  ) {
+    return notification.canDelete(currentUserId);
   }
 
   /// Get available filters based on user role
@@ -75,7 +94,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
         NotificationFilter.all,
         NotificationFilter.unread,
         NotificationFilter.read,
-        NotificationFilter.sentByMe,
         NotificationFilter.sentToMe,
         NotificationFilter.allUsers,
       ];
@@ -84,7 +102,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
         NotificationFilter.all,
         NotificationFilter.unread,
         NotificationFilter.read,
-        NotificationFilter.sentByMe,
         NotificationFilter.sentToMe,
       ];
     } else {
@@ -123,15 +140,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
   ) {
     switch (filter) {
       case NotificationFilter.unread:
-        return !notification.isRead; // ✅ 现在是 non-nullable
+        // 只过滤来自 user_notifications 的未读通知
+        return notification.source == NotificationSource.userNotifications &&
+            !notification.isRead;
       case NotificationFilter.read:
-        return notification.isRead; // ✅ 现在是 non-nullable
+        // 只过滤来自 user_notifications 的已读通知
+        return notification.source == NotificationSource.userNotifications &&
+            notification.isRead;
       case NotificationFilter.sentByMe:
+        // This filter is removed - kept for backwards compatibility
         return notification.createdBy == currentUserId;
       case NotificationFilter.sentToMe:
-        return notification.targetUserIds?.contains(currentUserId) ?? false;
+        // Notifications from user_notifications table (sent to me)
+        return notification.source == NotificationSource.userNotifications;
       case NotificationFilter.allUsers:
-        return true;
+        // Notifications from notifications table (all created notifications)
+        return notification.source == NotificationSource.allNotifications;
       case NotificationFilter.all:
         return true;
     }
@@ -577,6 +601,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               const Divider(height: 1),
                           itemBuilder: (context, index) {
                             final notification = filteredNotifications[index];
+                            final canEdit = _canEditNotification(
+                              notification,
+                              userId,
+                            );
                             final canDelete = _canDeleteNotification(
                               notification,
                             );
@@ -584,13 +612,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             return NotificationItemWidget(
                               notification: notification,
                               onTap: () => _handleNotificationTap(notification),
-                              onEdit: canDelete
+                              onEdit: canEdit
                                   ? () => _handleEdit(notification)
                                   : null,
                               onDelete: canDelete
                                   ? () => _handleDelete(notification.id)
                                   : null,
                               canDelete: canDelete,
+                              currentUserId: userId,
                             );
                           },
                         ),
@@ -630,7 +659,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
-  /// Handle notification delete (called after Dismissible confirmation)
+  /// Handle notification delete
+  /// Two types of delete:
+  /// 1. User-level soft delete (all users) - hides from user_notifications
+  /// 2. Admin delete (developer/authority) - deletes draft/scheduled from notifications table
   Future<void> _handleDelete(String notificationId) async {
     // Capture context values before any async operation
     if (!mounted) return;
@@ -642,15 +674,37 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
     if (userId == null) return;
 
-    // User-level soft delete
-    await provider.deleteNotificationForUser(notificationId, userId);
-    if (mounted) {
-      messenger.showSnackBar(
-        SnackBar(
-          content: Text(localizations.notification_deleted),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+    // Find the notification to check if admin delete is possible
+    final notification = provider.notifications.firstWhere(
+      (n) => n.id == notificationId,
+      orElse: () => provider.notifications.first,
+    );
+
+    // Check if this is an admin delete (creator deleting draft/scheduled)
+    final isAdminDelete = _canAdminDeleteNotification(notification, userId);
+
+    if (isAdminDelete) {
+      // Admin delete - remove from notifications table
+      await provider.deleteNotification(notificationId);
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(localizations.notification_deleted),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } else {
+      // User-level soft delete - hide from user_notifications
+      await provider.deleteNotificationForUser(notificationId, userId);
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(localizations.notification_deleted),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
     }
   }
 }

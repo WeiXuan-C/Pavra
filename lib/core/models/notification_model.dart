@@ -1,3 +1,9 @@
+/// Notification source type
+enum NotificationSource {
+  userNotifications, // From user_notifications table (sent to me)
+  allNotifications, // From notifications table (all created notifications)
+}
+
 /// Notification model - 完全重构版本
 ///
 /// 设计说明：
@@ -36,6 +42,9 @@ class NotificationModel {
   final bool isDeleted; // 默认 false，非 nullable（user_notifications 的 is_deleted）
   final DateTime? readAt;
 
+  // Data source indicator (for filtering)
+  final NotificationSource source;
+
   NotificationModel({
     required this.id,
     required this.title,
@@ -57,6 +66,7 @@ class NotificationModel {
     this.isRead = false,
     this.isDeleted = false,
     this.readAt,
+    this.source = NotificationSource.userNotifications,
   });
 
   /// Create from JSON (Supabase response)
@@ -147,6 +157,7 @@ class NotificationModel {
     bool? isRead,
     bool? isDeleted,
     DateTime? readAt,
+    NotificationSource? source,
   }) {
     return NotificationModel(
       id: id ?? this.id,
@@ -169,6 +180,7 @@ class NotificationModel {
       isRead: isRead ?? this.isRead,
       isDeleted: isDeleted ?? this.isDeleted,
       readAt: readAt ?? this.readAt,
+      source: source ?? this.source,
     );
   }
 

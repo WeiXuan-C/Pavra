@@ -1225,4 +1225,19 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get notification_filterAllUsers => '所有人的';
+
+  @override
+  String get notification_createdByMe => '我创建的';
+
+  @override
+  String get notification_statusDraft => '草稿';
+
+  @override
+  String get notification_statusScheduled => '已排程';
+
+  @override
+  String get notification_statusFailed => '发送失败';
+
+  @override
+  String get notification_statusSent => '已发送';
 }

@@ -19,15 +19,55 @@ class NotificationProvider extends ChangeNotifier {
   int get unreadCount => _unreadCount;
 
   /// Load notifications for a user
-  /// 所有用户都通过 user_notifications 表查询
+  /// - User: 只从 user_notifications 表查询
+  /// - Authority/Developer: 从 user_notifications + notifications 表查询并合并
   Future<void> loadNotifications(String userId, {String? userRole}) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      // 所有用户都使用相同的查询（通过 user_notifications）
-      _notifications = await _repository.getUserNotifications(userId: userId);
+      final role = userRole?.toLowerCase();
+
+      // 1. 获取发送给用户的通知（user_notifications）
+      final userNotifications = await _repository.getUserNotifications(
+        userId: userId,
+      );
+
+      // Mark source as userNotifications
+      final markedUserNotifications = userNotifications
+          .map((n) => n.copyWith(source: NotificationSource.userNotifications))
+          .toList();
+
+      // 2. Developer/Authority 额外获取所有通知（notifications 表）
+      if (role == 'developer' || role == 'authority') {
+        final allNotifications = await _repository.getAllNotifications();
+
+        // Mark source as allNotifications
+        final markedAllNotifications = allNotifications
+            .map((n) => n.copyWith(source: NotificationSource.allNotifications))
+            .toList();
+
+        // 3. 合并并去重（优先保留 userNotifications 的状态）
+        final Map<String, NotificationModel> notificationMap = {};
+
+        // 先添加 allNotifications
+        for (final notification in markedAllNotifications) {
+          notificationMap[notification.id] = notification;
+        }
+
+        // 再添加 userNotifications（会覆盖重复的，保留用户状态）
+        for (final notification in markedUserNotifications) {
+          notificationMap[notification.id] = notification;
+        }
+
+        _notifications = notificationMap.values.toList()
+          ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      } else {
+        // User 只显示 userNotifications
+        _notifications = markedUserNotifications;
+      }
+
       _unreadCount = await _repository.getUnreadCount(userId);
       _error = null;
     } catch (e) {

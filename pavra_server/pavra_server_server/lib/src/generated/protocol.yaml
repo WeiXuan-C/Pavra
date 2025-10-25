@@ -1,2 +1,27 @@
+actionLog:
+  - log:
+  - getUserActions:
+  - flushLogs:
+  - healthCheck:
+auth:
+  - signIn:
+  - signUp:
+  - signOut:
+  - testConnections:
+notification:
+  - sendToUser:
+  - sendToUsers:
+  - sendToAll:
+  - sendAppUpdateNotification:
+  - sendFeatureAnnouncement:
+  - sendActivityNotification:
+  - scheduleNotification:
+  - scheduleNotificationForUsers:
+  - cancelScheduledNotification:
+  - handleNotificationCreated:
+  - processScheduledNotifications:
+redisHealth:
+  - check:
+  - info:
 greeting:
   - hello:
