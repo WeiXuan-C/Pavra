@@ -262,6 +262,65 @@ class NotificationEndpoint extends Endpoint {
     );
   }
 
+  /// Schedule an existing notification by ID
+  ///
+  /// This is called from Flutter client after notification is created
+  /// Schedules the notification via QStash for processing
+  Future<Map<String, dynamic>> scheduleNotificationById(
+    Session session, {
+    required String notificationId,
+    required DateTime scheduledAt,
+  }) async {
+    try {
+      // 构建回调 URL（使用 PUBLIC_HOST）
+      final publicHost = Platform.environment['PUBLIC_HOST'] ??
+          session.serverpod.getPassword('publicHost') ??
+          'localhost:8080';
+      final apiPort = Platform.environment['API_PORT'] ?? '443';
+      final useHttps = apiPort == '443' || apiPort == '8443';
+      final protocol = useHttps ? 'https' : 'http';
+
+      // QStash webhook endpoint
+      final callbackUrl =
+          '$protocol://$publicHost/qstashWebhook/processScheduledNotification';
+
+      session.log(
+        '📤 Scheduling notification via QStash: $notificationId',
+        level: LogLevel.info,
+      );
+      session.log(
+        '   Callback URL: $callbackUrl',
+        level: LogLevel.info,
+      );
+
+      final qstashResult = await ScheduledNotificationTask.scheduleNotification(
+        notificationId: notificationId,
+        scheduledAt: scheduledAt,
+        callbackUrl: callbackUrl,
+      );
+
+      session.log(
+        '✓ Notification scheduled for ${scheduledAt.toIso8601String()}',
+        level: LogLevel.info,
+      );
+
+      return {
+        'success': true,
+        'notification_id': notificationId,
+        'scheduled_at': scheduledAt.toIso8601String(),
+        'qstash_message_id': qstashResult['messageId'],
+      };
+    } catch (e, stackTrace) {
+      session.log('❌ Error scheduling notification: $e', level: LogLevel.error);
+      session.log(stackTrace.toString(), level: LogLevel.error);
+
+      return {
+        'success': false,
+        'error': e.toString(),
+      };
+    }
+  }
+
   /// Schedule a notification to be sent at a specific time
   ///
   /// Creates notification record in Supabase with 'scheduled' status

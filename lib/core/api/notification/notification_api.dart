@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../../config/api_config.dart';
 import '../../supabase/database_service.dart';
 import '../../supabase/supabase_client.dart';
 
@@ -196,7 +197,7 @@ class NotificationApi {
     await supabase.from('notifications').delete().eq('id', notificationId);
   }
 
-  /// 创建通知并通过 OneSignal 发送推送
+  /// 创建通知并通过 OneSignal 发送推送或通过 QStash 调度
   Future<Map<String, dynamic>> createNotification({
     required String createdBy,
     required String title,
@@ -232,60 +233,88 @@ class NotificationApi {
         .select()
         .single();
 
-    // 2. 如果是立即发送，通过 OneSignal 推送
-    if (status == 'sent' && targetUserIds != null && targetUserIds.isNotEmpty) {
+    final notificationId = result['id'] as String;
+
+    // 2. 根据状态处理
+    if (status == 'sent') {
+      // 立即发送：调用 Serverpod endpoint 来发送推送
       try {
-        await _sendPushNotification(
-          title: title,
-          message: message,
-          targetUserIds: targetUserIds,
-          data: {'notification_id': result['id'], 'type': type, ...?data},
+        await _triggerNotificationSend(notificationId);
+      } catch (e) {
+        print('⚠️ Failed to trigger notification send: $e');
+      }
+    } else if (status == 'scheduled' && scheduledAt != null) {
+      // 调度发送：调用 Serverpod endpoint 来通过 QStash 调度
+      try {
+        await _scheduleNotificationViaServerpod(
+          notificationId: notificationId,
+          scheduledAt: scheduledAt,
         );
       } catch (e) {
-        // 推送失败不影响通知创建
-        print('⚠️ OneSignal push failed: $e');
+        print('⚠️ Failed to schedule notification: $e');
+        // 如果调度失败，更新状态为 failed
+        await supabase
+            .from('notifications')
+            .update({'status': 'failed'})
+            .eq('id', notificationId);
       }
     }
+    // status == 'draft' 不做任何操作
 
     return result;
   }
 
-  /// 通过 OneSignal 发送推送
-  Future<void> _sendPushNotification({
-    required String title,
-    required String message,
-    required List<String> targetUserIds,
-    Map<String, dynamic>? data,
-  }) async {
-    // 使用 OneSignal REST API 直接发送
-    final appId = '2eebafba-17aa-49a6-91aa-f9f7f2f72aca';
-    final apiKey =
-        'os_v2_app_f3v27oqxvje2nenk7h37f5zkzlnemkqsxkuezzffpgs3ug34lfz4gluj5rzlhqysuixzw5yr6lp4t36yxkj3r7camutveielpkqx24i';
+  /// 触发通知发送（通过 Serverpod endpoint）
+  Future<void> _triggerNotificationSend(String notificationId) async {
+    final serverpodUrl = ApiConfig.serverpodUrl;
 
-    final response = await http.post(
-      Uri.parse('https://api.onesignal.com/notifications'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic $apiKey',
-      },
-      body: jsonEncode({
-        'app_id': appId,
-        'include_aliases': {'external_id': targetUserIds},
-        'target_channel': 'push',
-        'headings': {'en': title},
-        'contents': {'en': message},
-        if (data != null) 'data': data,
-      }),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse('$serverpodUrl/notification/handleNotificationCreated'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'notificationId': notificationId}),
+      );
 
-    if (response.statusCode != 200) {
-      throw Exception('OneSignal API error: ${response.body}');
+      if (response.statusCode != 200) {
+        throw Exception('Serverpod API error: ${response.body}');
+      }
+
+      print('✓ Notification send triggered: $notificationId');
+    } catch (e) {
+      print('❌ Failed to trigger notification send: $e');
+      rethrow;
     }
-
-    print('✓ OneSignal push sent to ${targetUserIds.length} users');
   }
 
-  /// 更新通知
+  /// 通过 Serverpod 调度通知（使用 QStash）
+  Future<void> _scheduleNotificationViaServerpod({
+    required String notificationId,
+    required DateTime scheduledAt,
+  }) async {
+    final serverpodUrl = ApiConfig.serverpodUrl;
+
+    try {
+      final response = await http.post(
+        Uri.parse('$serverpodUrl/notification/scheduleNotificationById'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'notificationId': notificationId,
+          'scheduledAt': scheduledAt.toIso8601String(),
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Serverpod API error: ${response.body}');
+      }
+
+      print('✓ Notification scheduled via QStash: $notificationId');
+    } catch (e) {
+      print('❌ Failed to schedule notification: $e');
+      rethrow;
+    }
+  }
+
+  /// 更新通知（支持更新所有字段）
   Future<Map<String, dynamic>> updateNotification({
     required String notificationId,
     required String title,
@@ -293,19 +322,68 @@ class NotificationApi {
     required String type,
     String? relatedAction,
     Map<String, dynamic>? data,
+    String? status,
+    DateTime? scheduledAt,
+    String? targetType,
+    List<String>? targetRoles,
+    List<String>? targetUserIds,
   }) async {
+    final updateData = <String, dynamic>{
+      'title': title,
+      'message': message,
+      'type': type,
+      'related_action': relatedAction,
+      'data': data,
+      'updated_at': DateTime.now().toIso8601String(),
+    };
+
+    // 只有提供了这些字段才更新
+    if (status != null) {
+      updateData['status'] = status;
+      // 如果状态改为 sent，设置 sent_at
+      if (status == 'sent') {
+        updateData['sent_at'] = DateTime.now().toIso8601String();
+      }
+    }
+    if (scheduledAt != null) {
+      updateData['scheduled_at'] = scheduledAt.toIso8601String();
+    }
+    if (targetType != null) {
+      updateData['target_type'] = targetType;
+    }
+    if (targetRoles != null) {
+      updateData['target_roles'] = targetRoles;
+    }
+    if (targetUserIds != null) {
+      updateData['target_user_ids'] = targetUserIds;
+    }
+
     final result = await supabase
         .from('notifications')
-        .update({
-          'title': title,
-          'message': message,
-          'type': type,
-          'related_action': relatedAction,
-          'data': data,
-        })
+        .update(updateData)
         .eq('id', notificationId)
         .select()
         .single();
+
+    // 如果状态从 draft 改为 sent，触发发送
+    if (status == 'sent') {
+      try {
+        await _triggerNotificationSend(notificationId);
+      } catch (e) {
+        print('⚠️ Failed to trigger notification send after update: $e');
+      }
+    }
+    // 如果状态从 draft 改为 scheduled，调度发送
+    else if (status == 'scheduled' && scheduledAt != null) {
+      try {
+        await _scheduleNotificationViaServerpod(
+          notificationId: notificationId,
+          scheduledAt: scheduledAt,
+        );
+      } catch (e) {
+        print('⚠️ Failed to schedule notification after update: $e');
+      }
+    }
 
     return result;
   }

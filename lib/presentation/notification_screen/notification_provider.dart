@@ -202,7 +202,7 @@ class NotificationProvider extends ChangeNotifier {
     }
   }
 
-  /// Update an existing notification
+  /// Update an existing notification（支持更新所有字段）
   Future<NotificationModel> updateNotification({
     required String notificationId,
     required String title,
@@ -210,6 +210,11 @@ class NotificationProvider extends ChangeNotifier {
     required String type,
     String? relatedAction,
     Map<String, dynamic>? data,
+    String? status,
+    DateTime? scheduledAt,
+    String? targetType,
+    List<String>? targetRoles,
+    List<String>? targetUserIds,
   }) async {
     try {
       final updatedNotification = await _repository.updateNotification(
@@ -219,6 +224,11 @@ class NotificationProvider extends ChangeNotifier {
         type: type,
         relatedAction: relatedAction,
         data: data,
+        status: status,
+        scheduledAt: scheduledAt,
+        targetType: targetType,
+        targetRoles: targetRoles,
+        targetUserIds: targetUserIds,
       );
 
       // Update local state

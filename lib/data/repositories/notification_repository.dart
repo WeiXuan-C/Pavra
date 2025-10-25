@@ -145,7 +145,7 @@ class NotificationRepository {
     }
   }
 
-  /// 更新通知
+  /// 更新通知（支持更新所有字段）
   Future<NotificationModel> updateNotification({
     required String notificationId,
     required String title,
@@ -153,6 +153,11 @@ class NotificationRepository {
     required String type,
     String? relatedAction,
     Map<String, dynamic>? data,
+    String? status,
+    DateTime? scheduledAt,
+    String? targetType,
+    List<String>? targetRoles,
+    List<String>? targetUserIds,
   }) async {
     try {
       final result = await _api.updateNotification(
@@ -162,6 +167,11 @@ class NotificationRepository {
         type: type,
         relatedAction: relatedAction,
         data: data,
+        status: status,
+        scheduledAt: scheduledAt,
+        targetType: targetType,
+        targetRoles: targetRoles,
+        targetUserIds: targetUserIds,
       );
       return NotificationModel.fromJson(result);
     } catch (e) {

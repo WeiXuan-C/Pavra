@@ -1019,7 +1019,7 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
       final parsedData = _parseDataInput(_dataController.text);
 
       if (isEditing) {
-        // Update existing notification
+        // Update existing notification（传递所有字段）
         await provider.updateNotification(
           notificationId: widget.notification!.id,
           title: _titleController.text.trim(),
@@ -1027,6 +1027,13 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
           type: _selectedType,
           relatedAction: _selectedActionLogId,
           data: parsedData,
+          status: _selectedStatus,
+          scheduledAt: _selectedStatus == 'scheduled'
+              ? _scheduledDateTime
+              : null,
+          targetType: _selectedTargetType,
+          targetRoles: _selectedRoles.isNotEmpty ? _selectedRoles : null,
+          targetUserIds: _selectedUserIds.isNotEmpty ? _selectedUserIds : null,
         );
       } else {
         // Create new notification
