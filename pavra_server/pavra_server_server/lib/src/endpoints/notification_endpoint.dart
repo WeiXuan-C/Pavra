@@ -625,6 +625,36 @@ class NotificationEndpoint extends Endpoint {
     }
   }
 
+  /// 🧪 手动触发 scheduled notification 处理（仅用于开发测试）
+  ///
+  /// 这个方法模拟 QStash webhook 的行为，用于本地测试
+  /// 可以手动触发任何 scheduled notification 的处理
+  Future<Map<String, dynamic>> testProcessScheduledNotification(
+    Session session, {
+    required String notificationId,
+  }) async {
+    try {
+      session.log(
+          '🧪 [TEST] Manually processing scheduled notification: $notificationId');
+
+      // 调用相同的处理逻辑
+      final result = await ScheduledNotificationTask.processNotification(
+        session: session,
+        notificationId: notificationId,
+      );
+
+      session.log('✓ [TEST] Processing completed', level: LogLevel.info);
+      return result;
+    } catch (e, stackTrace) {
+      session.log('❌ [TEST] Error: $e', level: LogLevel.error);
+      session.log(stackTrace.toString(), level: LogLevel.error);
+      return {
+        'success': false,
+        'error': e.toString(),
+      };
+    }
+  }
+
   /// Process scheduled notifications (called by cron job or task)
   ///
   /// This should be called periodically to check for and send scheduled notifications

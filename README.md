@@ -1,94 +1,124 @@
 # Pavra  
 **Slogan:** *The Smarter Roads, The Safer Journeys.*  
 
----
-
-## 🌍 Overview
-**Pavra** is a mobile application that leverages **AI** and **geolocation technology** to enhance road care, quality, and safety.  
-The app empowers users and drivers to **detect**, **report**, and **analyze** road conditions in real time.  
-
-By combining **mobile intelligence**, **computer vision**, and **gamified engagement**, Pavra helps create **smarter roads and safer journeys** for everyone.
+[![DeepWiki](https://deepwiki.ai/badge.svg)](https://deepwiki.ai/github/WeiXuan-C/Pavra)
 
 ---
 
-## 🧠 Tech Stack
+## 🌍 Overview  
+**Pavra** is an intelligent mobile application that combines **AI-powered road damage detection**, **geolocation**, and **community-driven reporting** to improve road safety and infrastructure management.  
+
+Users can **detect**, **report**, and **analyze** road conditions in real time — helping authorities and drivers build **smarter roads** and ensure **safer journeys**.  
+
+---
+
+## 🧠 Tech Stack  
 
 | Layer | Technology | Purpose |
 |-------|-------------|----------|
 | **Frontend** | Flutter (Dart) | Cross-platform mobile development |
-| **Backend** | Serverpod | Custom server logic and Redis caching |
-| **Database** | Supabase (PostgreSQL) | Manage user and report data |
-| **Storage** | Supabase Storage | Store road images and history |
-| **AI Model** | YOLOv8n (Hugging Face Spaces) | Detect road damages such as cracks or potholes |
-| **Map & GPS** | Google Maps Flutter, Geolocator | Display and track report locations |
-| **Push Notifications** | OneSignal | Send nearby hazard alerts |
-| **Text-to-Speech** | flutter_tts | Real-time voice safety alerts |
-| **State Management** | Provider | Manage user, report, and UI state |
-| **Cache Layer** | Redis | Store short-term data such as action logs |
-| **Version Control** | GitHub | Collaborative development and versioning |
+| **Backend** | Serverpod | API server and custom business logic |
+| **Database** | Supabase (PostgreSQL) | Store users, reports, and metadata |
+| **Storage** | Supabase Storage | Road image and report history storage |
+| **AI Model** | YOLOv8n (Hugging Face Spaces) | Detect potholes, cracks, and obstacles |
+| **Map & GPS** | Google Maps Flutter, Geolocator | Visualize reports and get user location |
+| **Push Notifications** | OneSignal | Send hazard and system alerts |
+| **Task Queue** | Upstash QStash | Background task scheduling |
+| **Cache Layer** | Upstash Redis | Temporary data and action logs |
+| **State Management** | Provider | Manage authentication, theme, locale, notifications |
+| **Version Control** | GitHub | Source management and collaboration |
 
 ---
 
-## ⚙️ Core Modules
+## 👥 Roles & Access Levels  
 
-### 1. Authentication
-- Email/password registration and login via Supabase Auth
-- Persistent session management
-- Route guard middleware for authenticated navigation
+Pavra provides **three distinct user roles** to ensure a secure and organized experience for all participants in the ecosystem:  
 
-### 2. Road Condition Detection
-- Capture or upload road images  
-- YOLOv8n detects potholes, cracks, or obstacles  
-- Real-time inference through Hugging Face API  
+| Role | Description | Key Capabilities |
+|------|--------------|------------------|
+| **User** | Regular drivers and community members | Detect and report road issues, view maps, receive hazard alerts, earn points and badges |
+| **Authority** | Authorized government or maintenance personnel | Review and verify reports, manage road maintenance updates, access analytics |
+| **Developer** | Internal testers or system maintainers | Access debug tools, monitor logs, and test experimental features |
 
-### 3. Report Management
-- Submit detected issues with geolocation  
-- Upload road images to Supabase Storage  
-- View and manage past reports  
+### 🧑‍💻 How to Enter Developer Mode  
+To activate **Developer Mode**, go to **Profile → About Page**, then **tap the app version number 7 times**.  
 
-### 4. Map Visualization
-- Interactive Google Map to view all reports  
-- Color-coded markers based on severity or status  
-- Tap marker → open detailed report info  
+---
 
-### 5. Smart Drive Mode (Voice Alerts)
-- Live GPS tracking  
-- Detect nearby hazards in real time  
-- Text-to-Speech warnings such as  
+## ⚙️ Core Modules  
+
+### 🔐 Authentication  
+- Supabase Auth for email/password login  
+- Session persistence and token handling  
+- RouteGuard middleware for navigation protection  
+
+### 🧭 Road Condition Detection  
+- Capture or upload road images using device camera  
+- AI inference via YOLOv8n model hosted on Hugging Face  
+- Detects potholes, cracks, and foreign obstacles in real time  
+
+### 🗂️ Report Management  
+- Submit AI-detected issues with GPS metadata  
+- Upload road photos to Supabase Storage  
+- Access personal report history and status tracking  
+
+### 🗺️ Map Visualization  
+- Interactive Google Map display  
+- Color-coded markers by severity or report type  
+- Detailed pop-up info for each detected issue  
+
+### 🚗 Smart Drive Mode  
+- Background GPS tracking during driving  
+- Voice-based hazard alerts using Text-to-Speech  
+- Example:  
   > “⚠️ Pothole detected ahead. Please slow down.”  
 
-### 6. Gamification System
-- Users earn points for contributing valid reports  
-- Unlock badges for milestones (e.g. “First 10 Reports”)  
-- Leaderboard to encourage engagement  
-- Data synced to Supabase  
+### 🏅 Gamification System  
+- Earn points for validated reports  
+- Unlock achievement badges  
+- Real-time leaderboard synced to Supabase  
 
-### 7. Notifications & Alerts
-- Push alerts for nearby hazards or updates  
-- Powered by OneSignal  
+### 🔔 Notifications & Alerts  
+- Push alerts for nearby road hazards  
+- System updates powered by OneSignal  
 
-### 8. Analytics Dashboard *(Future Phase)*
-- Visualize reported issues and patterns  
-- Useful for identifying high-risk road areas  
+### 📊 Analytics Dashboard *(Future Development)*  
+- Insights into road conditions by area  
+- Identify high-risk and frequently reported zones  
 
 ---
 
-## 🧩 Key Features
-- 🤖 Real-time AI road damage detection  
+## 🧩 Key Features  
+- 🤖 AI-powered real-time damage detection  
 - 📍 GPS-based location tagging  
-- ☁️ Cloud-synced reports  
+- ☁️ Cloud-synced reporting  
 - 🔊 Voice alerts for nearby hazards  
-- 🏅 Gamified user engagement (points, badges, leaderboard)  
-- 🌗 Light/Dark mode + i10n localization  
+- 🏅 Gamified user engagement system  
+- 🌗 Dark/Light theme with full i18n (EN/ZH)  
+- 📶 Offline caching & reconnect logic  
+- 👥 Role-based access (User / Authority / Developer)  
 
 ---
 
-## 🔁 Workflow Overview
-1. User opens Pavra  
-2. Captures or uploads a road image/video  
-3. YOLOv8n detects damage and returns predictions  
-4. App tags result with GPS coordinates  
-5. Pavra issues voice alert if a nearby hazard is found  
-6. User confirms and submits the report  
-7. Report stored in Supabase and displayed on map  
-8. User earns points and badges  
+## 🔁 Workflow Overview  
+1. User opens Pavra app  
+2. Captures or uploads a road image  
+3. YOLOv8n performs AI damage detection  
+4. Pavra tags results with GPS coordinates  
+5. Voice alert triggers if hazards are nearby  
+6. User confirms and submits report  
+7. Report data and image stored in Supabase  
+8. Points and badges updated in user profile  
+
+---
+
+## 🚀 Deployment  
+- **Frontend:** Flutter 3.9.2+ (Android & iOS)  
+- **Backend:** Serverpod hosted on **Railway**  
+- **Cache & Queue:** Upstash Redis + QStash  
+- **Database & Storage:** Supabase  
+- **AI Service:** Hugging Face Spaces  
+
+---
+
+**Pavra — Smarter Roads, Safer Journeys.**

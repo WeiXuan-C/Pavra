@@ -314,6 +314,44 @@ class NotificationApi {
     }
   }
 
+  /// 🧪 测试：手动触发 scheduled notification 处理
+  ///
+  /// 用于本地开发测试，模拟 QStash webhook 的行为
+  ///
+  /// 使用方法：
+  /// 1. 创建一个 scheduled notification
+  /// 2. 复制 notification ID
+  /// 3. 调用此方法：await testProcessScheduledNotification('notification-id')
+  /// 4. 检查 Supabase 中的状态是否更新为 'sent'
+  Future<Map<String, dynamic>> testProcessScheduledNotification(
+    String notificationId,
+  ) async {
+    final serverpodUrl = ApiConfig.serverpodUrl;
+
+    try {
+      print('🧪 [TEST] Triggering scheduled notification: $notificationId');
+
+      final response = await http.post(
+        Uri.parse(
+          '$serverpodUrl/notification/testProcessScheduledNotification',
+        ),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'notificationId': notificationId}),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Test failed: ${response.body}');
+      }
+
+      final result = jsonDecode(response.body) as Map<String, dynamic>;
+      print('✓ [TEST] Result: $result');
+      return result;
+    } catch (e) {
+      print('❌ [TEST] Error: $e');
+      rethrow;
+    }
+  }
+
   /// 更新通知（支持更新所有字段）
   Future<Map<String, dynamic>> updateNotification({
     required String notificationId,
