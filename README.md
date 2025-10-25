@@ -1,7 +1,7 @@
 # Pavra  
 **Slogan:** *The Smarter Roads, The Safer Journeys.*  
 
-[![DeepWiki](https://deepwiki.ai/badge.svg)](https://deepwiki.ai/github/WeiXuan-C/Pavra)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WeiXuan-C/Pavra)
 
 ---
 
@@ -118,7 +118,3 @@ To activate **Developer Mode**, go to **Profile → About Page**, then **tap the
 - **Cache & Queue:** Upstash Redis + QStash  
 - **Database & Storage:** Supabase  
 - **AI Service:** Hugging Face Spaces  
-
----
-
-**Pavra — Smarter Roads, Safer Journeys.**
