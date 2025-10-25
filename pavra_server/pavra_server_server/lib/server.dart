@@ -62,16 +62,16 @@ void run(List<String> args) async {
         'ℹ️ No .env file found, using system environment variables (production mode)');
   }
 
-  final pod = Serverpod(args, Protocol(), Endpoints());
-
-  // 1️⃣ Start core server (HTTP, database)
-  await pod.start();
-
-  // 2️⃣ Initialize Upstash Redis REST API
+  // 1️⃣ Initialize Upstash Redis REST API (before Serverpod)
   await _initializeUpstashRedis(dotenv);
 
-  // 3️⃣ Initialize Supabase connection
-  await _initializeSupabase(pod, dotenv);
+  // 2️⃣ Initialize Supabase connection (before Serverpod)
+  await _initializeSupabaseEarly(dotenv);
+
+  final pod = Serverpod(args, Protocol(), Endpoints());
+
+  // 3️⃣ Start core server (HTTP, database)
+  await pod.start();
 
   // 4️⃣ Initialize OneSignal credentials
   _initializeOneSignal(pod, dotenv);
@@ -124,15 +124,13 @@ Future<void> _initializeUpstashRedis(DotEnv? dotenv) async {
   }
 }
 
-/// ✅ Supabase initialization
-Future<void> _initializeSupabase(Serverpod pod, DotEnv? dotenv) async {
+/// ✅ Supabase initialization (early, before Serverpod)
+Future<void> _initializeSupabaseEarly(DotEnv? dotenv) async {
   try {
-    final supabaseUrl = Platform.environment['SUPABASE_URL'] ??
-        dotenv?['SUPABASE_URL'] ??
-        pod.getPassword('SUPABASE_URL');
+    final supabaseUrl =
+        Platform.environment['SUPABASE_URL'] ?? dotenv?['SUPABASE_URL'];
     final supabaseKey = Platform.environment['SUPABASE_SERVICE_ROLE_KEY'] ??
-        dotenv?['SUPABASE_SERVICE_ROLE_KEY'] ??
-        pod.getPassword('SUPABASE_SERVICE_ROLE_KEY');
+        dotenv?['SUPABASE_SERVICE_ROLE_KEY'];
 
     if (supabaseUrl == null || supabaseKey == null) {
       PLog.warn(
