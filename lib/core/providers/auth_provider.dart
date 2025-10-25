@@ -6,6 +6,8 @@ import '../supabase/auth_service.dart';
 import '../models/user_model.dart';
 import '../services/action_log_client.dart';
 import '../services/onesignal_service.dart';
+import 'locale_provider.dart';
+import 'theme_provider.dart';
 
 /// Authentication Provider
 /// Manages authentication state and provides methods for auth operations
@@ -13,6 +15,10 @@ import '../services/onesignal_service.dart';
 class AuthProvider with ChangeNotifier {
   final AuthService _authService = AuthService();
   final ActionLogClient _actionLog = ActionLogClient();
+
+  // Optional providers for syncing theme and language
+  LocaleProvider? _localeProvider;
+  ThemeProvider? _themeProvider;
 
   // State variables
   User? _user;
@@ -32,6 +38,16 @@ class AuthProvider with ChangeNotifier {
 
   AuthProvider() {
     _initialize();
+  }
+
+  /// Set providers for syncing theme and language settings
+  /// Should be called after providers are initialized
+  void setProviders({
+    LocaleProvider? localeProvider,
+    ThemeProvider? themeProvider,
+  }) {
+    _localeProvider = localeProvider;
+    _themeProvider = themeProvider;
   }
 
   /// Initialize auth state and listen to auth changes
@@ -146,6 +162,17 @@ class AuthProvider with ChangeNotifier {
         );
         developer.log('Role: ${_userProfile!.role}', name: 'AuthProvider');
         developer.log('Email: ${_userProfile!.email}', name: 'AuthProvider');
+        developer.log(
+          'Language: ${_userProfile!.language}',
+          name: 'AuthProvider',
+        );
+        developer.log(
+          'Theme Mode: ${_userProfile!.themeMode}',
+          name: 'AuthProvider',
+        );
+
+        // Sync theme and language settings from user profile
+        await _syncUserPreferences();
       } else {
         developer.log('⚠️ Profile is NULL after query', name: 'AuthProvider');
         developer.log(
@@ -163,6 +190,67 @@ class AuthProvider with ChangeNotifier {
     }
 
     developer.log('===========================', name: 'AuthProvider');
+  }
+
+  /// Sync user preferences (theme and language) from profile to providers
+  /// Only syncs if there's a difference to avoid circular updates
+  Future<void> _syncUserPreferences() async {
+    if (_userProfile == null) return;
+
+    try {
+      // Sync language
+      if (_localeProvider != null) {
+        final languageCode = _userProfile!.language;
+        final currentLocale = _localeProvider!.locale.languageCode;
+
+        if (languageCode != currentLocale) {
+          developer.log(
+            '🌐 Syncing language: $currentLocale -> $languageCode',
+            name: 'AuthProvider',
+          );
+          await _localeProvider!.setLocale(Locale(languageCode));
+        }
+      }
+
+      // Sync theme mode
+      if (_themeProvider != null) {
+        final themeModeString = _userProfile!.themeMode;
+        ThemeMode themeMode;
+
+        switch (themeModeString.toLowerCase()) {
+          case 'light':
+            themeMode = ThemeMode.light;
+            break;
+          case 'dark':
+            themeMode = ThemeMode.dark;
+            break;
+          case 'system':
+          default:
+            themeMode = ThemeMode.system;
+            break;
+        }
+
+        final currentThemeMode = _themeProvider!.themeMode;
+        if (themeMode != currentThemeMode) {
+          developer.log(
+            '🎨 Syncing theme: $currentThemeMode -> $themeMode',
+            name: 'AuthProvider',
+          );
+          await _themeProvider!.setThemeMode(themeMode);
+        }
+      }
+    } catch (e) {
+      developer.log(
+        '⚠️ Error syncing user preferences: $e',
+        name: 'AuthProvider',
+        error: e,
+      );
+    }
+  }
+
+  /// Manually sync user preferences (useful after settings changes)
+  Future<void> syncUserPreferences() async {
+    await _syncUserPreferences();
   }
 
   // ========== AUTHENTICATION METHODS ==========

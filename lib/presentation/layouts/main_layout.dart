@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../core/app_export.dart';
 import '../../l10n/app_localizations.dart';
 import '../map_view_screen/map_view_screen.dart';
 import '../report_screen/report_screen.dart';
 import '../notification_screen/notification_screen.dart';
+import '../notification_screen/notification_provider.dart';
 import '../profile_screen/profile_screen.dart';
 
 /// Main Layout
@@ -270,14 +272,58 @@ class _MainLayoutState extends State<MainLayout> {
           ),
           // Notifications
           BottomNavigationBarItem(
-            icon: CustomIconWidget(
-              iconName: 'notifications_active',
-              color: _currentIndex == 2
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.6),
-              size: 6.w,
+            icon: Consumer<NotificationProvider>(
+              builder: (context, provider, child) {
+                final unreadCount = provider.unreadCount;
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    CustomIconWidget(
+                      iconName: 'notifications_active',
+                      color: _currentIndex == 2
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.6),
+                      size: 6.w,
+                    ),
+                    if (unreadCount > 0)
+                      Positioned(
+                        right: -1.w,
+                        top: -0.5.h,
+                        child: Container(
+                          padding: EdgeInsets.all(
+                            unreadCount > 99 ? 0.3.w : 0.8.w,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Theme.of(context).cardColor,
+                              width: 1.5,
+                            ),
+                          ),
+                          constraints: BoxConstraints(
+                            minWidth: 4.w,
+                            minHeight: 4.w,
+                          ),
+                          child: Center(
+                            child: Text(
+                              unreadCount > 99 ? '99+' : unreadCount.toString(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 8.sp,
+                                fontWeight: FontWeight.bold,
+                                height: 1.0,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
             ),
             label: l10n.notification_title,
           ),

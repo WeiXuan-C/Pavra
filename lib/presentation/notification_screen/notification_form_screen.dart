@@ -30,9 +30,9 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
   List<String> _selectedRoles = [];
   List<String> _selectedUserIds = [];
   bool _isSubmitting = false;
-  bool _isLoadingActionLogs = false;
+  // bool _isLoadingActionLogs = false;
   bool _isLoadingUsers = false;
-  List<Map<String, dynamic>> _actionLogs = [];
+  // List<Map<String, dynamic>> _actionLogs = [];
   List<Map<String, dynamic>> _users = [];
 
   // Search and UI state
@@ -53,9 +53,9 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
     'reminder',
   ];
 
-  final List<String> _statusOptions = ['draft', 'scheduled', 'sent'];
+  final List<String> _statusOptions = ['draft', 'sent'];
 
-  final List<String> _targetTypeOptions = ['single', 'all', 'role', 'custom'];
+  final List<String> _targetTypeOptions = ['all', 'custom'];
 
   final List<String> _roleOptions = ['user', 'authority', 'developer'];
 
@@ -74,7 +74,7 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
     _selectedActionLogId = widget.notification?.relatedAction;
     _selectedType = widget.notification?.type ?? 'info';
     _selectedStatus = widget.notification?.status ?? 'sent';
-    _selectedTargetType = widget.notification?.targetType ?? 'single';
+    _selectedTargetType = widget.notification?.targetType ?? 'all';
     _selectedRoles = widget.notification?.targetRoles ?? [];
     _selectedUserIds = widget.notification?.targetUserIds ?? [];
     _scheduledDateTime = widget.notification?.scheduledAt;
@@ -83,7 +83,7 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
     _isUserListExpanded =
         _selectedTargetType == 'single' || _selectedTargetType == 'custom';
 
-    _loadActionLogs();
+    // _loadActionLogs();
     _loadUsers();
   }
 
@@ -144,35 +144,35 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
     }
   }
 
-  Future<void> _loadActionLogs() async {
-    setState(() {
-      _isLoadingActionLogs = true;
-    });
+  // Future<void> _loadActionLogs() async {
+  //   setState(() {
+  //     _isLoadingActionLogs = true;
+  //   });
 
-    try {
-      // 通过 Repository 加载 action logs
-      final logs = await _repository.getActionLogs(limit: 50);
-      debugPrint('Loaded ${logs.length} action logs from action_log table');
+  //   try {
+  //     // 通过 Repository 加载 action logs
+  //     final logs = await _repository.getActionLogs(limit: 50);
+  //     debugPrint('Loaded ${logs.length} action logs from action_log table');
 
-      setState(() {
-        _actionLogs = logs;
-      });
-    } catch (e) {
-      debugPrint('Error loading action logs: $e');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to load action logs: $e'),
-            backgroundColor: Colors.orange,
-          ),
-        );
-      }
-    } finally {
-      setState(() {
-        _isLoadingActionLogs = false;
-      });
-    }
-  }
+  //     setState(() {
+  //       _actionLogs = logs;
+  //     });
+  //   } catch (e) {
+  //     debugPrint('Error loading action logs: $e');
+  //     if (mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text('Failed to load action logs: $e'),
+  //           backgroundColor: Colors.orange,
+  //         ),
+  //       );
+  //     }
+  //   } finally {
+  //     setState(() {
+  //       _isLoadingActionLogs = false;
+  //     });
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -301,102 +301,102 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
             _buildSectionHeader('Additional Options', Icons.settings_outlined),
 
             // Related action dropdown (optional) with search
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Dropdown with search info
-                DropdownButtonFormField<String>(
-                  initialValue: _selectedActionLogId,
-                  decoration: InputDecoration(
-                    labelText: l10n.notification_relatedActionLabel,
-                    hintText: _actionLogs.isEmpty
-                        ? 'No action logs available'
-                        : 'Select an action log (optional)',
-                    border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.link),
+            // Column(
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     // Dropdown with search info
+            //     DropdownButtonFormField<String>(
+            //       initialValue: _selectedActionLogId,
+            //       decoration: InputDecoration(
+            //         labelText: l10n.notification_relatedActionLabel,
+            //         hintText: _actionLogs.isEmpty
+            //             ? 'No action logs available'
+            //             : 'Select an action log (optional)',
+            //         border: const OutlineInputBorder(),
+            //         prefixIcon: const Icon(Icons.link),
 
-                    suffixIcon: _isLoadingActionLogs
-                        ? const Padding(
-                            padding: EdgeInsets.all(12),
-                            child: SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                          )
-                        : null,
-                  ),
-                  isExpanded: true,
-                  menuMaxHeight: 400,
-                  // 自定义选中项的显示（只显示 action type）
-                  selectedItemBuilder: (BuildContext context) {
-                    return [
-                      const Text('None'),
-                      ..._actionLogs.map((log) {
-                        final actionType =
-                            log['action_type'] as String? ?? 'Unknown';
-                        return Text(
-                          actionType,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 14),
-                        );
-                      }),
-                    ];
-                  },
-                  items: [
-                    const DropdownMenuItem<String>(
-                      value: null,
-                      child: Text('None'),
-                    ),
-                    ..._actionLogs.map((log) {
-                      final actionType =
-                          log['action_type'] as String? ?? 'Unknown';
-                      final profiles = log['profiles'] as Map<String, dynamic>?;
-                      final username =
-                          profiles?['username'] as String? ?? 'Unknown User';
-                      final email = profiles?['email'] as String? ?? '';
+            //         suffixIcon: _isLoadingActionLogs
+            //             ? const Padding(
+            //                 padding: EdgeInsets.all(12),
+            //                 child: SizedBox(
+            //                   width: 20,
+            //                   height: 20,
+            //                   child: CircularProgressIndicator(strokeWidth: 2),
+            //                 ),
+            //               )
+            //             : null,
+            //       ),
+            //       isExpanded: true,
+            //       menuMaxHeight: 400,
+            //       // 自定义选中项的显示（只显示 action type）
+            //       selectedItemBuilder: (BuildContext context) {
+            //         return [
+            //           const Text('None'),
+            //           ..._actionLogs.map((log) {
+            //             final actionType =
+            //                 log['action_type'] as String? ?? 'Unknown';
+            //             return Text(
+            //               actionType,
+            //               overflow: TextOverflow.ellipsis,
+            //               style: const TextStyle(fontSize: 14),
+            //             );
+            //           }),
+            //         ];
+            //       },
+            //       items: [
+            //         const DropdownMenuItem<String>(
+            //           value: null,
+            //           child: Text('None'),
+            //         ),
+            //         ..._actionLogs.map((log) {
+            //           final actionType =
+            //               log['action_type'] as String? ?? 'Unknown';
+            //           final profiles = log['profiles'] as Map<String, dynamic>?;
+            //           final username =
+            //               profiles?['username'] as String? ?? 'Unknown User';
+            //           final email = profiles?['email'] as String? ?? '';
 
-                      return DropdownMenuItem<String>(
-                        value: log['id'] as String,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                actionType,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                '$username${email.isNotEmpty ? " • $email" : ""}',
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.grey,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedActionLogId = value;
-                    });
-                  },
-                ),
-              ],
-            ),
+            //           return DropdownMenuItem<String>(
+            //             value: log['id'] as String,
+            //             child: Padding(
+            //               padding: const EdgeInsets.symmetric(vertical: 4),
+            //               child: Column(
+            //                 crossAxisAlignment: CrossAxisAlignment.start,
+            //                 mainAxisSize: MainAxisSize.min,
+            //                 children: [
+            //                   Text(
+            //                     actionType,
+            //                     style: const TextStyle(
+            //                       fontWeight: FontWeight.w600,
+            //                       fontSize: 13,
+            //                     ),
+            //                     overflow: TextOverflow.ellipsis,
+            //                     maxLines: 1,
+            //                   ),
+            //                   const SizedBox(height: 2),
+            //                   Text(
+            //                     '$username${email.isNotEmpty ? " • $email" : ""}',
+            //                     style: const TextStyle(
+            //                       fontSize: 10,
+            //                       color: Colors.grey,
+            //                     ),
+            //                     maxLines: 1,
+            //                     overflow: TextOverflow.ellipsis,
+            //                   ),
+            //                 ],
+            //               ),
+            //             ),
+            //           );
+            //         }),
+            //       ],
+            //       onChanged: (value) {
+            //         setState(() {
+            //           _selectedActionLogId = value;
+            //         });
+            //       },
+            //     ),
+            //   ],
+            // ),
             const SizedBox(height: 16),
 
             // Data field (optional JSON data)

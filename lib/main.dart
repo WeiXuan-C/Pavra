@@ -141,9 +141,31 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProxyProvider2<
+          LocaleProvider,
+          ThemeProvider,
+          AuthProvider
+        >(
+          create: (context) {
+            final authProvider = AuthProvider();
+            final localeProvider = context.read<LocaleProvider>();
+            final themeProvider = context.read<ThemeProvider>();
+            authProvider.setProviders(
+              localeProvider: localeProvider,
+              themeProvider: themeProvider,
+            );
+            return authProvider;
+          },
+          update: (context, localeProvider, themeProvider, authProvider) {
+            authProvider?.setProviders(
+              localeProvider: localeProvider,
+              themeProvider: themeProvider,
+            );
+            return authProvider!;
+          },
+        ),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
       child: MyApp(),
