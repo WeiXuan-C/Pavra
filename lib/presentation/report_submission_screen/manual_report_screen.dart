@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -31,11 +32,9 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   final TextEditingController _locationController = TextEditingController();
   final ImagePicker _imagePicker = ImagePicker();
 
-  final List<String> _photoUrls = [];
   final List<String> _selectedIssueTypeIds = [];
   double _severity = 3.0;
   bool _isSubmitting = false;
-  double _uploadProgress = 0.0;
 
   @override
   void dispose() {
@@ -44,17 +43,23 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     super.dispose();
   }
 
-  bool get _isFormValid {
-    return _photoUrls.isNotEmpty &&
+  bool _isFormValid(ManualReportProvider provider) {
+    return provider.uploadedPhotos.isNotEmpty &&
         _selectedIssueTypeIds.isNotEmpty &&
         _locationController.text.isNotEmpty;
   }
 
   /// Add photo from camera or gallery
   Future<void> _addPhoto({bool fromCamera = true}) async {
-    if (_photoUrls.length >= 5) {
+    final provider = context.read<ManualReportProvider>();
+
+    // Check if can add more photos
+    final photoType = provider.mainPhotoCount == 0 ? 'main' : 'additional';
+    final validationError = provider.canAddPhoto(photoType);
+
+    if (validationError != null) {
       Fluttertoast.showToast(
-        msg: AppLocalizations.of(context).report_maxPhotos,
+        msg: validationError,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
       );
@@ -66,12 +71,34 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
         source: fromCamera ? ImageSource.camera : ImageSource.gallery,
         preferredCameraDevice: CameraDevice.rear,
         imageQuality: 85,
+        maxWidth: 1920,
+        maxHeight: 1920,
       );
 
       if (image != null) {
-        setState(() {
-          _photoUrls.add(image.path);
-        });
+        // Read file bytes
+        final file = File(image.path);
+        final bytes = await file.readAsBytes();
+
+        // Determine MIME type
+        String? mimeType;
+        if (image.name.toLowerCase().endsWith('.jpg') ||
+            image.name.toLowerCase().endsWith('.jpeg')) {
+          mimeType = 'image/jpeg';
+        } else if (image.name.toLowerCase().endsWith('.png')) {
+          mimeType = 'image/png';
+        } else if (image.name.toLowerCase().endsWith('.webp')) {
+          mimeType = 'image/webp';
+        }
+
+        // Upload to storage
+        await provider.uploadPhoto(
+          fileName: image.name,
+          fileBytes: bytes,
+          mimeType: mimeType,
+          photoType: photoType,
+          isPrimary: provider.photoCount == 0,
+        );
 
         HapticFeedback.lightImpact();
         if (!mounted) return;
@@ -84,25 +111,39 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     } catch (e) {
       if (!mounted) return;
       Fluttertoast.showToast(
-        msg: AppLocalizations.of(context).report_photoAddFailed,
-        toastLength: Toast.LENGTH_SHORT,
+        msg: '${AppLocalizations.of(context).report_photoAddFailed}: $e',
+        toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
       );
     }
   }
 
   /// Remove photo
-  void _removePhoto(int index) {
-    setState(() {
-      _photoUrls.removeAt(index);
-    });
+  Future<void> _removePhoto(int index) async {
+    final provider = context.read<ManualReportProvider>();
 
-    HapticFeedback.lightImpact();
-    Fluttertoast.showToast(
-      msg: AppLocalizations.of(context).report_photoRemoved,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-    );
+    if (index >= provider.uploadedPhotos.length) return;
+
+    final photo = provider.uploadedPhotos[index];
+
+    try {
+      await provider.deletePhoto(photo);
+
+      HapticFeedback.lightImpact();
+      if (!mounted) return;
+      Fluttertoast.showToast(
+        msg: AppLocalizations.of(context).report_photoRemoved,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      Fluttertoast.showToast(
+        msg: 'Failed to remove photo: $e',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
+    }
   }
 
   /// Toggle issue type selection
@@ -164,13 +205,12 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
 
   /// Submit report
   Future<void> _submitReport() async {
-    if (!_isFormValid) return;
-
     final provider = context.read<ManualReportProvider>();
+
+    if (!_isFormValid(provider)) return;
 
     setState(() {
       _isSubmitting = true;
-      _uploadProgress = 0.0;
     });
 
     try {
@@ -182,26 +222,18 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
         address: _locationController.text,
       );
 
-      // Simulate upload progress
-      for (int i = 0; i <= 100; i += 10) {
-        await Future.delayed(const Duration(milliseconds: 200));
-        if (!mounted) return;
-        setState(() {
-          _uploadProgress = i / 100;
-        });
-      }
-
       // Submit the draft
+      final reportId = provider.draftReport?.id ?? 'Unknown';
       await provider.submitDraft();
 
       HapticFeedback.heavyImpact();
 
       if (!mounted) return;
-      _showSuccessDialog(provider.draftReport?.title ?? 'Unknown');
+      _showSuccessDialog(reportId);
     } catch (e) {
       if (!mounted) return;
       Fluttertoast.showToast(
-        msg: AppLocalizations.of(context).report_submitFailed,
+        msg: '${AppLocalizations.of(context).report_submitFailed}: $e',
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
       );
@@ -209,7 +241,6 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
       if (mounted) {
         setState(() {
           _isSubmitting = false;
-          _uploadProgress = 0.0;
         });
       }
     }
@@ -318,11 +349,13 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   void _handlePopInvoked(bool didPop, Object? result) async {
     if (didPop) return;
 
+    final provider = context.read<ManualReportProvider>();
+
     final hasChanges =
         _descriptionController.text.isNotEmpty ||
         _selectedIssueTypeIds.isNotEmpty ||
         _locationController.text.isNotEmpty ||
-        _photoUrls.isNotEmpty;
+        provider.uploadedPhotos.isNotEmpty;
 
     if (hasChanges) {
       final navigator = Navigator.of(context);
@@ -422,7 +455,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
                           SizedBox(height: 3.h),
 
                           // Photo section
-                          _buildPhotoSection(theme, l10n),
+                          _buildPhotoSection(theme, l10n, provider),
 
                           SizedBox(height: 3.h),
 
@@ -458,9 +491,9 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
 
                   // Bottom actions
                   SubmissionActionsWidget(
-                    isFormValid: _isFormValid,
-                    isSubmitting: _isSubmitting,
-                    uploadProgress: _uploadProgress,
+                    isFormValid: _isFormValid(provider),
+                    isSubmitting: _isSubmitting || provider.isUploadingPhoto,
+                    uploadProgress: provider.uploadProgress,
                     onSubmit: _submitReport,
                     onSaveDraft: _saveDraft,
                   ),
@@ -501,19 +534,51 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     );
   }
 
-  Widget _buildPhotoSection(ThemeData theme, AppLocalizations l10n) {
+  Widget _buildPhotoSection(
+    ThemeData theme,
+    AppLocalizations l10n,
+    ManualReportProvider provider,
+  ) {
+    // Convert uploaded photos to URLs for display
+    final photoUrls = provider.uploadedPhotos.map((p) => p.photoUrl).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          l10n.report_photos,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              l10n.report_photos,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              '${provider.photoCount}/10',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          ],
         ),
         SizedBox(height: 2.h),
+
+        // Show upload progress
+        if (provider.isUploadingPhoto)
+          Padding(
+            padding: EdgeInsets.only(bottom: 2.h),
+            child: Column(
+              children: [
+                LinearProgressIndicator(value: provider.uploadProgress),
+                SizedBox(height: 1.h),
+                Text('Uploading photo...', style: theme.textTheme.bodySmall),
+              ],
+            ),
+          ),
+
         PhotoGalleryWidget(
-          imageUrls: _photoUrls,
+          imageUrls: photoUrls,
           onAddPhoto: _addPhoto,
           onRemovePhoto: _removePhoto,
         ),
@@ -522,7 +587,9 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
           children: [
             Expanded(
               child: OutlinedButton.icon(
-                onPressed: () => _addPhoto(fromCamera: true),
+                onPressed: provider.isUploadingPhoto
+                    ? null
+                    : () => _addPhoto(fromCamera: true),
                 icon: const Icon(Icons.camera_alt),
                 label: Text(l10n.report_takePhoto),
               ),
@@ -530,7 +597,9 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
             SizedBox(width: 2.w),
             Expanded(
               child: OutlinedButton.icon(
-                onPressed: () => _addPhoto(fromCamera: false),
+                onPressed: provider.isUploadingPhoto
+                    ? null
+                    : () => _addPhoto(fromCamera: false),
                 icon: const Icon(Icons.photo_library),
                 label: Text(l10n.report_chooseFromGallery),
               ),

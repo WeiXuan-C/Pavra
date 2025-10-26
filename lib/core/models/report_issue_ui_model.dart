@@ -46,8 +46,27 @@ class ReportIssueUiModel {
   bool get hasPhotos => photos.isNotEmpty;
   bool get hasIssueTypes => issueTypes.isNotEmpty;
 
-  IssuePhotoModel? get primaryPhoto =>
-      photos.firstWhere((p) => p.isPrimary, orElse: () => photos.first);
+  IssuePhotoModel? get primaryPhoto {
+    if (photos.isEmpty) return null;
+    try {
+      return photos.firstWhere((p) => p.isPrimary);
+    } catch (e) {
+      return photos.first;
+    }
+  }
+
+  List<IssuePhotoModel> get mainPhotos =>
+      photos.where((p) => p.photoType == 'main').toList();
+
+  List<IssuePhotoModel> get additionalPhotos =>
+      photos.where((p) => p.photoType == 'additional').toList();
+
+  List<IssuePhotoModel> get reviewedPhotos =>
+      photos.where((p) => p.photoType == 'reviewed').toList();
+
+  int get photoCount => photos.length;
+  int get mainPhotoCount => mainPhotos.length;
+  int get additionalPhotoCount => additionalPhotos.length;
 
   String get severityLabel {
     switch (severity) {

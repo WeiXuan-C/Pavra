@@ -7,6 +7,7 @@ import '../../../data/repositories/report_issue_repository.dart';
 import '../../../data/sources/remote/report_issue_remote_source.dart';
 import '../../../data/sources/remote/issue_type_remote_source.dart';
 import '../../../data/sources/remote/issue_vote_remote_source.dart';
+import '../../supabase/storage_service.dart';
 
 /// Report Issue API
 /// High-level API for report issues operations
@@ -14,6 +15,7 @@ import '../../../data/sources/remote/issue_vote_remote_source.dart';
 class ReportIssueApi {
   late final ReportIssueRepository _repository;
   final SupabaseClient _supabase;
+  final StorageService _storageService = StorageService();
 
   ReportIssueApi(this._supabase) {
     _repository = ReportIssueRepository(
@@ -141,24 +143,20 @@ class ReportIssueApi {
   /// Upload photo to Supabase Storage and link to report
   Future<IssuePhotoModel> uploadPhoto({
     required String issueId,
-    required String filePath,
-    required List<int> fileBytes,
+    required String fileName,
+    required Uint8List fileBytes,
+    String? mimeType,
     String photoType = 'main',
     bool isPrimary = false,
   }) async {
     try {
-      // Upload to Supabase Storage
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}_$filePath';
-      final storagePath = 'report_photos/$issueId/$fileName';
-
-      await _supabase.storage
-          .from('reports')
-          .uploadBinary(storagePath, Uint8List.fromList(fileBytes));
-
-      // Get public URL
-      final photoUrl = _supabase.storage
-          .from('reports')
-          .getPublicUrl(storagePath);
+      // Upload to Supabase Storage (issue_photos bucket)
+      final photoUrl = await _storageService.uploadIssuePhoto(
+        issueId: issueId,
+        fileName: fileName,
+        fileBytes: fileBytes,
+        mimeType: mimeType,
+      );
 
       // Save to database
       return await _repository.uploadIssuePhoto(
@@ -172,17 +170,64 @@ class ReportIssueApi {
     }
   }
 
-  /// Delete photo
+  /// Upload multiple photos at once
+  Future<List<IssuePhotoModel>> uploadPhotos({
+    required String issueId,
+    required List<({String fileName, Uint8List bytes, String? mimeType})> files,
+    String photoType = 'additional',
+  }) async {
+    final uploadedPhotos = <IssuePhotoModel>[];
+
+    for (int i = 0; i < files.length; i++) {
+      final file = files[i];
+      try {
+        final photo = await uploadPhoto(
+          issueId: issueId,
+          fileName: file.fileName,
+          fileBytes: file.bytes,
+          mimeType: file.mimeType,
+          photoType: photoType,
+          isPrimary:
+              i == 0 && photoType == 'main', // First main photo is primary
+        );
+        uploadedPhotos.add(photo);
+      } catch (e) {
+        // Continue uploading other photos even if one fails
+        print('Failed to upload ${file.fileName}: $e');
+      }
+    }
+
+    return uploadedPhotos;
+  }
+
+  /// Delete photo from both database and storage
   Future<void> deletePhoto(String photoId, String photoUrl) async {
     try {
-      // Delete from database
+      // Delete from database (soft delete)
       await _repository.deleteIssuePhoto(photoId);
 
       // Delete from storage
-      final path = Uri.parse(photoUrl).path.split('/reports/').last;
-      await _supabase.storage.from('reports').remove([path]);
+      await _storageService.deleteIssuePhoto(photoUrl);
     } catch (e) {
       throw Exception('Failed to delete photo: $e');
+    }
+  }
+
+  /// Delete all photos for an issue (used when deleting a report)
+  Future<void> deleteAllPhotos(String issueId) async {
+    try {
+      // Get all photos for the issue
+      final photos = await _repository.getIssuePhotos(issueId);
+
+      // Delete from database
+      for (final photo in photos) {
+        await _repository.deleteIssuePhoto(photo.id);
+      }
+
+      // Delete from storage
+      await _storageService.deleteIssuePhotos(issueId);
+    } catch (e) {
+      throw Exception('Failed to delete all photos: $e');
     }
   }
 

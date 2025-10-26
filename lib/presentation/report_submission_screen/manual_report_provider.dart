@@ -1,20 +1,27 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/api/report_issue/report_issue_api.dart';
 import '../../core/api/report_issue/issue_type_api.dart';
+import '../../core/utils/issue_photo_helper.dart';
 import '../../data/models/report_issue_model.dart';
 import '../../data/models/issue_type_model.dart';
+import '../../data/models/issue_photo_model.dart';
 
 /// Provider for managing manual report drafts
 class ManualReportProvider extends ChangeNotifier {
   final ReportIssueApi _reportApi;
   final IssueTypeApi _issueTypeApi;
   final SupabaseClient _supabase;
+  late final IssuePhotoHelper _photoHelper;
 
   ReportIssueModel? _draftReport;
   List<IssueTypeModel> _availableIssueTypes = [];
+  List<IssuePhotoModel> _uploadedPhotos = [];
   bool _isLoading = false;
+  bool _isUploadingPhoto = false;
   String? _error;
+  double _uploadProgress = 0.0;
 
   ManualReportProvider({
     required ReportIssueApi reportApi,
@@ -22,13 +29,21 @@ class ManualReportProvider extends ChangeNotifier {
     required SupabaseClient supabase,
   }) : _reportApi = reportApi,
        _issueTypeApi = issueTypeApi,
-       _supabase = supabase;
+       _supabase = supabase {
+    _photoHelper = IssuePhotoHelper(_reportApi);
+  }
 
   ReportIssueModel? get draftReport => _draftReport;
   List<IssueTypeModel> get availableIssueTypes => _availableIssueTypes;
+  List<IssuePhotoModel> get uploadedPhotos => _uploadedPhotos;
   bool get isLoading => _isLoading;
+  bool get isUploadingPhoto => _isUploadingPhoto;
   String? get error => _error;
   bool get hasDraft => _draftReport != null;
+  double get uploadProgress => _uploadProgress;
+  int get photoCount => _uploadedPhotos.length;
+  int get mainPhotoCount =>
+      _uploadedPhotos.where((p) => p.photoType == 'main').length;
 
   /// Initialize: Load or create draft report
   Future<void> initialize() async {
@@ -42,11 +57,28 @@ class ManualReportProvider extends ChangeNotifier {
 
       // Try to find existing draft
       await _loadOrCreateDraft();
+
+      // Load photos for the draft
+      if (_draftReport != null) {
+        await _loadDraftPhotos();
+      }
     } catch (e) {
       _error = e.toString();
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  /// Load photos for the current draft
+  Future<void> _loadDraftPhotos() async {
+    if (_draftReport == null) return;
+
+    try {
+      _uploadedPhotos = await _reportApi.getReportPhotos(_draftReport!.id);
+    } catch (e) {
+      // Non-critical error, just log it
+      debugPrint('Failed to load draft photos: $e');
     }
   }
 
@@ -169,5 +201,116 @@ class ManualReportProvider extends ChangeNotifier {
   void clearError() {
     _error = null;
     notifyListeners();
+  }
+
+  // ========== Photo Management ==========
+
+  /// Upload photo to the draft report
+  Future<IssuePhotoModel> uploadPhoto({
+    required String fileName,
+    required Uint8List fileBytes,
+    String? mimeType,
+    String photoType = 'main',
+    bool isPrimary = false,
+  }) async {
+    if (_draftReport == null) {
+      throw Exception('No draft report available');
+    }
+
+    _isUploadingPhoto = true;
+    _uploadProgress = 0.0;
+    notifyListeners();
+
+    try {
+      // Simulate progress
+      _uploadProgress = 0.3;
+      notifyListeners();
+
+      final photo = await _photoHelper.uploadPhoto(
+        issueId: _draftReport!.id,
+        fileName: fileName,
+        fileBytes: fileBytes,
+        mimeType: mimeType,
+        photoType: photoType,
+        isPrimary: isPrimary,
+        currentPhotoCount: _uploadedPhotos.length,
+        currentMainPhotoCount: mainPhotoCount,
+      );
+
+      _uploadProgress = 1.0;
+      _uploadedPhotos.add(photo);
+      notifyListeners();
+
+      return photo;
+    } catch (e) {
+      _error = 'Failed to upload photo: $e';
+      notifyListeners();
+      rethrow;
+    } finally {
+      _isUploadingPhoto = false;
+      _uploadProgress = 0.0;
+      notifyListeners();
+    }
+  }
+
+  /// Upload multiple photos
+  Future<List<IssuePhotoModel>> uploadMultiplePhotos({
+    required List<({String fileName, Uint8List bytes, String? mimeType})> files,
+    String photoType = 'additional',
+  }) async {
+    if (_draftReport == null) {
+      throw Exception('No draft report available');
+    }
+
+    _isUploadingPhoto = true;
+    _uploadProgress = 0.0;
+    notifyListeners();
+
+    try {
+      final photos = await _photoHelper.uploadMultiplePhotos(
+        issueId: _draftReport!.id,
+        files: files,
+        photoType: photoType,
+        currentPhotoCount: _uploadedPhotos.length,
+      );
+
+      _uploadedPhotos.addAll(photos);
+      _uploadProgress = 1.0;
+      notifyListeners();
+
+      return photos;
+    } catch (e) {
+      _error = 'Failed to upload photos: $e';
+      notifyListeners();
+      rethrow;
+    } finally {
+      _isUploadingPhoto = false;
+      _uploadProgress = 0.0;
+      notifyListeners();
+    }
+  }
+
+  /// Delete a photo
+  Future<void> deletePhoto(IssuePhotoModel photo) async {
+    try {
+      await _reportApi.deletePhoto(photo.id, photo.photoUrl);
+      _uploadedPhotos.removeWhere((p) => p.id == photo.id);
+      notifyListeners();
+    } catch (e) {
+      _error = 'Failed to delete photo: $e';
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  /// Validate if can add more photos
+  String? canAddPhoto(String photoType) {
+    return IssuePhotoHelper.validatePhoto(
+      bytes: Uint8List(0), // Dummy for count check
+      mimeType: 'image/jpeg',
+      currentPhotoCount: _uploadedPhotos.length,
+      currentMainPhotoCount: mainPhotoCount,
+      photoType: photoType,
+    );
   }
 }
