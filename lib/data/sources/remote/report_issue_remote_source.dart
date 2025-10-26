@@ -111,9 +111,17 @@ class ReportIssueRemoteSource {
     return updateReportIssue(id, {'status': 'submitted'});
   }
 
-  /// Delete report issue (only draft status)
+  /// Delete report issue (only draft status) - Soft delete
   Future<void> deleteReportIssue(String id) async {
-    await _supabase.from('report_issues').delete().eq('id', id);
+    final now = DateTime.now();
+    await _supabase
+        .from('report_issues')
+        .update({
+          'is_deleted': true,
+          'deleted_at': now.toIso8601String(),
+          'updated_at': now.toIso8601String(),
+        })
+        .eq('id', id);
   }
 
   /// Fetch photos for a report issue
@@ -153,9 +161,17 @@ class ReportIssueRemoteSource {
     return IssuePhotoModel.fromJson(response);
   }
 
-  /// Delete photo
+  /// Delete photo - Soft delete
   Future<void> deleteIssuePhoto(String photoId) async {
-    await _supabase.from('issue_photos').delete().eq('id', photoId);
+    final now = DateTime.now();
+    await _supabase
+        .from('issue_photos')
+        .update({
+          'is_deleted': true,
+          'deleted_at': now.toIso8601String(),
+          'updated_at': now.toIso8601String(),
+        })
+        .eq('id', photoId);
   }
 
   /// Authority: Review report issue

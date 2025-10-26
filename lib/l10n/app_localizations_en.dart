@@ -1272,4 +1272,51 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notification_statusSent => 'Sent';
+
+  @override
+  String get issueTypes_title => 'Issue Types';
+
+  @override
+  String get issueTypes_manageTooltip => 'Manage Issue Types';
+
+  @override
+  String get issueTypes_create => 'Create Issue Type';
+
+  @override
+  String get issueTypes_edit => 'Edit Issue Type';
+
+  @override
+  String get issueTypes_delete => 'Delete Issue Type';
+
+  @override
+  String get issueTypes_name => 'Name';
+
+  @override
+  String get issueTypes_description => 'Description';
+
+  @override
+  String get issueTypes_nameRequired => 'Required';
+
+  @override
+  String issueTypes_deleteConfirm(String name) {
+    return 'Are you sure you want to delete \"$name\"?';
+  }
+
+  @override
+  String get issueTypes_created => 'Issue type created';
+
+  @override
+  String get issueTypes_updated => 'Issue type updated';
+
+  @override
+  String get issueTypes_deleted => 'Issue type deleted';
+
+  @override
+  String get issueTypes_noTypes => 'No issue types found';
+
+  @override
+  String get issueTypes_createPrompt => 'Tap + to create one';
+
+  @override
+  String get issueTypes_errorPrefix => 'Error: ';
 }

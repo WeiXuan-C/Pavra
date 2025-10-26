@@ -14,7 +14,7 @@ class ReportAuthorityApi {
   ReportAuthorityApi(SupabaseClient supabase) {
     _repository = ReportIssueRepository(
       reportRemoteSource: ReportIssueRemoteSource(supabase),
-      typeRemoteSource: IssueTypeRemoteSource(supabase),
+      typeRemoteSource: IssueTypeRemoteSource(),
       voteRemoteSource: IssueVoteRemoteSource(supabase),
     );
   }

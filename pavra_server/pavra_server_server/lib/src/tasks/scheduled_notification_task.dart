@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:serverpod/serverpod.dart';
-import 'package:serverpod/protocol.dart';
 import '../services/qstash_service.dart';
 import '../services/supabase_service.dart';
 import '../services/onesignal_service.dart';

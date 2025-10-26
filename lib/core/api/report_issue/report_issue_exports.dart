@@ -1,7 +1,3 @@
-/// Report Issue API Exports
-/// Convenient single import for all report issue APIs
-library report_issue_api;
-
 export 'report_issue_api.dart';
 export 'issue_type_api.dart';
 export 'report_authority_api.dart';

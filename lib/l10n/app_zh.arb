@@ -1652,5 +1652,70 @@
   "notification_statusSent": "已发送",
   "@notification_statusSent": {
     "description": "通知已成功发送给收件人。"
+  },
+  "issueTypes_title": "问题类型",
+  "@issueTypes_title": {
+    "description": "问题类型管理屏幕标题"
+  },
+  "issueTypes_manageTooltip": "管理问题类型",
+  "@issueTypes_manageTooltip": {
+    "description": "管理问题类型按钮提示"
+  },
+  "issueTypes_create": "创建问题类型",
+  "@issueTypes_create": {
+    "description": "创建问题类型对话框标题"
+  },
+  "issueTypes_edit": "编辑问题类型",
+  "@issueTypes_edit": {
+    "description": "编辑问题类型对话框标题"
+  },
+  "issueTypes_delete": "删除问题类型",
+  "@issueTypes_delete": {
+    "description": "删除问题类型对话框标题"
+  },
+  "issueTypes_name": "名称",
+  "@issueTypes_name": {
+    "description": "问题类型名称字段标签"
+  },
+  "issueTypes_description": "描述",
+  "@issueTypes_description": {
+    "description": "问题类型描述字段标签"
+  },
+  "issueTypes_nameRequired": "必填",
+  "@issueTypes_nameRequired": {
+    "description": "名称必填验证消息"
+  },
+  "issueTypes_deleteConfirm": "确定要删除 \"{name}\" 吗？",
+  "@issueTypes_deleteConfirm": {
+    "description": "删除确认消息",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "issueTypes_created": "问题类型已创建",
+  "@issueTypes_created": {
+    "description": "问题类型创建成功消息"
+  },
+  "issueTypes_updated": "问题类型已更新",
+  "@issueTypes_updated": {
+    "description": "问题类型更新成功消息"
+  },
+  "issueTypes_deleted": "问题类型已删除",
+  "@issueTypes_deleted": {
+    "description": "问题类型删除成功消息"
+  },
+  "issueTypes_noTypes": "未找到问题类型",
+  "@issueTypes_noTypes": {
+    "description": "无问题类型消息"
+  },
+  "issueTypes_createPrompt": "点击 + 创建一个",
+  "@issueTypes_createPrompt": {
+    "description": "创建问题类型提示"
+  },
+  "issueTypes_errorPrefix": "错误：",
+  "@issueTypes_errorPrefix": {
+    "description": "错误消息前缀"
   }
 }

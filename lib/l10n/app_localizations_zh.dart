@@ -1240,4 +1240,51 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get notification_statusSent => '已发送';
+
+  @override
+  String get issueTypes_title => '问题类型';
+
+  @override
+  String get issueTypes_manageTooltip => '管理问题类型';
+
+  @override
+  String get issueTypes_create => '创建问题类型';
+
+  @override
+  String get issueTypes_edit => '编辑问题类型';
+
+  @override
+  String get issueTypes_delete => '删除问题类型';
+
+  @override
+  String get issueTypes_name => '名称';
+
+  @override
+  String get issueTypes_description => '描述';
+
+  @override
+  String get issueTypes_nameRequired => '必填';
+
+  @override
+  String issueTypes_deleteConfirm(String name) {
+    return '确定要删除 \"$name\" 吗？';
+  }
+
+  @override
+  String get issueTypes_created => '问题类型已创建';
+
+  @override
+  String get issueTypes_updated => '问题类型已更新';
+
+  @override
+  String get issueTypes_deleted => '问题类型已删除';
+
+  @override
+  String get issueTypes_noTypes => '未找到问题类型';
+
+  @override
+  String get issueTypes_createPrompt => '点击 + 创建一个';
+
+  @override
+  String get issueTypes_errorPrefix => '错误：';
 }

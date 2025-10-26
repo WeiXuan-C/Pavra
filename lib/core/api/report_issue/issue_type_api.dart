@@ -1,25 +1,29 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data/models/issue_type_model.dart';
 import '../../../data/repositories/report_issue_repository.dart';
 import '../../../data/sources/remote/report_issue_remote_source.dart';
 import '../../../data/sources/remote/issue_type_remote_source.dart';
 import '../../../data/sources/remote/issue_vote_remote_source.dart';
+import '../../../core/supabase/supabase_client.dart';
 
 /// Issue Type API
 /// High-level API for issue type operations
 /// Used by UI layer (providers, screens)
+///
+/// 权限控制通过 Supabase RLS 策略实现：
+/// - 所有认证用户可以查看 issue types
+/// - 只有 developer 角色可以创建/编辑/删除
 class IssueTypeApi {
   late final ReportIssueRepository _repository;
 
-  IssueTypeApi(SupabaseClient supabase) {
+  IssueTypeApi() {
     _repository = ReportIssueRepository(
       reportRemoteSource: ReportIssueRemoteSource(supabase),
-      typeRemoteSource: IssueTypeRemoteSource(supabase),
+      typeRemoteSource: IssueTypeRemoteSource(),
       voteRemoteSource: IssueVoteRemoteSource(supabase),
     );
   }
 
-  /// Get all issue types
+  /// Get all issue types (所有认证用户可访问)
   Future<List<IssueTypeModel>> getAllIssueTypes() async {
     try {
       return await _repository.getIssueTypes();
@@ -28,7 +32,7 @@ class IssueTypeApi {
     }
   }
 
-  /// Get issue type by ID
+  /// Get issue type by ID (所有认证用户可访问)
   Future<IssueTypeModel?> getIssueTypeById(String id) async {
     try {
       return await _repository.getIssueTypeById(id);
@@ -37,7 +41,7 @@ class IssueTypeApi {
     }
   }
 
-  /// Get multiple issue types by IDs
+  /// Get multiple issue types by IDs (所有认证用户可访问)
   Future<List<IssueTypeModel>> getIssueTypesByIds(List<String> ids) async {
     try {
       final allTypes = await getAllIssueTypes();
@@ -47,7 +51,8 @@ class IssueTypeApi {
     }
   }
 
-  /// Create issue type (Authority/Developer only)
+  /// Create issue type (仅 Developer 可访问 - RLS 策略控制)
+  /// 如果用户不是 developer，数据库会拒绝操作
   Future<IssueTypeModel> createIssueType({
     required String name,
     String? description,
@@ -64,7 +69,8 @@ class IssueTypeApi {
     }
   }
 
-  /// Update issue type (Authority/Developer only)
+  /// Update issue type (仅 Developer 可访问 - RLS 策略控制)
+  /// 如果用户不是 developer，数据库会拒绝操作
   Future<IssueTypeModel> updateIssueType(
     String id,
     Map<String, dynamic> updates,
@@ -76,7 +82,8 @@ class IssueTypeApi {
     }
   }
 
-  /// Delete issue type (Authority/Developer only)
+  /// Delete issue type (仅 Developer 可访问 - RLS 策略控制)
+  /// 软删除实现，如果用户不是 developer，数据库会拒绝操作
   Future<void> deleteIssueType(String id) async {
     try {
       await _repository.deleteIssueType(id);

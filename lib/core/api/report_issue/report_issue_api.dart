@@ -18,7 +18,7 @@ class ReportIssueApi {
   ReportIssueApi(this._supabase) {
     _repository = ReportIssueRepository(
       reportRemoteSource: ReportIssueRemoteSource(_supabase),
-      typeRemoteSource: IssueTypeRemoteSource(_supabase),
+      typeRemoteSource: IssueTypeRemoteSource(),
       voteRemoteSource: IssueVoteRemoteSource(_supabase),
     );
   }
@@ -250,8 +250,9 @@ class ReportIssueApi {
 
       return reports
           .where((report) {
-            if (report.latitude == null || report.longitude == null)
+            if (report.latitude == null || report.longitude == null) {
               return false;
+            }
 
             final distance = _calculateDistance(
               latitude,

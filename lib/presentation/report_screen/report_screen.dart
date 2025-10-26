@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../l10n/app_localizations.dart';
 import '../camera_detection_screen/camera_detection_screen.dart';
 import '../layouts/header_layout.dart';
+import '../issue_types_screen/issue_types_screen.dart';
 import './widgets/report_list_tab.dart';
 import './widgets/report_home_skeleton.dart';
 
@@ -19,11 +21,34 @@ class ReportScreen extends StatefulWidget {
 
 class _ReportScreenState extends State<ReportScreen> {
   bool _isLoading = true;
+  bool _isDeveloper = false;
 
   @override
   void initState() {
     super.initState();
+    _checkUserRole();
     _loadData();
+  }
+
+  Future<void> _checkUserRole() async {
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user != null) {
+        final response = await Supabase.instance.client
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .maybeSingle();
+
+        if (mounted && response != null) {
+          setState(() {
+            _isDeveloper = response['role'] == 'developer';
+          });
+        }
+      }
+    } catch (e) {
+      // Silently fail - user just won't see the button
+    }
   }
 
   @override
@@ -55,7 +80,19 @@ class _ReportScreenState extends State<ReportScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: HeaderLayout(title: _getTitle(l10n), centerTitle: false),
+      appBar: HeaderLayout(
+        title: _getTitle(l10n),
+        centerTitle: false,
+        actions: _isDeveloper
+            ? [
+                IconButton(
+                  icon: const Icon(Icons.category),
+                  tooltip: l10n.issueTypes_manageTooltip,
+                  onPressed: () => _navigateToIssueTypes(context),
+                ),
+              ]
+            : null,
+      ),
       body: _buildBody(context, theme, l10n),
     );
   }
@@ -509,5 +546,12 @@ class _ReportScreenState extends State<ReportScreen> {
 
   void _navigateToManualReport(BuildContext context) {
     Navigator.pushNamed(context, '/report-submission-screen');
+  }
+
+  void _navigateToIssueTypes(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const IssueTypesScreen()),
+    );
   }
 }

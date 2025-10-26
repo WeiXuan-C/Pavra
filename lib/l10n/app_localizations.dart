@@ -2545,6 +2545,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sent'**
   String get notification_statusSent;
+
+  /// Issue types management screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Issue Types'**
+  String get issueTypes_title;
+
+  /// Tooltip for manage issue types button
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Issue Types'**
+  String get issueTypes_manageTooltip;
+
+  /// Create issue type dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Create Issue Type'**
+  String get issueTypes_create;
+
+  /// Edit issue type dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Issue Type'**
+  String get issueTypes_edit;
+
+  /// Delete issue type dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Issue Type'**
+  String get issueTypes_delete;
+
+  /// Issue type name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get issueTypes_name;
+
+  /// Issue type description field label
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get issueTypes_description;
+
+  /// Name required validation message
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get issueTypes_nameRequired;
+
+  /// Delete confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{name}\"?'**
+  String issueTypes_deleteConfirm(String name);
+
+  /// Issue type created success message
+  ///
+  /// In en, this message translates to:
+  /// **'Issue type created'**
+  String get issueTypes_created;
+
+  /// Issue type updated success message
+  ///
+  /// In en, this message translates to:
+  /// **'Issue type updated'**
+  String get issueTypes_updated;
+
+  /// Issue type deleted success message
+  ///
+  /// In en, this message translates to:
+  /// **'Issue type deleted'**
+  String get issueTypes_deleted;
+
+  /// No issue types message
+  ///
+  /// In en, this message translates to:
+  /// **'No issue types found'**
+  String get issueTypes_noTypes;
+
+  /// Prompt to create issue type
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to create one'**
+  String get issueTypes_createPrompt;
+
+  /// Error message prefix
+  ///
+  /// In en, this message translates to:
+  /// **'Error: '**
+  String get issueTypes_errorPrefix;
 }
 
 class _AppLocalizationsDelegate

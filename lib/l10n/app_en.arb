@@ -1651,5 +1651,70 @@
   "notification_statusSent": "Sent",
   "@notification_statusSent": {
     "description": "Notification has been successfully sent."
+  },
+  "issueTypes_title": "Issue Types",
+  "@issueTypes_title": {
+    "description": "Issue types management screen title"
+  },
+  "issueTypes_manageTooltip": "Manage Issue Types",
+  "@issueTypes_manageTooltip": {
+    "description": "Tooltip for manage issue types button"
+  },
+  "issueTypes_create": "Create Issue Type",
+  "@issueTypes_create": {
+    "description": "Create issue type dialog title"
+  },
+  "issueTypes_edit": "Edit Issue Type",
+  "@issueTypes_edit": {
+    "description": "Edit issue type dialog title"
+  },
+  "issueTypes_delete": "Delete Issue Type",
+  "@issueTypes_delete": {
+    "description": "Delete issue type dialog title"
+  },
+  "issueTypes_name": "Name",
+  "@issueTypes_name": {
+    "description": "Issue type name field label"
+  },
+  "issueTypes_description": "Description",
+  "@issueTypes_description": {
+    "description": "Issue type description field label"
+  },
+  "issueTypes_nameRequired": "Required",
+  "@issueTypes_nameRequired": {
+    "description": "Name required validation message"
+  },
+  "issueTypes_deleteConfirm": "Are you sure you want to delete \"{name}\"?",
+  "@issueTypes_deleteConfirm": {
+    "description": "Delete confirmation message",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "issueTypes_created": "Issue type created",
+  "@issueTypes_created": {
+    "description": "Issue type created success message"
+  },
+  "issueTypes_updated": "Issue type updated",
+  "@issueTypes_updated": {
+    "description": "Issue type updated success message"
+  },
+  "issueTypes_deleted": "Issue type deleted",
+  "@issueTypes_deleted": {
+    "description": "Issue type deleted success message"
+  },
+  "issueTypes_noTypes": "No issue types found",
+  "@issueTypes_noTypes": {
+    "description": "No issue types message"
+  },
+  "issueTypes_createPrompt": "Tap + to create one",
+  "@issueTypes_createPrompt": {
+    "description": "Prompt to create issue type"
+  },
+  "issueTypes_errorPrefix": "Error: ",
+  "@issueTypes_errorPrefix": {
+    "description": "Error message prefix"
   }
 }
