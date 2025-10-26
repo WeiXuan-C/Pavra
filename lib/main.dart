@@ -113,7 +113,7 @@ void main() async {
   try {
     await OneSignalService().initialize();
   } catch (e) {
-    print('⚠️ OneSignal initialization failed: $e');
+    debugPrint('⚠️ OneSignal initialization failed: $e');
     // Don't block app startup if OneSignal fails
   }
 

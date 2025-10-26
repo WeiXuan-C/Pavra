@@ -6,7 +6,6 @@ import '../../data/models/issue_type_model.dart';
 import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
 import 'widgets/icon_picker_dialog.dart';
-import 'widgets/issue_type_test_widget.dart';
 
 /// Issue Types Management Screen
 /// Only accessible by developers
@@ -64,12 +63,6 @@ class _IssueTypesScreenState extends State<IssueTypesScreen> {
         title: l10n.issueTypes_title,
         centerTitle: false,
         actions: [
-          // 测试按钮（开发时使用）
-          IconButton(
-            icon: const Icon(Icons.science),
-            tooltip: '测试 API',
-            onPressed: () => _showTestWidget(context),
-          ),
           IconButton(
             icon: const Icon(Icons.add),
             tooltip: l10n.issueTypes_create,
@@ -580,12 +573,5 @@ class _IssueTypesScreenState extends State<IssueTypesScreen> {
         );
       }
     }
-  }
-
-  void _showTestWidget(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const IssueTypeTestWidget()),
-    );
   }
 }

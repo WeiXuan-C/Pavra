@@ -1140,11 +1140,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profile_settings => 'Settings';
 
   @override
-  String get report_openCamera => 'Open Camera Detection';
+  String get report_openCamera => 'Open Camera';
 
   @override
-  String get report_aiDetectionReady =>
-      'AI detection ready to scan road issues';
+  String get report_aiDetectionReady => 'AI Detection Ready';
 
   @override
   String get report_quickReportTitle => 'Quick Report Road Issues';
@@ -1319,4 +1318,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get issueTypes_errorPrefix => 'Error: ';
+
+  @override
+  String get report_takePhoto => 'Take Photo';
+
+  @override
+  String get report_chooseFromGallery => 'Choose from Gallery';
+
+  @override
+  String get report_enterLocation => 'Enter location address';
 }

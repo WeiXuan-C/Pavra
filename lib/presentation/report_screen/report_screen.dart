@@ -5,6 +5,7 @@ import '../../l10n/app_localizations.dart';
 import '../camera_detection_screen/camera_detection_screen.dart';
 import '../layouts/header_layout.dart';
 import '../issue_types_screen/issue_types_screen.dart';
+import '../report_submission_screen/manual_report_screen.dart';
 import './widgets/report_list_tab.dart';
 import './widgets/report_home_skeleton.dart';
 
@@ -545,7 +546,10 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   void _navigateToManualReport(BuildContext context) {
-    Navigator.pushNamed(context, '/report-submission-screen');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ManualReportScreen()),
+    );
   }
 
   void _navigateToIssueTypes(BuildContext context) {

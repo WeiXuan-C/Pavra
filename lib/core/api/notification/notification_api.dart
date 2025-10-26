@@ -251,7 +251,6 @@ class NotificationApi {
           scheduledAt: scheduledAt,
         );
       } catch (e) {
-        print('⚠️ Failed to schedule notification: $e');
         // 如果调度失败，更新状态为 failed
         await supabase
             .from('notifications')
@@ -278,10 +277,7 @@ class NotificationApi {
       if (response.statusCode != 200) {
         throw Exception('Serverpod API error: ${response.body}');
       }
-
-      print('✓ Notification send triggered: $notificationId');
     } catch (e) {
-      print('❌ Failed to trigger notification send: $e');
       rethrow;
     }
   }
@@ -306,10 +302,7 @@ class NotificationApi {
       if (response.statusCode != 200) {
         throw Exception('Serverpod API error: ${response.body}');
       }
-
-      print('✓ Notification scheduled via QStash: $notificationId');
     } catch (e) {
-      print('❌ Failed to schedule notification: $e');
       rethrow;
     }
   }
@@ -329,8 +322,6 @@ class NotificationApi {
     final serverpodUrl = ApiConfig.serverpodUrl;
 
     try {
-      print('🧪 [TEST] Triggering scheduled notification: $notificationId');
-
       final response = await http.post(
         Uri.parse(
           '$serverpodUrl/notification/testProcessScheduledNotification',
@@ -344,10 +335,8 @@ class NotificationApi {
       }
 
       final result = jsonDecode(response.body) as Map<String, dynamic>;
-      print('✓ [TEST] Result: $result');
       return result;
     } catch (e) {
-      print('❌ [TEST] Error: $e');
       rethrow;
     }
   }

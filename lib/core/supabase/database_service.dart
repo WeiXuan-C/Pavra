@@ -108,26 +108,12 @@ class DatabaseService {
     required String filterColumn,
     required dynamic filterValue,
   }) async {
-    print('=== DatabaseService.selectSingle ===');
-    print('Table: $table');
-    print('Filter: $filterColumn = $filterValue');
-    print('Columns: $columns');
-
     final response = await supabase
         .from(table)
         .select(columns)
         .eq(filterColumn, filterValue)
         .maybeSingle();
 
-    if (response != null) {
-      print('✅ Query successful, record found');
-      print('Response keys: ${response.keys.toList()}');
-    } else {
-      print('⚠️ Query successful, but NO record found');
-      print('This means no row matches the filter');
-    }
-
-    print('=====================================');
     return response;
   }
 

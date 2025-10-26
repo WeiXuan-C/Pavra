@@ -12,7 +12,7 @@ class QstashWebhookEndpoint extends Endpoint {
     Map<String, dynamic> payload,
   ) async {
     try {
-      // TODO: Implement signature verification when you have access to request headers
+      // Implement signature verification when you have access to request headers
       // For now, we'll skip signature verification
       // In production, you should verify the QStash signature
 

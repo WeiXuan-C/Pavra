@@ -25,7 +25,6 @@ class OneSignalService {
     if (appId == null ||
         appId.isEmpty ||
         appId == 'your-onesignal-app-id-here') {
-      print('⚠️ OneSignal App ID not configured in .env');
       return;
     }
 
@@ -41,7 +40,6 @@ class OneSignalService {
 
       // Get player ID
       _playerId = OneSignal.User.pushSubscription.id;
-      print('✓ OneSignal initialized. Player ID: $_playerId');
 
       _isInitialized = true;
     } catch (e) {

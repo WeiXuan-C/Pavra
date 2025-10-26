@@ -1287,4 +1287,13 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get issueTypes_errorPrefix => '错误：';
+
+  @override
+  String get report_takePhoto => 'Take Photo';
+
+  @override
+  String get report_chooseFromGallery => 'Choose from Gallery';
+
+  @override
+  String get report_enterLocation => 'Enter location address';
 }

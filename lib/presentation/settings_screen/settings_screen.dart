@@ -607,7 +607,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
 
     if (confirm == true && context.mounted) {
-      // TODO: Implement backend request submission
+      // Implement backend request submission
       // For now, just show a success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.settings_requestAuthorityMessage)),

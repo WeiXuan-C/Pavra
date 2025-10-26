@@ -27,11 +27,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final authProvider = context.read<AuthProvider>();
       if (authProvider.userProfile == null && authProvider.user != null) {
-        print('⚠️ UserProfile is null, forcing reload...');
         authProvider.reloadUserProfile();
       } else {
-        print('✅ UserProfile loaded: ${authProvider.userProfile?.username}');
-        print('✅ Role: ${authProvider.userProfile?.role}');
+        debugPrint(
+          '✅ UserProfile loaded: ${authProvider.userProfile?.username}',
+        );
+        debugPrint('✅ Role: ${authProvider.userProfile?.role}');
       }
     });
   }
@@ -56,14 +57,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         builder: (context, authProvider, localeProvider, themeProvider, child) {
           final user = authProvider.user;
           final profile = authProvider.userProfile;
-
-          // Debug info
-          print('=== Profile Screen Render ===');
-          print('User ID: ${user?.id}');
-          print('User Email: ${user?.email}');
-          print('Profile: ${profile?.username}');
-          print('Role: ${profile?.role}');
-          print('============================');
 
           if (user == null) {
             return Center(child: Text(l10n.home_noUserLoggedIn));
@@ -96,27 +89,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onPressed: () async {
                       // Direct Supabase query test
                       final userId = user.id;
-                      print('=== Direct Supabase Test ===');
-                      print('Testing direct query for user: $userId');
 
                       try {
-                        final response = await Supabase.instance.client
+                        await Supabase.instance.client
                             .from('profiles')
                             .select()
                             .eq('id', userId)
                             .maybeSingle();
-
-                        print('Direct query result: $response');
-                        if (response != null) {
-                          print('Username: ${response['username']}');
-                          print('Role: ${response['role']}');
-                        } else {
-                          print('⚠️ Direct query returned null');
-                        }
                       } catch (e) {
-                        print('❌ Direct query error: $e');
+                        debugPrint('❌ Direct query error: $e');
                       }
-                      print('===========================');
                     },
                     icon: const Icon(Icons.bug_report),
                     label: const Text('Test Direct Query'),

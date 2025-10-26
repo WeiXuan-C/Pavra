@@ -397,7 +397,6 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
             //     ),
             //   ],
             // ),
-            const SizedBox(height: 16),
 
             // Data field (optional JSON data)
             TextFormField(
