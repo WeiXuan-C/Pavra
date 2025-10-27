@@ -1560,7 +1560,6 @@
   "@report_filterMenuSubtitleAll": {
     "description": "筛选菜单所有报告副标题"
   },
-  
   "notification_filterAll": "全部",
   "@notification_filterAll": {
     "description": "全部通知过滤标签"
@@ -1717,5 +1716,17 @@
   "issueTypes_errorPrefix": "错误：",
   "@issueTypes_errorPrefix": {
     "description": "错误消息前缀"
+  },
+  "report_enterLocation": "输入位置地址",
+  "@report_enterLocation": {
+    "description": "输入位置提示文本"
+  },
+  "report_chooseFromGallery": "从相册选择",
+  "@report_chooseFromGallery": {
+    "description": "从相册选择按钮文本"
+  },
+  "report_takePhoto": "拍照",
+  "@report_takePhoto": {
+    "description": "拍照按钮文本"
   }
 }

@@ -62,7 +62,7 @@ DROP POLICY IF EXISTS "Enable insert for authenticated users only" ON public.iss
 DROP POLICY IF EXISTS "Enable update for authenticated users" ON public.issue_photos;
 DROP POLICY IF EXISTS "Enable delete for authenticated users" ON public.issue_photos;
 
--- Enable read access for all users
+-- Enable read access for all users (public can view all photos)
 create policy "Enable read access for all users"
 on "public"."issue_photos"
 as PERMISSIVE
@@ -78,22 +78,40 @@ for INSERT
 to authenticated
 with check (true);
 
--- Enable update for authenticated users
+-- Enable update for authenticated users (only if they own the report)
 create policy "Enable update for authenticated users"
 on "public"."issue_photos"
 as PERMISSIVE
 for UPDATE
 to authenticated
-using (true)
-with check (true);
+using (
+  EXISTS (
+    SELECT 1 FROM report_issues 
+    WHERE report_issues.id = issue_photos.issue_id 
+    AND report_issues.created_by = (SELECT auth.uid())
+  )
+)
+with check (
+  EXISTS (
+    SELECT 1 FROM report_issues 
+    WHERE report_issues.id = issue_photos.issue_id 
+    AND report_issues.created_by = (SELECT auth.uid())
+  )
+);
 
--- Enable delete for authenticated users
+-- Enable delete for authenticated users (only if they own the report)
 create policy "Enable delete for authenticated users"
 on "public"."issue_photos"
 as PERMISSIVE
 for DELETE
 to authenticated
-using (true);
+using (
+  EXISTS (
+    SELECT 1 FROM report_issues 
+    WHERE report_issues.id = issue_photos.issue_id 
+    AND report_issues.created_by = (SELECT auth.uid())
+  )
+);
 
 -- =====================================
 -- ISSUE_TYPES TABLE POLICIES

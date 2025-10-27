@@ -6,6 +6,7 @@ import '../../data/models/issue_type_model.dart';
 import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
 import 'widgets/icon_picker_dialog.dart';
+import 'widgets/issue_types_skeleton.dart';
 
 /// Issue Types Management Screen
 /// Only accessible by developers
@@ -76,7 +77,7 @@ class _IssueTypesScreenState extends State<IssueTypesScreen> {
 
   Widget _buildBody(ThemeData theme, AppLocalizations l10n) {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const IssueTypesSkeleton();
     }
 
     if (_error != null) {

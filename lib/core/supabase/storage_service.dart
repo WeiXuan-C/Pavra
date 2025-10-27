@@ -14,7 +14,7 @@ class StorageService {
   SupabaseStorageClient get storage => supabase.storage;
 
   // Bucket names
-  static const String issuePhotosBucket = 'issue_photos';
+  static const String issuePhotosBucket = 'issue-photos';
 
   /// Upload file to storage
   Future<String> uploadFile({
@@ -127,6 +127,24 @@ class StorageService {
   }
 
   // ========== Issue Photos Specific Methods ==========
+
+  /// Ensure the issue_photos bucket exists
+  /// Creates it if it doesn't exist
+  Future<void> ensureIssuePhotosBucketExists() async {
+    try {
+      await getBucket(issuePhotosBucket);
+    } catch (e) {
+      // Bucket doesn't exist, create it
+      try {
+        await createBucket(id: issuePhotosBucket, public: true);
+      } catch (createError) {
+        // Ignore if bucket already exists (race condition)
+        if (!createError.toString().contains('already exists')) {
+          rethrow;
+        }
+      }
+    }
+  }
 
   /// Upload issue photo to storage
   /// Returns the public URL of the uploaded photo

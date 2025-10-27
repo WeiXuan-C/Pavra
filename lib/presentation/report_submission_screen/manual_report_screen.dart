@@ -9,10 +9,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/api/report_issue/report_issue_api.dart';
 import '../../core/api/report_issue/issue_type_api.dart';
+import '../../core/utils/icon_mapper.dart';
 import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
 import './manual_report_provider.dart';
 import './widgets/description_input_widget.dart';
+import './widgets/location_info_widget.dart';
+import './widgets/manual_report_skeleton.dart';
 import './widgets/photo_gallery_widget.dart';
 import './widgets/severity_slider_widget.dart';
 import './widgets/submission_actions_widget.dart';
@@ -35,6 +38,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   final List<String> _selectedIssueTypeIds = [];
   double _severity = 3.0;
   bool _isSubmitting = false;
+  bool _isIssueTypeSectionExpanded = true;
 
   @override
   void dispose() {
@@ -49,12 +53,15 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
         _locationController.text.isNotEmpty;
   }
 
-  /// Add photo from camera or gallery
-  Future<void> _addPhoto({bool fromCamera = true}) async {
-    final provider = context.read<ManualReportProvider>();
+  /// Add photo from camera or gallery with source selection
+  Future<void> _addPhoto(
+    BuildContext context,
+    ManualReportProvider provider, {
+    required String photoType,
+  }) async {
+    final l10n = AppLocalizations.of(context);
 
     // Check if can add more photos
-    final photoType = provider.mainPhotoCount == 0 ? 'main' : 'additional';
     final validationError = provider.canAddPhoto(photoType);
 
     if (validationError != null) {
@@ -66,9 +73,65 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
       return;
     }
 
+    // Show bottom sheet to choose camera or gallery
+    final ImageSource? source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        final theme = Theme.of(context);
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(4.w),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: EdgeInsets.only(bottom: 2.h),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.camera_alt,
+                    color: theme.colorScheme.primary,
+                  ),
+                  title: Text(l10n.report_takePhoto),
+                  onTap: () => Navigator.pop(context, ImageSource.camera),
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.photo_library,
+                    color: theme.colorScheme.primary,
+                  ),
+                  title: Text(l10n.report_chooseFromGallery),
+                  onTap: () => Navigator.pop(context, ImageSource.gallery),
+                ),
+                SizedBox(height: 1.h),
+                OutlinedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: Size(double.infinity, 6.h),
+                  ),
+                  child: Text(l10n.common_cancel),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (source == null) return;
+
     try {
       final XFile? image = await _imagePicker.pickImage(
-        source: fromCamera ? ImageSource.camera : ImageSource.gallery,
+        source: source,
         preferredCameraDevice: CameraDevice.rear,
         imageQuality: 85,
         maxWidth: 1920,
@@ -97,13 +160,13 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
           fileBytes: bytes,
           mimeType: mimeType,
           photoType: photoType,
-          isPrimary: provider.photoCount == 0,
+          isPrimary: photoType == 'main',
         );
 
         HapticFeedback.lightImpact();
         if (!mounted) return;
         Fluttertoast.showToast(
-          msg: AppLocalizations.of(context).report_photoAdded,
+          msg: l10n.report_photoAdded,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );
@@ -111,7 +174,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     } catch (e) {
       if (!mounted) return;
       Fluttertoast.showToast(
-        msg: '${AppLocalizations.of(context).report_photoAddFailed}: $e',
+        msg: '${l10n.report_photoAddFailed}: $e',
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
       );
@@ -119,25 +182,23 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   }
 
   /// Remove photo
-  Future<void> _removePhoto(int index) async {
-    final provider = context.read<ManualReportProvider>();
-
-    if (index >= provider.uploadedPhotos.length) return;
-
-    final photo = provider.uploadedPhotos[index];
-
+  Future<void> _removePhoto(
+    BuildContext context,
+    ManualReportProvider provider,
+    IssuePhotoModel photo,
+  ) async {
     try {
       await provider.deletePhoto(photo);
 
       HapticFeedback.lightImpact();
-      if (!mounted) return;
+      if (!context.mounted) return;
       Fluttertoast.showToast(
         msg: AppLocalizations.of(context).report_photoRemoved,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
       );
     } catch (e) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       Fluttertoast.showToast(
         msg: 'Failed to remove photo: $e',
         toastLength: Toast.LENGTH_SHORT,
@@ -346,10 +407,12 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   }
 
   /// Handle back navigation
-  void _handlePopInvoked(bool didPop, Object? result) async {
+  void _handlePopInvoked(
+    bool didPop,
+    Object? result,
+    ManualReportProvider provider,
+  ) async {
     if (didPop) return;
-
-    final provider = context.read<ManualReportProvider>();
 
     final hasChanges =
         _descriptionController.text.isNotEmpty ||
@@ -368,7 +431,17 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
             content: Text(l10n.report_unsavedChangesMessage),
             actions: [
               TextButton(
-                onPressed: () => Navigator.of(dialogContext).pop(true),
+                onPressed: () async {
+                  Navigator.of(dialogContext).pop(false);
+                  // Discard: Update status to 'discarded'
+                  try {
+                    await provider.discardDraft();
+                  } catch (e) {
+                    // Ignore error, just navigate back
+                  }
+                  if (!mounted) return;
+                  navigator.pop();
+                },
                 child: Text(l10n.report_discard),
               ),
               TextButton(
@@ -404,102 +477,121 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
         issueTypeApi: IssueTypeApi(),
         supabase: Supabase.instance.client,
       )..initialize(),
-      child: PopScope(
-        canPop: false,
-        onPopInvokedWithResult: _handlePopInvoked,
-        child: Scaffold(
-          appBar: HeaderLayout(title: l10n.report_manualReport),
-          body: Consumer<ManualReportProvider>(
-            builder: (context, provider, child) {
-              if (provider.isLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
+      child: Consumer<ManualReportProvider>(
+        builder: (context, provider, _) => PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) =>
+              _handlePopInvoked(didPop, result, provider),
+          child: Scaffold(
+            appBar: HeaderLayout(title: l10n.report_manualReport),
+            body: Builder(
+              builder: (context) {
+                final provider = context.watch<ManualReportProvider>();
+                if (provider.isLoading) {
+                  return const ManualReportSkeleton();
+                }
 
-              if (provider.error != null) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 48,
-                        color: theme.colorScheme.error,
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(provider.error!),
-                      SizedBox(height: 2.h),
-                      ElevatedButton(
-                        onPressed: () => provider.initialize(),
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  ),
-                );
-              }
+                if (provider.error != null) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 48,
+                          color: theme.colorScheme.error,
+                        ),
+                        SizedBox(height: 2.h),
+                        Text(provider.error!),
+                        SizedBox(height: 2.h),
+                        ElevatedButton(
+                          onPressed: () => provider.initialize(),
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
 
-              return Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.all(4.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Draft info
-                          if (provider.draftReport != null)
-                            _buildDraftInfo(
+                return Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.all(4.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Draft info
+                            if (provider.draftReport != null)
+                              _buildDraftInfo(
+                                theme,
+                                provider.draftReport!.title ?? 'Draft',
+                              ),
+
+                            SizedBox(height: 3.h),
+
+                            // 1. Main Photo (Required - Only 1)
+                            _buildMainPhotoSection(
+                              context,
                               theme,
-                              provider.draftReport!.title ?? 'Draft',
+                              l10n,
+                              provider,
                             ),
 
-                          SizedBox(height: 3.h),
+                            SizedBox(height: 3.h),
 
-                          // Photo section
-                          _buildPhotoSection(theme, l10n, provider),
+                            // 2. Location input (Latitude, Longitude, Address)
+                            _buildLocationInput(theme, l10n),
 
-                          SizedBox(height: 3.h),
+                            SizedBox(height: 3.h),
 
-                          // Location input
-                          _buildLocationInput(theme, l10n),
+                            // 3. Issue type selector (with name, description, icon)
+                            _buildIssueTypeSelector(theme, l10n, provider),
 
-                          SizedBox(height: 3.h),
+                            SizedBox(height: 3.h),
 
-                          // Issue type selector
-                          _buildIssueTypeSelector(theme, l10n, provider),
+                            // 4. Severity slider
+                            SeveritySliderWidget(
+                              severity: _severity,
+                              onSeverityChanged: _updateSeverity,
+                            ),
 
-                          SizedBox(height: 3.h),
+                            SizedBox(height: 3.h),
 
-                          // Severity slider
-                          SeveritySliderWidget(
-                            severity: _severity,
-                            onSeverityChanged: _updateSeverity,
-                          ),
+                            // 5. Description input
+                            DescriptionInputWidget(
+                              controller: _descriptionController,
+                              suggestions: const [],
+                            ),
 
-                          SizedBox(height: 3.h),
+                            SizedBox(height: 3.h),
 
-                          // Description input
-                          DescriptionInputWidget(
-                            controller: _descriptionController,
-                            suggestions: const [],
-                          ),
+                            // 6. Additional Photos (Optional - Up to 5)
+                            _buildAdditionalPhotosSection(
+                              context,
+                              theme,
+                              l10n,
+                              provider,
+                            ),
 
-                          SizedBox(height: 10.h),
-                        ],
+                            SizedBox(height: 10.h),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
 
-                  // Bottom actions
-                  SubmissionActionsWidget(
-                    isFormValid: _isFormValid(provider),
-                    isSubmitting: _isSubmitting || provider.isUploadingPhoto,
-                    uploadProgress: provider.uploadProgress,
-                    onSubmit: _submitReport,
-                    onSaveDraft: _saveDraft,
-                  ),
-                ],
-              );
-            },
+                    // Bottom actions
+                    SubmissionActionsWidget(
+                      isFormValid: _isFormValid(provider),
+                      isSubmitting: _isSubmitting || provider.isUploadingPhoto,
+                      uploadProgress: provider.uploadProgress,
+                      onSubmit: _submitReport,
+                      onSaveDraft: _saveDraft,
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -534,30 +626,52 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     );
   }
 
-  Widget _buildPhotoSection(
+  Widget _buildMainPhotoSection(
+    BuildContext context,
     ThemeData theme,
     AppLocalizations l10n,
     ManualReportProvider provider,
   ) {
-    // Convert uploaded photos to URLs for display
-    final photoUrls = provider.uploadedPhotos.map((p) => p.photoUrl).toList();
+    final mainPhotos = provider.uploadedPhotos
+        .where((p) => p.photoType == 'main')
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Header with count
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              l10n.report_photos,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
+            Icon(
+              Icons.photo_camera,
+              color: theme.colorScheme.primary,
+              size: 24,
+            ),
+            SizedBox(width: 2.w),
+            Expanded(
+              child: Text(
+                '${l10n.report_photos} *',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-            Text(
-              '${provider.photoCount}/10',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.primary,
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
+              decoration: BoxDecoration(
+                color: mainPhotos.isNotEmpty
+                    ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                    : theme.colorScheme.error.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                mainPhotos.isNotEmpty ? '1/1' : '0/1',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: mainPhotos.isNotEmpty
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.error,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],
@@ -565,72 +679,130 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
         SizedBox(height: 2.h),
 
         // Show upload progress
-        if (provider.isUploadingPhoto)
+        if (provider.isUploadingPhoto && mainPhotos.isEmpty)
           Padding(
             padding: EdgeInsets.only(bottom: 2.h),
             child: Column(
               children: [
                 LinearProgressIndicator(value: provider.uploadProgress),
                 SizedBox(height: 1.h),
-                Text('Uploading photo...', style: theme.textTheme.bodySmall),
+                Text(
+                  'Uploading photo...',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
+                ),
               ],
             ),
           ),
 
-        PhotoGalleryWidget(
-          imageUrls: photoUrls,
-          onAddPhoto: _addPhoto,
-          onRemovePhoto: _removePhoto,
-        ),
-        SizedBox(height: 1.h),
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: provider.isUploadingPhoto
-                    ? null
-                    : () => _addPhoto(fromCamera: true),
-                icon: const Icon(Icons.camera_alt),
-                label: Text(l10n.report_takePhoto),
+        // Main photo display
+        if (mainPhotos.isNotEmpty)
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  mainPhotos.first.photoUrl,
+                  width: double.infinity,
+                  height: 40.h,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: double.infinity,
+                      height: 40.h,
+                      color: theme.colorScheme.surfaceContainerHighest,
+                      child: Icon(
+                        Icons.broken_image,
+                        size: 48,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.3,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: IconButton(
+                  onPressed: () => _removePhoto(0),
+                  icon: const Icon(Icons.close),
+                  style: IconButton.styleFrom(
+                    backgroundColor: theme.colorScheme.surface.withValues(
+                      alpha: 0.9,
+                    ),
+                    foregroundColor: theme.colorScheme.error,
+                  ),
+                ),
+              ),
+            ],
+          )
+        else
+          // Add photo button
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: provider.isUploadingPhoto
+                  ? null
+                  : () => _addPhoto(context, provider, photoType: 'main'),
+              icon: const Icon(Icons.add_photo_alternate),
+              label: Text(l10n.report_addPhoto),
+              style: OutlinedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 6.h),
+                side: BorderSide(color: theme.colorScheme.primary, width: 2),
               ),
             ),
-            SizedBox(width: 2.w),
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: provider.isUploadingPhoto
-                    ? null
-                    : () => _addPhoto(fromCamera: false),
-                icon: const Icon(Icons.photo_library),
-                label: Text(l10n.report_chooseFromGallery),
-              ),
-            ),
-          ],
-        ),
+          ),
       ],
     );
   }
 
+  Widget _buildAdditionalPhotosSection(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+    ManualReportProvider provider,
+  ) {
+    final additionalPhotos = provider.uploadedPhotos
+        .where((p) => p.photoType == 'additional')
+        .map((p) => p.photoUrl)
+        .toList();
+
+    return PhotoGalleryWidget(
+      imageUrls: additionalPhotos,
+      onAddPhoto: () => _addPhoto(context, provider, photoType: 'additional'),
+      onRemovePhoto: (index) {
+        final mainPhotoCount = provider.uploadedPhotos
+            .where((p) => p.photoType == 'main')
+            .length;
+        _removePhoto(mainPhotoCount + index);
+      },
+    );
+  }
+
   Widget _buildLocationInput(ThemeData theme, AppLocalizations l10n) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l10n.report_location,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        SizedBox(height: 2.h),
-        TextField(
-          controller: _locationController,
-          decoration: InputDecoration(
-            hintText: l10n.report_enterLocation,
-            prefixIcon: const Icon(Icons.location_on),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-          maxLines: 2,
-        ),
-      ],
+    // Mock location data - in real app, get from GPS
+    const double latitude = 0.0;
+    const double longitude = 0.0;
+    const double accuracy = 0.0;
+
+    return LocationInfoWidget(
+      streetAddress: _locationController.text.isEmpty
+          ? l10n.report_enterLocation
+          : _locationController.text,
+      latitude: latitude,
+      longitude: longitude,
+      accuracy: accuracy,
+      onRefreshLocation: () async {
+        HapticFeedback.lightImpact();
+        Fluttertoast.showToast(
+          msg: l10n.report_locationUpdated,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      },
     );
   }
 
@@ -639,31 +811,182 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     AppLocalizations l10n,
     ManualReportProvider provider,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l10n.report_issueType,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
+    return Container(
+      padding: EdgeInsets.all(4.w),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with collapse/expand button
+          InkWell(
+            onTap: () {
+              setState(() {
+                _isIssueTypeSectionExpanded = !_isIssueTypeSectionExpanded;
+              });
+              HapticFeedback.selectionClick();
+            },
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 1.h),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.category,
+                    color: theme.colorScheme.primary,
+                    size: 24,
+                  ),
+                  SizedBox(width: 2.w),
+                  Expanded(
+                    child: Text(
+                      '${l10n.report_issueType} *',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  // Selected count badge
+                  if (_selectedIssueTypeIds.isNotEmpty)
+                    Container(
+                      margin: EdgeInsets.only(right: 2.w),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 2.w,
+                        vertical: 0.5.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '${_selectedIssueTypeIds.length}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  // Expand/collapse icon
+                  Icon(
+                    _isIssueTypeSectionExpanded
+                        ? Icons.expand_less
+                        : Icons.expand_more,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-        SizedBox(height: 2.h),
-        Wrap(
-          spacing: 2.w,
-          runSpacing: 1.h,
-          children: provider.availableIssueTypes.map((issueType) {
-            final isSelected = _selectedIssueTypeIds.contains(issueType.id);
-            return FilterChip(
-              label: Text(issueType.name),
-              selected: isSelected,
-              onSelected: (_) => _toggleIssueType(issueType.id),
-              selectedColor: theme.colorScheme.primary.withValues(alpha: 0.2),
-              checkmarkColor: theme.colorScheme.primary,
-            );
-          }).toList(),
-        ),
-      ],
+
+          // Expandable content
+          if (_isIssueTypeSectionExpanded) ...[
+            SizedBox(height: 2.h),
+
+            // Issue type cards
+            ...provider.availableIssueTypes.map((issueType) {
+              final isSelected = _selectedIssueTypeIds.contains(issueType.id);
+
+              return Padding(
+                padding: EdgeInsets.only(bottom: 2.h),
+                child: InkWell(
+                  onTap: () => _toggleIssueType(issueType.id),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: EdgeInsets.all(3.w),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                          : theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isSelected
+                            ? theme.colorScheme.primary
+                            : theme.colorScheme.outline.withValues(alpha: 0.3),
+                        width: isSelected ? 2 : 1,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        // Icon with better error handling
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? theme.colorScheme.primary.withValues(
+                                    alpha: 0.2,
+                                  )
+                                : theme.colorScheme.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            IconMapper.getIcon(issueType.iconUrl),
+                            color: isSelected
+                                ? theme.colorScheme.primary
+                                : theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.6,
+                                  ),
+                            size: 28,
+                          ),
+                        ),
+                        SizedBox(width: 3.w),
+
+                        // Name and description
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                issueType.name,
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: isSelected
+                                      ? theme.colorScheme.primary
+                                      : theme.colorScheme.onSurface,
+                                ),
+                              ),
+                              if (issueType.description != null &&
+                                  issueType.description!.isNotEmpty) ...[
+                                SizedBox(height: 0.5.h),
+                                Text(
+                                  issueType.description!,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.6),
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+
+                        // Checkbox
+                        Icon(
+                          isSelected
+                              ? Icons.check_circle
+                              : Icons.radio_button_unchecked,
+                          color: isSelected
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.3,
+                                ),
+                          size: 24,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ],
+        ],
+      ),
     );
   }
 }

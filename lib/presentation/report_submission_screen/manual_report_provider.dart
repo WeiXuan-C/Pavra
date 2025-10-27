@@ -197,6 +197,22 @@ class ManualReportProvider extends ChangeNotifier {
     }
   }
 
+  /// Discard the draft report (change status to 'discarded')
+  Future<void> discardDraft() async {
+    if (_draftReport == null) return;
+
+    try {
+      await _reportApi.updateReport(_draftReport!.id, {'status': 'discarded'});
+      _draftReport = null;
+      _uploadedPhotos.clear();
+      notifyListeners();
+    } catch (e) {
+      _error = 'Failed to discard draft: $e';
+      notifyListeners();
+      rethrow;
+    }
+  }
+
   /// Clear error message
   void clearError() {
     _error = null;
