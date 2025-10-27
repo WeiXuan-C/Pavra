@@ -10,6 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/api/report_issue/report_issue_api.dart';
 import '../../core/api/report_issue/issue_type_api.dart';
 import '../../core/utils/icon_mapper.dart';
+import '../../data/models/issue_photo_model.dart';
 import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
 import './manual_report_provider.dart';
@@ -727,7 +728,8 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
                 top: 8,
                 right: 8,
                 child: IconButton(
-                  onPressed: () => _removePhoto(0),
+                  onPressed: () =>
+                      _removePhoto(context, provider, mainPhotos.first),
                   icon: const Icon(Icons.close),
                   style: IconButton.styleFrom(
                     backgroundColor: theme.colorScheme.surface.withValues(
@@ -767,17 +769,14 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   ) {
     final additionalPhotos = provider.uploadedPhotos
         .where((p) => p.photoType == 'additional')
-        .map((p) => p.photoUrl)
         .toList();
 
     return PhotoGalleryWidget(
-      imageUrls: additionalPhotos,
+      imageUrls: additionalPhotos.map((p) => p.photoUrl).toList(),
       onAddPhoto: () => _addPhoto(context, provider, photoType: 'additional'),
       onRemovePhoto: (index) {
-        final mainPhotoCount = provider.uploadedPhotos
-            .where((p) => p.photoType == 'main')
-            .length;
-        _removePhoto(mainPhotoCount + index);
+        final photo = additionalPhotos[index];
+        _removePhoto(context, provider, photo);
       },
     );
   }
