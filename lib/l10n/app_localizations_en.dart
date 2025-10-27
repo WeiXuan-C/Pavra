@@ -1140,10 +1140,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profile_settings => 'Settings';
 
   @override
-  String get report_openCamera => 'Open Camera';
+  String get report_openCamera => 'Open Camera Detection';
 
   @override
-  String get report_aiDetectionReady => 'AI Detection Ready';
+  String get report_aiDetectionReady =>
+      'AI detection ready to scan road issues';
 
   @override
   String get report_quickReportTitle => 'Quick Report Road Issues';
@@ -1182,6 +1183,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get report_resolved => 'Resolved';
+
+  @override
+  String get report_reviewed => 'Reviewed';
 
   @override
   String get report_inProgress => 'In Progress';
@@ -1327,4 +1331,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get report_enterLocation => 'Enter location address';
+
+  @override
+  String get report_untitled => 'Untitled Report';
+
+  @override
+  String get report_noLocation => 'No location';
+
+  @override
+  String get report_statusDraft => 'Draft';
+
+  @override
+  String get report_statusSubmitted => 'Submitted';
+
+  @override
+  String get report_statusReviewed => 'Reviewed';
+
+  @override
+  String get report_statusSpam => 'Spam';
+
+  @override
+  String get report_statusDiscarded => 'Discarded';
+
+  @override
+  String get report_critical => 'Critical';
+
+  @override
+  String get report_moderate => 'Moderate';
+
+  @override
+  String get report_minor => 'Minor';
 }

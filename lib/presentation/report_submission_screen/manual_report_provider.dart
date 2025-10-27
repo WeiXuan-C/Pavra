@@ -108,7 +108,7 @@ class ManualReportProvider extends ChangeNotifier {
         _draftReport = drafts.first;
       } else {
         // Create new draft with auto-generated title
-        final title = _generateReportTitle();
+        final title = await _generateReportTitle();
         _draftReport = await _reportApi.createReport(
           title: title,
           severity: 'moderate',
@@ -120,11 +120,43 @@ class ManualReportProvider extends ChangeNotifier {
   }
 
   /// Generate report title: RPT-[timestamp]-[sequence]
-  String _generateReportTitle() {
+  /// Auto-increments sequence number if timestamp already exists
+  Future<String> _generateReportTitle() async {
     final now = DateTime.now();
     final timestamp =
         '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}';
-    return 'RPT-$timestamp-001';
+
+    try {
+      // Query all reports with titles starting with this timestamp
+      final response = await _supabase
+          .from('report_issues')
+          .select('title')
+          .like('title', 'RPT-$timestamp-%')
+          .order('title', ascending: false)
+          .limit(1);
+
+      if (response.isEmpty) {
+        // No existing reports with this timestamp
+        return 'RPT-$timestamp-001';
+      }
+
+      // Extract the sequence number from the last title
+      final lastTitle = response.first['title'] as String;
+      final parts = lastTitle.split('-');
+
+      if (parts.length == 3) {
+        final lastSequence = int.tryParse(parts[2]) ?? 0;
+        final nextSequence = lastSequence + 1;
+        return 'RPT-$timestamp-${nextSequence.toString().padLeft(3, '0')}';
+      }
+
+      // Fallback if parsing fails
+      return 'RPT-$timestamp-001';
+    } catch (e) {
+      debugPrint('Error generating report title: $e');
+      // Fallback to 001 if query fails
+      return 'RPT-$timestamp-001';
+    }
   }
 
   /// Update draft report
@@ -137,7 +169,13 @@ class ManualReportProvider extends ChangeNotifier {
     double? latitude,
     double? longitude,
   }) async {
-    if (_draftReport == null) return;
+    debugPrint('[Provider] updateDraft called');
+    debugPrint('[Provider] Draft report: ${_draftReport?.id}');
+
+    if (_draftReport == null) {
+      debugPrint('[Provider] No draft report available!');
+      return;
+    }
 
     try {
       final updates = <String, dynamic>{};
@@ -150,11 +188,19 @@ class ManualReportProvider extends ChangeNotifier {
       if (latitude != null) updates['latitude'] = latitude;
       if (longitude != null) updates['longitude'] = longitude;
 
+      debugPrint('[Provider] Updates to apply: $updates');
+
       if (updates.isNotEmpty) {
+        debugPrint('[Provider] Calling API updateReport...');
         _draftReport = await _reportApi.updateReport(_draftReport!.id, updates);
+        debugPrint('[Provider] API call successful');
         notifyListeners();
+      } else {
+        debugPrint('[Provider] No updates to apply');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('[Provider] Error updating draft: $e');
+      debugPrint('[Provider] Stack trace: $stackTrace');
       _error = 'Failed to update draft: $e';
       notifyListeners();
       rethrow;
@@ -199,14 +245,24 @@ class ManualReportProvider extends ChangeNotifier {
 
   /// Discard the draft report (change status to 'discarded')
   Future<void> discardDraft() async {
-    if (_draftReport == null) return;
+    debugPrint('[Provider] discardDraft called');
+    debugPrint('[Provider] Draft report: ${_draftReport?.id}');
+
+    if (_draftReport == null) {
+      debugPrint('[Provider] No draft report available!');
+      return;
+    }
 
     try {
-      await _reportApi.updateReport(_draftReport!.id, {'status': 'discarded'});
+      debugPrint('[Provider] Calling API to discard draft...');
+      await _reportApi.updateReport(_draftReport!.id, {'status': 'discard'});
+      debugPrint('[Provider] Draft discarded successfully');
       _draftReport = null;
       _uploadedPhotos.clear();
       notifyListeners();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('[Provider] Error discarding draft: $e');
+      debugPrint('[Provider] Stack trace: $stackTrace');
       _error = 'Failed to discard draft: $e';
       notifyListeners();
       rethrow;

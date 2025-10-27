@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../../../l10n/app_localizations.dart';
+import '../../../data/repositories/report_issue_repository.dart';
+import '../../../data/sources/remote/report_issue_remote_source.dart';
+import '../../../data/sources/remote/issue_type_remote_source.dart';
+import '../../../data/sources/remote/issue_vote_remote_source.dart';
+import '../../../data/models/report_issue_model.dart';
 import './report_skeleton.dart';
 
 enum ReportFilterType { myReports, allReports }
@@ -10,7 +16,7 @@ enum ReportFilterType { myReports, allReports }
 /// 显示报告列表（我的报告或所有报告）
 class ReportListTab extends StatefulWidget {
   final ReportFilterType filterType;
-  final Function(Map<String, dynamic>) onReportTap;
+  final Function(ReportIssueModel) onReportTap;
 
   const ReportListTab({
     super.key,
@@ -25,12 +31,23 @@ class ReportListTab extends StatefulWidget {
 class _ReportListTabState extends State<ReportListTab> {
   bool _isLoading = false;
   String _sortBy = 'date'; // date, severity, status
-  List<Map<String, dynamic>> _reports = [];
+  List<ReportIssueModel> _reports = [];
+  late ReportIssueRepository _repository;
 
   @override
   void initState() {
     super.initState();
+    _initRepository();
     _loadReports();
+  }
+
+  void _initRepository() {
+    final supabase = Supabase.instance.client;
+    _repository = ReportIssueRepository(
+      reportRemoteSource: ReportIssueRemoteSource(supabase),
+      typeRemoteSource: IssueTypeRemoteSource(),
+      voteRemoteSource: IssueVoteRemoteSource(supabase),
+    );
   }
 
   Future<void> _loadReports() async {
@@ -38,90 +55,50 @@ class _ReportListTabState extends State<ReportListTab> {
       _isLoading = true;
     });
 
-    // Simulate loading
-    await Future.delayed(const Duration(milliseconds: 500));
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user == null) {
+        setState(() {
+          _isLoading = false;
+        });
+        return;
+      }
 
-    // Mock data
-    _reports = widget.filterType == ReportFilterType.myReports
-        ? _getMyReports()
-        : _getAllReports();
+      List<ReportIssueModel> reports;
+      if (widget.filterType == ReportFilterType.myReports) {
+        // Load reports created by current user
+        reports = await _repository.getReportIssues(createdBy: user.id);
+      } else {
+        // Load all reports
+        reports = await _repository.getReportIssues();
+      }
 
-    setState(() {
-      _isLoading = false;
-    });
-  }
+      // Filter to only show draft, submitted, reviewed, spam (exclude discard)
+      final filteredReports = reports
+          .where(
+            (report) => [
+              'draft',
+              'submitted',
+              'reviewed',
+              'spam',
+            ].contains(report.status),
+          )
+          .toList();
 
-  List<Map<String, dynamic>> _getMyReports() {
-    return [
-      {
-        'id': 'RPT-001',
-        'type': 'Pothole',
-        'severity': 'high',
-        'status': 'reported',
-        'location': 'Main Street & 5th Avenue',
-        'description': 'Large pothole causing traffic issues',
-        'createdAt': DateTime.now().subtract(const Duration(hours: 2)),
-        'imageUrl':
-            'https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg',
-        'isMyReport': true,
-      },
-      {
-        'id': 'RPT-002',
-        'type': 'Crack',
-        'severity': 'medium',
-        'status': 'in_progress',
-        'location': 'Oak Avenue, Downtown',
-        'description': 'Road crack extending across lane',
-        'createdAt': DateTime.now().subtract(const Duration(days: 1)),
-        'imageUrl':
-            'https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg',
-        'isMyReport': true,
-      },
-      {
-        'id': 'RPT-003',
-        'type': 'Obstacle',
-        'severity': 'low',
-        'status': 'resolved',
-        'location': 'Pine Street Bridge',
-        'description': 'Debris removed from roadway',
-        'createdAt': DateTime.now().subtract(const Duration(days: 3)),
-        'imageUrl':
-            'https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg',
-        'isMyReport': true,
-      },
-    ];
-  }
-
-  List<Map<String, dynamic>> _getAllReports() {
-    return [
-      ..._getMyReports(),
-      {
-        'id': 'RPT-004',
-        'type': 'Pothole',
-        'severity': 'high',
-        'status': 'reported',
-        'location': 'Highway 101, Mile 23',
-        'description': 'Multiple potholes in right lane',
-        'createdAt': DateTime.now().subtract(const Duration(hours: 5)),
-        'imageUrl':
-            'https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg',
-        'isMyReport': false,
-        'reportedBy': 'John Doe',
-      },
-      {
-        'id': 'RPT-005',
-        'type': 'Lighting',
-        'severity': 'medium',
-        'status': 'reported',
-        'location': 'Sunset Boulevard',
-        'description': 'Street lights not working',
-        'createdAt': DateTime.now().subtract(const Duration(hours: 8)),
-        'imageUrl':
-            'https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg',
-        'isMyReport': false,
-        'reportedBy': 'Jane Smith',
-      },
-    ];
+      if (mounted) {
+        setState(() {
+          _reports = filteredReports;
+          _isLoading = false;
+        });
+        _sortReports(_sortBy);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   void _sortReports(String sortBy) {
@@ -130,25 +107,33 @@ class _ReportListTabState extends State<ReportListTab> {
 
       switch (sortBy) {
         case 'date':
-          _reports.sort(
-            (a, b) => (b['createdAt'] as DateTime).compareTo(
-              a['createdAt'] as DateTime,
-            ),
-          );
+          _reports.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
           break;
         case 'severity':
-          final severityOrder = {'high': 0, 'medium': 1, 'low': 2};
+          final severityOrder = {
+            'critical': 0,
+            'high': 1,
+            'moderate': 2,
+            'low': 3,
+            'minor': 4,
+          };
           _reports.sort(
-            (a, b) => severityOrder[a['severity']]!.compareTo(
-              severityOrder[b['severity']]!,
+            (a, b) => (severityOrder[a.severity] ?? 5).compareTo(
+              severityOrder[b.severity] ?? 5,
             ),
           );
           break;
         case 'status':
-          final statusOrder = {'reported': 0, 'in_progress': 1, 'resolved': 2};
+          final statusOrder = {
+            'submitted': 0,
+            'reviewed': 1,
+            'draft': 2,
+            'spam': 3,
+          };
           _reports.sort(
-            (a, b) =>
-                statusOrder[a['status']]!.compareTo(statusOrder[b['status']]!),
+            (a, b) => (statusOrder[a.status] ?? 4).compareTo(
+              statusOrder[b.status] ?? 4,
+            ),
           );
           break;
       }
@@ -273,13 +258,12 @@ class _ReportListTabState extends State<ReportListTab> {
   }
 
   Widget _buildReportCard(
-    Map<String, dynamic> report,
+    ReportIssueModel report,
     ThemeData theme,
     AppLocalizations l10n,
   ) {
-    final severity = report['severity'] as String;
-    final status = report['status'] as String;
-    final isMyReport = report['isMyReport'] as bool;
+    final user = Supabase.instance.client.auth.currentUser;
+    final isMyReport = user != null && report.createdBy == user.id;
 
     return Card(
       elevation: 2,
@@ -294,26 +278,6 @@ class _ReportListTabState extends State<ReportListTab> {
               // Header Row
               Row(
                 children: [
-                  // Report ID
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 2.w,
-                      vertical: 0.5.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      report['id'] as String,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 2.w),
-
                   // My Report Badge
                   if (isMyReport)
                     Container(
@@ -338,17 +302,17 @@ class _ReportListTabState extends State<ReportListTab> {
                   const Spacer(),
 
                   // Severity Badge
-                  _buildSeverityBadge(severity, theme, l10n),
+                  _buildSeverityBadge(report.severity, theme, l10n),
                 ],
               ),
 
               SizedBox(height: 1.h),
 
-              // Type and Location
+              // Title and Location
               Row(
                 children: [
                   Icon(
-                    _getTypeIcon(report['type'] as String),
+                    Icons.report_problem,
                     size: 20,
                     color: theme.colorScheme.primary,
                   ),
@@ -358,34 +322,40 @@ class _ReportListTabState extends State<ReportListTab> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          report['type'] as String,
+                          report.title ?? l10n.report_untitled,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        Text(
-                          report['location'] as String,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.6,
+                        if (report.address != null)
+                          Text(
+                            report.address!,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.6,
+                              ),
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
                       ],
                     ),
                   ),
                 ],
               ),
 
-              SizedBox(height: 1.h),
-
-              // Description
-              Text(
-                report['description'] as String,
-                style: theme.textTheme.bodyMedium,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
+              if (report.description != null) ...[
+                SizedBox(height: 1.h),
+                // Description
+                Text(
+                  report.description!,
+                  style: theme.textTheme.bodyMedium,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
 
               SizedBox(height: 1.h),
 
@@ -393,30 +363,17 @@ class _ReportListTabState extends State<ReportListTab> {
               Row(
                 children: [
                   // Status
-                  _buildStatusBadge(status, theme, l10n),
+                  _buildStatusBadge(report.status, theme, l10n),
 
                   const Spacer(),
 
                   // Time
                   Text(
-                    timeago.format(report['createdAt'] as DateTime),
+                    timeago.format(report.updatedAt),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
-
-                  // Reporter (for all reports)
-                  if (!isMyReport && report.containsKey('reportedBy')) ...[
-                    SizedBox(width: 2.w),
-                    Text(
-                      '• ${report['reportedBy']}',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.6,
-                        ),
-                      ),
-                    ),
-                  ],
                 ],
               ),
             ],
@@ -435,17 +392,25 @@ class _ReportListTabState extends State<ReportListTab> {
     String label;
 
     switch (severity) {
+      case 'critical':
+        color = Colors.red.shade900;
+        label = l10n.report_critical;
+        break;
       case 'high':
         color = Colors.red;
         label = l10n.report_high;
         break;
-      case 'medium':
+      case 'moderate':
         color = Colors.orange;
-        label = l10n.report_medium;
+        label = l10n.report_moderate;
         break;
       case 'low':
-        color = Colors.yellow;
+        color = Colors.yellow.shade700;
         label = l10n.report_low;
+        break;
+      case 'minor':
+        color = Colors.grey;
+        label = l10n.report_minor;
         break;
       default:
         color = Colors.grey;
@@ -478,20 +443,25 @@ class _ReportListTabState extends State<ReportListTab> {
     String label;
 
     switch (status) {
-      case 'reported':
-        color = Colors.blue;
-        icon = Icons.report;
-        label = l10n.report_statusReported;
+      case 'draft':
+        color = Colors.grey;
+        icon = Icons.edit;
+        label = l10n.report_statusDraft;
         break;
-      case 'in_progress':
+      case 'submitted':
         color = Colors.orange;
-        icon = Icons.construction;
-        label = l10n.report_statusInProgress;
+        icon = Icons.send;
+        label = l10n.report_statusSubmitted;
         break;
-      case 'resolved':
+      case 'reviewed':
         color = Colors.green;
         icon = Icons.check_circle;
-        label = l10n.report_statusResolved;
+        label = l10n.report_statusReviewed;
+        break;
+      case 'spam':
+        color = Colors.red;
+        icon = Icons.block;
+        label = l10n.report_statusSpam;
         break;
       default:
         color = Colors.grey;
@@ -513,20 +483,5 @@ class _ReportListTabState extends State<ReportListTab> {
         ),
       ],
     );
-  }
-
-  IconData _getTypeIcon(String type) {
-    switch (type.toLowerCase()) {
-      case 'pothole':
-        return Icons.warning;
-      case 'crack':
-        return Icons.broken_image;
-      case 'obstacle':
-        return Icons.block;
-      case 'lighting':
-        return Icons.lightbulb_outline;
-      default:
-        return Icons.report_problem;
-    }
   }
 }

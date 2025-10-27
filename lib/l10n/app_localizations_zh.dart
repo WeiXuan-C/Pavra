@@ -1155,6 +1155,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get report_resolved => '已解决';
 
   @override
+  String get report_reviewed => '已审核';
+
+  @override
   String get report_inProgress => '处理中';
 
   @override
@@ -1296,4 +1299,34 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get report_enterLocation => '输入位置地址';
+
+  @override
+  String get report_untitled => '无标题报告';
+
+  @override
+  String get report_noLocation => '无位置';
+
+  @override
+  String get report_statusDraft => '草稿';
+
+  @override
+  String get report_statusSubmitted => '已提交';
+
+  @override
+  String get report_statusReviewed => '已审核';
+
+  @override
+  String get report_statusSpam => '垃圾信息';
+
+  @override
+  String get report_statusDiscarded => '已丢弃';
+
+  @override
+  String get report_critical => '严重';
+
+  @override
+  String get report_moderate => '中等';
+
+  @override
+  String get report_minor => '轻微';
 }

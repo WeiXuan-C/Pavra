@@ -2204,13 +2204,13 @@ abstract class AppLocalizations {
   /// **'New Report'**
   String get report_newReport;
 
-  /// My reports tab title
+  /// My reports tab label
   ///
   /// In en, this message translates to:
   /// **'My Reports'**
   String get report_myReports;
 
-  /// All reports tab title
+  /// All reports tab label
   ///
   /// In en, this message translates to:
   /// **'All Reports'**
@@ -2288,16 +2288,16 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get profile_settings;
 
-  /// Open camera button text
+  /// Button to open camera detection screen
   ///
   /// In en, this message translates to:
-  /// **'Open Camera'**
+  /// **'Open Camera Detection'**
   String get report_openCamera;
 
-  /// AI detection ready message
+  /// Description for camera detection feature
   ///
   /// In en, this message translates to:
-  /// **'AI Detection Ready'**
+  /// **'AI detection ready to scan road issues'**
   String get report_aiDetectionReady;
 
   /// Quick report section title
@@ -2318,7 +2318,7 @@ abstract class AppLocalizations {
   /// **'Report Methods'**
   String get report_reportMethods;
 
-  /// AI smart detection option
+  /// AI detection card title
   ///
   /// In en, this message translates to:
   /// **'AI Smart Detection'**
@@ -2330,7 +2330,7 @@ abstract class AppLocalizations {
   /// **'Use camera to automatically detect road issues'**
   String get report_useCameraAutoDetect;
 
-  /// Manual report screen title
+  /// Manual report card title
   ///
   /// In en, this message translates to:
   /// **'Manual Report'**
@@ -2354,25 +2354,31 @@ abstract class AppLocalizations {
   /// **'AI analyze photo'**
   String get report_aiAnalyzePhoto;
 
-  /// My contribution section title
+  /// Stats section title
   ///
   /// In en, this message translates to:
   /// **'My Contribution'**
   String get report_myContribution;
 
-  /// Total reports label
+  /// Total reports stat label
   ///
   /// In en, this message translates to:
   /// **'Total Reports'**
   String get report_totalReports;
 
-  /// Resolved status label
+  /// Resolved reports stat label
   ///
   /// In en, this message translates to:
   /// **'Resolved'**
   String get report_resolved;
 
-  /// In progress status label
+  /// Reviewed reports stat label
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed'**
+  String get report_reviewed;
+
+  /// In progress reports stat label
   ///
   /// In en, this message translates to:
   /// **'In Progress'**
@@ -2653,6 +2659,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter location address'**
   String get report_enterLocation;
+
+  /// Default title for reports without a title
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled Report'**
+  String get report_untitled;
+
+  /// Message when report has no location
+  ///
+  /// In en, this message translates to:
+  /// **'No location'**
+  String get report_noLocation;
+
+  /// Draft status label
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get report_statusDraft;
+
+  /// Submitted status label
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted'**
+  String get report_statusSubmitted;
+
+  /// Reviewed status label
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed'**
+  String get report_statusReviewed;
+
+  /// Spam status label
+  ///
+  /// In en, this message translates to:
+  /// **'Spam'**
+  String get report_statusSpam;
+
+  /// Discarded status label
+  ///
+  /// In en, this message translates to:
+  /// **'Discarded'**
+  String get report_statusDiscarded;
+
+  /// Critical severity level
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get report_critical;
+
+  /// Moderate severity level
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get report_moderate;
+
+  /// Minor severity level
+  ///
+  /// In en, this message translates to:
+  /// **'Minor'**
+  String get report_minor;
 }
 
 class _AppLocalizationsDelegate

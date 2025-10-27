@@ -40,6 +40,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   double _severity = 3.0;
   bool _isSubmitting = false;
   bool _isIssueTypeSectionExpanded = true;
+  bool _isDraftLoaded = false;
 
   @override
   void dispose() {
@@ -48,10 +49,75 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     super.dispose();
   }
 
+  /// Load draft data into form fields
+  void _loadDraftData(ManualReportProvider provider) {
+    final draft = provider.draftReport;
+    if (draft == null) return;
+
+    debugPrint('=== Loading draft data into form ===');
+    debugPrint('Draft: ${draft.toJson()}');
+
+    // Load description
+    final description = draft.description;
+    if (description != null && description.isNotEmpty) {
+      _descriptionController.text = description;
+      debugPrint('Loaded description: $description');
+    }
+
+    // Load address
+    final address = draft.address;
+    if (address != null && address.isNotEmpty) {
+      _locationController.text = address;
+      debugPrint('Loaded address: $address');
+    }
+
+    // Load issue type IDs
+    if (draft.issueTypeIds.isNotEmpty) {
+      _selectedIssueTypeIds.clear();
+      _selectedIssueTypeIds.addAll(draft.issueTypeIds);
+      debugPrint('Loaded issue types: ${draft.issueTypeIds}');
+    }
+
+    // Load severity
+    _severity = _getSeverityValue(draft.severity);
+    debugPrint('Loaded severity: ${draft.severity} -> $_severity');
+
+    debugPrint('=== Draft data loaded ===');
+  }
+
+  /// Convert severity string to slider value
+  double _getSeverityValue(String severity) {
+    switch (severity.toLowerCase()) {
+      case 'minor':
+        return 1.0;
+      case 'low':
+        return 2.0;
+      case 'moderate':
+        return 3.0;
+      case 'high':
+        return 4.0;
+      case 'critical':
+        return 5.0;
+      default:
+        return 3.0;
+    }
+  }
+
   bool _isFormValid(ManualReportProvider provider) {
-    return provider.uploadedPhotos.isNotEmpty &&
-        _selectedIssueTypeIds.isNotEmpty &&
-        _locationController.text.isNotEmpty;
+    // Check if at least one main photo is uploaded
+    final hasMainPhoto = provider.uploadedPhotos.any(
+      (p) => p.photoType == 'main',
+    );
+
+    // Check if at least one issue type is selected
+    final hasIssueType = _selectedIssueTypeIds.isNotEmpty;
+
+    // Check if location is filled
+    final hasLocation = _locationController.text.isNotEmpty;
+
+    // Severity always has a default value (3.0 = moderate)
+
+    return hasMainPhoto && hasIssueType && hasLocation;
   }
 
   /// Add photo from camera or gallery with source selection
@@ -231,23 +297,31 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   }
 
   /// Save draft
-  Future<void> _saveDraft() async {
-    final provider = context.read<ManualReportProvider>();
-
+  Future<void> _saveDraft(ManualReportProvider provider) async {
     try {
+      // Default coordinates (Kuala Lumpur, Malaysia)
+      const double defaultLatitude = 3.1390;
+      const double defaultLongitude = 101.6869;
+
+      debugPrint('=== Saving draft ===');
+      debugPrint('Description: ${_descriptionController.text}');
+      debugPrint('Issue Types: $_selectedIssueTypeIds');
+      debugPrint('Severity: ${_getSeverityString(_severity)}');
+      debugPrint('Address: ${_locationController.text}');
+      debugPrint('Latitude: $defaultLatitude');
+      debugPrint('Longitude: $defaultLongitude');
+      debugPrint('Draft ID: ${provider.draftReport?.id}');
+
       await provider.updateDraft(
-        description: _descriptionController.text.isEmpty
-            ? null
-            : _descriptionController.text,
-        issueTypeIds: _selectedIssueTypeIds.isEmpty
-            ? null
-            : _selectedIssueTypeIds,
+        description: _descriptionController.text,
+        issueTypeIds: _selectedIssueTypeIds,
         severity: _getSeverityString(_severity),
-        address: _locationController.text.isEmpty
-            ? null
-            : _locationController.text,
+        address: _locationController.text,
+        latitude: defaultLatitude,
+        longitude: defaultLongitude,
       );
 
+      debugPrint('=== Draft saved successfully ===');
       HapticFeedback.lightImpact();
       if (!mounted) return;
       Fluttertoast.showToast(
@@ -255,44 +329,72 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('=== Error saving draft ===');
+      debugPrint('Error: $e');
+      debugPrint('Stack trace: $stackTrace');
       if (!mounted) return;
       Fluttertoast.showToast(
         msg: 'Failed to save draft: $e',
-        toastLength: Toast.LENGTH_SHORT,
+        toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
       );
     }
   }
 
   /// Submit report
-  Future<void> _submitReport() async {
-    final provider = context.read<ManualReportProvider>();
-
-    if (!_isFormValid(provider)) return;
+  Future<void> _submitReport(ManualReportProvider provider) async {
+    if (!_isFormValid(provider)) {
+      Fluttertoast.showToast(
+        msg: 'Please fill in all required fields',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
+      return;
+    }
 
     setState(() {
       _isSubmitting = true;
     });
 
     try {
-      // Update draft with final data
+      // Default coordinates (Kuala Lumpur, Malaysia)
+      const double defaultLatitude = 3.1390;
+      const double defaultLongitude = 101.6869;
+
+      debugPrint('=== Submitting report ===');
+      debugPrint('Description: ${_descriptionController.text}');
+      debugPrint('Issue Types: $_selectedIssueTypeIds');
+      debugPrint('Severity: ${_getSeverityString(_severity)}');
+      debugPrint('Address: ${_locationController.text}');
+      debugPrint('Coordinates: $defaultLatitude, $defaultLongitude');
+
+      // Update draft with final data including coordinates
       await provider.updateDraft(
-        description: _descriptionController.text,
+        description: _descriptionController.text.isEmpty
+            ? 'No description provided'
+            : _descriptionController.text,
         issueTypeIds: _selectedIssueTypeIds,
         severity: _getSeverityString(_severity),
         address: _locationController.text,
+        latitude: defaultLatitude,
+        longitude: defaultLongitude,
       );
 
-      // Submit the draft
+      // Submit the draft (changes status from 'draft' to 'submitted')
       final reportId = provider.draftReport?.id ?? 'Unknown';
+      debugPrint('Submitting draft with ID: $reportId');
       await provider.submitDraft();
 
+      debugPrint('=== Report submitted successfully ===');
       HapticFeedback.heavyImpact();
 
       if (!mounted) return;
       _showSuccessDialog(reportId);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('=== Error submitting report ===');
+      debugPrint('Error: $e');
+      debugPrint('Stack trace: $stackTrace');
       if (!mounted) return;
       Fluttertoast.showToast(
         msg: '${AppLocalizations.of(context).report_submitFailed}: $e',
@@ -436,8 +538,14 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
                   Navigator.of(dialogContext).pop(false);
                   // Discard: Update status to 'discarded'
                   try {
+                    debugPrint('=== Discarding draft ===');
+                    debugPrint('Draft ID: ${provider.draftReport?.id}');
                     await provider.discardDraft();
-                  } catch (e) {
+                    debugPrint('=== Draft discarded successfully ===');
+                  } catch (e, stackTrace) {
+                    debugPrint('=== Error discarding draft ===');
+                    debugPrint('Error: $e');
+                    debugPrint('Stack trace: $stackTrace');
                     // Ignore error, just navigate back
                   }
                   if (!mounted) return;
@@ -448,7 +556,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
               TextButton(
                 onPressed: () async {
                   Navigator.of(dialogContext).pop(false);
-                  await _saveDraft();
+                  await _saveDraft(provider);
                   if (!mounted) return;
                   navigator.pop();
                 },
@@ -512,6 +620,16 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
                       ],
                     ),
                   );
+                }
+
+                // Load draft data into form fields (only once)
+                if (!_isDraftLoaded && provider.draftReport != null) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _loadDraftData(provider);
+                    setState(() {
+                      _isDraftLoaded = true;
+                    });
+                  });
                 }
 
                 return Column(
@@ -586,8 +704,8 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
                       isFormValid: _isFormValid(provider),
                       isSubmitting: _isSubmitting || provider.isUploadingPhoto,
                       uploadProgress: provider.uploadProgress,
-                      onSubmit: _submitReport,
-                      onSaveDraft: _saveDraft,
+                      onSubmit: () => _submitReport(provider),
+                      onSaveDraft: () => _saveDraft(provider),
                     ),
                   ],
                 );
@@ -782,17 +900,20 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   }
 
   Widget _buildLocationInput(ThemeData theme, AppLocalizations l10n) {
-    // Mock location data - in real app, get from GPS
-    const double latitude = 0.0;
-    const double longitude = 0.0;
-    const double accuracy = 0.0;
+    // Default location data - set default values if empty
+    const double defaultLatitude = 3.1390; // Kuala Lumpur, Malaysia
+    const double defaultLongitude = 101.6869;
+    const double accuracy = 10.0;
+
+    // Set default address if empty
+    if (_locationController.text.isEmpty) {
+      _locationController.text = 'Kuala Lumpur, Malaysia';
+    }
 
     return LocationInfoWidget(
-      streetAddress: _locationController.text.isEmpty
-          ? l10n.report_enterLocation
-          : _locationController.text,
-      latitude: latitude,
-      longitude: longitude,
+      streetAddress: _locationController.text,
+      latitude: defaultLatitude,
+      longitude: defaultLongitude,
       accuracy: accuracy,
       onRefreshLocation: () async {
         HapticFeedback.lightImpact();

@@ -1536,6 +1536,10 @@
   "@report_resolved": {
     "description": "已解决报告统计标签"
   },
+  "report_reviewed": "已审核",
+  "@report_reviewed": {
+    "description": "已审核报告统计标签"
+  },
   "report_inProgress": "处理中",
   "@report_inProgress": {
     "description": "处理中报告统计标签"
@@ -1728,5 +1732,45 @@
   "report_takePhoto": "拍照",
   "@report_takePhoto": {
     "description": "拍照按钮文本"
+  },
+  "report_untitled": "无标题报告",
+  "@report_untitled": {
+    "description": "没有标题的报告的默认标题"
+  },
+  "report_noLocation": "无位置",
+  "@report_noLocation": {
+    "description": "报告没有位置时的消息"
+  },
+  "report_statusDraft": "草稿",
+  "@report_statusDraft": {
+    "description": "草稿状态标签"
+  },
+  "report_statusSubmitted": "已提交",
+  "@report_statusSubmitted": {
+    "description": "已提交状态标签"
+  },
+  "report_statusReviewed": "已审核",
+  "@report_statusReviewed": {
+    "description": "已审核状态标签"
+  },
+  "report_statusSpam": "垃圾信息",
+  "@report_statusSpam": {
+    "description": "垃圾信息状态标签"
+  },
+  "report_statusDiscarded": "已丢弃",
+  "@report_statusDiscarded": {
+    "description": "已丢弃状态标签"
+  },
+  "report_critical": "严重",
+  "@report_critical": {
+    "description": "严重程度级别"
+  },
+  "report_moderate": "中等",
+  "@report_moderate": {
+    "description": "中等严重程度级别"
+  },
+  "report_minor": "轻微",
+  "@report_minor": {
+    "description": "轻微严重程度级别"
   }
 }

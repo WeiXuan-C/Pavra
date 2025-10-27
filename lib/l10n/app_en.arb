@@ -1536,6 +1536,10 @@
   "@report_resolved": {
     "description": "Resolved reports stat label"
   },
+  "report_reviewed": "Reviewed",
+  "@report_reviewed": {
+    "description": "Reviewed reports stat label"
+  },
   "report_inProgress": "In Progress",
   "@report_inProgress": {
     "description": "In progress reports stat label"
@@ -1717,10 +1721,6 @@
   "@issueTypes_errorPrefix": {
     "description": "Error message prefix"
   },
-  "report_manualReport": "Manual Report",
-  "@report_manualReport": {
-    "description": "Manual report screen title"
-  },
   "report_takePhoto": "Take Photo",
   "@report_takePhoto": {
     "description": "Take photo button text"
@@ -1733,52 +1733,44 @@
   "@report_enterLocation": {
     "description": "Enter location hint text"
   },
-  "report_reportMethods": "Report Methods",
-  "@report_reportMethods": {
-    "description": "Report methods section title"
+  "report_untitled": "Untitled Report",
+  "@report_untitled": {
+    "description": "Default title for reports without a title"
   },
-  "report_aiSmartDetection": "AI Smart Detection",
-  "@report_aiSmartDetection": {
-    "description": "AI smart detection option"
+  "report_noLocation": "No location",
+  "@report_noLocation": {
+    "description": "Message when report has no location"
   },
-  "report_myContribution": "My Contribution",
-  "@report_myContribution": {
-    "description": "My contribution section title"
+  "report_statusDraft": "Draft",
+  "@report_statusDraft": {
+    "description": "Draft status label"
   },
-  "report_totalReports": "Total Reports",
-  "@report_totalReports": {
-    "description": "Total reports label"
+  "report_statusSubmitted": "Submitted",
+  "@report_statusSubmitted": {
+    "description": "Submitted status label"
   },
-  "report_resolved": "Resolved",
-  "@report_resolved": {
-    "description": "Resolved status label"
+  "report_statusReviewed": "Reviewed",
+  "@report_statusReviewed": {
+    "description": "Reviewed status label"
   },
-  "report_inProgress": "In Progress",
-  "@report_inProgress": {
-    "description": "In progress status label"
+  "report_statusSpam": "Spam",
+  "@report_statusSpam": {
+    "description": "Spam status label"
   },
-  "report_recentReports": "Recent Reports",
-  "@report_recentReports": {
-    "description": "Recent reports section title"
+  "report_statusDiscarded": "Discarded",
+  "@report_statusDiscarded": {
+    "description": "Discarded status label"
   },
-  "report_viewAll": "View All",
-  "@report_viewAll": {
-    "description": "View all button text"
+  "report_critical": "Critical",
+  "@report_critical": {
+    "description": "Critical severity level"
   },
-  "report_myReports": "My Reports",
-  "@report_myReports": {
-    "description": "My reports tab title"
+  "report_moderate": "Moderate",
+  "@report_moderate": {
+    "description": "Moderate severity level"
   },
-  "report_allReports": "All Reports",
-  "@report_allReports": {
-    "description": "All reports tab title"
-  },
-  "report_openCamera": "Open Camera",
-  "@report_openCamera": {
-    "description": "Open camera button text"
-  },
-  "report_aiDetectionReady": "AI Detection Ready",
-  "@report_aiDetectionReady": {
-    "description": "AI detection ready message"
+  "report_minor": "Minor",
+  "@report_minor": {
+    "description": "Minor severity level"
   }
 }

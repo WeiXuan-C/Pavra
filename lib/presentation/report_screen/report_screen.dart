@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import '../../l10n/app_localizations.dart';
+import '../../data/repositories/report_issue_repository.dart';
+import '../../data/sources/remote/report_issue_remote_source.dart';
+import '../../data/sources/remote/issue_type_remote_source.dart';
+import '../../data/sources/remote/issue_vote_remote_source.dart';
+import '../../data/models/report_issue_model.dart';
 import '../camera_detection_screen/camera_detection_screen.dart';
 import '../layouts/header_layout.dart';
 import '../issue_types_screen/issue_types_screen.dart';
@@ -23,12 +29,27 @@ class ReportScreen extends StatefulWidget {
 class _ReportScreenState extends State<ReportScreen> {
   bool _isLoading = true;
   bool _isDeveloper = false;
+  late ReportIssueRepository _repository;
+  List<ReportIssueModel> _recentReports = [];
+  int _totalReports = 0;
+  int _reviewedReports = 0;
+  int _inProgressReports = 0;
 
   @override
   void initState() {
     super.initState();
+    _initRepository();
     _checkUserRole();
     _loadData();
+  }
+
+  void _initRepository() {
+    final supabase = Supabase.instance.client;
+    _repository = ReportIssueRepository(
+      reportRemoteSource: ReportIssueRemoteSource(supabase),
+      typeRemoteSource: IssueTypeRemoteSource(),
+      voteRemoteSource: IssueVoteRemoteSource(supabase),
+    );
   }
 
   Future<void> _checkUserRole() async {
@@ -65,13 +86,60 @@ class _ReportScreenState extends State<ReportScreen> {
       _isLoading = true;
     });
 
-    // Simulate loading data
-    await Future.delayed(const Duration(milliseconds: 800));
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user != null && widget.filterType == 0) {
+        // Load all reports for current user
+        final allReports = await _repository.getReportIssues(
+          createdBy: user.id,
+        );
 
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
+        // Filter reports with status: draft, submitted, reviewed, spam
+        final filteredReports = allReports.where((report) {
+          return [
+            'draft',
+            'submitted',
+            'reviewed',
+            'spam',
+          ].contains(report.status);
+        }).toList();
+
+        // Sort by updated_at descending
+        filteredReports.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+
+        // Take only the 3 most recent for preview
+        final recentReports = filteredReports.take(3).toList();
+
+        // Calculate stats
+        final reviewed = filteredReports
+            .where((r) => r.status == 'reviewed')
+            .length;
+        final inProgress = filteredReports
+            .where((r) => r.status == 'submitted')
+            .length;
+
+        if (mounted) {
+          setState(() {
+            _recentReports = recentReports;
+            _totalReports = filteredReports.length;
+            _reviewedReports = reviewed;
+            _inProgressReports = inProgress;
+            _isLoading = false;
+          });
+        }
+      } else {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -138,61 +206,65 @@ class _ReportScreenState extends State<ReportScreen> {
     ThemeData theme,
     AppLocalizations l10n,
   ) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(4.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.report_reportMethods,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
+    return RefreshIndicator(
+      onRefresh: _loadData,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.all(4.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.report_reportMethods,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          SizedBox(height: 2.h),
+            SizedBox(height: 2.h),
 
-          // Report Methods Row - AI (5/9) + Manual (4/9)
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // AI Camera Detection - Primary (5/9 width)
-              Expanded(
-                flex: 5,
-                child: _buildSimplePrimaryCard(
-                  context,
-                  theme,
-                  icon: Icons.camera_alt,
-                  title: l10n.report_aiSmartDetection,
-                  gradient: LinearGradient(
-                    colors: [
-                      theme.colorScheme.primary,
-                      theme.colorScheme.primary.withValues(alpha: 0.7),
-                    ],
+            // Report Methods Row - AI (5/9) + Manual (4/9)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // AI Camera Detection - Primary (5/9 width)
+                Expanded(
+                  flex: 5,
+                  child: _buildSimplePrimaryCard(
+                    context,
+                    theme,
+                    icon: Icons.camera_alt,
+                    title: l10n.report_aiSmartDetection,
+                    gradient: LinearGradient(
+                      colors: [
+                        theme.colorScheme.primary,
+                        theme.colorScheme.primary.withValues(alpha: 0.7),
+                      ],
+                    ),
+                    onTap: () => _openCameraDetection(context),
                   ),
-                  onTap: () => _openCameraDetection(context),
                 ),
-              ),
-              SizedBox(width: 3.w),
+                SizedBox(width: 3.w),
 
-              // Manual Report - Secondary (4/9 width)
-              Expanded(
-                flex: 4,
-                child: _buildCompactActionCard(
-                  context,
-                  theme,
-                  icon: Icons.edit_location_alt,
-                  title: l10n.report_manualReport,
-                  color: theme.colorScheme.secondary,
-                  onTap: () => _navigateToManualReport(context),
+                // Manual Report - Secondary (4/9 width)
+                Expanded(
+                  flex: 4,
+                  child: _buildCompactActionCard(
+                    context,
+                    theme,
+                    icon: Icons.edit_location_alt,
+                    title: l10n.report_manualReport,
+                    color: theme.colorScheme.secondary,
+                    onTap: () => _navigateToManualReport(context),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 4.h),
-          _buildStatsSection(theme, l10n),
-          SizedBox(height: 4.h),
-          _buildRecentReportsPreview(context, theme, l10n),
-        ],
+              ],
+            ),
+            SizedBox(height: 4.h),
+            _buildStatsSection(theme, l10n),
+            SizedBox(height: 4.h),
+            _buildRecentReportsPreview(context, theme, l10n),
+          ],
+        ),
       ),
     );
   }
@@ -323,7 +395,7 @@ class _ReportScreenState extends State<ReportScreen> {
               child: _buildStatCard(
                 theme,
                 icon: Icons.report_outlined,
-                value: '12',
+                value: _totalReports.toString(),
                 label: l10n.report_totalReports,
                 color: theme.colorScheme.primary,
               ),
@@ -333,8 +405,8 @@ class _ReportScreenState extends State<ReportScreen> {
               child: _buildStatCard(
                 theme,
                 icon: Icons.check_circle_outline,
-                value: '8',
-                label: l10n.report_resolved,
+                value: _reviewedReports.toString(),
+                label: l10n.report_reviewed,
                 color: Colors.green,
               ),
             ),
@@ -343,7 +415,7 @@ class _ReportScreenState extends State<ReportScreen> {
               child: _buildStatCard(
                 theme,
                 icon: Icons.pending_outlined,
-                value: '4',
+                value: _inProgressReports.toString(),
                 label: l10n.report_inProgress,
                 color: Colors.orange,
               ),
@@ -408,120 +480,186 @@ class _ReportScreenState extends State<ReportScreen> {
             ),
             TextButton(
               onPressed: () {
-                // This will be handled by the parent layout
-                // User can tap the Report nav button again to see the menu
+                // Navigate to My Reports screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ReportScreen(filterType: 1),
+                  ),
+                );
               },
               child: Text(l10n.report_viewAll),
             ),
           ],
         ),
         SizedBox(height: 2.h),
-        _buildReportPreviewCard(
-          theme,
-          title: '道路坑洞',
-          location: 'Main Street & 5th Ave',
-          status: '处理中',
-          statusColor: Colors.orange,
-          time: '2小时前',
-        ),
-        SizedBox(height: 2.h),
-        _buildReportPreviewCard(
-          theme,
-          title: '路面裂缝',
-          location: 'Highway 101, Mile 23',
-          status: '已解决',
-          statusColor: Colors.green,
-          time: '1天前',
-        ),
+        if (_recentReports.isEmpty)
+          Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 4.h),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.report_off,
+                    size: 48,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                  ),
+                  SizedBox(height: 1.h),
+                  Text(
+                    l10n.report_noReports,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        else
+          ..._recentReports.map((report) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: 2.h),
+              child: _buildReportPreviewCard(
+                context,
+                theme,
+                l10n,
+                report: report,
+              ),
+            );
+          }),
       ],
     );
   }
 
   Widget _buildReportPreviewCard(
-    ThemeData theme, {
-    required String title,
-    required String location,
-    required String status,
-    required Color statusColor,
-    required String time,
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n, {
+    required ReportIssueModel report,
   }) {
-    return Container(
-      padding: EdgeInsets.all(4.w),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 12.w,
-            height: 12.w,
-            decoration: BoxDecoration(
-              color: statusColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(Icons.report_problem, color: statusColor),
+    final statusColor = _getStatusColor(report.status);
+    final statusLabel = _getStatusLabel(report.status, l10n);
+
+    return InkWell(
+      onTap: () {
+        // Navigator.pushNamed(context, '/report-detail', arguments: report);
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: EdgeInsets.all(4.w),
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: theme.colorScheme.outline.withValues(alpha: 0.2),
           ),
-          SizedBox(width: 3.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 12.w,
+              height: 12.w,
+              decoration: BoxDecoration(
+                color: statusColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(Icons.report_problem, color: statusColor),
+            ),
+            SizedBox(width: 3.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    report.title ?? l10n.report_untitled,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 0.5.h),
+                  Text(
+                    report.address ?? l10n.report_noLocation,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  title,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 2.w,
+                    vertical: 0.5.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    statusLabel,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: statusColor,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 SizedBox(height: 0.5.h),
                 Text(
-                  location,
+                  timeago.format(report.updatedAt),
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
                 ),
               ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
-                decoration: BoxDecoration(
-                  color: statusColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  status,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: statusColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              SizedBox(height: 0.5.h),
-              Text(
-                time,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                ),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'draft':
+        return Colors.grey;
+      case 'submitted':
+        return Colors.orange;
+      case 'reviewed':
+        return Colors.green;
+      case 'spam':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  String _getStatusLabel(String status, AppLocalizations l10n) {
+    switch (status) {
+      case 'draft':
+        return l10n.report_statusDraft;
+      case 'submitted':
+        return l10n.report_statusSubmitted;
+      case 'reviewed':
+        return l10n.report_statusReviewed;
+      case 'spam':
+        return l10n.report_statusSpam;
+      default:
+        return status;
+    }
   }
 
   Widget _buildMyReportsTab(BuildContext context) {
     return ReportListTab(
       filterType: ReportFilterType.myReports,
       onReportTap: (report) {
-        Navigator.pushNamed(context, '/report-detail', arguments: report);
+        // Navigator.pushNamed(context, '/report-detail', arguments: report);
       },
     );
   }
@@ -530,7 +668,7 @@ class _ReportScreenState extends State<ReportScreen> {
     return ReportListTab(
       filterType: ReportFilterType.allReports,
       onReportTap: (report) {
-        Navigator.pushNamed(context, '/report-detail', arguments: report);
+        // Navigator.pushNamed(context, '/report-detail', arguments: report);
       },
     );
   }
