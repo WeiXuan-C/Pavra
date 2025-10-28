@@ -46,6 +46,12 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	
+	<!-- Location permissions -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to your location to accurately report road issues.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs access to your location to accurately report road issues.</string>
+	
 	<!-- Deep Link / Custom URL Scheme for OAuth -->
 	<key>CFBundleURLTypes</key>
 	<array>

@@ -2330,12 +2330,6 @@ abstract class AppLocalizations {
   /// **'Use camera to automatically detect road issues'**
   String get report_useCameraAutoDetect;
 
-  /// Manual report card title
-  ///
-  /// In en, this message translates to:
-  /// **'Manual Report'**
-  String get report_manualReport;
-
   /// Manual report card subtitle
   ///
   /// In en, this message translates to:
@@ -2642,18 +2636,6 @@ abstract class AppLocalizations {
   /// **'Error: '**
   String get issueTypes_errorPrefix;
 
-  /// Take photo button text
-  ///
-  /// In en, this message translates to:
-  /// **'Take Photo'**
-  String get report_takePhoto;
-
-  /// Choose from gallery button text
-  ///
-  /// In en, this message translates to:
-  /// **'Choose from Gallery'**
-  String get report_chooseFromGallery;
-
   /// Enter location hint text
   ///
   /// In en, this message translates to:
@@ -2719,6 +2701,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Minor'**
   String get report_minor;
+
+  /// Location permission permanently denied message
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission permanently denied. Please enable it in settings.'**
+  String get report_locationPermissionDeniedForever;
+
+  /// Location error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to get location'**
+  String get report_locationError;
+
+  /// Manual address entry section title
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Address Entry'**
+  String get report_manualAddressEntry;
+
+  /// Address line 1 label
+  ///
+  /// In en, this message translates to:
+  /// **'Address Line 1'**
+  String get report_addressLine1;
+
+  /// Address line 1 hint
+  ///
+  /// In en, this message translates to:
+  /// **'Street address, P.O. box'**
+  String get report_addressLine1Hint;
+
+  /// Address line 2 label
+  ///
+  /// In en, this message translates to:
+  /// **'Address Line 2'**
+  String get report_addressLine2;
+
+  /// Address line 2 hint
+  ///
+  /// In en, this message translates to:
+  /// **'Apartment, suite, unit, building, floor, etc.'**
+  String get report_addressLine2Hint;
+
+  /// City label
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get report_city;
+
+  /// City hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter city'**
+  String get report_cityHint;
+
+  /// State/Province label
+  ///
+  /// In en, this message translates to:
+  /// **'State/Province'**
+  String get report_state;
+
+  /// State hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter state or province'**
+  String get report_stateHint;
+
+  /// Postal code label
+  ///
+  /// In en, this message translates to:
+  /// **'Postal Code'**
+  String get report_postalCode;
+
+  /// Postal code hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter postal code'**
+  String get report_postalCodeHint;
+
+  /// Country label
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get report_country;
+
+  /// Country hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter country'**
+  String get report_countryHint;
+
+  /// Use manual address button
+  ///
+  /// In en, this message translates to:
+  /// **'Enter address manually'**
+  String get report_useManualAddress;
+
+  /// Use GPS button
+  ///
+  /// In en, this message translates to:
+  /// **'Use GPS Location'**
+  String get report_useGPS;
+
+  /// Refresh location button
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Location'**
+  String get report_refreshLocation;
+
+  /// Open settings button
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get report_openSettings;
+
+  /// Manual report screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Report'**
+  String get report_manualReport;
+
+  /// Take photo button
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get report_takePhoto;
+
+  /// Choose from gallery button
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get report_chooseFromGallery;
+
+  /// Location not set message
+  ///
+  /// In en, this message translates to:
+  /// **'Location not set'**
+  String get report_locationNotSet;
+
+  /// Excellent GPS accuracy
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get report_accuracyExcellent;
+
+  /// Good GPS accuracy
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get report_accuracyGood;
+
+  /// Fair GPS accuracy
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get report_accuracyFair;
+
+  /// Poor GPS accuracy
+  ///
+  /// In en, this message translates to:
+  /// **'Poor'**
+  String get report_accuracyPoor;
+
+  /// Location permission denied message
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission denied'**
+  String get report_locationPermissionDenied;
+
+  /// Location permission denied detailed message
+  ///
+  /// In en, this message translates to:
+  /// **'Please enable location permission in settings to use GPS features.'**
+  String get report_locationPermissionDeniedMessage;
+
+  /// Location service disabled message
+  ///
+  /// In en, this message translates to:
+  /// **'Location service disabled'**
+  String get report_locationServiceDisabled;
+
+  /// Location service disabled detailed message
+  ///
+  /// In en, this message translates to:
+  /// **'Please enable location services to use GPS features.'**
+  String get report_locationServiceDisabledMessage;
+
+  /// Getting location status message
+  ///
+  /// In en, this message translates to:
+  /// **'Getting location...'**
+  String get report_gettingLocation;
+
+  /// Edit address dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Address'**
+  String get report_editAddress;
+
+  /// Enter address hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Address'**
+  String get report_enterAddress;
+
+  /// Searching address status
+  ///
+  /// In en, this message translates to:
+  /// **'Searching address...'**
+  String get report_searchingAddress;
+
+  /// Address not found message
+  ///
+  /// In en, this message translates to:
+  /// **'Address not found'**
+  String get report_addressNotFound;
+
+  /// Invalid address message
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid address'**
+  String get report_invalidAddress;
+
+  /// Address search hint message
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a full address and we\'ll find the coordinates for you'**
+  String get report_addressSearchHint;
+
+  /// Filter by status label
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Status'**
+  String get report_filterByStatus;
+
+  /// Reports found count suffix
+  ///
+  /// In en, this message translates to:
+  /// **'reports found'**
+  String get report_reportsFound;
+
+  /// Filter button label
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get report_filter;
+
+  /// Sort button label
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get report_sort;
 }
 
 class _AppLocalizationsDelegate

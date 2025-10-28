@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -9,13 +10,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/api/report_issue/report_issue_api.dart';
 import '../../core/api/report_issue/issue_type_api.dart';
+import '../../core/services/location_service.dart';
 import '../../core/utils/icon_mapper.dart';
 import '../../data/models/issue_photo_model.dart';
 import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
 import './manual_report_provider.dart';
 import './widgets/description_input_widget.dart';
-import './widgets/location_info_widget.dart';
+import './widgets/location_input_widget.dart';
 import './widgets/manual_report_skeleton.dart';
 import './widgets/photo_gallery_widget.dart';
 import './widgets/severity_slider_widget.dart';
@@ -35,18 +37,293 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final ImagePicker _imagePicker = ImagePicker();
+  final LocationService _locationService = LocationService();
 
   final List<String> _selectedIssueTypeIds = [];
   double _severity = 3.0;
   bool _isSubmitting = false;
   bool _isIssueTypeSectionExpanded = true;
   bool _isDraftLoaded = false;
+  bool _isLoadingLocation = false;
+
+  // Location data
+  double? _latitude;
+  double? _longitude;
+  double? _accuracy;
+  String _address = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Get location when screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getCurrentLocation();
+    });
+  }
 
   @override
   void dispose() {
     _descriptionController.dispose();
     _locationController.dispose();
     super.dispose();
+  }
+
+  /// Get current GPS location
+  Future<void> _getCurrentLocation() async {
+    setState(() {
+      _isLoadingLocation = true;
+    });
+
+    try {
+      final position = await _locationService.getCurrentPosition();
+
+      if (position == null) {
+        // Permission denied or service disabled
+        if (!mounted) return;
+        await _showLocationPermissionDialog();
+        return;
+      }
+
+      // Get address from coordinates
+      final addressData = await _locationService.getAddressFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        _latitude = position.latitude;
+        _longitude = position.longitude;
+        _accuracy = position.accuracy;
+        _address = addressData['fullAddress'] ?? '';
+        _locationController.text = _address;
+        _isLoadingLocation = false;
+      });
+
+      debugPrint('=== Location updated ===');
+      debugPrint('Latitude: $_latitude');
+      debugPrint('Longitude: $_longitude');
+      debugPrint('Accuracy: $_accuracy');
+      debugPrint('Address: $_address');
+    } catch (e) {
+      debugPrint('Error getting location: $e');
+      if (!mounted) return;
+      setState(() {
+        _isLoadingLocation = false;
+      });
+      Fluttertoast.showToast(
+        msg: 'Failed to get location: $e',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
+    }
+  }
+
+  /// Show location permission dialog
+  Future<void> _showLocationPermissionDialog() async {
+    final l10n = AppLocalizations.of(context);
+
+    // Check if service is disabled
+    final serviceEnabled = await _locationService.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      if (!mounted) return;
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.report_locationServiceDisabled),
+          content: Text(l10n.report_locationServiceDisabledMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.common_cancel),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                await _locationService.openLocationSettings();
+              },
+              child: Text(l10n.report_openSettings),
+            ),
+          ],
+        ),
+      );
+      setState(() {
+        _isLoadingLocation = false;
+      });
+      return;
+    }
+
+    // Check permission
+    final permission = await _locationService.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      if (!mounted) return;
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.report_locationPermissionDenied),
+          content: Text(l10n.report_locationPermissionDeniedMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.common_cancel),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                await _locationService.openAppSettings();
+              },
+              child: Text(l10n.report_openSettings),
+            ),
+          ],
+        ),
+      );
+    } else {
+      if (!mounted) return;
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.report_locationPermissionDenied),
+          content: Text(l10n.report_locationPermissionDeniedMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.common_cancel),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                await _getCurrentLocation();
+              },
+              child: Text(l10n.common_retry),
+            ),
+          ],
+        ),
+      );
+    }
+
+    setState(() {
+      _isLoadingLocation = false;
+    });
+  }
+
+  /// Show address edit dialog
+  Future<void> _showAddressEditDialog() async {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final TextEditingController addressController = TextEditingController(
+      text: _address,
+    );
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.report_editAddress),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: addressController,
+              decoration: InputDecoration(
+                labelText: l10n.report_address,
+                hintText: l10n.report_enterAddress,
+                border: const OutlineInputBorder(),
+              ),
+              maxLines: 3,
+            ),
+            SizedBox(height: 2.h),
+            Text(
+              l10n.report_addressSearchHint,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.common_cancel),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final newAddress = addressController.text.trim();
+              if (newAddress.isEmpty) {
+                Fluttertoast.showToast(
+                  msg: l10n.report_invalidAddress,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                );
+                return;
+              }
+
+              Navigator.pop(context);
+
+              // Geocode the address
+              setState(() {
+                _isLoadingLocation = true;
+              });
+
+              try {
+                final position = await _locationService
+                    .getCoordinatesFromAddress(newAddress);
+
+                if (position == null) {
+                  if (!mounted) return;
+                  Fluttertoast.showToast(
+                    msg: l10n.report_addressNotFound,
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                  );
+                  setState(() {
+                    _isLoadingLocation = false;
+                  });
+                  return;
+                }
+
+                // Get formatted address from coordinates
+                final addressData = await _locationService
+                    .getAddressFromCoordinates(
+                      position.latitude,
+                      position.longitude,
+                    );
+
+                if (!mounted) return;
+
+                setState(() {
+                  _latitude = position.latitude;
+                  _longitude = position.longitude;
+                  _accuracy = null; // Manual address has no accuracy
+                  _address = addressData['fullAddress'] ?? newAddress;
+                  _locationController.text = _address;
+                  _isLoadingLocation = false;
+                });
+
+                Fluttertoast.showToast(
+                  msg: l10n.report_locationUpdated,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                );
+              } catch (e) {
+                debugPrint('Error geocoding address: $e');
+                if (!mounted) return;
+                setState(() {
+                  _isLoadingLocation = false;
+                });
+                Fluttertoast.showToast(
+                  msg: '${l10n.report_addressNotFound}: $e',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                );
+              }
+            },
+            child: Text(l10n.common_save),
+          ),
+        ],
+      ),
+    );
+
+    addressController.dispose();
   }
 
   /// Load draft data into form fields
@@ -64,11 +341,22 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
       debugPrint('Loaded description: $description');
     }
 
-    // Load address
+    // Load address and coordinates
     final address = draft.address;
     if (address != null && address.isNotEmpty) {
+      _address = address;
       _locationController.text = address;
       debugPrint('Loaded address: $address');
+    }
+
+    if (draft.latitude != null) {
+      _latitude = draft.latitude;
+      debugPrint('Loaded latitude: $_latitude');
+    }
+
+    if (draft.longitude != null) {
+      _longitude = draft.longitude;
+      debugPrint('Loaded longitude: $_longitude');
     }
 
     // Load issue type IDs
@@ -299,17 +587,17 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   /// Save draft
   Future<void> _saveDraft(ManualReportProvider provider) async {
     try {
-      // Default coordinates (Kuala Lumpur, Malaysia)
-      const double defaultLatitude = 3.1390;
-      const double defaultLongitude = 101.6869;
+      // Use actual location or default
+      final latitude = _latitude ?? 3.1390;
+      final longitude = _longitude ?? 101.6869;
 
       debugPrint('=== Saving draft ===');
       debugPrint('Description: ${_descriptionController.text}');
       debugPrint('Issue Types: $_selectedIssueTypeIds');
       debugPrint('Severity: ${_getSeverityString(_severity)}');
       debugPrint('Address: ${_locationController.text}');
-      debugPrint('Latitude: $defaultLatitude');
-      debugPrint('Longitude: $defaultLongitude');
+      debugPrint('Latitude: $latitude');
+      debugPrint('Longitude: $longitude');
       debugPrint('Draft ID: ${provider.draftReport?.id}');
 
       await provider.updateDraft(
@@ -317,8 +605,8 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
         issueTypeIds: _selectedIssueTypeIds,
         severity: _getSeverityString(_severity),
         address: _locationController.text,
-        latitude: defaultLatitude,
-        longitude: defaultLongitude,
+        latitude: latitude,
+        longitude: longitude,
       );
 
       debugPrint('=== Draft saved successfully ===');
@@ -358,16 +646,16 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     });
 
     try {
-      // Default coordinates (Kuala Lumpur, Malaysia)
-      const double defaultLatitude = 3.1390;
-      const double defaultLongitude = 101.6869;
+      // Use actual location or default
+      final latitude = _latitude ?? 3.1390;
+      final longitude = _longitude ?? 101.6869;
 
       debugPrint('=== Submitting report ===');
       debugPrint('Description: ${_descriptionController.text}');
       debugPrint('Issue Types: $_selectedIssueTypeIds');
       debugPrint('Severity: ${_getSeverityString(_severity)}');
       debugPrint('Address: ${_locationController.text}');
-      debugPrint('Coordinates: $defaultLatitude, $defaultLongitude');
+      debugPrint('Coordinates: $latitude, $longitude');
 
       // Update draft with final data including coordinates
       await provider.updateDraft(
@@ -377,8 +665,8 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
         issueTypeIds: _selectedIssueTypeIds,
         severity: _getSeverityString(_severity),
         address: _locationController.text,
-        latitude: defaultLatitude,
-        longitude: defaultLongitude,
+        latitude: latitude,
+        longitude: longitude,
       );
 
       // Submit the draft (changes status from 'draft' to 'submitted')
@@ -900,29 +1188,14 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   }
 
   Widget _buildLocationInput(ThemeData theme, AppLocalizations l10n) {
-    // Default location data - set default values if empty
-    const double defaultLatitude = 3.1390; // Kuala Lumpur, Malaysia
-    const double defaultLongitude = 101.6869;
-    const double accuracy = 10.0;
-
-    // Set default address if empty
-    if (_locationController.text.isEmpty) {
-      _locationController.text = 'Kuala Lumpur, Malaysia';
-    }
-
-    return LocationInfoWidget(
-      streetAddress: _locationController.text,
-      latitude: defaultLatitude,
-      longitude: defaultLongitude,
-      accuracy: accuracy,
-      onRefreshLocation: () async {
-        HapticFeedback.lightImpact();
-        Fluttertoast.showToast(
-          msg: l10n.report_locationUpdated,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-        );
-      },
+    return LocationInputWidget(
+      streetAddress: _address,
+      latitude: _latitude,
+      longitude: _longitude,
+      accuracy: _accuracy,
+      isLoading: _isLoadingLocation,
+      onRefreshLocation: _getCurrentLocation,
+      onEditAddress: _showAddressEditDialog,
     );
   }
 

@@ -32,7 +32,15 @@ class _ReportListTabState extends State<ReportListTab> {
   bool _isLoading = false;
   String _sortBy = 'date'; // date, severity, status
   List<ReportIssueModel> _reports = [];
+  List<ReportIssueModel> _filteredReports = [];
   late ReportIssueRepository _repository;
+
+  // Status filters
+  Set<String> _selectedStatuses = {};
+
+  // UI state
+  bool _isFilterExpanded = false;
+  bool _isSortExpanded = false;
 
   @override
   void initState() {
@@ -65,24 +73,31 @@ class _ReportListTabState extends State<ReportListTab> {
       }
 
       List<ReportIssueModel> reports;
+      List<String> allowedStatuses;
+
       if (widget.filterType == ReportFilterType.myReports) {
-        // Load reports created by current user
+        // My Reports: show draft, submitted, reviewed, spam
         reports = await _repository.getReportIssues(createdBy: user.id);
+        allowedStatuses = ['draft', 'submitted', 'reviewed', 'spam'];
+
+        // Initialize selected statuses for My Reports
+        if (_selectedStatuses.isEmpty) {
+          _selectedStatuses = {'draft', 'submitted', 'reviewed', 'spam'};
+        }
       } else {
-        // Load all reports
+        // All Reports: show only submitted, reviewed, spam (exclude draft)
         reports = await _repository.getReportIssues();
+        allowedStatuses = ['submitted', 'reviewed', 'spam'];
+
+        // Initialize selected statuses for All Reports
+        if (_selectedStatuses.isEmpty) {
+          _selectedStatuses = {'submitted', 'reviewed', 'spam'};
+        }
       }
 
-      // Filter to only show draft, submitted, reviewed, spam (exclude discard)
+      // Filter to only show allowed statuses (exclude discarded)
       final filteredReports = reports
-          .where(
-            (report) => [
-              'draft',
-              'submitted',
-              'reviewed',
-              'spam',
-            ].contains(report.status),
-          )
+          .where((report) => allowedStatuses.contains(report.status))
           .toList();
 
       if (mounted) {
@@ -90,7 +105,7 @@ class _ReportListTabState extends State<ReportListTab> {
           _reports = filteredReports;
           _isLoading = false;
         });
-        _sortReports(_sortBy);
+        _applyFiltersAndSort();
       }
     } catch (e) {
       if (mounted) {
@@ -101,43 +116,70 @@ class _ReportListTabState extends State<ReportListTab> {
     }
   }
 
+  void _applyFiltersAndSort() {
+    // Apply status filters
+    List<ReportIssueModel> filtered = _reports.where((report) {
+      return _selectedStatuses.contains(report.status);
+    }).toList();
+
+    // Apply sorting
+    switch (_sortBy) {
+      case 'date':
+        filtered.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+        break;
+      case 'severity':
+        final severityOrder = {
+          'critical': 0,
+          'high': 1,
+          'moderate': 2,
+          'low': 3,
+          'minor': 4,
+        };
+        filtered.sort(
+          (a, b) => (severityOrder[a.severity] ?? 5).compareTo(
+            severityOrder[b.severity] ?? 5,
+          ),
+        );
+        break;
+      case 'status':
+        final statusOrder = {
+          'submitted': 0,
+          'reviewed': 1,
+          'draft': 2,
+          'spam': 3,
+        };
+        filtered.sort(
+          (a, b) => (statusOrder[a.status] ?? 4).compareTo(
+            statusOrder[b.status] ?? 4,
+          ),
+        );
+        break;
+    }
+
+    setState(() {
+      _filteredReports = filtered;
+    });
+  }
+
+  void _toggleStatusFilter(String status) {
+    setState(() {
+      if (_selectedStatuses.contains(status)) {
+        // Don't allow deselecting all statuses
+        if (_selectedStatuses.length > 1) {
+          _selectedStatuses.remove(status);
+        }
+      } else {
+        _selectedStatuses.add(status);
+      }
+    });
+    _applyFiltersAndSort();
+  }
+
   void _sortReports(String sortBy) {
     setState(() {
       _sortBy = sortBy;
-
-      switch (sortBy) {
-        case 'date':
-          _reports.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-          break;
-        case 'severity':
-          final severityOrder = {
-            'critical': 0,
-            'high': 1,
-            'moderate': 2,
-            'low': 3,
-            'minor': 4,
-          };
-          _reports.sort(
-            (a, b) => (severityOrder[a.severity] ?? 5).compareTo(
-              severityOrder[b.severity] ?? 5,
-            ),
-          );
-          break;
-        case 'status':
-          final statusOrder = {
-            'submitted': 0,
-            'reviewed': 1,
-            'draft': 2,
-            'spam': 3,
-          };
-          _reports.sort(
-            (a, b) => (statusOrder[a.status] ?? 4).compareTo(
-              statusOrder[b.status] ?? 4,
-            ),
-          );
-          break;
-      }
     });
+    _applyFiltersAndSort();
   }
 
   @override
@@ -149,55 +191,254 @@ class _ReportListTabState extends State<ReportListTab> {
       return const ReportSkeleton(itemCount: 5);
     }
 
-    if (_reports.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.report_off,
-              size: 64,
-              color: theme.colorScheme.secondary,
-            ),
-            SizedBox(height: 2.h),
-            Text(l10n.report_noReports, style: theme.textTheme.titleLarge),
-            SizedBox(height: 1.h),
-            Text(
-              l10n.report_noReportsMessage,
-              style: theme.textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      );
-    }
-
     return Column(
       children: [
-        // Sort Options
+        // Filter & Sort Header (Always Visible)
         Container(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-          color: theme.cardColor,
+          decoration: BoxDecoration(
+            color: theme.cardColor,
+            border: Border(
+              bottom: BorderSide(
+                color: theme.colorScheme.outline.withValues(alpha: 0.2),
+              ),
+            ),
+          ),
           child: Row(
             children: [
-              Text(l10n.report_sortBy, style: theme.textTheme.bodyMedium),
-              SizedBox(width: 2.w),
+              // Filter Button
               Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _buildSortChip(l10n.report_sortDate, 'date', theme),
-                      SizedBox(width: 2.w),
-                      _buildSortChip(
-                        l10n.report_sortSeverity,
-                        'severity',
-                        theme,
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _isFilterExpanded = !_isFilterExpanded;
+                      if (_isFilterExpanded) _isSortExpanded = false;
+                    });
+                  },
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 3.w,
+                      vertical: 1.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _isFilterExpanded
+                          ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: _isFilterExpanded
+                            ? theme.colorScheme.primary
+                            : theme.colorScheme.outline.withValues(alpha: 0.3),
                       ),
-                      SizedBox(width: 2.w),
-                      _buildSortChip(l10n.report_sortStatus, 'status', theme),
-                    ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.filter_list,
+                          size: 18,
+                          color: _isFilterExpanded
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.7,
+                                ),
+                        ),
+                        SizedBox(width: 2.w),
+                        Text(
+                          l10n.report_filter,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: _isFilterExpanded
+                                ? theme.colorScheme.primary
+                                : theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.7,
+                                  ),
+                          ),
+                        ),
+                        SizedBox(width: 1.w),
+                        Icon(
+                          _isFilterExpanded
+                              ? Icons.expand_less
+                              : Icons.expand_more,
+                          size: 18,
+                          color: _isFilterExpanded
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.7,
+                                ),
+                        ),
+                      ],
+                    ),
                   ),
+                ),
+              ),
+              SizedBox(width: 3.w),
+              // Sort Button
+              Expanded(
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _isSortExpanded = !_isSortExpanded;
+                      if (_isSortExpanded) _isFilterExpanded = false;
+                    });
+                  },
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 3.w,
+                      vertical: 1.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _isSortExpanded
+                          ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: _isSortExpanded
+                            ? theme.colorScheme.primary
+                            : theme.colorScheme.outline.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.sort,
+                          size: 18,
+                          color: _isSortExpanded
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.7,
+                                ),
+                        ),
+                        SizedBox(width: 2.w),
+                        Text(
+                          l10n.report_sort,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: _isSortExpanded
+                                ? theme.colorScheme.primary
+                                : theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.7,
+                                  ),
+                          ),
+                        ),
+                        SizedBox(width: 1.w),
+                        Icon(
+                          _isSortExpanded
+                              ? Icons.expand_less
+                              : Icons.expand_more,
+                          size: 18,
+                          color: _isSortExpanded
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.7,
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Expandable Filter Section
+        if (_isFilterExpanded)
+          Container(
+            padding: EdgeInsets.all(4.w),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.5,
+              ),
+              border: Border(
+                bottom: BorderSide(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                ),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.report_filterByStatus,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 1.h),
+                Wrap(
+                  spacing: 2.w,
+                  runSpacing: 1.h,
+                  children: _getAvailableStatuses().map((status) {
+                    return _buildStatusFilterChip(status, theme, l10n);
+                  }).toList(),
+                ),
+              ],
+            ),
+          ),
+
+        // Expandable Sort Section
+        if (_isSortExpanded)
+          Container(
+            padding: EdgeInsets.all(4.w),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.5,
+              ),
+              border: Border(
+                bottom: BorderSide(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                ),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.report_sortBy,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 1.h),
+                Wrap(
+                  spacing: 2.w,
+                  runSpacing: 1.h,
+                  children: [
+                    _buildSortChip(l10n.report_sortDate, 'date', theme),
+                    _buildSortChip(l10n.report_sortSeverity, 'severity', theme),
+                    _buildSortChip(l10n.report_sortStatus, 'status', theme),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+        // Report Count
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: 0.5,
+            ),
+            border: Border(
+              top: BorderSide(
+                color: theme.colorScheme.outline.withValues(alpha: 0.2),
+              ),
+            ),
+          ),
+          child: Row(
+            children: [
+              Text(
+                '${_filteredReports.length} ${l10n.report_reportsFound}',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
@@ -206,21 +447,141 @@ class _ReportListTabState extends State<ReportListTab> {
 
         // Report List
         Expanded(
-          child: RefreshIndicator(
-            onRefresh: _loadReports,
-            child: ListView.separated(
-              padding: EdgeInsets.all(4.w),
-              itemCount: _reports.length,
-              separatorBuilder: (context, index) => SizedBox(height: 2.h),
-              itemBuilder: (context, index) {
-                final report = _reports[index];
-                return _buildReportCard(report, theme, l10n);
-              },
-            ),
-          ),
+          child: _filteredReports.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.report_off,
+                        size: 64,
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.3,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        l10n.report_noReports,
+                        style: theme.textTheme.titleLarge,
+                      ),
+                      SizedBox(height: 1.h),
+                      Text(
+                        l10n.report_noReportsMessage,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: _loadReports,
+                  child: ListView.separated(
+                    padding: EdgeInsets.all(4.w),
+                    itemCount: _filteredReports.length,
+                    separatorBuilder: (context, index) => SizedBox(height: 2.h),
+                    itemBuilder: (context, index) {
+                      final report = _filteredReports[index];
+                      return _buildReportCard(report, theme, l10n);
+                    },
+                  ),
+                ),
         ),
       ],
     );
+  }
+
+  List<String> _getAvailableStatuses() {
+    if (widget.filterType == ReportFilterType.myReports) {
+      return ['draft', 'submitted', 'reviewed', 'spam'];
+    } else {
+      return ['submitted', 'reviewed', 'spam'];
+    }
+  }
+
+  Widget _buildStatusFilterChip(
+    String status,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    final isSelected = _selectedStatuses.contains(status);
+    final statusColor = _getStatusColorForFilter(status);
+    final statusLabel = _getStatusLabel(status, l10n);
+
+    return FilterChip(
+      label: Text(
+        statusLabel,
+        style: TextStyle(
+          color: isSelected
+              ? statusColor
+              : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+          fontSize: 12,
+        ),
+      ),
+      selected: isSelected,
+      onSelected: (selected) => _toggleStatusFilter(status),
+      backgroundColor: theme.colorScheme.surfaceContainerHighest,
+      selectedColor: statusColor.withValues(alpha: 0.15),
+      checkmarkColor: statusColor,
+      side: BorderSide(
+        color: isSelected
+            ? statusColor
+            : theme.colorScheme.outline.withValues(alpha: 0.3),
+        width: isSelected ? 1.5 : 1,
+      ),
+      avatar: isSelected
+          ? Icon(_getStatusIcon(status), size: 16, color: statusColor)
+          : null,
+    );
+  }
+
+  Color _getStatusColorForFilter(String status) {
+    switch (status) {
+      case 'draft':
+        return Colors.grey;
+      case 'submitted':
+        return Colors.orange;
+      case 'reviewed':
+        return Colors.green;
+      case 'spam':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  IconData _getStatusIcon(String status) {
+    switch (status) {
+      case 'draft':
+        return Icons.edit;
+      case 'submitted':
+        return Icons.send;
+      case 'reviewed':
+        return Icons.check_circle;
+      case 'spam':
+        return Icons.block;
+      default:
+        return Icons.help;
+    }
+  }
+
+  String _getStatusLabel(String status, AppLocalizations l10n) {
+    switch (status) {
+      case 'draft':
+        return l10n.report_statusDraft;
+      case 'submitted':
+        return l10n.report_statusSubmitted;
+      case 'reviewed':
+        return l10n.report_statusReviewed;
+      case 'spam':
+        return l10n.report_statusSpam;
+      default:
+        return status;
+    }
   }
 
   Widget _buildSortChip(String label, String value, ThemeData theme) {
@@ -235,6 +596,7 @@ class _ReportListTabState extends State<ReportListTab> {
               ? theme.colorScheme.primary
               : theme.colorScheme.onSurface.withValues(alpha: 0.7),
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+          fontSize: 12,
         ),
       ),
       selected: isSelected,

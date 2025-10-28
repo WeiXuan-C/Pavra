@@ -1508,10 +1508,6 @@
   "@report_useCameraAutoDetect": {
     "description": "AI detection card subtitle"
   },
-  "report_manualReport": "Manual Report",
-  "@report_manualReport": {
-    "description": "Manual report card title"
-  },
   "report_fillFormReport": "Fill form to report",
   "@report_fillFormReport": {
     "description": "Manual report card subtitle"
@@ -1721,14 +1717,6 @@
   "@issueTypes_errorPrefix": {
     "description": "Error message prefix"
   },
-  "report_takePhoto": "Take Photo",
-  "@report_takePhoto": {
-    "description": "Take photo button text"
-  },
-  "report_chooseFromGallery": "Choose from Gallery",
-  "@report_chooseFromGallery": {
-    "description": "Choose from gallery button text"
-  },
   "report_enterLocation": "Enter location address",
   "@report_enterLocation": {
     "description": "Enter location hint text"
@@ -1772,5 +1760,173 @@
   "report_minor": "Minor",
   "@report_minor": {
     "description": "Minor severity level"
+  },
+  "report_locationPermissionDeniedForever": "Location permission permanently denied. Please enable it in settings.",
+  "@report_locationPermissionDeniedForever": {
+    "description": "Location permission permanently denied message"
+  },
+  "report_locationError": "Failed to get location",
+  "@report_locationError": {
+    "description": "Location error message"
+  },
+  "report_manualAddressEntry": "Manual Address Entry",
+  "@report_manualAddressEntry": {
+    "description": "Manual address entry section title"
+  },
+  "report_addressLine1": "Address Line 1",
+  "@report_addressLine1": {
+    "description": "Address line 1 label"
+  },
+  "report_addressLine1Hint": "Street address, P.O. box",
+  "@report_addressLine1Hint": {
+    "description": "Address line 1 hint"
+  },
+  "report_addressLine2": "Address Line 2",
+  "@report_addressLine2": {
+    "description": "Address line 2 label"
+  },
+  "report_addressLine2Hint": "Apartment, suite, unit, building, floor, etc.",
+  "@report_addressLine2Hint": {
+    "description": "Address line 2 hint"
+  },
+  "report_city": "City",
+  "@report_city": {
+    "description": "City label"
+  },
+  "report_cityHint": "Enter city",
+  "@report_cityHint": {
+    "description": "City hint"
+  },
+  "report_state": "State/Province",
+  "@report_state": {
+    "description": "State/Province label"
+  },
+  "report_stateHint": "Enter state or province",
+  "@report_stateHint": {
+    "description": "State hint"
+  },
+  "report_postalCode": "Postal Code",
+  "@report_postalCode": {
+    "description": "Postal code label"
+  },
+  "report_postalCodeHint": "Enter postal code",
+  "@report_postalCodeHint": {
+    "description": "Postal code hint"
+  },
+  "report_country": "Country",
+  "@report_country": {
+    "description": "Country label"
+  },
+  "report_countryHint": "Enter country",
+  "@report_countryHint": {
+    "description": "Country hint"
+  },
+  "report_useManualAddress": "Enter address manually",
+  "@report_useManualAddress": {
+    "description": "Use manual address button"
+  },
+  "report_useGPS": "Use GPS Location",
+  "@report_useGPS": {
+    "description": "Use GPS button"
+  },
+  "report_refreshLocation": "Refresh Location",
+  "@report_refreshLocation": {
+    "description": "Refresh location button"
+  },
+  "report_openSettings": "Open Settings",
+  "@report_openSettings": {
+    "description": "Open settings button"
+  },
+  "report_manualReport": "Manual Report",
+  "@report_manualReport": {
+    "description": "Manual report screen title"
+  },
+  "report_takePhoto": "Take Photo",
+  "@report_takePhoto": {
+    "description": "Take photo button"
+  },
+  "report_chooseFromGallery": "Choose from Gallery",
+  "@report_chooseFromGallery": {
+    "description": "Choose from gallery button"
+  },
+  "report_locationNotSet": "Location not set",
+  "@report_locationNotSet": {
+    "description": "Location not set message"
+  },
+  "report_accuracyExcellent": "Excellent",
+  "@report_accuracyExcellent": {
+    "description": "Excellent GPS accuracy"
+  },
+  "report_accuracyGood": "Good",
+  "@report_accuracyGood": {
+    "description": "Good GPS accuracy"
+  },
+  "report_accuracyFair": "Fair",
+  "@report_accuracyFair": {
+    "description": "Fair GPS accuracy"
+  },
+  "report_accuracyPoor": "Poor",
+  "@report_accuracyPoor": {
+    "description": "Poor GPS accuracy"
+  },
+  "report_locationPermissionDenied": "Location permission denied",
+  "@report_locationPermissionDenied": {
+    "description": "Location permission denied message"
+  },
+  "report_locationPermissionDeniedMessage": "Please enable location permission in settings to use GPS features.",
+  "@report_locationPermissionDeniedMessage": {
+    "description": "Location permission denied detailed message"
+  },
+  "report_locationServiceDisabled": "Location service disabled",
+  "@report_locationServiceDisabled": {
+    "description": "Location service disabled message"
+  },
+  "report_locationServiceDisabledMessage": "Please enable location services to use GPS features.",
+  "@report_locationServiceDisabledMessage": {
+    "description": "Location service disabled detailed message"
+  },
+  "report_gettingLocation": "Getting location...",
+  "@report_gettingLocation": {
+    "description": "Getting location status message"
+  },
+  "report_editAddress": "Edit Address",
+  "@report_editAddress": {
+    "description": "Edit address dialog title"
+  },
+  "report_enterAddress": "Enter Address",
+  "@report_enterAddress": {
+    "description": "Enter address hint"
+  },
+  "report_searchingAddress": "Searching address...",
+  "@report_searchingAddress": {
+    "description": "Searching address status"
+  },
+  "report_addressNotFound": "Address not found",
+  "@report_addressNotFound": {
+    "description": "Address not found message"
+  },
+  "report_invalidAddress": "Please enter a valid address",
+  "@report_invalidAddress": {
+    "description": "Invalid address message"
+  },
+  "report_addressSearchHint": "Enter a full address and we'll find the coordinates for you",
+  "@report_addressSearchHint": {
+    "description": "Address search hint message"
+  },
+  "report_filterByStatus": "Filter by Status",
+  "@report_filterByStatus": {
+    "description": "Filter by status label"
+  },
+  "report_reportsFound": "reports found",
+  "@report_reportsFound": {
+    "description": "Reports found count suffix"
+  },
+  "report_filter": "Filter",
+  "@report_filter": {
+    "description": "Filter button label"
+  },
+  "report_sort": "Sort",
+  "@report_sort": {
+    "description": "Sort button label"
   }
 }

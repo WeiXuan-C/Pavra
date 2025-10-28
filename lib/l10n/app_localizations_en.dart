@@ -1164,9 +1164,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Use camera to automatically detect road issues';
 
   @override
-  String get report_manualReport => 'Manual Report';
-
-  @override
   String get report_fillFormReport => 'Fill form to report';
 
   @override
@@ -1324,12 +1321,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get issueTypes_errorPrefix => 'Error: ';
 
   @override
-  String get report_takePhoto => 'Take Photo';
-
-  @override
-  String get report_chooseFromGallery => 'Choose from Gallery';
-
-  @override
   String get report_enterLocation => 'Enter location address';
 
   @override
@@ -1361,4 +1352,135 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get report_minor => 'Minor';
+
+  @override
+  String get report_locationPermissionDeniedForever =>
+      'Location permission permanently denied. Please enable it in settings.';
+
+  @override
+  String get report_locationError => 'Failed to get location';
+
+  @override
+  String get report_manualAddressEntry => 'Manual Address Entry';
+
+  @override
+  String get report_addressLine1 => 'Address Line 1';
+
+  @override
+  String get report_addressLine1Hint => 'Street address, P.O. box';
+
+  @override
+  String get report_addressLine2 => 'Address Line 2';
+
+  @override
+  String get report_addressLine2Hint =>
+      'Apartment, suite, unit, building, floor, etc.';
+
+  @override
+  String get report_city => 'City';
+
+  @override
+  String get report_cityHint => 'Enter city';
+
+  @override
+  String get report_state => 'State/Province';
+
+  @override
+  String get report_stateHint => 'Enter state or province';
+
+  @override
+  String get report_postalCode => 'Postal Code';
+
+  @override
+  String get report_postalCodeHint => 'Enter postal code';
+
+  @override
+  String get report_country => 'Country';
+
+  @override
+  String get report_countryHint => 'Enter country';
+
+  @override
+  String get report_useManualAddress => 'Enter address manually';
+
+  @override
+  String get report_useGPS => 'Use GPS Location';
+
+  @override
+  String get report_refreshLocation => 'Refresh Location';
+
+  @override
+  String get report_openSettings => 'Open Settings';
+
+  @override
+  String get report_manualReport => 'Manual Report';
+
+  @override
+  String get report_takePhoto => 'Take Photo';
+
+  @override
+  String get report_chooseFromGallery => 'Choose from Gallery';
+
+  @override
+  String get report_locationNotSet => 'Location not set';
+
+  @override
+  String get report_accuracyExcellent => 'Excellent';
+
+  @override
+  String get report_accuracyGood => 'Good';
+
+  @override
+  String get report_accuracyFair => 'Fair';
+
+  @override
+  String get report_accuracyPoor => 'Poor';
+
+  @override
+  String get report_locationPermissionDenied => 'Location permission denied';
+
+  @override
+  String get report_locationPermissionDeniedMessage =>
+      'Please enable location permission in settings to use GPS features.';
+
+  @override
+  String get report_locationServiceDisabled => 'Location service disabled';
+
+  @override
+  String get report_locationServiceDisabledMessage =>
+      'Please enable location services to use GPS features.';
+
+  @override
+  String get report_gettingLocation => 'Getting location...';
+
+  @override
+  String get report_editAddress => 'Edit Address';
+
+  @override
+  String get report_enterAddress => 'Enter Address';
+
+  @override
+  String get report_searchingAddress => 'Searching address...';
+
+  @override
+  String get report_addressNotFound => 'Address not found';
+
+  @override
+  String get report_invalidAddress => 'Please enter a valid address';
+
+  @override
+  String get report_addressSearchHint =>
+      'Enter a full address and we\'ll find the coordinates for you';
+
+  @override
+  String get report_filterByStatus => 'Filter by Status';
+
+  @override
+  String get report_reportsFound => 'reports found';
+
+  @override
+  String get report_filter => 'Filter';
+
+  @override
+  String get report_sort => 'Sort';
 }

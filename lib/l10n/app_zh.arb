@@ -1772,5 +1772,161 @@
   "report_minor": "轻微",
   "@report_minor": {
     "description": "轻微严重程度级别"
+  },
+  "report_locationNotSet": "未设置位置",
+  "@report_locationNotSet": {
+    "description": "未设置位置消息"
+  },
+  "report_accuracyExcellent": "优秀",
+  "@report_accuracyExcellent": {
+    "description": "优秀的GPS精度"
+  },
+  "report_accuracyGood": "良好",
+  "@report_accuracyGood": {
+    "description": "良好的GPS精度"
+  },
+  "report_accuracyFair": "一般",
+  "@report_accuracyFair": {
+    "description": "一般的GPS精度"
+  },
+  "report_accuracyPoor": "较差",
+  "@report_accuracyPoor": {
+    "description": "较差的GPS精度"
+  },
+  "report_locationPermissionDenied": "位置权限被拒绝",
+  "@report_locationPermissionDenied": {
+    "description": "位置权限被拒绝消息"
+  },
+  "report_locationPermissionDeniedMessage": "请在设置中启用位置权限以使用GPS功能。",
+  "@report_locationPermissionDeniedMessage": {
+    "description": "位置权限被拒绝详细消息"
+  },
+  "report_locationServiceDisabled": "位置服务已禁用",
+  "@report_locationServiceDisabled": {
+    "description": "位置服务已禁用消息"
+  },
+  "report_locationServiceDisabledMessage": "请启用位置服务以使用GPS功能。",
+  "@report_locationServiceDisabledMessage": {
+    "description": "位置服务已禁用详细消息"
+  },
+  "report_gettingLocation": "正在获取位置...",
+  "@report_gettingLocation": {
+    "description": "正在获取位置状态消息"
+  },
+  "report_editAddress": "编辑地址",
+  "@report_editAddress": {
+    "description": "编辑地址对话框标题"
+  },
+  "report_enterAddress": "输入地址",
+  "@report_enterAddress": {
+    "description": "输入地址提示"
+  },
+  "report_searchingAddress": "正在搜索地址...",
+  "@report_searchingAddress": {
+    "description": "正在搜索地址状态"
+  },
+  "report_addressNotFound": "未找到地址",
+  "@report_addressNotFound": {
+    "description": "未找到地址消息"
+  },
+  "report_invalidAddress": "请输入有效的地址",
+  "@report_invalidAddress": {
+    "description": "无效地址消息"
+  },
+  "report_addressSearchHint": "输入完整地址，我们将为您找到坐标",
+  "@report_addressSearchHint": {
+    "description": "地址搜索提示消息"
+  },
+  "report_locationPermissionDeniedForever": "位置权限已永久拒绝。请在设置中启用。",
+  "@report_locationPermissionDeniedForever": {
+    "description": "位置权限永久拒绝消息"
+  },
+  "report_locationError": "无法获取位置",
+  "@report_locationError": {
+    "description": "获取位置失败消息"
+  },
+  "report_manualAddressEntry": "手动输入地址",
+  "@report_manualAddressEntry": {
+    "description": "手动地址输入标题"
+  },
+  "report_addressLine1": "地址第一行",
+  "@report_addressLine1": {
+    "description": "地址第一行标签"
+  },
+  "report_addressLine1Hint": "输入街道地址",
+  "@report_addressLine1Hint": {
+    "description": "地址第一行提示"
+  },
+  "report_addressLine2": "地址第二行",
+  "@report_addressLine2": {
+    "description": "地址第二行标签"
+  },
+  "report_addressLine2Hint": "公寓、单元等（可选）",
+  "@report_addressLine2Hint": {
+    "description": "地址第二行提示"
+  },
+  "report_city": "城市",
+  "@report_city": {
+    "description": "城市标签"
+  },
+  "report_cityHint": "输入城市",
+  "@report_cityHint": {
+    "description": "城市提示"
+  },
+  "report_state": "州/省",
+  "@report_state": {
+    "description": "州/省标签"
+  },
+  "report_stateHint": "输入州或省",
+  "@report_stateHint": {
+    "description": "州提示"
+  },
+  "report_postalCode": "邮政编码",
+  "@report_postalCode": {
+    "description": "邮政编码标签"
+  },
+  "report_postalCodeHint": "输入邮政编码",
+  "@report_postalCodeHint": {
+    "description": "邮政编码提示"
+  },
+  "report_country": "国家",
+  "@report_country": {
+    "description": "国家标签"
+  },
+  "report_countryHint": "输入国家",
+  "@report_countryHint": {
+    "description": "国家提示"
+  },
+  "report_useManualAddress": "手动输入地址",
+  "@report_useManualAddress": {
+    "description": "使用手动地址按钮"
+  },
+  "report_useGPS": "使用GPS定位",
+  "@report_useGPS": {
+    "description": "使用GPS按钮"
+  },
+  "report_refreshLocation": "刷新位置",
+  "@report_refreshLocation": {
+    "description": "刷新位置按钮"
+  },
+  "report_openSettings": "打开设置",
+  "@report_openSettings": {
+    "description": "打开设置按钮"
+  },
+  "report_filterByStatus": "按状态筛选",
+  "@report_filterByStatus": {
+    "description": "按状态筛选标签"
+  },
+  "report_reportsFound": "个报告",
+  "@report_reportsFound": {
+    "description": "找到的报告数量后缀"
+  },
+  "report_filter": "筛选",
+  "@report_filter": {
+    "description": "筛选按钮标签"
+  },
+  "report_sort": "排序",
+  "@report_sort": {
+    "description": "排序按钮标签"
   }
 }

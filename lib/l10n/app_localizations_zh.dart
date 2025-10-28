@@ -1134,9 +1134,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get report_useCameraAutoDetect => '使用相机自动识别道路问题';
 
   @override
-  String get report_manualReport => '手动报告';
-
-  @override
   String get report_fillFormReport => '填写表单报告';
 
   @override
@@ -1292,12 +1289,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get issueTypes_errorPrefix => '错误：';
 
   @override
-  String get report_takePhoto => '拍照';
-
-  @override
-  String get report_chooseFromGallery => '从相册选择';
-
-  @override
   String get report_enterLocation => '输入位置地址';
 
   @override
@@ -1329,4 +1320,130 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get report_minor => '轻微';
+
+  @override
+  String get report_locationPermissionDeniedForever => '位置权限已永久拒绝。请在设置中启用。';
+
+  @override
+  String get report_locationError => '无法获取位置';
+
+  @override
+  String get report_manualAddressEntry => '手动输入地址';
+
+  @override
+  String get report_addressLine1 => '地址第一行';
+
+  @override
+  String get report_addressLine1Hint => '输入街道地址';
+
+  @override
+  String get report_addressLine2 => '地址第二行';
+
+  @override
+  String get report_addressLine2Hint => '公寓、单元等（可选）';
+
+  @override
+  String get report_city => '城市';
+
+  @override
+  String get report_cityHint => '输入城市';
+
+  @override
+  String get report_state => '州/省';
+
+  @override
+  String get report_stateHint => '输入州或省';
+
+  @override
+  String get report_postalCode => '邮政编码';
+
+  @override
+  String get report_postalCodeHint => '输入邮政编码';
+
+  @override
+  String get report_country => '国家';
+
+  @override
+  String get report_countryHint => '输入国家';
+
+  @override
+  String get report_useManualAddress => '手动输入地址';
+
+  @override
+  String get report_useGPS => '使用GPS定位';
+
+  @override
+  String get report_refreshLocation => '刷新位置';
+
+  @override
+  String get report_openSettings => '打开设置';
+
+  @override
+  String get report_manualReport => '手动报告';
+
+  @override
+  String get report_takePhoto => '拍照';
+
+  @override
+  String get report_chooseFromGallery => '从相册选择';
+
+  @override
+  String get report_locationNotSet => '未设置位置';
+
+  @override
+  String get report_accuracyExcellent => '优秀';
+
+  @override
+  String get report_accuracyGood => '良好';
+
+  @override
+  String get report_accuracyFair => '一般';
+
+  @override
+  String get report_accuracyPoor => '较差';
+
+  @override
+  String get report_locationPermissionDenied => '位置权限被拒绝';
+
+  @override
+  String get report_locationPermissionDeniedMessage => '请在设置中启用位置权限以使用GPS功能。';
+
+  @override
+  String get report_locationServiceDisabled => '位置服务已禁用';
+
+  @override
+  String get report_locationServiceDisabledMessage => '请启用位置服务以使用GPS功能。';
+
+  @override
+  String get report_gettingLocation => '正在获取位置...';
+
+  @override
+  String get report_editAddress => '编辑地址';
+
+  @override
+  String get report_enterAddress => '输入地址';
+
+  @override
+  String get report_searchingAddress => '正在搜索地址...';
+
+  @override
+  String get report_addressNotFound => '未找到地址';
+
+  @override
+  String get report_invalidAddress => '请输入有效的地址';
+
+  @override
+  String get report_addressSearchHint => '输入完整地址，我们将为您找到坐标';
+
+  @override
+  String get report_filterByStatus => '按状态筛选';
+
+  @override
+  String get report_reportsFound => '个报告';
+
+  @override
+  String get report_filter => '筛选';
+
+  @override
+  String get report_sort => '排序';
 }
