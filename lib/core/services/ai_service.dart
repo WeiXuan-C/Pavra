@@ -7,11 +7,45 @@ class AiService {
   static const String _openRouterUrl =
       'https://openrouter.ai/api/v1/chat/completions';
 
-  String get _apiKey => dotenv.env['OPEN_ROUTER_API_KEY'] ?? '';
+  static int _currentKeyIndex = 0;
+  static final List<String> _apiKeys = [];
 
-  AiService();
+  AiService() {
+    _loadApiKeys();
+  }
 
-  /// Send a simple chat message to AI
+  /// Load all available API keys from environment
+  void _loadApiKeys() {
+    if (_apiKeys.isNotEmpty) return; // Already loaded
+
+    for (int i = 1; i <= 20; i++) {
+      final key = dotenv.env['OPEN_ROUTER_KEY_$i'];
+      if (key != null && key.isNotEmpty) {
+        _apiKeys.add(key);
+      }
+    }
+
+    if (_apiKeys.isEmpty) {
+      throw AiException(
+        'No OpenRouter API keys found',
+        details:
+            'Please add OPEN_ROUTER_KEY_1, OPEN_ROUTER_KEY_2, etc. to your .env file',
+      );
+    }
+  }
+
+  /// Get current API key
+  String get _apiKey {
+    if (_apiKeys.isEmpty) _loadApiKeys();
+    return _apiKeys[_currentKeyIndex % _apiKeys.length];
+  }
+
+  /// Rotate to next API key
+  void _rotateApiKey() {
+    _currentKeyIndex = (_currentKeyIndex + 1) % _apiKeys.length;
+  }
+
+  /// Send a simple chat message to AI with automatic key rotation on rate limit
   ///
   /// Returns the AI's response text or throws an exception on error
   Future<String> chat({
@@ -20,7 +54,7 @@ class AiService {
     int? maxTokens,
     double? temperature,
   }) async {
-    try {
+    return _retryWithKeyRotation(() async {
       final response = await http.post(
         Uri.parse(_openRouterUrl),
         headers: {
@@ -42,16 +76,16 @@ class AiService {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         return _extractMessage(data);
+      } else if (response.statusCode == 429 || response.statusCode == 401) {
+        // Rate limit or auth error - rotate key and retry
+        throw _RateLimitException(response.statusCode, response.body);
       } else {
         throw AiException(
           'OpenRouter API error: ${response.statusCode}',
           details: response.body,
         );
       }
-    } catch (e) {
-      if (e is AiException) rethrow;
-      throw AiException('Network error: ${e.toString()}');
-    }
+    });
   }
 
   /// Extract message from OpenRouter response
@@ -70,7 +104,7 @@ class AiService {
     }
   }
 
-  /// Send a chat message with conversation history
+  /// Send a chat message with conversation history with automatic key rotation
   ///
   /// [messages] should be a list of maps with 'role' and 'content' keys
   /// Example: [{'role': 'user', 'content': 'Hello'}, {'role': 'assistant', 'content': 'Hi!'}]
@@ -80,7 +114,7 @@ class AiService {
     int? maxTokens,
     double? temperature,
   }) async {
-    try {
+    return _retryWithKeyRotation(() async {
       final response = await http.post(
         Uri.parse(_openRouterUrl),
         headers: {
@@ -100,21 +134,20 @@ class AiService {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         return _extractMessage(data);
+      } else if (response.statusCode == 429 || response.statusCode == 401) {
+        throw _RateLimitException(response.statusCode, response.body);
       } else {
         throw AiException(
           'OpenRouter API error: ${response.statusCode}',
           details: response.body,
         );
       }
-    } catch (e) {
-      if (e is AiException) rethrow;
-      throw AiException('Network error: ${e.toString()}');
-    }
+    });
   }
 
-  /// Get list of available AI models
+  /// Get list of available AI models with automatic key rotation
   Future<List<Map<String, dynamic>>> getModels() async {
-    try {
+    return _retryWithKeyRotation(() async {
       final response = await http.get(
         Uri.parse('https://openrouter.ai/api/v1/models'),
         headers: {
@@ -126,31 +159,64 @@ class AiService {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         return List<Map<String, dynamic>>.from(data['data'] as List? ?? []);
+      } else if (response.statusCode == 429 || response.statusCode == 401) {
+        throw _RateLimitException(response.statusCode, response.body);
       } else {
         throw AiException('OpenRouter API error: ${response.statusCode}');
       }
-    } catch (e) {
-      if (e is AiException) rethrow;
-      throw AiException('Network error: ${e.toString()}');
-    }
+    });
   }
 
-  /// Analyze an image and extract issue information
+  /// Retry logic with automatic API key rotation on rate limit
+  Future<T> _retryWithKeyRotation<T>(Future<T> Function() operation) async {
+    int attempts = 0;
+    final maxAttempts = _apiKeys.length; // Try all keys once
+
+    while (attempts < maxAttempts) {
+      try {
+        return await operation();
+      } on _RateLimitException catch (e) {
+        attempts++;
+        if (attempts >= maxAttempts) {
+          throw AiException(
+            'All API keys exhausted',
+            details: 'Tried ${_apiKeys.length} keys. Last error: ${e.details}',
+          );
+        }
+        // Rotate to next key and retry
+        _rotateApiKey();
+        continue;
+      } catch (e) {
+        if (e is AiException) rethrow;
+        throw AiException('Network error: ${e.toString()}');
+      }
+    }
+
+    throw AiException('Max retry attempts reached');
+  }
+
+  /// Analyze an image and extract issue information with automatic key rotation
   ///
   /// [imageUrl] - Public URL of the uploaded image
   /// [additionalContext] - Optional context about what to look for
+  /// [availableIssueTypes] - List of available issue type names from database
   ///
   /// Returns a map with detected information:
   /// - description: AI-generated description of the issue
-  /// - suggestedIssueTypes: List of suggested issue type names
+  /// - issueTypes: List of matched issue type names from availableIssueTypes
   /// - severity: Suggested severity level (minor/low/moderate/high/critical)
+  /// - confidence: AI's confidence level (low/medium/high)
   Future<Map<String, dynamic>> analyzeImage({
     required String imageUrl,
     String? additionalContext,
+    List<String>? availableIssueTypes,
   }) async {
-    try {
-      final prompt = _buildImageAnalysisPrompt(additionalContext);
+    final prompt = _buildImageAnalysisPrompt(
+      additionalContext,
+      availableIssueTypes,
+    );
 
+    return _retryWithKeyRotation(() async {
       final response = await http
           .post(
             Uri.parse(_openRouterUrl),
@@ -189,21 +255,36 @@ class AiService {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         final aiResponse = _extractMessage(data);
         return _parseImageAnalysisResponse(aiResponse);
+      } else if (response.statusCode == 429 || response.statusCode == 401) {
+        throw _RateLimitException(response.statusCode, response.body);
       } else {
         throw AiException(
           'OpenRouter API error: ${response.statusCode}',
           details: response.body,
         );
       }
-    } catch (e) {
-      if (e is AiException) rethrow;
-      throw AiException('Image analysis failed: ${e.toString()}');
-    }
+    });
   }
 
   /// Build prompt for image analysis
-  String _buildImageAnalysisPrompt(String? additionalContext) {
-    final basePrompt = '''
+  String _buildImageAnalysisPrompt(
+    String? additionalContext,
+    List<String>? availableIssueTypes,
+  ) {
+    final issueTypesSection =
+        availableIssueTypes != null && availableIssueTypes.isNotEmpty
+        ? '''
+IMPORTANT: You MUST select issue types ONLY from this list:
+${availableIssueTypes.map((type) => '- $type').join('\n')}
+
+Select 1-3 most relevant types from the above list that match what you see in the image.
+'''
+        : '''
+Issue types can include: pothole, broken streetlight, damaged road, graffiti, illegal dumping, broken sidewalk, damaged signage, flooding, fallen tree, damaged fence, etc.
+''';
+
+    final basePrompt =
+        '''
 Analyze this image and identify any infrastructure or safety issues. Provide your response in the following JSON format:
 
 {
@@ -213,7 +294,7 @@ Analyze this image and identify any infrastructure or safety issues. Provide you
   "confidence": "low|medium|high"
 }
 
-Issue types can include: pothole, broken streetlight, damaged road, graffiti, illegal dumping, broken sidewalk, damaged signage, flooding, fallen tree, damaged fence, etc.
+$issueTypesSection
 
 Severity levels:
 - minor: Cosmetic issues, no immediate danger
@@ -221,6 +302,11 @@ Severity levels:
 - moderate: Noticeable issue, potential minor safety concern
 - high: Significant issue, clear safety concern
 - critical: Immediate danger, requires urgent attention
+
+Confidence levels:
+- low: Uncertain about the issue or type
+- medium: Reasonably confident
+- high: Very confident in the assessment
 ''';
 
     if (additionalContext != null && additionalContext.isNotEmpty) {
@@ -284,4 +370,12 @@ class AiException implements Exception {
     }
     return 'AiException: $message';
   }
+}
+
+/// Internal exception for rate limit detection
+class _RateLimitException implements Exception {
+  final int statusCode;
+  final String details;
+
+  _RateLimitException(this.statusCode, this.details);
 }

@@ -774,6 +774,9 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     Map<String, dynamic> analysis,
   ) {
     final description = analysis['description'] as String? ?? '';
+    final issueTypeNames =
+        (analysis['issueTypes'] as List?)?.map((e) => e.toString()).toList() ??
+        [];
     final severity = analysis['severity'] as String? ?? 'moderate';
 
     // Update description if empty
@@ -781,6 +784,37 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
       setState(() {
         _descriptionController.text = description;
       });
+    }
+
+    // Match AI suggested issue type names to IDs and select them
+    if (issueTypeNames.isNotEmpty) {
+      final matchedIds = <String>[];
+
+      for (final typeName in issueTypeNames) {
+        // Find matching issue type by name (case-insensitive)
+        final matchingType = provider.availableIssueTypes.firstWhere(
+          (type) => type.name.toLowerCase() == typeName.toLowerCase(),
+          orElse: () => provider.availableIssueTypes.firstWhere(
+            (type) => type.name.toLowerCase().contains(typeName.toLowerCase()),
+            orElse: () => provider.availableIssueTypes.first,
+          ),
+        );
+
+        if (!matchedIds.contains(matchingType.id)) {
+          matchedIds.add(matchingType.id);
+        }
+      }
+
+      setState(() {
+        _selectedIssueTypeIds.clear();
+        _selectedIssueTypeIds.addAll(matchedIds);
+        // Expand the issue type section so user can see the selection
+        _isIssueTypeSectionExpanded = true;
+      });
+
+      debugPrint('=== AI Issue Types Applied ===');
+      debugPrint('AI suggested names: $issueTypeNames');
+      debugPrint('Matched IDs: $matchedIds');
     }
 
     // Update severity

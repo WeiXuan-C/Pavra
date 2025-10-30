@@ -342,10 +342,17 @@ class ManualReportProvider extends ChangeNotifier {
     try {
       final aiService = AiService();
 
+      // Get available issue type names for AI to choose from
+      final issueTypeNames = _availableIssueTypes
+          .where((type) => !type.isDeleted)
+          .map((type) => type.name)
+          .toList();
+
       final result = await aiService.analyzeImage(
         imageUrl: photoUrl,
         additionalContext:
             'This is a report about infrastructure or safety issues.',
+        availableIssueTypes: issueTypeNames,
       );
 
       _aiAnalysisResult = result;
