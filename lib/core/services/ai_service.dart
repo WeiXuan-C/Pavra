@@ -18,7 +18,7 @@ class AiService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse('$serverUrl/openrouter/chat'),
+        Uri.parse('$serverUrl/openRouter/chat'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'prompt': prompt,
@@ -63,7 +63,7 @@ class AiService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse('$serverUrl/openrouter/chatWithHistory'),
+        Uri.parse('$serverUrl/openRouter/chatWithHistory'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'messages': messages,
@@ -100,7 +100,7 @@ class AiService {
   Future<List<Map<String, dynamic>>> getModels() async {
     try {
       final response = await http.get(
-        Uri.parse('$serverUrl/openrouter/getModels'),
+        Uri.parse('$serverUrl/openRouter/getModels'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -139,7 +139,7 @@ class AiService {
 
       final response = await http
           .post(
-            Uri.parse('$serverUrl/openrouter/chatWithVision'),
+            Uri.parse('$serverUrl/openRouter/chatWithVision'),
             headers: {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
