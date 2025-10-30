@@ -137,28 +137,43 @@ class AiService {
     try {
       final prompt = _buildImageAnalysisPrompt(additionalContext);
 
-      final response = await http.post(
-        Uri.parse('$serverUrl/openrouter/chatWithVision'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'textPrompt': prompt,
-          'imageUrl': imageUrl,
-          'model': 'nvidia/nemotron-nano-12b-v2-vl:free', // Vision model
-          'temperature': 0.3, // Lower for more factual analysis
-          'maxTokens': 500,
-        }),
-      );
+      final response = await http
+          .post(
+            Uri.parse('$serverUrl/openrouter/chatWithVision'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: jsonEncode({
+              'textPrompt': prompt,
+              'imageUrl': imageUrl,
+              'model': 'nvidia/nemotron-nano-12b-v2-vl:free', // Vision model
+              'temperature': 0.3, // Lower for more factual analysis
+              'maxTokens': 500,
+            }),
+          )
+          .timeout(
+            const Duration(seconds: 30),
+            onTimeout: () {
+              throw AiException('Request timeout - AI analysis took too long');
+            },
+          );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
 
-        if (data['success'] == true) {
-          final aiResponse = data['message'] as String? ?? '';
+        // Serverpod wraps response in 'result' field
+        final result = data.containsKey('result')
+            ? data['result'] as Map<String, dynamic>
+            : data;
+
+        if (result['success'] == true) {
+          final aiResponse = result['message'] as String? ?? '';
           return _parseImageAnalysisResponse(aiResponse);
         } else {
           throw AiException(
-            data['error'] as String? ?? 'Unknown error',
-            details: data['details'] as String?,
+            result['error'] as String? ?? 'Unknown error',
+            details: result['details'] as String?,
           );
         }
       } else {
