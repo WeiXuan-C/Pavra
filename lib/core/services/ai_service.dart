@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-/// Service for interacting with OpenRouter AI through Serverpod backend
+/// Service for interacting with OpenRouter AI directly
 class AiService {
-  final String serverUrl;
+  static const String _openRouterUrl =
+      'https://openrouter.ai/api/v1/chat/completions';
 
-  AiService({this.serverUrl = 'http://localhost:8080'});
+  String get _apiKey => dotenv.env['OPEN_ROUTER_API_KEY'] ?? '';
+
+  AiService();
 
   /// Send a simple chat message to AI
   ///
@@ -18,36 +22,51 @@ class AiService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse('$serverUrl/openRouter/chat'),
-        headers: {'Content-Type': 'application/json'},
+        Uri.parse(_openRouterUrl),
+        headers: {
+          'Authorization': 'Bearer $_apiKey',
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://pavra.app',
+          'X-Title': 'Pavra App',
+        },
         body: jsonEncode({
-          'prompt': prompt,
-          if (model != null) 'model': model,
-          if (maxTokens != null) 'maxTokens': maxTokens,
-          if (temperature != null) 'temperature': temperature,
+          'model': model ?? 'nvidia/nemotron-nano-12b-v2-vl:free',
+          'messages': [
+            {'role': 'user', 'content': prompt},
+          ],
+          'max_tokens': maxTokens ?? 1000,
+          'temperature': temperature ?? 0.7,
         }),
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
-
-        if (data['success'] == true) {
-          return data['message'] as String? ?? '';
-        } else {
-          throw AiException(
-            data['error'] as String? ?? 'Unknown error',
-            details: data['details'] as String?,
-          );
-        }
+        return _extractMessage(data);
       } else {
         throw AiException(
-          'Server error: ${response.statusCode}',
+          'OpenRouter API error: ${response.statusCode}',
           details: response.body,
         );
       }
     } catch (e) {
       if (e is AiException) rethrow;
       throw AiException('Network error: ${e.toString()}');
+    }
+  }
+
+  /// Extract message from OpenRouter response
+  String _extractMessage(Map<String, dynamic> data) {
+    try {
+      final choices = data['choices'] as List?;
+      if (choices != null && choices.isNotEmpty) {
+        final message = choices[0]['message'] as Map<String, dynamic>?;
+        if (message != null) {
+          return message['content'] as String? ?? '';
+        }
+      }
+      return '';
+    } catch (e) {
+      return '';
     }
   }
 
@@ -63,30 +82,27 @@ class AiService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse('$serverUrl/openRouter/chatWithHistory'),
-        headers: {'Content-Type': 'application/json'},
+        Uri.parse(_openRouterUrl),
+        headers: {
+          'Authorization': 'Bearer $_apiKey',
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://pavra.app',
+          'X-Title': 'Pavra App',
+        },
         body: jsonEncode({
+          'model': model ?? 'nvidia/nemotron-nano-12b-v2-vl:free',
           'messages': messages,
-          if (model != null) 'model': model,
-          if (maxTokens != null) 'maxTokens': maxTokens,
-          if (temperature != null) 'temperature': temperature,
+          'max_tokens': maxTokens ?? 1000,
+          'temperature': temperature ?? 0.7,
         }),
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
-
-        if (data['success'] == true) {
-          return data['message'] as String? ?? '';
-        } else {
-          throw AiException(
-            data['error'] as String? ?? 'Unknown error',
-            details: data['details'] as String?,
-          );
-        }
+        return _extractMessage(data);
       } else {
         throw AiException(
-          'Server error: ${response.statusCode}',
+          'OpenRouter API error: ${response.statusCode}',
           details: response.body,
         );
       }
@@ -100,20 +116,18 @@ class AiService {
   Future<List<Map<String, dynamic>>> getModels() async {
     try {
       final response = await http.get(
-        Uri.parse('$serverUrl/openRouter/getModels'),
-        headers: {'Content-Type': 'application/json'},
+        Uri.parse('https://openrouter.ai/api/v1/models'),
+        headers: {
+          'Authorization': 'Bearer $_apiKey',
+          'Content-Type': 'application/json',
+        },
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
-
-        if (data['success'] == true) {
-          return List<Map<String, dynamic>>.from(data['models'] as List? ?? []);
-        } else {
-          throw AiException(data['error'] as String? ?? 'Unknown error');
-        }
+        return List<Map<String, dynamic>>.from(data['data'] as List? ?? []);
       } else {
-        throw AiException('Server error: ${response.statusCode}');
+        throw AiException('OpenRouter API error: ${response.statusCode}');
       }
     } catch (e) {
       if (e is AiException) rethrow;
@@ -139,17 +153,29 @@ class AiService {
 
       final response = await http
           .post(
-            Uri.parse('$serverUrl/openRouter/chatWithVision'),
+            Uri.parse(_openRouterUrl),
             headers: {
+              'Authorization': 'Bearer $_apiKey',
               'Content-Type': 'application/json',
-              'Accept': 'application/json',
+              'HTTP-Referer': 'https://pavra.app',
+              'X-Title': 'Pavra App',
             },
             body: jsonEncode({
-              'textPrompt': prompt,
-              'imageUrl': imageUrl,
-              'model': 'nvidia/nemotron-nano-12b-v2-vl:free', // Vision model
-              'temperature': 0.3, // Lower for more factual analysis
-              'maxTokens': 500,
+              'model': 'nvidia/nemotron-nano-12b-v2-vl:free',
+              'messages': [
+                {
+                  'role': 'user',
+                  'content': [
+                    {'type': 'text', 'text': prompt},
+                    {
+                      'type': 'image_url',
+                      'image_url': {'url': imageUrl},
+                    },
+                  ],
+                },
+              ],
+              'max_tokens': 500,
+              'temperature': 0.3,
             }),
           )
           .timeout(
@@ -161,24 +187,11 @@ class AiService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
-
-        // Serverpod wraps response in 'result' field
-        final result = data.containsKey('result')
-            ? data['result'] as Map<String, dynamic>
-            : data;
-
-        if (result['success'] == true) {
-          final aiResponse = result['message'] as String? ?? '';
-          return _parseImageAnalysisResponse(aiResponse);
-        } else {
-          throw AiException(
-            result['error'] as String? ?? 'Unknown error',
-            details: result['details'] as String?,
-          );
-        }
+        final aiResponse = _extractMessage(data);
+        return _parseImageAnalysisResponse(aiResponse);
       } else {
         throw AiException(
-          'Server error: ${response.statusCode}',
+          'OpenRouter API error: ${response.statusCode}',
           details: response.body,
         );
       }
