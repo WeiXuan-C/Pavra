@@ -1204,6 +1204,46 @@
   "@report_suggestions": {
     "description": "建议部分标题"
   },
+  "report_aiAnalysis": "AI 分析",
+  "@report_aiAnalysis": {
+    "description": "AI 分析对话框标题"
+  },
+  "report_confidence": "信心水平",
+  "@report_confidence": {
+    "description": "AI 信心标签"
+  },
+  "report_noDescription": "未提供描述",
+  "@report_noDescription": {
+    "description": "无描述后备文本"
+  },
+  "report_suggestedIssueTypes": "建议的问题类型",
+  "@report_suggestedIssueTypes": {
+    "description": "建议的问题类型标签"
+  },
+  "report_suggestedSeverity": "建议的严重程度",
+  "@report_suggestedSeverity": {
+    "description": "建议的严重程度标签"
+  },
+  "report_applySuggestions": "应用建议",
+  "@report_applySuggestions": {
+    "description": "应用建议按钮"
+  },
+  "report_analyzingImage": "正在用 AI 分析图片",
+  "@report_analyzingImage": {
+    "description": "分析图片进度标题"
+  },
+  "report_analyzingImageMessage": "请稍候，我们正在分析图片...",
+  "@report_analyzingImageMessage": {
+    "description": "分析图片进度消息"
+  },
+  "report_draft": "草稿",
+  "@report_draft": {
+    "description": "草稿标签"
+  },
+  "report_uploadingPhoto": "正在上传照片...",
+  "@report_uploadingPhoto": {
+    "description": "上传照片进度消息"
+  },
   "notification_title": "通知",
   "@notification_title": {
     "description": "通知屏幕标题"

@@ -731,7 +731,7 @@ class _ReportListTabState extends State<ReportListTab> {
 
                   // Time
                   Text(
-                    timeago.format(report.updatedAt),
+                    timeago.format(report.updatedAt, locale: l10n.localeName),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),

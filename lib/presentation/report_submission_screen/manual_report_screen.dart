@@ -11,12 +11,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/api/report_issue/report_issue_api.dart';
 import '../../core/api/report_issue/issue_type_api.dart';
 import '../../core/services/location_service.dart';
-import '../../core/utils/icon_mapper.dart';
 import '../../data/models/issue_photo_model.dart';
 import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
 import './manual_report_provider.dart';
+import './widgets/ai_analysis_dialog.dart';
 import './widgets/description_input_widget.dart';
+import './widgets/issue_type_card.dart';
 import './widgets/location_input_widget.dart';
 import './widgets/manual_report_skeleton.dart';
 import './widgets/photo_gallery_widget.dart';
@@ -566,7 +567,15 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
 
       // Show AI analysis result dialog
       if (!context.mounted) return;
-      _showAiAnalysisDialog(context, provider, result);
+      showDialog(
+        context: context,
+        builder: (dialogContext) => AiAnalysisDialog(
+          analysis: result,
+          provider: provider,
+          onApplySuggestions: (analysis) =>
+              _applyAiSuggestions(provider, analysis),
+        ),
+      );
     } catch (e) {
       debugPrint('AI analysis error: $e');
 
@@ -586,6 +595,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   /// Build AI analysis progress dialog
   Widget _buildAnalysisProgressDialog(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return AlertDialog(
       content: Column(
@@ -603,165 +613,18 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
           ),
           SizedBox(height: 3.h),
           Text(
-            'Analyzing Image with AI',
+            l10n.report_analyzingImage,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
           SizedBox(height: 1.h),
           Text(
-            'Please wait while we analyze the image...',
+            l10n.report_analyzingImageMessage,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Show AI analysis result dialog
-  void _showAiAnalysisDialog(
-    BuildContext context,
-    ManualReportProvider provider,
-    Map<String, dynamic> analysis,
-  ) {
-    final theme = Theme.of(context);
-
-    final description = analysis['description'] as String? ?? '';
-    final issueTypes =
-        (analysis['issueTypes'] as List?)?.map((e) => e.toString()).toList() ??
-        [];
-    final severity = analysis['severity'] as String? ?? 'moderate';
-    final confidence = analysis['confidence'] as String? ?? 'medium';
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Row(
-          children: [
-            Icon(Icons.auto_awesome, color: theme.colorScheme.primary),
-            SizedBox(width: 2.w),
-            const Text('AI Analysis'),
-          ],
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Confidence badge
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
-                decoration: BoxDecoration(
-                  color: _getConfidenceColor(
-                    confidence,
-                    theme,
-                  ).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  'Confidence: ${confidence.toUpperCase()}',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: _getConfidenceColor(confidence, theme),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              SizedBox(height: 2.h),
-
-              // Description
-              Text(
-                'Description:',
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 1.h),
-              Text(
-                description.isNotEmpty
-                    ? description
-                    : 'No description provided',
-                style: theme.textTheme.bodyMedium,
-              ),
-              SizedBox(height: 2.h),
-
-              // Suggested issue types
-              if (issueTypes.isNotEmpty) ...[
-                Text(
-                  'Suggested Issue Types:',
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 1.h),
-                Wrap(
-                  spacing: 1.w,
-                  runSpacing: 1.h,
-                  children: issueTypes.map((type) {
-                    return Chip(
-                      label: Text(type),
-                      backgroundColor: theme.colorScheme.primaryContainer,
-                      labelStyle: TextStyle(
-                        color: theme.colorScheme.onPrimaryContainer,
-                      ),
-                    );
-                  }).toList(),
-                ),
-                SizedBox(height: 2.h),
-              ],
-
-              // Suggested severity
-              Text(
-                'Suggested Severity:',
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 1.h),
-              Container(
-                padding: EdgeInsets.all(2.w),
-                decoration: BoxDecoration(
-                  color: _getSeverityColor(
-                    severity,
-                    theme,
-                  ).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      _getSeverityIcon(severity),
-                      color: _getSeverityColor(severity, theme),
-                      size: 20,
-                    ),
-                    SizedBox(width: 2.w),
-                    Text(
-                      severity.toUpperCase(),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: _getSeverityColor(severity, theme),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Dismiss'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              _applyAiSuggestions(provider, analysis);
-            },
-            child: const Text('Apply Suggestions'),
           ),
         ],
       ),
@@ -773,13 +636,14 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     ManualReportProvider provider,
     Map<String, dynamic> analysis,
   ) {
+    // Use English description for storage
     final description = analysis['description'] as String? ?? '';
     final issueTypeNames =
         (analysis['issueTypes'] as List?)?.map((e) => e.toString()).toList() ??
         [];
     final severity = analysis['severity'] as String? ?? 'moderate';
 
-    // Update description if empty
+    // Update description if empty (store English version)
     if (_descriptionController.text.isEmpty && description.isNotEmpty) {
       setState(() {
         _descriptionController.text = description;
@@ -827,56 +691,6 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
     );
-  }
-
-  /// Get confidence color
-  Color _getConfidenceColor(String confidence, ThemeData theme) {
-    switch (confidence.toLowerCase()) {
-      case 'high':
-        return Colors.green;
-      case 'medium':
-        return Colors.orange;
-      case 'low':
-        return Colors.red;
-      default:
-        return theme.colorScheme.primary;
-    }
-  }
-
-  /// Get severity color
-  Color _getSeverityColor(String severity, ThemeData theme) {
-    switch (severity.toLowerCase()) {
-      case 'minor':
-        return Colors.blue;
-      case 'low':
-        return Colors.green;
-      case 'moderate':
-        return Colors.orange;
-      case 'high':
-        return Colors.deepOrange;
-      case 'critical':
-        return Colors.red;
-      default:
-        return theme.colorScheme.primary;
-    }
-  }
-
-  /// Get severity icon
-  IconData _getSeverityIcon(String severity) {
-    switch (severity.toLowerCase()) {
-      case 'minor':
-        return Icons.info_outline;
-      case 'low':
-        return Icons.warning_amber_outlined;
-      case 'moderate':
-        return Icons.warning;
-      case 'high':
-        return Icons.error_outline;
-      case 'critical':
-        return Icons.dangerous;
-      default:
-        return Icons.help_outline;
-    }
   }
 
   /// Remove photo
@@ -1349,6 +1163,8 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   }
 
   Widget _buildDraftInfo(ThemeData theme, String title) {
+    final l10n = AppLocalizations.of(context);
+
     return Container(
       padding: EdgeInsets.all(3.w),
       decoration: BoxDecoration(
@@ -1364,7 +1180,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
           SizedBox(width: 2.w),
           Expanded(
             child: Text(
-              'Draft: $title',
+              '${l10n.report_draft}: $title',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.primary,
                 fontWeight: FontWeight.w500,
@@ -1437,7 +1253,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
                 LinearProgressIndicator(value: provider.uploadProgress),
                 SizedBox(height: 1.h),
                 Text(
-                  'Uploading photo...',
+                  l10n.report_uploadingPhoto,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
@@ -1547,6 +1363,9 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     AppLocalizations l10n,
     ManualReportProvider provider,
   ) {
+    // Check if user is Chinese
+    final isChineseUser = l10n.localeName == 'zh';
+
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
@@ -1622,101 +1441,17 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
           if (_isIssueTypeSectionExpanded) ...[
             SizedBox(height: 2.h),
 
-            // Issue type cards
+            // Issue type cards with translate button
             ...provider.availableIssueTypes.map((issueType) {
               final isSelected = _selectedIssueTypeIds.contains(issueType.id);
 
               return Padding(
                 padding: EdgeInsets.only(bottom: 2.h),
-                child: InkWell(
+                child: IssueTypeCard(
+                  issueType: issueType,
+                  isSelected: isSelected,
                   onTap: () => _toggleIssueType(issueType.id),
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    padding: EdgeInsets.all(3.w),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? theme.colorScheme.primary.withValues(alpha: 0.1)
-                          : theme.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: isSelected
-                            ? theme.colorScheme.primary
-                            : theme.colorScheme.outline.withValues(alpha: 0.3),
-                        width: isSelected ? 2 : 1,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        // Icon with better error handling
-                        Container(
-                          width: 48,
-                          height: 48,
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? theme.colorScheme.primary.withValues(
-                                    alpha: 0.2,
-                                  )
-                                : theme.colorScheme.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Icon(
-                            IconMapper.getIcon(issueType.iconUrl),
-                            color: isSelected
-                                ? theme.colorScheme.primary
-                                : theme.colorScheme.onSurface.withValues(
-                                    alpha: 0.6,
-                                  ),
-                            size: 28,
-                          ),
-                        ),
-                        SizedBox(width: 3.w),
-
-                        // Name and description
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                issueType.name,
-                                style: theme.textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: isSelected
-                                      ? theme.colorScheme.primary
-                                      : theme.colorScheme.onSurface,
-                                ),
-                              ),
-                              if (issueType.description != null &&
-                                  issueType.description!.isNotEmpty) ...[
-                                SizedBox(height: 0.5.h),
-                                Text(
-                                  issueType.description!,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurface
-                                        .withValues(alpha: 0.6),
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-
-                        // Checkbox
-                        Icon(
-                          isSelected
-                              ? Icons.check_circle
-                              : Icons.radio_button_unchecked,
-                          color: isSelected
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.3,
-                                ),
-                          size: 24,
-                        ),
-                      ],
-                    ),
-                  ),
+                  showTranslateButton: isChineseUser,
                 ),
               );
             }),

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import '../core/app_export.dart';
@@ -18,6 +19,10 @@ import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Configure timeago with short format
+  timeago.setLocaleMessages('en', timeago.EnShortMessages());
+  timeago.setLocaleMessages('zh', timeago.ZhMessages());
 
   // 🚨 CRITICAL: Load environment variables from .env file
   try {

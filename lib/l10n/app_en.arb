@@ -1204,6 +1204,46 @@
   "@report_suggestions": {
     "description": "Suggestions section title"
   },
+  "report_aiAnalysis": "AI Analysis",
+  "@report_aiAnalysis": {
+    "description": "AI Analysis dialog title"
+  },
+  "report_confidence": "Confidence",
+  "@report_confidence": {
+    "description": "AI confidence label"
+  },
+  "report_noDescription": "No description provided",
+  "@report_noDescription": {
+    "description": "No description fallback text"
+  },
+  "report_suggestedIssueTypes": "Suggested Issue Types",
+  "@report_suggestedIssueTypes": {
+    "description": "Suggested issue types label"
+  },
+  "report_suggestedSeverity": "Suggested Severity",
+  "@report_suggestedSeverity": {
+    "description": "Suggested severity label"
+  },
+  "report_applySuggestions": "Apply Suggestions",
+  "@report_applySuggestions": {
+    "description": "Apply suggestions button"
+  },
+  "report_analyzingImage": "Analyzing Image with AI",
+  "@report_analyzingImage": {
+    "description": "Analyzing image progress title"
+  },
+  "report_analyzingImageMessage": "Please wait while we analyze the image...",
+  "@report_analyzingImageMessage": {
+    "description": "Analyzing image progress message"
+  },
+  "report_draft": "Draft",
+  "@report_draft": {
+    "description": "Draft label"
+  },
+  "report_uploadingPhoto": "Uploading photo...",
+  "@report_uploadingPhoto": {
+    "description": "Uploading photo progress message"
+  },
   "notification_title": "Notifications",
   "@notification_title": {
     "description": "Notifications screen title"

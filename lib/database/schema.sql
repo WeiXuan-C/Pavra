@@ -165,33 +165,6 @@ CREATE TABLE IF NOT EXISTS public.issue_votes (
   UNIQUE(issue_id, user_id, vote_type)
 );
 
-CREATE TABLE IF NOT EXISTS public.ai_detection (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  issue_id UUID REFERENCES report_issues(id) ON DELETE CASCADE,
-  model_name TEXT,
-  detected_objects JSONB DEFAULT '{}',       -- 检测到的物体与置信度
-  confidence_score DOUBLE PRECISION,
-  analyzed_at TIMESTAMPTZ DEFAULT now(),
-  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-  created_at TIMESTAMPTZ DEFAULT now(),
-  updated_at TIMESTAMPTZ DEFAULT now(),
-  deleted_at TIMESTAMPTZ,
-  is_deleted BOOLEAN DEFAULT FALSE
-);
-
-CREATE TABLE IF NOT EXISTS public.ai_descriptions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  issue_id UUID REFERENCES report_issues(id) ON DELETE CASCADE,
-  model_name TEXT,                            -- 用哪个 AI 模型生成 (e.g. "GPT-5", "Gemini-2")
-  generated_description JSONB DEFAULT '{}',        -- 生成的完整文字描述
-  confidence_score DOUBLE PRECISION,          -- 模型生成的自信度（可选）
-  language TEXT DEFAULT 'en',                 -- 支持多语言输出（en, zh 等）
-  created_at TIMESTAMPTZ DEFAULT now(),
-  updated_at TIMESTAMPTZ DEFAULT now(),
-  deleted_at TIMESTAMPTZ,
-  is_deleted BOOLEAN DEFAULT FALSE
-);
-
 -- =====================================
 -- INDEXES
 -- =====================================

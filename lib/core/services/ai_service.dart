@@ -202,7 +202,7 @@ class AiService {
   /// [availableIssueTypes] - List of available issue type names from database
   ///
   /// Returns a map with detected information:
-  /// - description: AI-generated description of the issue
+  /// - description: AI-generated description in English
   /// - issueTypes: List of matched issue type names from availableIssueTypes
   /// - severity: Suggested severity level (minor/low/moderate/high/critical)
   /// - confidence: AI's confidence level (low/medium/high)
@@ -288,7 +288,7 @@ Issue types can include: pothole, broken streetlight, damaged road, graffiti, il
 Analyze this image and identify any infrastructure or safety issues. Provide your response in the following JSON format:
 
 {
-  "description": "Brief description of what you see and the issue",
+  "description": "Brief description in English",
   "issueTypes": ["type1", "type2"],
   "severity": "minor|low|moderate|high|critical",
   "confidence": "low|medium|high"
@@ -314,6 +314,46 @@ Confidence levels:
     }
 
     return basePrompt;
+  }
+
+  /// Parse AI response into structured data
+  /// Translate text to Chinese
+  Future<String> translateToZh(String text) async {
+    return _retryWithKeyRotation(() async {
+      final response = await http.post(
+        Uri.parse(_openRouterUrl),
+        headers: {
+          'Authorization': 'Bearer $_apiKey',
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://pavra.app',
+          'X-Title': 'Pavra App',
+        },
+        body: jsonEncode({
+          'model': 'nvidia/nemotron-nano-12b-v2-vl:free',
+          'messages': [
+            {
+              'role': 'user',
+              'content':
+                  'Translate the following text to Chinese (Simplified):\n\n$text\n\nProvide ONLY the translation, no explanations.',
+            },
+          ],
+          'max_tokens': 200,
+          'temperature': 0.3,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        return _extractMessage(data).trim();
+      } else if (response.statusCode == 429 || response.statusCode == 401) {
+        throw _RateLimitException(response.statusCode, response.body);
+      } else {
+        throw AiException(
+          'OpenRouter API error: ${response.statusCode}',
+          details: response.body,
+        );
+      }
+    });
   }
 
   /// Parse AI response into structured data

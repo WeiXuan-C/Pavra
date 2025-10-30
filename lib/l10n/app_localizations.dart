@@ -1874,6 +1874,66 @@ abstract class AppLocalizations {
   /// **'Suggestions'**
   String get report_suggestions;
 
+  /// AI Analysis dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'AI Analysis'**
+  String get report_aiAnalysis;
+
+  /// AI confidence label
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence'**
+  String get report_confidence;
+
+  /// No description fallback text
+  ///
+  /// In en, this message translates to:
+  /// **'No description provided'**
+  String get report_noDescription;
+
+  /// Suggested issue types label
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested Issue Types'**
+  String get report_suggestedIssueTypes;
+
+  /// Suggested severity label
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested Severity'**
+  String get report_suggestedSeverity;
+
+  /// Apply suggestions button
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Suggestions'**
+  String get report_applySuggestions;
+
+  /// Analyzing image progress title
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing Image with AI'**
+  String get report_analyzingImage;
+
+  /// Analyzing image progress message
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait while we analyze the image...'**
+  String get report_analyzingImageMessage;
+
+  /// Draft label
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get report_draft;
+
+  /// Uploading photo progress message
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading photo...'**
+  String get report_uploadingPhoto;
+
   /// Notifications screen title
   ///
   /// In en, this message translates to:

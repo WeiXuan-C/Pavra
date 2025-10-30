@@ -927,6 +927,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get report_suggestions => 'Suggestions';
 
   @override
+  String get report_aiAnalysis => 'AI Analysis';
+
+  @override
+  String get report_confidence => 'Confidence';
+
+  @override
+  String get report_noDescription => 'No description provided';
+
+  @override
+  String get report_suggestedIssueTypes => 'Suggested Issue Types';
+
+  @override
+  String get report_suggestedSeverity => 'Suggested Severity';
+
+  @override
+  String get report_applySuggestions => 'Apply Suggestions';
+
+  @override
+  String get report_analyzingImage => 'Analyzing Image with AI';
+
+  @override
+  String get report_analyzingImageMessage =>
+      'Please wait while we analyze the image...';
+
+  @override
+  String get report_draft => 'Draft';
+
+  @override
+  String get report_uploadingPhoto => 'Uploading photo...';
+
+  @override
   String get notification_title => 'Notifications';
 
   @override

@@ -906,6 +906,36 @@ class AppLocalizationsZh extends AppLocalizations {
   String get report_suggestions => '建议';
 
   @override
+  String get report_aiAnalysis => 'AI 分析';
+
+  @override
+  String get report_confidence => '信心水平';
+
+  @override
+  String get report_noDescription => '未提供描述';
+
+  @override
+  String get report_suggestedIssueTypes => '建议的问题类型';
+
+  @override
+  String get report_suggestedSeverity => '建议的严重程度';
+
+  @override
+  String get report_applySuggestions => '应用建议';
+
+  @override
+  String get report_analyzingImage => '正在用 AI 分析图片';
+
+  @override
+  String get report_analyzingImageMessage => '请稍候，我们正在分析图片...';
+
+  @override
+  String get report_draft => '草稿';
+
+  @override
+  String get report_uploadingPhoto => '正在上传照片...';
+
+  @override
   String get notification_title => '通知';
 
   @override
