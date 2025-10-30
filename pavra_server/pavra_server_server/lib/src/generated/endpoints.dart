@@ -13,8 +13,9 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../endpoints/action_log_endpoint.dart' as _i2;
 import '../endpoints/auth_endpoint.dart' as _i3;
 import '../endpoints/notification_endpoint.dart' as _i4;
-import '../endpoints/redis_health_endpoint.dart' as _i5;
-import '../greeting_endpoint.dart' as _i6;
+import '../endpoints/openrouter_endpoint.dart' as _i5;
+import '../endpoints/redis_health_endpoint.dart' as _i6;
+import '../greeting_endpoint.dart' as _i7;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -38,13 +39,19 @@ class Endpoints extends _i1.EndpointDispatch {
           'notification',
           null,
         ),
-      'redisHealth': _i5.RedisHealthEndpoint()
+      'openrouter': _i5.OpenRouterEndpoint()
+        ..initialize(
+          server,
+          'openrouter',
+          null,
+        ),
+      'redisHealth': _i6.RedisHealthEndpoint()
         ..initialize(
           server,
           'redisHealth',
           null,
         ),
-      'greeting': _i6.GreetingEndpoint()
+      'greeting': _i7.GreetingEndpoint()
         ..initialize(
           server,
           'greeting',
@@ -683,6 +690,96 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
+    connectors['openrouter'] = _i1.EndpointConnector(
+      name: 'openrouter',
+      endpoint: endpoints['openrouter']!,
+      methodConnectors: {
+        'chat': _i1.MethodConnector(
+          name: 'chat',
+          params: {
+            'prompt': _i1.ParameterDescription(
+              name: 'prompt',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'model': _i1.ParameterDescription(
+              name: 'model',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'maxTokens': _i1.ParameterDescription(
+              name: 'maxTokens',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+            'temperature': _i1.ParameterDescription(
+              name: 'temperature',
+              type: _i1.getType<double?>(),
+              nullable: true,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['openrouter'] as _i5.OpenRouterEndpoint).chat(
+            session: session,
+            prompt: params['prompt'],
+            model: params['model'],
+            maxTokens: params['maxTokens'],
+            temperature: params['temperature'],
+          ),
+        ),
+        'chatWithHistory': _i1.MethodConnector(
+          name: 'chatWithHistory',
+          params: {
+            'messages': _i1.ParameterDescription(
+              name: 'messages',
+              type: _i1.getType<List<Map<String, dynamic>>>(),
+              nullable: false,
+            ),
+            'model': _i1.ParameterDescription(
+              name: 'model',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'maxTokens': _i1.ParameterDescription(
+              name: 'maxTokens',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+            'temperature': _i1.ParameterDescription(
+              name: 'temperature',
+              type: _i1.getType<double?>(),
+              nullable: true,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['openrouter'] as _i5.OpenRouterEndpoint)
+                  .chatWithHistory(
+            session: session,
+            messages: params['messages'],
+            model: params['model'],
+            maxTokens: params['maxTokens'],
+            temperature: params['temperature'],
+          ),
+        ),
+        'getModels': _i1.MethodConnector(
+          name: 'getModels',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['openrouter'] as _i5.OpenRouterEndpoint).getModels(
+            session: session,
+          ),
+        ),
+      },
+    );
     connectors['redisHealth'] = _i1.EndpointConnector(
       name: 'redisHealth',
       endpoint: endpoints['redisHealth']!,
@@ -694,7 +791,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['redisHealth'] as _i5.RedisHealthEndpoint)
+              (endpoints['redisHealth'] as _i6.RedisHealthEndpoint)
                   .check(session),
         ),
         'info': _i1.MethodConnector(
@@ -704,7 +801,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['redisHealth'] as _i5.RedisHealthEndpoint)
+              (endpoints['redisHealth'] as _i6.RedisHealthEndpoint)
                   .info(session),
         ),
       },
@@ -726,7 +823,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['greeting'] as _i6.GreetingEndpoint).hello(
+              (endpoints['greeting'] as _i7.GreetingEndpoint).hello(
             session,
             params['name'],
           ),

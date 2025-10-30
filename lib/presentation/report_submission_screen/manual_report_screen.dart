@@ -510,7 +510,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
         }
 
         // Upload to storage
-        await provider.uploadPhoto(
+        final uploadedPhoto = await provider.uploadPhoto(
           fileName: image.name,
           fileBytes: bytes,
           mimeType: mimeType,
@@ -525,6 +525,11 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );
+
+        // Trigger AI analysis for main photo
+        if (photoType == 'main' && mounted) {
+          _analyzeMainPhoto(context, provider, uploadedPhoto.photoUrl);
+        }
       }
     } catch (e) {
       if (!mounted) return;
@@ -533,6 +538,261 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
       );
+    }
+  }
+
+  /// Analyze main photo with AI
+  Future<void> _analyzeMainPhoto(
+    BuildContext context,
+    ManualReportProvider provider,
+    String photoUrl,
+  ) async {
+    // Show analyzing toast
+    Fluttertoast.showToast(
+      msg: 'Analyzing image with AI...',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+    );
+
+    try {
+      final result = await provider.analyzePhotoWithAI(photoUrl);
+
+      if (result == null || !mounted) return;
+
+      // Show AI analysis result dialog
+      _showAiAnalysisDialog(context, provider, result);
+    } catch (e) {
+      debugPrint('AI analysis error: $e');
+      if (!mounted) return;
+      Fluttertoast.showToast(
+        msg: 'AI analysis failed: $e',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
+    }
+  }
+
+  /// Show AI analysis result dialog
+  void _showAiAnalysisDialog(
+    BuildContext context,
+    ManualReportProvider provider,
+    Map<String, dynamic> analysis,
+  ) {
+    final theme = Theme.of(context);
+
+    final description = analysis['description'] as String? ?? '';
+    final issueTypes =
+        (analysis['issueTypes'] as List?)?.map((e) => e.toString()).toList() ??
+        [];
+    final severity = analysis['severity'] as String? ?? 'moderate';
+    final confidence = analysis['confidence'] as String? ?? 'medium';
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.auto_awesome, color: theme.colorScheme.primary),
+            SizedBox(width: 2.w),
+            const Text('AI Analysis'),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Confidence badge
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
+                decoration: BoxDecoration(
+                  color: _getConfidenceColor(
+                    confidence,
+                    theme,
+                  ).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  'Confidence: ${confidence.toUpperCase()}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: _getConfidenceColor(confidence, theme),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              SizedBox(height: 2.h),
+
+              // Description
+              Text(
+                'Description:',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 1.h),
+              Text(
+                description.isNotEmpty
+                    ? description
+                    : 'No description provided',
+                style: theme.textTheme.bodyMedium,
+              ),
+              SizedBox(height: 2.h),
+
+              // Suggested issue types
+              if (issueTypes.isNotEmpty) ...[
+                Text(
+                  'Suggested Issue Types:',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 1.h),
+                Wrap(
+                  spacing: 1.w,
+                  runSpacing: 1.h,
+                  children: issueTypes.map((type) {
+                    return Chip(
+                      label: Text(type),
+                      backgroundColor: theme.colorScheme.primaryContainer,
+                      labelStyle: TextStyle(
+                        color: theme.colorScheme.onPrimaryContainer,
+                      ),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 2.h),
+              ],
+
+              // Suggested severity
+              Text(
+                'Suggested Severity:',
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 1.h),
+              Container(
+                padding: EdgeInsets.all(2.w),
+                decoration: BoxDecoration(
+                  color: _getSeverityColor(
+                    severity,
+                    theme,
+                  ).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      _getSeverityIcon(severity),
+                      color: _getSeverityColor(severity, theme),
+                      size: 20,
+                    ),
+                    SizedBox(width: 2.w),
+                    Text(
+                      severity.toUpperCase(),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: _getSeverityColor(severity, theme),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Dismiss'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              _applyAiSuggestions(provider, analysis);
+            },
+            child: const Text('Apply Suggestions'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Apply AI suggestions to the form
+  void _applyAiSuggestions(
+    ManualReportProvider provider,
+    Map<String, dynamic> analysis,
+  ) {
+    final description = analysis['description'] as String? ?? '';
+    final severity = analysis['severity'] as String? ?? 'moderate';
+
+    // Update description if empty
+    if (_descriptionController.text.isEmpty && description.isNotEmpty) {
+      setState(() {
+        _descriptionController.text = description;
+      });
+    }
+
+    // Update severity
+    setState(() {
+      _severity = _getSeverityValue(severity);
+    });
+
+    Fluttertoast.showToast(
+      msg: 'AI suggestions applied',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+    );
+  }
+
+  /// Get confidence color
+  Color _getConfidenceColor(String confidence, ThemeData theme) {
+    switch (confidence.toLowerCase()) {
+      case 'high':
+        return Colors.green;
+      case 'medium':
+        return Colors.orange;
+      case 'low':
+        return Colors.red;
+      default:
+        return theme.colorScheme.primary;
+    }
+  }
+
+  /// Get severity color
+  Color _getSeverityColor(String severity, ThemeData theme) {
+    switch (severity.toLowerCase()) {
+      case 'minor':
+        return Colors.blue;
+      case 'low':
+        return Colors.green;
+      case 'moderate':
+        return Colors.orange;
+      case 'high':
+        return Colors.deepOrange;
+      case 'critical':
+        return Colors.red;
+      default:
+        return theme.colorScheme.primary;
+    }
+  }
+
+  /// Get severity icon
+  IconData _getSeverityIcon(String severity) {
+    switch (severity.toLowerCase()) {
+      case 'minor':
+        return Icons.info_outline;
+      case 'low':
+        return Icons.warning_amber_outlined;
+      case 'moderate':
+        return Icons.warning;
+      case 'high':
+        return Icons.error_outline;
+      case 'critical':
+        return Icons.dangerous;
+      default:
+        return Icons.help_outline;
     }
   }
 

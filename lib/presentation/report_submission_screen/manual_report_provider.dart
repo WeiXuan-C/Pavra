@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/api/report_issue/report_issue_api.dart';
 import '../../core/api/report_issue/issue_type_api.dart';
 import '../../core/utils/issue_photo_helper.dart';
+import '../../core/services/ai_service.dart';
 import '../../data/models/report_issue_model.dart';
 import '../../data/models/issue_type_model.dart';
 import '../../data/models/issue_photo_model.dart';
@@ -323,6 +324,49 @@ class ManualReportProvider extends ChangeNotifier {
       _uploadProgress = 0.0;
       notifyListeners();
     }
+  }
+
+  /// AI Analysis result
+  Map<String, dynamic>? _aiAnalysisResult;
+  bool _isAnalyzingImage = false;
+
+  Map<String, dynamic>? get aiAnalysisResult => _aiAnalysisResult;
+  bool get isAnalyzingImage => _isAnalyzingImage;
+
+  /// Analyze uploaded photo with AI
+  Future<Map<String, dynamic>?> analyzePhotoWithAI(String photoUrl) async {
+    _isAnalyzingImage = true;
+    _aiAnalysisResult = null;
+    notifyListeners();
+
+    try {
+      final aiService = AiService();
+
+      final result = await aiService.analyzeImage(
+        imageUrl: photoUrl,
+        additionalContext:
+            'This is a report about infrastructure or safety issues.',
+      );
+
+      _aiAnalysisResult = result;
+      notifyListeners();
+
+      return result;
+    } catch (e) {
+      debugPrint('AI analysis failed: $e');
+      _error = 'AI analysis failed: $e';
+      notifyListeners();
+      return null;
+    } finally {
+      _isAnalyzingImage = false;
+      notifyListeners();
+    }
+  }
+
+  /// Clear AI analysis result
+  void clearAiAnalysis() {
+    _aiAnalysisResult = null;
+    notifyListeners();
   }
 
   /// Upload multiple photos
