@@ -918,9 +918,153 @@ class _NotificationEndpoint {
 
 class _OpenRouterEndpoint {
   _OpenRouterEndpoint(
-    _endpointDispatch,
-    _serializationManager,
+    this._endpointDispatch,
+    this._serializationManager,
   );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<Map<String, dynamic>> chat(
+    _i1.TestSessionBuilder sessionBuilder,
+    String prompt, {
+    String? model,
+    int? maxTokens,
+    double? temperature,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'openRouter',
+        method: 'chat',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'openRouter',
+          methodName: 'chat',
+          parameters: _i1.testObjectToJson({
+            'prompt': prompt,
+            'model': model,
+            'maxTokens': maxTokens,
+            'temperature': temperature,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<Map<String, dynamic>> chatWithHistory(
+    _i1.TestSessionBuilder sessionBuilder,
+    List<Map<String, dynamic>> messages, {
+    String? model,
+    int? maxTokens,
+    double? temperature,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'openRouter',
+        method: 'chatWithHistory',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'openRouter',
+          methodName: 'chatWithHistory',
+          parameters: _i1.testObjectToJson({
+            'messages': messages,
+            'model': model,
+            'maxTokens': maxTokens,
+            'temperature': temperature,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<Map<String, dynamic>> chatWithVision(
+    _i1.TestSessionBuilder sessionBuilder,
+    String textPrompt,
+    String imageUrl, {
+    String? model,
+    int? maxTokens,
+    double? temperature,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'openRouter',
+        method: 'chatWithVision',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'openRouter',
+          methodName: 'chatWithVision',
+          parameters: _i1.testObjectToJson({
+            'textPrompt': textPrompt,
+            'imageUrl': imageUrl,
+            'model': model,
+            'maxTokens': maxTokens,
+            'temperature': temperature,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<Map<String, dynamic>> getModels(
+      _i1.TestSessionBuilder sessionBuilder) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'openRouter',
+        method: 'getModels',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'openRouter',
+          methodName: 'getModels',
+          parameters: _i1.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 }
 
 class _QstashWebhookEndpoint {

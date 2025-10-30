@@ -744,7 +744,134 @@ class Endpoints extends _i1.EndpointDispatch {
     connectors['openRouter'] = _i1.EndpointConnector(
       name: 'openRouter',
       endpoint: endpoints['openRouter']!,
-      methodConnectors: {},
+      methodConnectors: {
+        'chat': _i1.MethodConnector(
+          name: 'chat',
+          params: {
+            'prompt': _i1.ParameterDescription(
+              name: 'prompt',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'model': _i1.ParameterDescription(
+              name: 'model',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'maxTokens': _i1.ParameterDescription(
+              name: 'maxTokens',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+            'temperature': _i1.ParameterDescription(
+              name: 'temperature',
+              type: _i1.getType<double?>(),
+              nullable: true,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['openRouter'] as _i5.OpenRouterEndpoint).chat(
+            session,
+            params['prompt'],
+            model: params['model'],
+            maxTokens: params['maxTokens'],
+            temperature: params['temperature'],
+          ),
+        ),
+        'chatWithHistory': _i1.MethodConnector(
+          name: 'chatWithHistory',
+          params: {
+            'messages': _i1.ParameterDescription(
+              name: 'messages',
+              type: _i1.getType<List<Map<String, dynamic>>>(),
+              nullable: false,
+            ),
+            'model': _i1.ParameterDescription(
+              name: 'model',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'maxTokens': _i1.ParameterDescription(
+              name: 'maxTokens',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+            'temperature': _i1.ParameterDescription(
+              name: 'temperature',
+              type: _i1.getType<double?>(),
+              nullable: true,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['openRouter'] as _i5.OpenRouterEndpoint)
+                  .chatWithHistory(
+            session,
+            params['messages'],
+            model: params['model'],
+            maxTokens: params['maxTokens'],
+            temperature: params['temperature'],
+          ),
+        ),
+        'chatWithVision': _i1.MethodConnector(
+          name: 'chatWithVision',
+          params: {
+            'textPrompt': _i1.ParameterDescription(
+              name: 'textPrompt',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'imageUrl': _i1.ParameterDescription(
+              name: 'imageUrl',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'model': _i1.ParameterDescription(
+              name: 'model',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'maxTokens': _i1.ParameterDescription(
+              name: 'maxTokens',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+            'temperature': _i1.ParameterDescription(
+              name: 'temperature',
+              type: _i1.getType<double?>(),
+              nullable: true,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['openRouter'] as _i5.OpenRouterEndpoint)
+                  .chatWithVision(
+            session,
+            params['textPrompt'],
+            params['imageUrl'],
+            model: params['model'],
+            maxTokens: params['maxTokens'],
+            temperature: params['temperature'],
+          ),
+        ),
+        'getModels': _i1.MethodConnector(
+          name: 'getModels',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['openRouter'] as _i5.OpenRouterEndpoint)
+                  .getModels(session),
+        ),
+      },
     );
     connectors['qstashWebhook'] = _i1.EndpointConnector(
       name: 'qstashWebhook',

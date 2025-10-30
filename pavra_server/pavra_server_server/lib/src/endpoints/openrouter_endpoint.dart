@@ -41,9 +41,9 @@ class OpenRouterEndpoint extends Endpoint {
   /// [model] - The AI model to use (default: nvidia/nemotron-nano-12b-v2-vl:free)
   /// [maxTokens] - Maximum tokens in response (default: 1000)
   /// [temperature] - Sampling temperature 0-2 (default: 0.7)
-  Future<Map<String, dynamic>> chat({
-    required Session session,
-    required String prompt,
+  Future<Map<String, dynamic>> chat(
+    Session session,
+    String prompt, {
     String? model,
     int? maxTokens,
     double? temperature,
@@ -116,9 +116,9 @@ class OpenRouterEndpoint extends Endpoint {
   /// [model] - The AI model to use
   /// [maxTokens] - Maximum tokens in response
   /// [temperature] - Sampling temperature 0-2
-  Future<Map<String, dynamic>> chatWithHistory({
-    required Session session,
-    required List<Map<String, dynamic>> messages,
+  Future<Map<String, dynamic>> chatWithHistory(
+    Session session,
+    List<Map<String, dynamic>> messages, {
     String? model,
     int? maxTokens,
     double? temperature,
@@ -203,10 +203,10 @@ class OpenRouterEndpoint extends Endpoint {
   /// [model] - The AI model to use (must support vision)
   /// [maxTokens] - Maximum tokens in response
   /// [temperature] - Sampling temperature 0-2
-  Future<Map<String, dynamic>> chatWithVision({
-    required Session session,
-    required String textPrompt,
-    required String imageUrl,
+  Future<Map<String, dynamic>> chatWithVision(
+    Session session,
+    String textPrompt,
+    String imageUrl, {
     String? model,
     int? maxTokens,
     double? temperature,
@@ -288,9 +288,7 @@ class OpenRouterEndpoint extends Endpoint {
   }
 
   /// Get available models from OpenRouter
-  Future<Map<String, dynamic>> getModels({
-    required Session session,
-  }) async {
+  Future<Map<String, dynamic>> getModels(Session session) async {
     try {
       final apiKey = _getRandomApiKey();
 

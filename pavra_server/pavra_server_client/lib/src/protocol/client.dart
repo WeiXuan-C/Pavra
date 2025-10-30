@@ -447,6 +447,86 @@ class EndpointOpenRouter extends _i1.EndpointRef {
 
   @override
   String get name => 'openRouter';
+
+  /// Send a chat completion request to OpenRouter
+  ///
+  /// [prompt] - The user's message/prompt
+  /// [model] - The AI model to use (default: nvidia/nemotron-nano-12b-v2-vl:free)
+  /// [maxTokens] - Maximum tokens in response (default: 1000)
+  /// [temperature] - Sampling temperature 0-2 (default: 0.7)
+  _i2.Future<Map<String, dynamic>> chat(
+    String prompt, {
+    String? model,
+    int? maxTokens,
+    double? temperature,
+  }) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'openRouter',
+        'chat',
+        {
+          'prompt': prompt,
+          'model': model,
+          'maxTokens': maxTokens,
+          'temperature': temperature,
+        },
+      );
+
+  /// Send a chat completion with conversation history
+  ///
+  /// [messages] - List of message maps with 'role' and 'content' keys
+  /// [model] - The AI model to use
+  /// [maxTokens] - Maximum tokens in response
+  /// [temperature] - Sampling temperature 0-2
+  _i2.Future<Map<String, dynamic>> chatWithHistory(
+    List<Map<String, dynamic>> messages, {
+    String? model,
+    int? maxTokens,
+    double? temperature,
+  }) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'openRouter',
+        'chatWithHistory',
+        {
+          'messages': messages,
+          'model': model,
+          'maxTokens': maxTokens,
+          'temperature': temperature,
+        },
+      );
+
+  /// Send a chat completion with vision (image analysis)
+  ///
+  /// [textPrompt] - The text prompt/question about the image
+  /// [imageUrl] - Public URL of the image to analyze
+  /// [model] - The AI model to use (must support vision)
+  /// [maxTokens] - Maximum tokens in response
+  /// [temperature] - Sampling temperature 0-2
+  _i2.Future<Map<String, dynamic>> chatWithVision(
+    String textPrompt,
+    String imageUrl, {
+    String? model,
+    int? maxTokens,
+    double? temperature,
+  }) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'openRouter',
+        'chatWithVision',
+        {
+          'textPrompt': textPrompt,
+          'imageUrl': imageUrl,
+          'model': model,
+          'maxTokens': maxTokens,
+          'temperature': temperature,
+        },
+      );
+
+  /// Get available models from OpenRouter
+  _i2.Future<Map<String, dynamic>> getModels() =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'openRouter',
+        'getModels',
+        {},
+      );
 }
 
 /// Endpoint for receiving QStash webhook callbacks

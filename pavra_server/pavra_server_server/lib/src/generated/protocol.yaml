@@ -23,6 +23,10 @@ notification:
   - testProcessScheduledNotification:
   - processScheduledNotifications:
 openRouter:
+  - chat:
+  - chatWithHistory:
+  - chatWithVision:
+  - getModels:
 qstashWebhook:
   - processScheduledNotification:
 redisHealth:

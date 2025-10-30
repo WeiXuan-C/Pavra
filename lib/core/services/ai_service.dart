@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 class AiService {
   final String serverUrl;
 
-  AiService({this.serverUrl = 'https://pavra-production.up.railway.app'});
+  AiService({this.serverUrl = 'http://localhost:8080'});
 
   /// Send a simple chat message to AI
   ///
