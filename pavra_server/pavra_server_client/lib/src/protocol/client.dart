@@ -320,10 +320,27 @@ class EndpointNotification extends _i1.EndpointRef {
         },
       );
 
+  /// Schedule an existing notification by ID
+  ///
+  /// This is called from Flutter client after notification is created
+  /// Schedules the notification via QStash for processing
+  _i2.Future<Map<String, dynamic>> scheduleNotificationById({
+    required String notificationId,
+    required DateTime scheduledAt,
+  }) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'notification',
+        'scheduleNotificationById',
+        {
+          'notificationId': notificationId,
+          'scheduledAt': scheduledAt,
+        },
+      );
+
   /// Schedule a notification to be sent at a specific time
   ///
   /// Creates notification record in Supabase with 'scheduled' status
-  /// and stores in Redis for processing
+  /// and schedules via QStash for processing
   _i2.Future<Map<String, dynamic>> scheduleNotification({
     required String title,
     required String message,
@@ -400,6 +417,18 @@ class EndpointNotification extends _i1.EndpointRef {
         {'notificationId': notificationId},
       );
 
+  /// 🧪 手动触发 scheduled notification 处理（仅用于开发测试）
+  ///
+  /// 这个方法模拟 QStash webhook 的行为，用于本地测试
+  /// 可以手动触发任何 scheduled notification 的处理
+  _i2.Future<Map<String, dynamic>> testProcessScheduledNotification(
+          {required String notificationId}) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'notification',
+        'testProcessScheduledNotification',
+        {'notificationId': notificationId},
+      );
+
   /// Process scheduled notifications (called by cron job or task)
   ///
   /// This should be called periodically to check for and send scheduled notifications
@@ -408,6 +437,33 @@ class EndpointNotification extends _i1.EndpointRef {
         'notification',
         'processScheduledNotifications',
         {},
+      );
+}
+
+/// OpenRouter AI endpoint for chat completions
+/// {@category Endpoint}
+class EndpointOpenRouter extends _i1.EndpointRef {
+  EndpointOpenRouter(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'openRouter';
+}
+
+/// Endpoint for receiving QStash webhook callbacks
+/// {@category Endpoint}
+class EndpointQstashWebhook extends _i1.EndpointRef {
+  EndpointQstashWebhook(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'qstashWebhook';
+
+  /// Handle scheduled notification callback from QStash
+  _i2.Future<Map<String, dynamic>> processScheduledNotification(
+          Map<String, dynamic> payload) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'qstashWebhook',
+        'processScheduledNotification',
+        {'payload': payload},
       );
 }
 
@@ -492,6 +548,8 @@ class Client extends _i1.ServerpodClientShared {
     actionLog = EndpointActionLog(this);
     auth = EndpointAuth(this);
     notification = EndpointNotification(this);
+    openRouter = EndpointOpenRouter(this);
+    qstashWebhook = EndpointQstashWebhook(this);
     redisHealth = EndpointRedisHealth(this);
     greeting = EndpointGreeting(this);
   }
@@ -502,6 +560,10 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointNotification notification;
 
+  late final EndpointOpenRouter openRouter;
+
+  late final EndpointQstashWebhook qstashWebhook;
+
   late final EndpointRedisHealth redisHealth;
 
   late final EndpointGreeting greeting;
@@ -511,6 +573,8 @@ class Client extends _i1.ServerpodClientShared {
         'actionLog': actionLog,
         'auth': auth,
         'notification': notification,
+        'openRouter': openRouter,
+        'qstashWebhook': qstashWebhook,
         'redisHealth': redisHealth,
         'greeting': greeting,
       };

@@ -14,8 +14,9 @@ import '../endpoints/action_log_endpoint.dart' as _i2;
 import '../endpoints/auth_endpoint.dart' as _i3;
 import '../endpoints/notification_endpoint.dart' as _i4;
 import '../endpoints/openrouter_endpoint.dart' as _i5;
-import '../endpoints/redis_health_endpoint.dart' as _i6;
-import '../greeting_endpoint.dart' as _i7;
+import '../endpoints/qstash_webhook_endpoint.dart' as _i6;
+import '../endpoints/redis_health_endpoint.dart' as _i7;
+import '../greeting_endpoint.dart' as _i8;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -39,19 +40,25 @@ class Endpoints extends _i1.EndpointDispatch {
           'notification',
           null,
         ),
-      'openrouter': _i5.OpenRouterEndpoint()
+      'openRouter': _i5.OpenRouterEndpoint()
         ..initialize(
           server,
-          'openrouter',
+          'openRouter',
           null,
         ),
-      'redisHealth': _i6.RedisHealthEndpoint()
+      'qstashWebhook': _i6.QstashWebhookEndpoint()
+        ..initialize(
+          server,
+          'qstashWebhook',
+          null,
+        ),
+      'redisHealth': _i7.RedisHealthEndpoint()
         ..initialize(
           server,
           'redisHealth',
           null,
         ),
-      'greeting': _i7.GreetingEndpoint()
+      'greeting': _i8.GreetingEndpoint()
         ..initialize(
           server,
           'greeting',
@@ -506,6 +513,31 @@ class Endpoints extends _i1.EndpointDispatch {
             activityMessage: params['activityMessage'],
           ),
         ),
+        'scheduleNotificationById': _i1.MethodConnector(
+          name: 'scheduleNotificationById',
+          params: {
+            'notificationId': _i1.ParameterDescription(
+              name: 'notificationId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'scheduledAt': _i1.ParameterDescription(
+              name: 'scheduledAt',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['notification'] as _i4.NotificationEndpoint)
+                  .scheduleNotificationById(
+            session,
+            notificationId: params['notificationId'],
+            scheduledAt: params['scheduledAt'],
+          ),
+        ),
         'scheduleNotification': _i1.MethodConnector(
           name: 'scheduleNotification',
           params: {
@@ -678,6 +710,25 @@ class Endpoints extends _i1.EndpointDispatch {
             notificationId: params['notificationId'],
           ),
         ),
+        'testProcessScheduledNotification': _i1.MethodConnector(
+          name: 'testProcessScheduledNotification',
+          params: {
+            'notificationId': _i1.ParameterDescription(
+              name: 'notificationId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['notification'] as _i4.NotificationEndpoint)
+                  .testProcessScheduledNotification(
+            session,
+            notificationId: params['notificationId'],
+          ),
+        ),
         'processScheduledNotifications': _i1.MethodConnector(
           name: 'processScheduledNotifications',
           params: {},
@@ -690,94 +741,34 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    connectors['openrouter'] = _i1.EndpointConnector(
-      name: 'openrouter',
-      endpoint: endpoints['openrouter']!,
+    connectors['openRouter'] = _i1.EndpointConnector(
+      name: 'openRouter',
+      endpoint: endpoints['openRouter']!,
+      methodConnectors: {},
+    );
+    connectors['qstashWebhook'] = _i1.EndpointConnector(
+      name: 'qstashWebhook',
+      endpoint: endpoints['qstashWebhook']!,
       methodConnectors: {
-        'chat': _i1.MethodConnector(
-          name: 'chat',
+        'processScheduledNotification': _i1.MethodConnector(
+          name: 'processScheduledNotification',
           params: {
-            'prompt': _i1.ParameterDescription(
-              name: 'prompt',
-              type: _i1.getType<String>(),
+            'payload': _i1.ParameterDescription(
+              name: 'payload',
+              type: _i1.getType<Map<String, dynamic>>(),
               nullable: false,
-            ),
-            'model': _i1.ParameterDescription(
-              name: 'model',
-              type: _i1.getType<String?>(),
-              nullable: true,
-            ),
-            'maxTokens': _i1.ParameterDescription(
-              name: 'maxTokens',
-              type: _i1.getType<int?>(),
-              nullable: true,
-            ),
-            'temperature': _i1.ParameterDescription(
-              name: 'temperature',
-              type: _i1.getType<double?>(),
-              nullable: true,
-            ),
+            )
           },
           call: (
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['openrouter'] as _i5.OpenRouterEndpoint).chat(
-            session: session,
-            prompt: params['prompt'],
-            model: params['model'],
-            maxTokens: params['maxTokens'],
-            temperature: params['temperature'],
+              (endpoints['qstashWebhook'] as _i6.QstashWebhookEndpoint)
+                  .processScheduledNotification(
+            session,
+            params['payload'],
           ),
-        ),
-        'chatWithHistory': _i1.MethodConnector(
-          name: 'chatWithHistory',
-          params: {
-            'messages': _i1.ParameterDescription(
-              name: 'messages',
-              type: _i1.getType<List<Map<String, dynamic>>>(),
-              nullable: false,
-            ),
-            'model': _i1.ParameterDescription(
-              name: 'model',
-              type: _i1.getType<String?>(),
-              nullable: true,
-            ),
-            'maxTokens': _i1.ParameterDescription(
-              name: 'maxTokens',
-              type: _i1.getType<int?>(),
-              nullable: true,
-            ),
-            'temperature': _i1.ParameterDescription(
-              name: 'temperature',
-              type: _i1.getType<double?>(),
-              nullable: true,
-            ),
-          },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['openrouter'] as _i5.OpenRouterEndpoint)
-                  .chatWithHistory(
-            session: session,
-            messages: params['messages'],
-            model: params['model'],
-            maxTokens: params['maxTokens'],
-            temperature: params['temperature'],
-          ),
-        ),
-        'getModels': _i1.MethodConnector(
-          name: 'getModels',
-          params: {},
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['openrouter'] as _i5.OpenRouterEndpoint).getModels(
-            session: session,
-          ),
-        ),
+        )
       },
     );
     connectors['redisHealth'] = _i1.EndpointConnector(
@@ -791,7 +782,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['redisHealth'] as _i6.RedisHealthEndpoint)
+              (endpoints['redisHealth'] as _i7.RedisHealthEndpoint)
                   .check(session),
         ),
         'info': _i1.MethodConnector(
@@ -801,7 +792,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['redisHealth'] as _i6.RedisHealthEndpoint)
+              (endpoints['redisHealth'] as _i7.RedisHealthEndpoint)
                   .info(session),
         ),
       },
@@ -823,7 +814,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['greeting'] as _i7.GreetingEndpoint).hello(
+              (endpoints['greeting'] as _i8.GreetingEndpoint).hello(
             session,
             params['name'],
           ),

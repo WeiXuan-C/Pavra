@@ -15,11 +15,16 @@ notification:
   - sendAppUpdateNotification:
   - sendFeatureAnnouncement:
   - sendActivityNotification:
+  - scheduleNotificationById:
   - scheduleNotification:
   - scheduleNotificationForUsers:
   - cancelScheduledNotification:
   - handleNotificationCreated:
+  - testProcessScheduledNotification:
   - processScheduledNotifications:
+openRouter:
+qstashWebhook:
+  - processScheduledNotification:
 redisHealth:
   - check:
   - info:

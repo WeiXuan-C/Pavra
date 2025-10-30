@@ -107,6 +107,10 @@ class TestEndpoints {
 
   late final _NotificationEndpoint notification;
 
+  late final _OpenRouterEndpoint openRouter;
+
+  late final _QstashWebhookEndpoint qstashWebhook;
+
   late final _RedisHealthEndpoint redisHealth;
 
   late final _GreetingEndpoint greeting;
@@ -128,6 +132,14 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     notification = _NotificationEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    openRouter = _OpenRouterEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    qstashWebhook = _QstashWebhookEndpoint(
       endpoints,
       serializationManager,
     );
@@ -662,6 +674,39 @@ class _NotificationEndpoint {
     });
   }
 
+  _i3.Future<Map<String, dynamic>> scheduleNotificationById(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String notificationId,
+    required DateTime scheduledAt,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'notification',
+        method: 'scheduleNotificationById',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'notification',
+          methodName: 'scheduleNotificationById',
+          parameters: _i1.testObjectToJson({
+            'notificationId': notificationId,
+            'scheduledAt': scheduledAt,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
   _i3.Future<Map<String, dynamic>> scheduleNotification(
     _i1.TestSessionBuilder sessionBuilder, {
     required String title,
@@ -814,6 +859,35 @@ class _NotificationEndpoint {
     });
   }
 
+  _i3.Future<Map<String, dynamic>> testProcessScheduledNotification(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String notificationId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'notification',
+        method: 'testProcessScheduledNotification',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'notification',
+          methodName: 'testProcessScheduledNotification',
+          parameters: _i1.testObjectToJson({'notificationId': notificationId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
   _i3.Future<Map<String, dynamic>> processScheduledNotifications(
       _i1.TestSessionBuilder sessionBuilder) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
@@ -828,6 +902,53 @@ class _NotificationEndpoint {
           endpointPath: 'notification',
           methodName: 'processScheduledNotifications',
           parameters: _i1.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _OpenRouterEndpoint {
+  _OpenRouterEndpoint(
+    _endpointDispatch,
+    _serializationManager,
+  );
+}
+
+class _QstashWebhookEndpoint {
+  _QstashWebhookEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<Map<String, dynamic>> processScheduledNotification(
+    _i1.TestSessionBuilder sessionBuilder,
+    Map<String, dynamic> payload,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'qstashWebhook',
+        method: 'processScheduledNotification',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'qstashWebhook',
+          methodName: 'processScheduledNotification',
+          parameters: _i1.testObjectToJson({'payload': payload}),
           serializationManager: _serializationManager,
         );
         var _localReturnValue = await (_localCallContext.method.call(
