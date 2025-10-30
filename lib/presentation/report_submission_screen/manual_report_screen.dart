@@ -527,7 +527,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
         );
 
         // Trigger AI analysis for main photo
-        if (photoType == 'main' && mounted) {
+        if (photoType == 'main' && mounted && context.mounted) {
           _analyzeMainPhoto(context, provider, uploadedPhoto.photoUrl);
         }
       }
@@ -547,29 +547,78 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     ManualReportProvider provider,
     String photoUrl,
   ) async {
-    // Show analyzing toast
-    Fluttertoast.showToast(
-      msg: 'Analyzing image with AI...',
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
+    // Show progress dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => _buildAnalysisProgressDialog(dialogContext),
     );
 
     try {
       final result = await provider.analyzePhotoWithAI(photoUrl);
 
-      if (result == null || !mounted) return;
+      // Close progress dialog
+      if (!mounted) return;
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+
+      if (result == null) return;
 
       // Show AI analysis result dialog
+      if (!context.mounted) return;
       _showAiAnalysisDialog(context, provider, result);
     } catch (e) {
       debugPrint('AI analysis error: $e');
+
+      // Close progress dialog
       if (!mounted) return;
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+
       Fluttertoast.showToast(
         msg: 'AI analysis failed: $e',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
       );
     }
+  }
+
+  /// Build AI analysis progress dialog
+  Widget _buildAnalysisProgressDialog(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return AlertDialog(
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 60,
+            height: 60,
+            child: CircularProgressIndicator(
+              strokeWidth: 4,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                theme.colorScheme.primary,
+              ),
+            ),
+          ),
+          SizedBox(height: 3.h),
+          Text(
+            'Analyzing Image with AI',
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 1.h),
+          Text(
+            'Please wait while we analyze the image...',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
   }
 
   /// Show AI analysis result dialog

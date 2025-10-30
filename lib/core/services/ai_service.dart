@@ -138,10 +138,11 @@ class AiService {
       final prompt = _buildImageAnalysisPrompt(additionalContext);
 
       final response = await http.post(
-        Uri.parse('$serverUrl/openrouter/chat'),
+        Uri.parse('$serverUrl/openrouter/chatWithVision'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'prompt': '$prompt\n\nImage URL: $imageUrl',
+          'textPrompt': prompt,
+          'imageUrl': imageUrl,
           'model': 'nvidia/nemotron-nano-12b-v2-vl:free', // Vision model
           'temperature': 0.3, // Lower for more factual analysis
           'maxTokens': 500,
