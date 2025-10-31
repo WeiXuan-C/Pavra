@@ -1514,4 +1514,66 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get report_sort => 'Sort';
+
+  @override
+  String get report_reportDetails => 'Report Details';
+
+  @override
+  String get report_mainPhoto => 'Main Photo';
+
+  @override
+  String get report_noIssueTypes => 'No issue types selected';
+
+  @override
+  String get report_coordinates => 'Coordinates';
+
+  @override
+  String get report_severity => 'Severity';
+
+  @override
+  String get report_severityMinor => 'Minor';
+
+  @override
+  String get report_severityLow => 'Low';
+
+  @override
+  String get report_severityModerate => 'Moderate';
+
+  @override
+  String get report_severityHigh => 'High';
+
+  @override
+  String get report_severityCritical => 'Critical';
+
+  @override
+  String get report_verify => 'Verify';
+
+  @override
+  String get report_verifyReport => 'Verify Report';
+
+  @override
+  String get report_verifyReportMessage =>
+      'Are you sure you want to verify this report as legitimate?';
+
+  @override
+  String get report_verifySuccess => 'Report verified successfully';
+
+  @override
+  String get report_verifyFailed => 'Failed to verify report';
+
+  @override
+  String get report_markSpam => 'Mark as Spam';
+
+  @override
+  String get report_markAsSpam => 'Mark as Spam';
+
+  @override
+  String get report_markAsSpamMessage =>
+      'Are you sure you want to mark this report as spam? This action cannot be undone.';
+
+  @override
+  String get report_spamSuccess => 'Report marked as spam';
+
+  @override
+  String get report_spamFailed => 'Failed to mark report as spam';
 }

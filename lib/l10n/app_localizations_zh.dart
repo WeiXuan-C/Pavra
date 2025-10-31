@@ -1476,4 +1476,64 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get report_sort => '排序';
+
+  @override
+  String get report_reportDetails => '报告详情';
+
+  @override
+  String get report_mainPhoto => '主要照片';
+
+  @override
+  String get report_noIssueTypes => '未选择问题类型';
+
+  @override
+  String get report_coordinates => '坐标';
+
+  @override
+  String get report_severity => '严重程度';
+
+  @override
+  String get report_severityMinor => '轻微';
+
+  @override
+  String get report_severityLow => '低';
+
+  @override
+  String get report_severityModerate => '中等';
+
+  @override
+  String get report_severityHigh => '高';
+
+  @override
+  String get report_severityCritical => '严重';
+
+  @override
+  String get report_verify => '验证';
+
+  @override
+  String get report_verifyReport => '验证报告';
+
+  @override
+  String get report_verifyReportMessage => '您确定要验证此报告为合法吗？';
+
+  @override
+  String get report_verifySuccess => '报告验证成功';
+
+  @override
+  String get report_verifyFailed => '验证报告失败';
+
+  @override
+  String get report_markSpam => '标记为垃圾';
+
+  @override
+  String get report_markAsSpam => '标记为垃圾';
+
+  @override
+  String get report_markAsSpamMessage => '您确定要将此报告标记为垃圾吗？此操作无法撤消。';
+
+  @override
+  String get report_spamSuccess => '报告已标记为垃圾';
+
+  @override
+  String get report_spamFailed => '标记报告为垃圾失败';
 }

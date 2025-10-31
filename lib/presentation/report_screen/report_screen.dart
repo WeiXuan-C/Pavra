@@ -12,6 +12,7 @@ import '../camera_detection_screen/camera_detection_screen.dart';
 import '../layouts/header_layout.dart';
 import '../issue_types_screen/issue_types_screen.dart';
 import '../report_submission_screen/manual_report_screen.dart';
+import '../report_detail_screen/report_detail_screen.dart';
 import './widgets/report_list_tab.dart';
 import './widgets/report_home_skeleton.dart';
 
@@ -542,7 +543,16 @@ class _ReportScreenState extends State<ReportScreen> {
 
     return InkWell(
       onTap: () {
-        // Navigator.pushNamed(context, '/report-detail', arguments: report);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ReportDetailScreen(report: report),
+          ),
+        ).then((result) {
+          if (result == true) {
+            _loadData();
+          }
+        });
       },
       borderRadius: BorderRadius.circular(12),
       child: Container(
@@ -659,7 +669,16 @@ class _ReportScreenState extends State<ReportScreen> {
     return ReportListTab(
       filterType: ReportFilterType.myReports,
       onReportTap: (report) {
-        // Navigator.pushNamed(context, '/report-detail', arguments: report);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ReportDetailScreen(report: report),
+          ),
+        ).then((result) {
+          if (result == true) {
+            _loadData();
+          }
+        });
       },
     );
   }
@@ -668,7 +687,16 @@ class _ReportScreenState extends State<ReportScreen> {
     return ReportListTab(
       filterType: ReportFilterType.allReports,
       onReportTap: (report) {
-        // Navigator.pushNamed(context, '/report-detail', arguments: report);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ReportDetailScreen(report: report),
+          ),
+        ).then((result) {
+          if (result == true) {
+            _loadData();
+          }
+        });
       },
     );
   }

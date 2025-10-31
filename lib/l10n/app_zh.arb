@@ -1968,5 +1968,85 @@
   "report_sort": "排序",
   "@report_sort": {
     "description": "排序按钮标签"
+  },
+  "report_reportDetails": "报告详情",
+  "@report_reportDetails": {
+    "description": "报告详情屏幕标题"
+  },
+  "report_mainPhoto": "主要照片",
+  "@report_mainPhoto": {
+    "description": "主要照片部分标签"
+  },
+  "report_noIssueTypes": "未选择问题类型",
+  "@report_noIssueTypes": {
+    "description": "无问题类型消息"
+  },
+  "report_coordinates": "坐标",
+  "@report_coordinates": {
+    "description": "坐标标签"
+  },
+  "report_severity": "严重程度",
+  "@report_severity": {
+    "description": "严重程度标签"
+  },
+  "report_severityMinor": "轻微",
+  "@report_severityMinor": {
+    "description": "轻微严重程度"
+  },
+  "report_severityLow": "低",
+  "@report_severityLow": {
+    "description": "低严重程度"
+  },
+  "report_severityModerate": "中等",
+  "@report_severityModerate": {
+    "description": "中等严重程度"
+  },
+  "report_severityHigh": "高",
+  "@report_severityHigh": {
+    "description": "高严重程度"
+  },
+  "report_severityCritical": "严重",
+  "@report_severityCritical": {
+    "description": "严重程度"
+  },
+  "report_verify": "验证",
+  "@report_verify": {
+    "description": "验证按钮文本"
+  },
+  "report_verifyReport": "验证报告",
+  "@report_verifyReport": {
+    "description": "验证报告对话框标题"
+  },
+  "report_verifyReportMessage": "您确定要验证此报告为合法吗？",
+  "@report_verifyReportMessage": {
+    "description": "验证报告确认消息"
+  },
+  "report_verifySuccess": "报告验证成功",
+  "@report_verifySuccess": {
+    "description": "报告验证成功消息"
+  },
+  "report_verifyFailed": "验证报告失败",
+  "@report_verifyFailed": {
+    "description": "报告验证失败消息"
+  },
+  "report_markSpam": "标记为垃圾",
+  "@report_markSpam": {
+    "description": "标记为垃圾按钮文本"
+  },
+  "report_markAsSpam": "标记为垃圾",
+  "@report_markAsSpam": {
+    "description": "标记为垃圾对话框标题"
+  },
+  "report_markAsSpamMessage": "您确定要将此报告标记为垃圾吗？此操作无法撤消。",
+  "@report_markAsSpamMessage": {
+    "description": "标记为垃圾确认消息"
+  },
+  "report_spamSuccess": "报告已标记为垃圾",
+  "@report_spamSuccess": {
+    "description": "报告标记为垃圾成功消息"
+  },
+  "report_spamFailed": "标记报告为垃圾失败",
+  "@report_spamFailed": {
+    "description": "报告垃圾标记失败消息"
   }
 }

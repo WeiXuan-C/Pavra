@@ -3013,6 +3013,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sort'**
   String get report_sort;
+
+  /// Report details screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Report Details'**
+  String get report_reportDetails;
+
+  /// Main photo section label
+  ///
+  /// In en, this message translates to:
+  /// **'Main Photo'**
+  String get report_mainPhoto;
+
+  /// No issue types message
+  ///
+  /// In en, this message translates to:
+  /// **'No issue types selected'**
+  String get report_noIssueTypes;
+
+  /// Coordinates label
+  ///
+  /// In en, this message translates to:
+  /// **'Coordinates'**
+  String get report_coordinates;
+
+  /// Severity label
+  ///
+  /// In en, this message translates to:
+  /// **'Severity'**
+  String get report_severity;
+
+  /// Minor severity level
+  ///
+  /// In en, this message translates to:
+  /// **'Minor'**
+  String get report_severityMinor;
+
+  /// Low severity level
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get report_severityLow;
+
+  /// Moderate severity level
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get report_severityModerate;
+
+  /// High severity level
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get report_severityHigh;
+
+  /// Critical severity level
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get report_severityCritical;
+
+  /// Verify button text
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get report_verify;
+
+  /// Verify report dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Report'**
+  String get report_verifyReport;
+
+  /// Verify report confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to verify this report as legitimate?'**
+  String get report_verifyReportMessage;
+
+  /// Report verified success message
+  ///
+  /// In en, this message translates to:
+  /// **'Report verified successfully'**
+  String get report_verifySuccess;
+
+  /// Report verify failed message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to verify report'**
+  String get report_verifyFailed;
+
+  /// Mark as spam button text
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Spam'**
+  String get report_markSpam;
+
+  /// Mark as spam dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Spam'**
+  String get report_markAsSpam;
+
+  /// Mark as spam confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to mark this report as spam? This action cannot be undone.'**
+  String get report_markAsSpamMessage;
+
+  /// Report marked as spam success message
+  ///
+  /// In en, this message translates to:
+  /// **'Report marked as spam'**
+  String get report_spamSuccess;
+
+  /// Report spam failed message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to mark report as spam'**
+  String get report_spamFailed;
 }
 
 class _AppLocalizationsDelegate

@@ -1968,5 +1968,85 @@
   "report_sort": "Sort",
   "@report_sort": {
     "description": "Sort button label"
+  },
+  "report_reportDetails": "Report Details",
+  "@report_reportDetails": {
+    "description": "Report details screen title"
+  },
+  "report_mainPhoto": "Main Photo",
+  "@report_mainPhoto": {
+    "description": "Main photo section label"
+  },
+  "report_noIssueTypes": "No issue types selected",
+  "@report_noIssueTypes": {
+    "description": "No issue types message"
+  },
+  "report_coordinates": "Coordinates",
+  "@report_coordinates": {
+    "description": "Coordinates label"
+  },
+  "report_severity": "Severity",
+  "@report_severity": {
+    "description": "Severity label"
+  },
+  "report_severityMinor": "Minor",
+  "@report_severityMinor": {
+    "description": "Minor severity level"
+  },
+  "report_severityLow": "Low",
+  "@report_severityLow": {
+    "description": "Low severity level"
+  },
+  "report_severityModerate": "Moderate",
+  "@report_severityModerate": {
+    "description": "Moderate severity level"
+  },
+  "report_severityHigh": "High",
+  "@report_severityHigh": {
+    "description": "High severity level"
+  },
+  "report_severityCritical": "Critical",
+  "@report_severityCritical": {
+    "description": "Critical severity level"
+  },
+  "report_verify": "Verify",
+  "@report_verify": {
+    "description": "Verify button text"
+  },
+  "report_verifyReport": "Verify Report",
+  "@report_verifyReport": {
+    "description": "Verify report dialog title"
+  },
+  "report_verifyReportMessage": "Are you sure you want to verify this report as legitimate?",
+  "@report_verifyReportMessage": {
+    "description": "Verify report confirmation message"
+  },
+  "report_verifySuccess": "Report verified successfully",
+  "@report_verifySuccess": {
+    "description": "Report verified success message"
+  },
+  "report_verifyFailed": "Failed to verify report",
+  "@report_verifyFailed": {
+    "description": "Report verify failed message"
+  },
+  "report_markSpam": "Mark as Spam",
+  "@report_markSpam": {
+    "description": "Mark as spam button text"
+  },
+  "report_markAsSpam": "Mark as Spam",
+  "@report_markAsSpam": {
+    "description": "Mark as spam dialog title"
+  },
+  "report_markAsSpamMessage": "Are you sure you want to mark this report as spam? This action cannot be undone.",
+  "@report_markAsSpamMessage": {
+    "description": "Mark as spam confirmation message"
+  },
+  "report_spamSuccess": "Report marked as spam",
+  "@report_spamSuccess": {
+    "description": "Report marked as spam success message"
+  },
+  "report_spamFailed": "Failed to mark report as spam",
+  "@report_spamFailed": {
+    "description": "Report spam failed message"
   }
 }
