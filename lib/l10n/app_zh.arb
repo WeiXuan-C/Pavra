@@ -1136,6 +1136,71 @@
   "@profile_reputation": {
     "description": "声誉标签"
   },
+  "profile_statisticsAnalysis": "统计分析",
+  "@profile_statisticsAnalysis": {
+    "description": "统计分析部分标题"
+  },
+  "profile_generateAnalysis": "生成分析",
+  "@profile_generateAnalysis": {
+    "description": "生成分析按钮文本"
+  },
+  "profile_generating": "生成中...",
+  "@profile_generating": {
+    "description": "生成状态消息"
+  },
+  "profile_analysisError": "生成分析失败，请重试。",
+  "@profile_analysisError": {
+    "description": "分析错误消息"
+  },
+  "profile_validReports": "有效报告",
+  "@profile_validReports": {
+    "description": "有效报告计数标签"
+  },
+  "profile_insights": "洞察",
+  "@profile_insights": {
+    "description": "洞察部分标题"
+  },
+  "profile_insightReports": "您已提交 {count} 份有效报告以改善道路安全。",
+  "@profile_insightReports": {
+    "description": "关于报告计数的洞察",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profile_insightReputationHigh": "您的声誉分数非常出色！继续保持！",
+  "@profile_insightReputationHigh": {
+    "description": "高声誉洞察"
+  },
+  "profile_insightReputationMedium": "您正在社区中建立良好的声誉。",
+  "@profile_insightReputationMedium": {
+    "description": "中等声誉洞察"
+  },
+  "profile_insightReputationLow": "提交更多报告以提高您的声誉分数。",
+  "@profile_insightReputationLow": {
+    "description": "低声誉洞察"
+  },
+  "profile_contributionExcellent": "您是道路安全的杰出贡献者！",
+  "@profile_contributionExcellent": {
+    "description": "优秀贡献级别"
+  },
+  "profile_contributionGood": "您是社区的宝贵贡献者。",
+  "@profile_contributionGood": {
+    "description": "良好贡献级别"
+  },
+  "profile_contributionActive": "您是社区的活跃成员。",
+  "@profile_contributionActive": {
+    "description": "活跃贡献级别"
+  },
+  "profile_contributionBeginner": "开始报告问题以为道路安全做出贡献。",
+  "@profile_contributionBeginner": {
+    "description": "初学者贡献级别"
+  },
+  "profile_refreshAnalysis": "刷新分析",
+  "@profile_refreshAnalysis": {
+    "description": "刷新分析按钮文本"
+  },
   "alerts_miles": "英里",
   "@alerts_miles": {
     "description": "英里单位（复数）"

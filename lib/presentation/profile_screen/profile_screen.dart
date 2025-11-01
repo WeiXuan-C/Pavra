@@ -1,11 +1,16 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/providers/auth_provider.dart';
 import '../../core/providers/locale_provider.dart';
 import '../../core/providers/theme_provider.dart';
+import '../../core/supabase/storage_service.dart';
 import '../layouts/header_layout.dart';
+import 'widgets/edit_profile_dialog.dart';
+import 'widgets/statistics_analysis_widget.dart';
 
 /// Profile Screen
 /// Displays user profile information and app settings
@@ -19,6 +24,10 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool _isAccountInfoExpanded = true;
+  final _imagePicker = ImagePicker();
+  bool _isUploading = false;
+
   @override
   void initState() {
     super.initState();
@@ -109,44 +118,109 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     padding: const EdgeInsets.all(24.0),
                     child: Column(
                       children: [
-                        // Avatar
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundColor:
-                              Theme.of(context).brightness == Brightness.dark
-                              ? Theme.of(context).colorScheme.primaryContainer
-                              : Theme.of(
+                        // Avatar with edit button
+                        Stack(
+                          children: [
+                            CircleAvatar(
+                              radius: 50,
+                              backgroundColor:
+                                  Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Theme.of(
+                                      context,
+                                    ).colorScheme.primaryContainer
+                                  : Theme.of(context).colorScheme.primary
+                                        .withValues(alpha: 0.1),
+                              backgroundImage:
+                                  profile.avatarUrl != null &&
+                                      profile.avatarUrl!.isNotEmpty
+                                  ? CachedNetworkImageProvider(
+                                      profile.avatarUrl!,
+                                    )
+                                  : null,
+                              child:
+                                  profile.avatarUrl == null ||
+                                      profile.avatarUrl!.isEmpty
+                                  ? Icon(
+                                      Icons.person,
+                                      size: 50,
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Theme.of(
+                                              context,
+                                            ).colorScheme.onPrimaryContainer
+                                          : Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
+                                    )
+                                  : null,
+                            ),
+                            if (_isUploading)
+                              Positioned.fill(
+                                child: CircleAvatar(
+                                  radius: 50,
+                                  backgroundColor: Colors.black54,
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Theme.of(
                                   context,
-                                ).colorScheme.primary.withValues(alpha: 0.1),
-                          backgroundImage:
-                              profile.avatarUrl != null &&
-                                  profile.avatarUrl!.isNotEmpty
-                              ? CachedNetworkImageProvider(profile.avatarUrl!)
-                              : null,
-                          child:
-                              profile.avatarUrl == null ||
-                                  profile.avatarUrl!.isEmpty
-                              ? Icon(
-                                  Icons.person,
-                                  size: 50,
-                                  color:
-                                      Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Theme.of(
-                                          context,
-                                        ).colorScheme.onPrimaryContainer
-                                      : Theme.of(context).colorScheme.primary,
-                                )
-                              : null,
+                                ).colorScheme.primary,
+                                child: IconButton(
+                                  icon: const Icon(Icons.camera_alt, size: 16),
+                                  color: Colors.white,
+                                  padding: EdgeInsets.zero,
+                                  onPressed: _isUploading
+                                      ? null
+                                      : () => _changeAvatar(authProvider),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
 
                         const SizedBox(height: 16),
 
-                        // Username
-                        Text(
-                          profile.username,
-                          style: Theme.of(context).textTheme.headlineSmall
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                        // Username with edit button
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                profile.username,
+                                style: Theme.of(context).textTheme.headlineSmall
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: profile.username.length > 15
+                                          ? 20
+                                          : profile.username.length > 12
+                                          ? 22
+                                          : 24,
+                                    ),
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.edit, size: 18),
+                              onPressed: () =>
+                                  _editUsername(authProvider, profile.username),
+                              tooltip: 'Edit username',
+                              padding: const EdgeInsets.all(4),
+                              constraints: const BoxConstraints(
+                                minWidth: 32,
+                                minHeight: 32,
+                              ),
+                            ),
+                          ],
                         ),
 
                         const SizedBox(height: 8),
@@ -157,31 +231,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: Colors.grey[600]),
                         ),
-
-                        const SizedBox(height: 16),
-
-                        // User ID
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                ? Theme.of(
-                                    context,
-                                  ).colorScheme.surfaceContainerHighest
-                                : Colors.grey[200],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            '${l10n.home_userId}: ${user.id}',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(fontFamily: 'monospace'),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -189,98 +238,90 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 const SizedBox(height: 24),
 
-                // Account Info Section
+                // Account Info Section (Collapsible)
                 Card(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.home_accountInfo,
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                  child: Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            _isAccountInfoExpanded = !_isAccountInfoExpanded;
+                          });
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.account_circle_outlined,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  l10n.home_accountInfo,
+                                  style: Theme.of(context).textTheme.titleMedium
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Icon(
+                                _isAccountInfoExpanded
+                                    ? Icons.expand_less
+                                    : Icons.expand_more,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 16),
-                        _InfoRow(
-                          icon: Icons.person_outline,
-                          label: l10n.profile_username,
-                          value: profile.username,
+                      ),
+                      AnimatedCrossFade(
+                        firstChild: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            16.0,
+                            0,
+                            16.0,
+                            16.0,
+                          ),
+                          child: Column(
+                            children: [
+                              const Divider(height: 8),
+                              const SizedBox(height: 8),
+                              _InfoRow(
+                                icon: Icons.fingerprint,
+                                label: l10n.home_userId,
+                                value: user.id,
+                              ),
+                              const Divider(height: 24),
+                              _RoleRow(role: profile.role),
+                              const Divider(height: 24),
+                              _InfoRow(
+                                icon: Icons.update,
+                                label: l10n.home_lastUpdated,
+                                value: _formatDate(profile.updatedAt),
+                              ),
+                            ],
+                          ),
                         ),
-                        const Divider(height: 24),
-                        _InfoRow(
-                          icon: Icons.email_outlined,
-                          label: l10n.home_email,
-                          value: user.email ?? 'N/A',
-                        ),
-                        const Divider(height: 24),
-                        _RoleRow(role: profile.role),
-                        const Divider(height: 24),
-                        _InfoRow(
-                          icon: Icons.language,
-                          label: l10n.profile_language,
-                          value: _getLanguageName(profile.language),
-                        ),
-                        const Divider(height: 24),
-                        _InfoRow(
-                          icon: Icons.update,
-                          label: l10n.home_lastUpdated,
-                          value: _formatDate(profile.updatedAt),
-                        ),
-                      ],
-                    ),
+                        secondChild: const SizedBox.shrink(),
+                        crossFadeState: _isAccountInfoExpanded
+                            ? CrossFadeState.showFirst
+                            : CrossFadeState.showSecond,
+                        duration: const Duration(milliseconds: 300),
+                      ),
+                    ],
                   ),
                 ),
 
                 const SizedBox(height: 24),
 
-                // Statistics Section (if user has reports)
-                if (profile.reportsCount > 0)
-                  Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.profile_statistics,
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _StatCard(
-                                  icon: Icons.report_outlined,
-                                  label: l10n.profile_totalReports,
-                                  value: profile.reportsCount.toString(),
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: _StatCard(
-                                  icon: Icons.star_outline,
-                                  label: l10n.profile_reputation,
-                                  value: profile.reputationScore.toString(),
-                                  color: Colors.orange,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                // Statistics Analysis Section
+                const StatisticsAnalysisWidget(),
 
                 const SizedBox(height: 24),
 
@@ -347,15 +388,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
-  /// Get language display name
-  String _getLanguageName(String languageCode) {
-    switch (languageCode) {
-      case 'en':
-        return 'English';
-      case 'zh':
-        return '中文';
-      default:
-        return languageCode;
+  /// Edit username
+  Future<void> _editUsername(
+    AuthProvider authProvider,
+    String currentUsername,
+  ) async {
+    await showDialog(
+      context: context,
+      builder: (dialogContext) => EditProfileDialog(
+        currentUsername: currentUsername,
+        currentUserId: authProvider.user!.id,
+        onSave: (newUsername) async {
+          try {
+            await authProvider.updateProfile(username: newUsername);
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Username updated successfully')),
+            );
+          } catch (e) {
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to update username: $e')),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  /// Change avatar
+  Future<void> _changeAvatar(AuthProvider authProvider) async {
+    final source = await showDialog<ImageSource>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Choose Avatar Source'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Gallery'),
+              onTap: () => Navigator.pop(dialogContext, ImageSource.gallery),
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Camera'),
+              onTap: () => Navigator.pop(dialogContext, ImageSource.camera),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (source == null) return;
+
+    try {
+      final pickedFile = await _imagePicker.pickImage(
+        source: source,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 85,
+      );
+
+      if (pickedFile == null) return;
+
+      if (!mounted) return;
+      setState(() => _isUploading = true);
+
+      // Upload to Supabase storage
+      final userId = authProvider.user!.id;
+      final fileName = 'avatar_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final filePath = '$userId/$fileName';
+
+      final file = File(pickedFile.path);
+      final bytes = await file.readAsBytes();
+
+      final avatarUrl = await StorageService().uploadAvatar(
+        filePath: filePath,
+        fileBytes: bytes,
+      );
+
+      // Update profile with new avatar URL
+      await authProvider.updateProfile(avatarUrl: avatarUrl);
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Avatar updated successfully')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to update avatar: $e')));
+    } finally {
+      if (mounted) {
+        setState(() => _isUploading = false);
+      }
     }
   }
 }
@@ -484,54 +612,5 @@ class _RoleRow extends StatelessWidget {
           'color': Colors.green,
         };
     }
-  }
-}
-
-/// Statistics Card Widget
-class _StatCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
-
-  const _StatCard({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, size: 32, color: color),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
   }
 }

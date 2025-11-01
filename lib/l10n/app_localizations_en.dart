@@ -836,6 +836,61 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profile_reputation => 'Reputation';
 
   @override
+  String get profile_statisticsAnalysis => 'Statistics Analysis';
+
+  @override
+  String get profile_generateAnalysis => 'Generate Analysis';
+
+  @override
+  String get profile_generating => 'Generating...';
+
+  @override
+  String get profile_analysisError =>
+      'Failed to generate analysis. Please try again.';
+
+  @override
+  String get profile_validReports => 'Valid Reports';
+
+  @override
+  String get profile_insights => 'Insights';
+
+  @override
+  String profile_insightReports(int count) {
+    return 'You have submitted $count valid reports to improve road safety.';
+  }
+
+  @override
+  String get profile_insightReputationHigh =>
+      'Your reputation score is excellent! Keep up the great work.';
+
+  @override
+  String get profile_insightReputationMedium =>
+      'You\'re building a good reputation in the community.';
+
+  @override
+  String get profile_insightReputationLow =>
+      'Submit more reports to increase your reputation score.';
+
+  @override
+  String get profile_contributionExcellent =>
+      'You\'re an excellent contributor to road safety!';
+
+  @override
+  String get profile_contributionGood =>
+      'You\'re a valuable contributor to the community.';
+
+  @override
+  String get profile_contributionActive =>
+      'You\'re an active member of the community.';
+
+  @override
+  String get profile_contributionBeginner =>
+      'Start reporting issues to contribute to road safety.';
+
+  @override
+  String get profile_refreshAnalysis => 'Refresh Analysis';
+
+  @override
   String get settings_roadDamageDesc =>
       'Potholes, cracks, and road surface issues';
 

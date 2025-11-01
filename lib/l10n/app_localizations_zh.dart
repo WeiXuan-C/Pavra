@@ -819,6 +819,53 @@ class AppLocalizationsZh extends AppLocalizations {
   String get profile_reputation => '声誉';
 
   @override
+  String get profile_statisticsAnalysis => '统计分析';
+
+  @override
+  String get profile_generateAnalysis => '生成分析';
+
+  @override
+  String get profile_generating => '生成中...';
+
+  @override
+  String get profile_analysisError => '生成分析失败，请重试。';
+
+  @override
+  String get profile_validReports => '有效报告';
+
+  @override
+  String get profile_insights => '洞察';
+
+  @override
+  String profile_insightReports(int count) {
+    return '您已提交 $count 份有效报告以改善道路安全。';
+  }
+
+  @override
+  String get profile_insightReputationHigh => '您的声誉分数非常出色！继续保持！';
+
+  @override
+  String get profile_insightReputationMedium => '您正在社区中建立良好的声誉。';
+
+  @override
+  String get profile_insightReputationLow => '提交更多报告以提高您的声誉分数。';
+
+  @override
+  String get profile_contributionExcellent => '您是道路安全的杰出贡献者！';
+
+  @override
+  String get profile_contributionGood => '您是社区的宝贵贡献者。';
+
+  @override
+  String get profile_contributionActive => '您是社区的活跃成员。';
+
+  @override
+  String get profile_contributionBeginner => '开始报告问题以为道路安全做出贡献。';
+
+  @override
+  String get profile_refreshAnalysis => '刷新分析';
+
+  @override
   String get settings_roadDamageDesc => '坑洞、裂缝和路面问题';
 
   @override

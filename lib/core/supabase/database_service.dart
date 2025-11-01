@@ -205,4 +205,19 @@ class DatabaseService {
         .select(columns)
         .textSearch(column, searchTerm);
   }
+
+  /// Check if username is available
+  Future<bool> isUsernameAvailable(String username) async {
+    try {
+      final response = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('username', username)
+          .maybeSingle();
+
+      return response == null;
+    } catch (e) {
+      throw Exception('Failed to check username availability: $e');
+    }
+  }
 }

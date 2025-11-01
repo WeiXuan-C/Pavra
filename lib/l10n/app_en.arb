@@ -1088,6 +1088,71 @@
   "@profile_reputation": {
     "description": "Reputation label"
   },
+  "profile_statisticsAnalysis": "Statistics Analysis",
+  "@profile_statisticsAnalysis": {
+    "description": "Statistics analysis section title"
+  },
+  "profile_generateAnalysis": "Generate Analysis",
+  "@profile_generateAnalysis": {
+    "description": "Generate analysis button text"
+  },
+  "profile_generating": "Generating...",
+  "@profile_generating": {
+    "description": "Generating status message"
+  },
+  "profile_analysisError": "Failed to generate analysis. Please try again.",
+  "@profile_analysisError": {
+    "description": "Analysis error message"
+  },
+  "profile_validReports": "Valid Reports",
+  "@profile_validReports": {
+    "description": "Valid reports count label"
+  },
+  "profile_insights": "Insights",
+  "@profile_insights": {
+    "description": "Insights section title"
+  },
+  "profile_insightReports": "You have submitted {count} valid reports to improve road safety.",
+  "@profile_insightReports": {
+    "description": "Insight about reports count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profile_insightReputationHigh": "Your reputation score is excellent! Keep up the great work.",
+  "@profile_insightReputationHigh": {
+    "description": "High reputation insight"
+  },
+  "profile_insightReputationMedium": "You're building a good reputation in the community.",
+  "@profile_insightReputationMedium": {
+    "description": "Medium reputation insight"
+  },
+  "profile_insightReputationLow": "Submit more reports to increase your reputation score.",
+  "@profile_insightReputationLow": {
+    "description": "Low reputation insight"
+  },
+  "profile_contributionExcellent": "You're an excellent contributor to road safety!",
+  "@profile_contributionExcellent": {
+    "description": "Excellent contribution level"
+  },
+  "profile_contributionGood": "You're a valuable contributor to the community.",
+  "@profile_contributionGood": {
+    "description": "Good contribution level"
+  },
+  "profile_contributionActive": "You're an active member of the community.",
+  "@profile_contributionActive": {
+    "description": "Active contribution level"
+  },
+  "profile_contributionBeginner": "Start reporting issues to contribute to road safety.",
+  "@profile_contributionBeginner": {
+    "description": "Beginner contribution level"
+  },
+  "profile_refreshAnalysis": "Refresh Analysis",
+  "@profile_refreshAnalysis": {
+    "description": "Refresh analysis button text"
+  },
   "settings_roadDamageDesc": "Potholes, cracks, and road surface issues",
   "@settings_roadDamageDesc": {
     "description": "Road damage description"

@@ -1700,6 +1700,96 @@ abstract class AppLocalizations {
   /// **'Reputation'**
   String get profile_reputation;
 
+  /// Statistics analysis section title
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics Analysis'**
+  String get profile_statisticsAnalysis;
+
+  /// Generate analysis button text
+  ///
+  /// In en, this message translates to:
+  /// **'Generate Analysis'**
+  String get profile_generateAnalysis;
+
+  /// Generating status message
+  ///
+  /// In en, this message translates to:
+  /// **'Generating...'**
+  String get profile_generating;
+
+  /// Analysis error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to generate analysis. Please try again.'**
+  String get profile_analysisError;
+
+  /// Valid reports count label
+  ///
+  /// In en, this message translates to:
+  /// **'Valid Reports'**
+  String get profile_validReports;
+
+  /// Insights section title
+  ///
+  /// In en, this message translates to:
+  /// **'Insights'**
+  String get profile_insights;
+
+  /// Insight about reports count
+  ///
+  /// In en, this message translates to:
+  /// **'You have submitted {count} valid reports to improve road safety.'**
+  String profile_insightReports(int count);
+
+  /// High reputation insight
+  ///
+  /// In en, this message translates to:
+  /// **'Your reputation score is excellent! Keep up the great work.'**
+  String get profile_insightReputationHigh;
+
+  /// Medium reputation insight
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re building a good reputation in the community.'**
+  String get profile_insightReputationMedium;
+
+  /// Low reputation insight
+  ///
+  /// In en, this message translates to:
+  /// **'Submit more reports to increase your reputation score.'**
+  String get profile_insightReputationLow;
+
+  /// Excellent contribution level
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re an excellent contributor to road safety!'**
+  String get profile_contributionExcellent;
+
+  /// Good contribution level
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re a valuable contributor to the community.'**
+  String get profile_contributionGood;
+
+  /// Active contribution level
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re an active member of the community.'**
+  String get profile_contributionActive;
+
+  /// Beginner contribution level
+  ///
+  /// In en, this message translates to:
+  /// **'Start reporting issues to contribute to road safety.'**
+  String get profile_contributionBeginner;
+
+  /// Refresh analysis button text
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Analysis'**
+  String get profile_refreshAnalysis;
+
   /// Road damage description
   ///
   /// In en, this message translates to:

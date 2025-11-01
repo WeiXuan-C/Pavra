@@ -15,6 +15,7 @@ class StorageService {
 
   // Bucket names
   static const String issuePhotosBucket = 'issue-photos';
+  static const String profileAvatarBucket = 'profile-photos';
 
   /// Upload file to storage
   Future<String> uploadFile({
@@ -199,6 +200,66 @@ class StorageService {
       await storage.from(issuePhotosBucket).remove(paths);
     } catch (e) {
       throw Exception('Failed to delete issue photos: $e');
+    }
+  }
+
+  // ========== Profile Avatar Specific Methods ==========
+
+  /// Ensure the profile-photos bucket exists
+  /// Creates it if it doesn't exist
+  Future<void> ensureProfileAvatarBucketExists() async {
+    try {
+      await getBucket(profileAvatarBucket);
+    } catch (e) {
+      // Bucket doesn't exist, create it
+      try {
+        await createBucket(id: profileAvatarBucket, public: true);
+      } catch (createError) {
+        // Ignore if bucket already exists (race condition)
+        if (!createError.toString().contains('already exists')) {
+          rethrow;
+        }
+      }
+    }
+  }
+
+  /// Upload profile avatar to storage
+  /// Returns the public URL of the uploaded avatar
+  Future<String> uploadAvatar({
+    required String filePath,
+    required Uint8List fileBytes,
+  }) async {
+    await storage
+        .from(profileAvatarBucket)
+        .uploadBinary(
+          filePath,
+          fileBytes,
+          fileOptions: const FileOptions(
+            contentType: 'image/jpeg',
+            upsert: true,
+          ),
+        );
+
+    return getPublicUrl(bucket: profileAvatarBucket, path: filePath);
+  }
+
+  /// Delete profile avatar from storage
+  Future<void> deleteAvatar(String avatarUrl) async {
+    try {
+      // Extract path from URL
+      final uri = Uri.parse(avatarUrl);
+      final pathSegments = uri.pathSegments;
+
+      // Find 'profile-photos' in path and get everything after it
+      final bucketIndex = pathSegments.indexOf(profileAvatarBucket);
+      if (bucketIndex == -1 || bucketIndex >= pathSegments.length - 1) {
+        throw Exception('Invalid avatar URL format');
+      }
+
+      final path = pathSegments.sublist(bucketIndex + 1).join('/');
+      await storage.from(profileAvatarBucket).remove([path]);
+    } catch (e) {
+      throw Exception('Failed to delete avatar from storage: $e');
     }
   }
 }
