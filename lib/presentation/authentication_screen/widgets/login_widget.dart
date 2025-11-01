@@ -1,7 +1,6 @@
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../core/providers/auth_provider.dart';
 
@@ -116,12 +115,26 @@ class _LoginWidgetState extends State<LoginWidget> {
   }
 
   /// Handle social login
-  Future<void> _handleSocialLogin(OAuthProvider provider) async {
+  Future<void> _handleSocialLogin(String provider) async {
     if (!mounted) return;
     setState(() => _isProcessing = true);
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final success = await authProvider.socialSignIn(provider);
+
+    bool success;
+    switch (provider) {
+      case 'google':
+        success = await authProvider.signInWithGoogle();
+        break;
+      case 'github':
+        success = await authProvider.signInWithGithub();
+        break;
+      case 'discord':
+        success = await authProvider.signInWithDiscord();
+        break;
+      default:
+        success = false;
+    }
 
     // Critical: Check mounted immediately after async call
     if (!mounted) return;
@@ -257,7 +270,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               color: Colors.red,
               onPressed: _isProcessing
                   ? null
-                  : () => _handleSocialLogin(OAuthProvider.google),
+                  : () => _handleSocialLogin('google'),
             ),
 
             const SizedBox(height: 12),
@@ -268,7 +281,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               color: Colors.green,
               onPressed: _isProcessing
                   ? null
-                  : () => _handleSocialLogin(OAuthProvider.github),
+                  : () => _handleSocialLogin('github'),
             ),
 
             const SizedBox(height: 12),
@@ -279,7 +292,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               color: Colors.blue,
               onPressed: _isProcessing
                   ? null
-                  : () => _handleSocialLogin(OAuthProvider.discord),
+                  : () => _handleSocialLogin('discord'),
             ),
 
             const SizedBox(height: 24),

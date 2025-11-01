@@ -21,6 +21,9 @@ class AuthService {
   // User Repository for profile operations
   final _userRepository = UserRepository();
 
+  // Quick access to Supabase client (for internal use only)
+  SupabaseClient get supabaseClient => supabase;
+
   // Quick access to auth client
   GoTrueClient get auth => supabase.auth;
 

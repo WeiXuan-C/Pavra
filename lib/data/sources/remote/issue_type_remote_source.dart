@@ -1,14 +1,16 @@
+import 'package:supabase_flutter/supabase_flutter.dart' show SupabaseClient;
 import '../../../core/supabase/database_service.dart';
-import '../../../core/supabase/supabase_client.dart';
 import '../../models/issue_type_model.dart';
 
 /// Remote data source for issue types
 /// Uses DatabaseService for all CRUD operations
 /// RLS policies ensure proper access control
+/// Note: Receives SupabaseClient via dependency injection from API layer
 class IssueTypeRemoteSource {
   final DatabaseService _db;
+  final SupabaseClient _supabase;
 
-  IssueTypeRemoteSource() : _db = DatabaseService();
+  IssueTypeRemoteSource(this._supabase) : _db = DatabaseService();
 
   /// Fetch all issue types (所有用户可访问)
   Future<List<IssueTypeModel>> fetchIssueTypes() async {
@@ -41,7 +43,7 @@ class IssueTypeRemoteSource {
     String? description,
     String? iconUrl,
   }) async {
-    final userId = supabase.auth.currentUser?.id;
+    final userId = _supabase.auth.currentUser?.id;
     if (userId == null) throw Exception('User not authenticated');
 
     final data = {
@@ -87,5 +89,20 @@ class IssueTypeRemoteSource {
         .from('issue_types')
         .update({'is_deleted': true, 'deleted_at': now, 'updated_at': now})
         .eq('id', id);
+  }
+
+  /// Fetch issue types by IDs
+  Future<List<IssueTypeModel>> fetchIssueTypesByIds(List<String> ids) async {
+    if (ids.isEmpty) return [];
+
+    final response = await _db
+        .from('issue_types')
+        .select()
+        .inFilter('id', ids)
+        .eq('is_deleted', false);
+
+    return (response as List)
+        .map((json) => IssueTypeModel.fromJson(json))
+        .toList();
   }
 }

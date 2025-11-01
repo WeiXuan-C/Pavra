@@ -1,8 +1,10 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show SupabaseClient;
 import '../../models/report_issue_model.dart';
 import '../../models/issue_photo_model.dart';
 
 /// Remote data source for report issues
+/// Note: Only receives SupabaseClient via dependency injection from API layer
+/// Does not directly access Supabase.instance
 class ReportIssueRemoteSource {
   final SupabaseClient _supabase;
 

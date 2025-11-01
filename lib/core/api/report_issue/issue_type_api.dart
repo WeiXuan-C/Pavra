@@ -18,7 +18,7 @@ class IssueTypeApi {
   IssueTypeApi() {
     _repository = ReportIssueRepository(
       reportRemoteSource: ReportIssueRemoteSource(supabase),
-      typeRemoteSource: IssueTypeRemoteSource(),
+      typeRemoteSource: IssueTypeRemoteSource(supabase),
       voteRemoteSource: IssueVoteRemoteSource(supabase),
     );
   }

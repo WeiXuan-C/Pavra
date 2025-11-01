@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../../core/api/report_issue/report_issue_api.dart';
+import '../../core/providers/auth_provider.dart';
 import '../../data/models/report_issue_model.dart';
 import '../../data/models/issue_type_model.dart';
 import '../../data/models/issue_photo_model.dart';
@@ -28,12 +30,35 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   bool _isLoadingTypes = true;
   bool _isLoadingPhotos = true;
 
+  // Voting state
+  late final ReportIssueApi _reportApi;
+  String? _userVote; // 'verify' or 'spam' or null
+  int _verifiedVotes = 0;
+  int _spamVotes = 0;
+  bool _isLoadingVotes = true;
+
   @override
   void initState() {
     super.initState();
-    _loadIssueTypes();
-    _loadPhotos();
+    // Initialize API in didChangeDependencies where we have context
+    _verifiedVotes = widget.report.verifiedVotes;
+    _spamVotes = widget.report.spamVotes;
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      final authProvider = context.read<AuthProvider>();
+      _reportApi = ReportIssueApi(authProvider.supabaseClient);
+      _loadIssueTypes();
+      _loadPhotos();
+      _loadVotingData();
+      _isInitialized = true;
+    }
+  }
+
+  bool _isInitialized = false;
 
   Future<void> _loadIssueTypes() async {
     try {
@@ -46,16 +71,11 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         return;
       }
 
-      final response = await Supabase.instance.client
-          .from('issue_types')
-          .select()
-          .inFilter('id', widget.report.issueTypeIds);
+      final types = await _reportApi.getIssueTypesByIds(
+        widget.report.issueTypeIds,
+      );
 
       if (mounted) {
-        final types = (response as List)
-            .map((json) => IssueTypeModel.fromJson(json))
-            .toList();
-
         debugPrint('=== Loaded issue types ===');
         for (var type in types) {
           debugPrint('Type: ${type.name}, Icon URL: ${type.iconUrl}');
@@ -80,27 +100,19 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     try {
       debugPrint('=== Loading photos for report: ${widget.report.id} ===');
 
-      final response = await Supabase.instance.client
-          .from('issue_photos')
-          .select()
-          .eq('issue_id', widget.report.id)
-          .eq('is_deleted', false)
-          .order('created_at', ascending: true);
-
-      debugPrint('Photos response: $response');
-      debugPrint('Number of photos: ${(response as List).length}');
+      final photos = await _reportApi.getReportPhotos(widget.report.id);
 
       if (mounted) {
-        final photos = (response as List).map((json) {
-          final photo = IssuePhotoModel.fromJson(json);
-          // Ensure photo URL is complete
+        // Ensure photo URLs are complete
+        final processedPhotos = photos.map((photo) {
           String photoUrl = photo.photoUrl;
           if (!photoUrl.startsWith('http')) {
             // If it's a relative path, get the full URL from storage
             try {
-              photoUrl = Supabase.instance.client.storage
-                  .from('issue-photos')
-                  .getPublicUrl(photoUrl);
+              photoUrl = _reportApi.getStoragePublicUrl(
+                'issue-photos',
+                photoUrl,
+              );
               debugPrint('Converted relative path to full URL: $photoUrl');
             } catch (e) {
               debugPrint('Error converting photo URL: $e');
@@ -120,12 +132,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         }).toList();
 
         debugPrint('Parsed photos:');
-        for (var photo in photos) {
+        for (var photo in processedPhotos) {
           debugPrint('  - ${photo.photoType}: ${photo.photoUrl}');
         }
 
         setState(() {
-          _photos = photos;
+          _photos = processedPhotos;
           _isLoadingPhotos = false;
         });
       }
@@ -140,57 +152,85 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     }
   }
 
+  Future<void> _loadVotingData() async {
+    try {
+      // Load user's vote
+      final userVote = await _reportApi.getMyVote(widget.report.id);
+
+      // Load vote counts
+      final voteCounts = await _reportApi.getVoteCounts(widget.report.id);
+
+      if (mounted) {
+        setState(() {
+          _userVote = userVote;
+          _verifiedVotes = voteCounts['verified'] ?? 0;
+          _spamVotes = voteCounts['spam'] ?? 0;
+          _isLoadingVotes = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading voting data: $e');
+      if (mounted) {
+        setState(() {
+          _isLoadingVotes = false;
+        });
+      }
+    }
+  }
+
   Future<void> _handleVerify() async {
-    final l10n = AppLocalizations.of(context);
-
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Verify Report'),
-        content: const Text(
-          'Are you sure you want to verify this report as legitimate?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.common_cancel),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Verify'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed != true) return;
+    if (_isProcessing) return;
 
     setState(() {
       _isProcessing = true;
     });
 
     try {
-      await Supabase.instance.client
-          .from('report_issues')
-          .update({'status': 'reviewed'})
-          .eq('id', widget.report.id);
+      if (_userVote == 'verify') {
+        // Remove verify vote (toggle off)
+        await _reportApi.removeVote(widget.report.id);
 
-      HapticFeedback.heavyImpact();
-      if (!mounted) return;
+        HapticFeedback.lightImpact();
+        if (!mounted) return;
 
-      Fluttertoast.showToast(
-        msg: 'Report verified successfully',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-      );
+        setState(() {
+          _userVote = null;
+          _verifiedVotes = (_verifiedVotes - 1).clamp(0, 999999);
+        });
 
-      Navigator.pop(context, true);
+        Fluttertoast.showToast(
+          msg: 'Verification removed',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      } else {
+        // Cast verify vote (will update if user had spam vote)
+        await _reportApi.voteVerify(widget.report.id);
+
+        HapticFeedback.heavyImpact();
+        if (!mounted) return;
+
+        setState(() {
+          // If user had spam vote, decrement spam count
+          if (_userVote == 'spam') {
+            _spamVotes = (_spamVotes - 1).clamp(0, 999999);
+          }
+          _userVote = 'verify';
+          _verifiedVotes++;
+        });
+
+        Fluttertoast.showToast(
+          msg: 'Report verified',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
     } catch (e) {
-      debugPrint('Error verifying report: $e');
+      debugPrint('Error voting: $e');
       if (!mounted) return;
 
       Fluttertoast.showToast(
-        msg: 'Failed to verify report: $e',
+        msg: 'Failed to vote: $e',
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
       );
@@ -204,60 +244,58 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   Future<void> _handleSpam() async {
-    final l10n = AppLocalizations.of(context);
-
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Mark as Spam'),
-        content: const Text(
-          'Are you sure you want to mark this report as spam? This action cannot be undone.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.common_cancel),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('Mark as Spam'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed != true) return;
+    if (_isProcessing) return;
 
     setState(() {
       _isProcessing = true;
     });
 
     try {
-      await Supabase.instance.client
-          .from('report_issues')
-          .update({'status': 'spam'})
-          .eq('id', widget.report.id);
+      if (_userVote == 'spam') {
+        // Remove spam vote (toggle off)
+        await _reportApi.removeVote(widget.report.id);
 
-      HapticFeedback.heavyImpact();
-      if (!mounted) return;
+        HapticFeedback.lightImpact();
+        if (!mounted) return;
 
-      Fluttertoast.showToast(
-        msg: 'Report marked as spam',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-      );
+        setState(() {
+          _userVote = null;
+          _spamVotes = (_spamVotes - 1).clamp(0, 999999);
+        });
 
-      Navigator.pop(context, true);
+        Fluttertoast.showToast(
+          msg: 'Spam vote removed',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      } else {
+        // Cast spam vote (will update if user had verify vote)
+        await _reportApi.voteSpam(widget.report.id);
+
+        HapticFeedback.heavyImpact();
+        if (!mounted) return;
+
+        setState(() {
+          // If user had verify vote, decrement verify count
+          if (_userVote == 'verify') {
+            _verifiedVotes = (_verifiedVotes - 1).clamp(0, 999999);
+          }
+          _userVote = 'spam';
+          _spamVotes++;
+        });
+
+        Fluttertoast.showToast(
+          msg: 'Marked as spam',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
     } catch (e) {
-      debugPrint('Error marking as spam: $e');
+      debugPrint('Error voting: $e');
       if (!mounted) return;
 
       Fluttertoast.showToast(
-        msg: 'Failed to mark as spam: $e',
+        msg: 'Failed to vote: $e',
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
       );
@@ -296,6 +334,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                   _buildSeveritySection(theme, l10n),
                   SizedBox(height: 3.h),
                   _buildDescriptionSection(theme, l10n),
+                  SizedBox(height: 3.h),
+                  _buildVoteCountsSection(theme, l10n),
                   SizedBox(height: 10.h),
                 ],
               ),
@@ -863,9 +903,108 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     );
   }
 
+  Widget _buildVoteCountsSection(ThemeData theme, AppLocalizations l10n) {
+    if (_isLoadingVotes) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return Container(
+      padding: EdgeInsets.all(4.w),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.how_to_vote,
+                color: theme.colorScheme.primary,
+                size: 24,
+              ),
+              SizedBox(width: 2.w),
+              Text(
+                'Community Votes',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 2.h),
+          Row(
+            children: [
+              Expanded(
+                child: _buildVoteCount(
+                  theme,
+                  icon: Icons.check_circle,
+                  label: 'Verified',
+                  count: _verifiedVotes,
+                  color: Colors.green,
+                ),
+              ),
+              SizedBox(width: 3.w),
+              Expanded(
+                child: _buildVoteCount(
+                  theme,
+                  icon: Icons.report,
+                  label: 'Spam',
+                  count: _spamVotes,
+                  color: Colors.red,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVoteCount(
+    ThemeData theme, {
+    required IconData icon,
+    required String label,
+    required int count,
+    required Color color,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(3.w),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 32),
+          SizedBox(height: 1.h),
+          Text(
+            count.toString(),
+            style: theme.textTheme.titleLarge?.copyWith(
+              color: color,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildActionButtons(ThemeData theme, AppLocalizations l10n) {
     // Check if current user is the creator of this report
-    final currentUserId = Supabase.instance.client.auth.currentUser?.id;
+    final authProvider = context.watch<AuthProvider>();
+    final currentUserId = authProvider.user?.id;
     final isOwnReport =
         currentUserId != null && widget.report.createdBy == currentUserId;
 
@@ -890,14 +1029,26 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         child: Row(
           children: [
             Expanded(
-              child: OutlinedButton(
+              child: OutlinedButton.icon(
                 onPressed: _isProcessing ? null : _handleSpam,
                 style: OutlinedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 2.h),
-                  side: BorderSide(color: Colors.red, width: 2),
-                  foregroundColor: Colors.red,
+                  side: BorderSide(
+                    color: _userVote == 'spam' ? Colors.red : Colors.grey,
+                    width: _userVote == 'spam' ? 2.5 : 2,
+                  ),
+                  foregroundColor: _userVote == 'spam'
+                      ? Colors.red
+                      : Colors.grey,
+                  backgroundColor: _userVote == 'spam'
+                      ? Colors.red.withValues(alpha: 0.1)
+                      : null,
                 ),
-                child: _isProcessing
+                icon: Icon(
+                  _userVote == 'spam' ? Icons.report : Icons.report_outlined,
+                  size: 20,
+                ),
+                label: _isProcessing
                     ? SizedBox(
                         height: 20,
                         width: 20,
@@ -906,10 +1057,10 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                         ),
                       )
-                    : const Text(
-                        'Mark as Spam',
-                        style: TextStyle(
-                          fontSize: 16,
+                    : Text(
+                        _userVote == 'spam' ? 'Spam' : 'Mark Spam',
+                        style: const TextStyle(
+                          fontSize: 15,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -917,14 +1068,23 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             ),
             SizedBox(width: 3.w),
             Expanded(
-              child: ElevatedButton(
+              child: ElevatedButton.icon(
                 onPressed: _isProcessing ? null : _handleVerify,
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 2.h),
-                  backgroundColor: theme.colorScheme.primary,
+                  backgroundColor: _userVote == 'verify'
+                      ? Colors.green
+                      : theme.colorScheme.primary,
                   foregroundColor: Colors.white,
+                  elevation: _userVote == 'verify' ? 4 : 2,
                 ),
-                child: _isProcessing
+                icon: Icon(
+                  _userVote == 'verify'
+                      ? Icons.check_circle
+                      : Icons.check_circle_outline,
+                  size: 20,
+                ),
+                label: _isProcessing
                     ? const SizedBox(
                         height: 20,
                         width: 20,
@@ -935,10 +1095,10 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                           ),
                         ),
                       )
-                    : const Text(
-                        'Verify',
-                        style: TextStyle(
-                          fontSize: 16,
+                    : Text(
+                        _userVote == 'verify' ? 'Verified' : 'Verify',
+                        style: const TextStyle(
+                          fontSize: 15,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../../../l10n/app_localizations.dart';
+import '../../../core/providers/auth_provider.dart';
 import '../../../data/repositories/report_issue_repository.dart';
 import '../../../data/sources/remote/report_issue_remote_source.dart';
 import '../../../data/sources/remote/issue_type_remote_source.dart';
@@ -45,15 +46,27 @@ class _ReportListTabState extends State<ReportListTab> {
   @override
   void initState() {
     super.initState();
-    _initRepository();
-    _loadReports();
+    // Initialize in didChangeDependencies where we have context
   }
 
-  void _initRepository() {
-    final supabase = Supabase.instance.client;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      _initRepository(context);
+      _loadReports();
+      _isInitialized = true;
+    }
+  }
+
+  bool _isInitialized = false;
+
+  void _initRepository(BuildContext context) {
+    final authProvider = context.read<AuthProvider>();
+    final supabase = authProvider.supabaseClient;
     _repository = ReportIssueRepository(
       reportRemoteSource: ReportIssueRemoteSource(supabase),
-      typeRemoteSource: IssueTypeRemoteSource(),
+      typeRemoteSource: IssueTypeRemoteSource(supabase),
       voteRemoteSource: IssueVoteRemoteSource(supabase),
     );
   }
@@ -64,7 +77,8 @@ class _ReportListTabState extends State<ReportListTab> {
     });
 
     try {
-      final user = Supabase.instance.client.auth.currentUser;
+      final authProvider = context.read<AuthProvider>();
+      final user = authProvider.user;
       if (user == null) {
         setState(() {
           _isLoading = false;
@@ -624,7 +638,8 @@ class _ReportListTabState extends State<ReportListTab> {
     ThemeData theme,
     AppLocalizations l10n,
   ) {
-    final user = Supabase.instance.client.auth.currentUser;
+    final authProvider = context.watch<AuthProvider>();
+    final user = authProvider.user;
     final isMyReport = user != null && report.createdBy == user.id;
 
     return Card(

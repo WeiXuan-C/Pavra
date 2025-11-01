@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/api/report_issue/report_issue_api.dart';
 import '../../core/api/report_issue/issue_type_api.dart';
 import '../../core/utils/issue_photo_helper.dart';
@@ -13,7 +12,6 @@ import '../../data/models/issue_photo_model.dart';
 class ManualReportProvider extends ChangeNotifier {
   final ReportIssueApi _reportApi;
   final IssueTypeApi _issueTypeApi;
-  final SupabaseClient _supabase;
   late final IssuePhotoHelper _photoHelper;
 
   ReportIssueModel? _draftReport;
@@ -27,10 +25,8 @@ class ManualReportProvider extends ChangeNotifier {
   ManualReportProvider({
     required ReportIssueApi reportApi,
     required IssueTypeApi issueTypeApi,
-    required SupabaseClient supabase,
   }) : _reportApi = reportApi,
-       _issueTypeApi = issueTypeApi,
-       _supabase = supabase {
+       _issueTypeApi = issueTypeApi {
     _photoHelper = IssuePhotoHelper(_reportApi);
   }
 
@@ -96,7 +92,7 @@ class ManualReportProvider extends ChangeNotifier {
   /// Load existing draft or create new one
   Future<void> _loadOrCreateDraft() async {
     try {
-      final userId = _supabase.auth.currentUser?.id;
+      final userId = _reportApi.getCurrentUserId();
       if (userId == null) {
         throw Exception('User not authenticated');
       }
@@ -109,7 +105,7 @@ class ManualReportProvider extends ChangeNotifier {
         _draftReport = drafts.first;
       } else {
         // Create new draft with auto-generated title
-        final title = await _generateReportTitle();
+        final title = _generateReportTitle();
         _draftReport = await _reportApi.createReport(
           title: title,
           severity: 'moderate',
@@ -120,44 +116,17 @@ class ManualReportProvider extends ChangeNotifier {
     }
   }
 
-  /// Generate report title: RPT-[timestamp]-[sequence]
-  /// Auto-increments sequence number if timestamp already exists
-  Future<String> _generateReportTitle() async {
+  /// Generate report title: RPT-[timestamp]-[random]
+  /// Uses timestamp with random suffix to avoid conflicts
+  String _generateReportTitle() {
     final now = DateTime.now();
     final timestamp =
-        '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}';
+        '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}${now.second.toString().padLeft(2, '0')}';
 
-    try {
-      // Query all reports with titles starting with this timestamp
-      final response = await _supabase
-          .from('report_issues')
-          .select('title')
-          .like('title', 'RPT-$timestamp-%')
-          .order('title', ascending: false)
-          .limit(1);
+    // Add milliseconds for uniqueness
+    final milliseconds = now.millisecond.toString().padLeft(3, '0');
 
-      if (response.isEmpty) {
-        // No existing reports with this timestamp
-        return 'RPT-$timestamp-001';
-      }
-
-      // Extract the sequence number from the last title
-      final lastTitle = response.first['title'] as String;
-      final parts = lastTitle.split('-');
-
-      if (parts.length == 3) {
-        final lastSequence = int.tryParse(parts[2]) ?? 0;
-        final nextSequence = lastSequence + 1;
-        return 'RPT-$timestamp-${nextSequence.toString().padLeft(3, '0')}';
-      }
-
-      // Fallback if parsing fails
-      return 'RPT-$timestamp-001';
-    } catch (e) {
-      debugPrint('Error generating report title: $e');
-      // Fallback to 001 if query fails
-      return 'RPT-$timestamp-001';
-    }
+    return 'RPT-$timestamp-$milliseconds';
   }
 
   /// Update draft report

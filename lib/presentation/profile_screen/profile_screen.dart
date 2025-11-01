@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/providers/auth_provider.dart';
 import '../../core/providers/locale_provider.dart';
@@ -85,23 +84,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     label: const Text('Reload Profile'),
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      // Direct Supabase query test
-                      final userId = user.id;
-
-                      try {
-                        await Supabase.instance.client
-                            .from('profiles')
-                            .select()
-                            .eq('id', userId)
-                            .maybeSingle();
-                      } catch (e) {
-                        debugPrint('❌ Direct query error: $e');
-                      }
-                    },
-                    icon: const Icon(Icons.bug_report),
-                    label: const Text('Test Direct Query'),
+                  Text(
+                    'Try reloading the profile or restarting the app',
+                    style: Theme.of(context).textTheme.bodySmall,
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),

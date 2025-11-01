@@ -6,10 +6,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/api/report_issue/report_issue_api.dart';
 import '../../core/api/report_issue/issue_type_api.dart';
+import '../../core/providers/auth_provider.dart';
 import '../../core/services/location_service.dart';
 import '../../data/models/issue_photo_model.dart';
 import '../../l10n/app_localizations.dart';
@@ -1026,11 +1026,13 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     final theme = Theme.of(context);
 
     return ChangeNotifierProvider(
-      create: (_) => ManualReportProvider(
-        reportApi: ReportIssueApi(Supabase.instance.client),
-        issueTypeApi: IssueTypeApi(),
-        supabase: Supabase.instance.client,
-      )..initialize(),
+      create: (context) {
+        final authProvider = context.read<AuthProvider>();
+        return ManualReportProvider(
+          reportApi: ReportIssueApi(authProvider.supabaseClient),
+          issueTypeApi: IssueTypeApi(),
+        )..initialize();
+      },
       child: Consumer<ManualReportProvider>(
         builder: (context, provider, _) => PopScope(
           canPop: false,

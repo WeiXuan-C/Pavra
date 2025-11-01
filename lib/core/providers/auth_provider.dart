@@ -35,6 +35,7 @@ class AuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading; // Used by UI components
   bool get isAuthenticated => _user != null;
   String? get errorMessage => _errorMessage;
+  SupabaseClient get supabaseClient => _authService.supabaseClient;
 
   AuthProvider() {
     _initialize();

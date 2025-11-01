@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data/models/report_issue_model.dart';
 import '../../../data/models/issue_photo_model.dart';
+import '../../../data/models/issue_type_model.dart';
+import '../../../data/models/issue_vote_model.dart';
 import '../../../data/repositories/report_issue_repository.dart';
 import '../../../data/sources/remote/report_issue_remote_source.dart';
 import '../../../data/sources/remote/issue_type_remote_source.dart';
@@ -20,7 +22,7 @@ class ReportIssueApi {
   ReportIssueApi(this._supabase) {
     _repository = ReportIssueRepository(
       reportRemoteSource: ReportIssueRemoteSource(_supabase),
-      typeRemoteSource: IssueTypeRemoteSource(),
+      typeRemoteSource: IssueTypeRemoteSource(_supabase),
       voteRemoteSource: IssueVoteRemoteSource(_supabase),
     );
   }
@@ -262,9 +264,9 @@ class ReportIssueApi {
   }
 
   /// Remove vote
-  Future<void> removeVote(String issueId, String voteType) async {
+  Future<void> removeVote(String issueId) async {
     try {
-      await _repository.removeVote(issueId, voteType);
+      await _repository.removeVote(issueId);
     } catch (e) {
       throw Exception('Failed to remove vote: $e');
     }
@@ -276,6 +278,15 @@ class ReportIssueApi {
       return await _repository.getVoteCounts(issueId);
     } catch (e) {
       return {'verified': 0, 'spam': 0};
+    }
+  }
+
+  /// Get all votes for an issue (useful for admin/debugging)
+  Future<List<IssueVoteModel>> getAllVotes(String issueId) async {
+    try {
+      return await _repository.getAllVotesForIssue(issueId);
+    } catch (e) {
+      throw Exception('Failed to fetch votes: $e');
     }
   }
 
@@ -338,4 +349,25 @@ class ReportIssueApi {
   }
 
   double _toRadians(double degrees) => degrees * math.pi / 180;
+
+  // ========== Helper Methods ==========
+
+  /// Get current user ID
+  String? getCurrentUserId() {
+    return _supabase.auth.currentUser?.id;
+  }
+
+  /// Get public URL for storage file
+  String getStoragePublicUrl(String bucket, String path) {
+    return _supabase.storage.from(bucket).getPublicUrl(path);
+  }
+
+  /// Get issue types by IDs
+  Future<List<IssueTypeModel>> getIssueTypesByIds(List<String> ids) async {
+    try {
+      return await _repository.getIssueTypesByIds(ids);
+    } catch (e) {
+      throw Exception('Failed to get issue types: $e');
+    }
+  }
 }

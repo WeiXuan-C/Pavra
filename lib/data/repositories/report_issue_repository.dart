@@ -177,13 +177,18 @@ class ReportIssueRepository {
   }
 
   /// Remove vote
-  Future<void> removeVote(String issueId, String voteType) async {
-    return _voteRemoteSource.removeVote(issueId, voteType);
+  Future<void> removeVote(String issueId) async {
+    return _voteRemoteSource.removeVote(issueId);
   }
 
   /// Get vote counts for an issue
   Future<Map<String, int>> getVoteCounts(String issueId) async {
     return _voteRemoteSource.getVoteCounts(issueId);
+  }
+
+  /// Get all votes for an issue
+  Future<List<IssueVoteModel>> getAllVotesForIssue(String issueId) async {
+    return _voteRemoteSource.fetchAllVotesForIssue(issueId);
   }
 
   // ========== Authority Functions ==========
@@ -199,5 +204,12 @@ class ReportIssueRepository {
       status: status,
       comment: comment,
     );
+  }
+
+  // ========== Issue Types ==========
+
+  /// Get issue types by IDs
+  Future<List<IssueTypeModel>> getIssueTypesByIds(List<String> ids) async {
+    return _typeRemoteSource.fetchIssueTypesByIds(ids);
   }
 }

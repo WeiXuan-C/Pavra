@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../../l10n/app_localizations.dart';
+import '../../core/providers/auth_provider.dart';
 import '../../data/repositories/report_issue_repository.dart';
 import '../../data/sources/remote/report_issue_remote_source.dart';
 import '../../data/sources/remote/issue_type_remote_source.dart';
@@ -39,35 +40,41 @@ class _ReportScreenState extends State<ReportScreen> {
   @override
   void initState() {
     super.initState();
-    _initRepository();
-    _checkUserRole();
-    _loadData();
+    // Initialize in didChangeDependencies where we have context
   }
 
-  void _initRepository() {
-    final supabase = Supabase.instance.client;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      _initRepository(context);
+      _checkUserRole();
+      _loadData();
+      _isInitialized = true;
+    }
+  }
+
+  bool _isInitialized = false;
+
+  void _initRepository(BuildContext context) {
+    final authProvider = context.read<AuthProvider>();
+    final supabase = authProvider.supabaseClient;
     _repository = ReportIssueRepository(
       reportRemoteSource: ReportIssueRemoteSource(supabase),
-      typeRemoteSource: IssueTypeRemoteSource(),
+      typeRemoteSource: IssueTypeRemoteSource(supabase),
       voteRemoteSource: IssueVoteRemoteSource(supabase),
     );
   }
 
   Future<void> _checkUserRole() async {
     try {
-      final user = Supabase.instance.client.auth.currentUser;
-      if (user != null) {
-        final response = await Supabase.instance.client
-            .from('profiles')
-            .select('role')
-            .eq('id', user.id)
-            .maybeSingle();
+      final authProvider = context.read<AuthProvider>();
+      final profile = authProvider.userProfile;
 
-        if (mounted && response != null) {
-          setState(() {
-            _isDeveloper = response['role'] == 'developer';
-          });
-        }
+      if (mounted && profile != null) {
+        setState(() {
+          _isDeveloper = profile.role == 'developer';
+        });
       }
     } catch (e) {
       // Silently fail - user just won't see the button
@@ -88,7 +95,8 @@ class _ReportScreenState extends State<ReportScreen> {
     });
 
     try {
-      final user = Supabase.instance.client.auth.currentUser;
+      final authProvider = context.read<AuthProvider>();
+      final user = authProvider.user;
       if (user != null && widget.filterType == 0) {
         // Load all reports for current user
         final allReports = await _repository.getReportIssues(
