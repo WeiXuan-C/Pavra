@@ -3223,6 +3223,264 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to mark report as spam'**
   String get report_spamFailed;
+
+  /// Request authority dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Request Authority Role'**
+  String get settings_requestAuthorityDialog;
+
+  /// Request authority dialog description
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in the form below to request authority role. All fields marked with * are required.'**
+  String get settings_requestAuthorityDesc;
+
+  /// ID number field label
+  ///
+  /// In en, this message translates to:
+  /// **'ID Number'**
+  String get settings_idNumber;
+
+  /// ID number field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your ID number'**
+  String get settings_idNumberHint;
+
+  /// ID number required error
+  ///
+  /// In en, this message translates to:
+  /// **'ID number is required'**
+  String get settings_idNumberRequired;
+
+  /// Organization field label
+  ///
+  /// In en, this message translates to:
+  /// **'Organization'**
+  String get settings_organization;
+
+  /// Organization field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your organization name'**
+  String get settings_organizationHint;
+
+  /// Organization required error
+  ///
+  /// In en, this message translates to:
+  /// **'Organization is required'**
+  String get settings_organizationRequired;
+
+  /// Location field label
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get settings_location;
+
+  /// Location field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Select your location'**
+  String get settings_locationHint;
+
+  /// Location required error
+  ///
+  /// In en, this message translates to:
+  /// **'Location is required'**
+  String get settings_locationRequired;
+
+  /// Referrer code field label
+  ///
+  /// In en, this message translates to:
+  /// **'Referrer Code'**
+  String get settings_referrerCode;
+
+  /// Referrer code field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter 6-digit referrer code (optional)'**
+  String get settings_referrerCodeHint;
+
+  /// Referrer code invalid error
+  ///
+  /// In en, this message translates to:
+  /// **'Referrer code must be 6 digits'**
+  String get settings_referrerCodeInvalid;
+
+  /// Remarks field label
+  ///
+  /// In en, this message translates to:
+  /// **'Remarks'**
+  String get settings_remarks;
+
+  /// Remarks field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Additional information (optional)'**
+  String get settings_remarksHint;
+
+  /// Request submitted success message
+  ///
+  /// In en, this message translates to:
+  /// **'Request submitted successfully'**
+  String get settings_requestSubmitted;
+
+  /// Request submitted detailed message
+  ///
+  /// In en, this message translates to:
+  /// **'Your authority role request has been submitted for review. You will be notified once it\'s processed.'**
+  String get settings_requestSubmittedDesc;
+
+  /// Request failed error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit request'**
+  String get settings_requestFailed;
+
+  /// Has pending request message
+  ///
+  /// In en, this message translates to:
+  /// **'You already have a pending request'**
+  String get settings_hasPendingRequest;
+
+  /// Johor state
+  ///
+  /// In en, this message translates to:
+  /// **'Johor'**
+  String get location_johor;
+
+  /// Kedah state
+  ///
+  /// In en, this message translates to:
+  /// **'Kedah'**
+  String get location_kedah;
+
+  /// Kelantan state
+  ///
+  /// In en, this message translates to:
+  /// **'Kelantan'**
+  String get location_kelantan;
+
+  /// Malacca state
+  ///
+  /// In en, this message translates to:
+  /// **'Malacca'**
+  String get location_malacca;
+
+  /// Negeri Sembilan state
+  ///
+  /// In en, this message translates to:
+  /// **'Negeri Sembilan'**
+  String get location_negeriSembilan;
+
+  /// Pahang state
+  ///
+  /// In en, this message translates to:
+  /// **'Pahang'**
+  String get location_pahang;
+
+  /// Penang state
+  ///
+  /// In en, this message translates to:
+  /// **'Penang'**
+  String get location_penang;
+
+  /// Perak state
+  ///
+  /// In en, this message translates to:
+  /// **'Perak'**
+  String get location_perak;
+
+  /// Perlis state
+  ///
+  /// In en, this message translates to:
+  /// **'Perlis'**
+  String get location_perlis;
+
+  /// Sabah state
+  ///
+  /// In en, this message translates to:
+  /// **'Sabah'**
+  String get location_sabah;
+
+  /// Sarawak state
+  ///
+  /// In en, this message translates to:
+  /// **'Sarawak'**
+  String get location_sarawak;
+
+  /// Selangor state
+  ///
+  /// In en, this message translates to:
+  /// **'Selangor'**
+  String get location_selangor;
+
+  /// Terengganu state
+  ///
+  /// In en, this message translates to:
+  /// **'Terengganu'**
+  String get location_terengganu;
+
+  /// Kuala Lumpur federal territory
+  ///
+  /// In en, this message translates to:
+  /// **'Kuala Lumpur'**
+  String get location_kualaLumpur;
+
+  /// Labuan federal territory
+  ///
+  /// In en, this message translates to:
+  /// **'Labuan'**
+  String get location_labuan;
+
+  /// Putrajaya federal territory
+  ///
+  /// In en, this message translates to:
+  /// **'Putrajaya'**
+  String get location_putrajaya;
+
+  /// Request pending button text
+  ///
+  /// In en, this message translates to:
+  /// **'Request Pending'**
+  String get settings_requestPending;
+
+  /// Pending status title
+  ///
+  /// In en, this message translates to:
+  /// **'Request Under Review'**
+  String get settings_statusPending;
+
+  /// Pending status description
+  ///
+  /// In en, this message translates to:
+  /// **'Your authority request is being reviewed by administrators'**
+  String get settings_statusPendingDesc;
+
+  /// Approved status title
+  ///
+  /// In en, this message translates to:
+  /// **'Request Approved'**
+  String get settings_statusApproved;
+
+  /// Approved status description
+  ///
+  /// In en, this message translates to:
+  /// **'Your authority request has been approved'**
+  String get settings_statusApprovedDesc;
+
+  /// Rejected status title
+  ///
+  /// In en, this message translates to:
+  /// **'Request Rejected'**
+  String get settings_statusRejected;
+
+  /// Rejected status description
+  ///
+  /// In en, this message translates to:
+  /// **'Your authority request was not approved. You may submit a new request'**
+  String get settings_statusRejectedDesc;
 }
 
 class _AppLocalizationsDelegate

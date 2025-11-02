@@ -2113,5 +2113,179 @@
   "report_spamFailed": "Failed to mark report as spam",
   "@report_spamFailed": {
     "description": "Report spam failed message"
+  },
+
+  "settings_requestAuthorityDialog": "Request Authority Role",
+  "@settings_requestAuthorityDialog": {
+    "description": "Request authority dialog title"
+  },
+  "settings_requestAuthorityDesc": "Fill in the form below to request authority role. All fields marked with * are required.",
+  "@settings_requestAuthorityDesc": {
+    "description": "Request authority dialog description"
+  },
+  "settings_idNumber": "ID Number",
+  "@settings_idNumber": {
+    "description": "ID number field label"
+  },
+  "settings_idNumberHint": "Enter your ID number",
+  "@settings_idNumberHint": {
+    "description": "ID number field hint"
+  },
+  "settings_idNumberRequired": "ID number is required",
+  "@settings_idNumberRequired": {
+    "description": "ID number required error"
+  },
+  "settings_organization": "Organization",
+  "@settings_organization": {
+    "description": "Organization field label"
+  },
+  "settings_organizationHint": "Enter your organization name",
+  "@settings_organizationHint": {
+    "description": "Organization field hint"
+  },
+  "settings_organizationRequired": "Organization is required",
+  "@settings_organizationRequired": {
+    "description": "Organization required error"
+  },
+  "settings_location": "Location",
+  "@settings_location": {
+    "description": "Location field label"
+  },
+  "settings_locationHint": "Select your location",
+  "@settings_locationHint": {
+    "description": "Location field hint"
+  },
+  "settings_locationRequired": "Location is required",
+  "@settings_locationRequired": {
+    "description": "Location required error"
+  },
+  "settings_referrerCode": "Referrer Code",
+  "@settings_referrerCode": {
+    "description": "Referrer code field label"
+  },
+  "settings_referrerCodeHint": "Enter 6-digit referrer code (optional)",
+  "@settings_referrerCodeHint": {
+    "description": "Referrer code field hint"
+  },
+  "settings_referrerCodeInvalid": "Referrer code must be 6 digits",
+  "@settings_referrerCodeInvalid": {
+    "description": "Referrer code invalid error"
+  },
+  "settings_remarks": "Remarks",
+  "@settings_remarks": {
+    "description": "Remarks field label"
+  },
+  "settings_remarksHint": "Additional information (optional)",
+  "@settings_remarksHint": {
+    "description": "Remarks field hint"
+  },
+  "settings_requestSubmitted": "Request submitted successfully",
+  "@settings_requestSubmitted": {
+    "description": "Request submitted success message"
+  },
+  "settings_requestSubmittedDesc": "Your authority role request has been submitted for review. You will be notified once it's processed.",
+  "@settings_requestSubmittedDesc": {
+    "description": "Request submitted detailed message"
+  },
+  "settings_requestFailed": "Failed to submit request",
+  "@settings_requestFailed": {
+    "description": "Request failed error message"
+  },
+  "settings_hasPendingRequest": "You already have a pending request",
+  "@settings_hasPendingRequest": {
+    "description": "Has pending request message"
+  },
+  "location_johor": "Johor",
+  "@location_johor": {
+    "description": "Johor state"
+  },
+  "location_kedah": "Kedah",
+  "@location_kedah": {
+    "description": "Kedah state"
+  },
+  "location_kelantan": "Kelantan",
+  "@location_kelantan": {
+    "description": "Kelantan state"
+  },
+  "location_malacca": "Malacca",
+  "@location_malacca": {
+    "description": "Malacca state"
+  },
+  "location_negeriSembilan": "Negeri Sembilan",
+  "@location_negeriSembilan": {
+    "description": "Negeri Sembilan state"
+  },
+  "location_pahang": "Pahang",
+  "@location_pahang": {
+    "description": "Pahang state"
+  },
+  "location_penang": "Penang",
+  "@location_penang": {
+    "description": "Penang state"
+  },
+  "location_perak": "Perak",
+  "@location_perak": {
+    "description": "Perak state"
+  },
+  "location_perlis": "Perlis",
+  "@location_perlis": {
+    "description": "Perlis state"
+  },
+  "location_sabah": "Sabah",
+  "@location_sabah": {
+    "description": "Sabah state"
+  },
+  "location_sarawak": "Sarawak",
+  "@location_sarawak": {
+    "description": "Sarawak state"
+  },
+  "location_selangor": "Selangor",
+  "@location_selangor": {
+    "description": "Selangor state"
+  },
+  "location_terengganu": "Terengganu",
+  "@location_terengganu": {
+    "description": "Terengganu state"
+  },
+  "location_kualaLumpur": "Kuala Lumpur",
+  "@location_kualaLumpur": {
+    "description": "Kuala Lumpur federal territory"
+  },
+  "location_labuan": "Labuan",
+  "@location_labuan": {
+    "description": "Labuan federal territory"
+  },
+  "location_putrajaya": "Putrajaya",
+  "@location_putrajaya": {
+    "description": "Putrajaya federal territory"
+  }
+,
+  "settings_requestPending": "Request Pending",
+  "@settings_requestPending": {
+    "description": "Request pending button text"
+  },
+  "settings_statusPending": "Request Under Review",
+  "@settings_statusPending": {
+    "description": "Pending status title"
+  },
+  "settings_statusPendingDesc": "Your authority request is being reviewed by administrators",
+  "@settings_statusPendingDesc": {
+    "description": "Pending status description"
+  },
+  "settings_statusApproved": "Request Approved",
+  "@settings_statusApproved": {
+    "description": "Approved status title"
+  },
+  "settings_statusApprovedDesc": "Your authority request has been approved",
+  "@settings_statusApprovedDesc": {
+    "description": "Approved status description"
+  },
+  "settings_statusRejected": "Request Rejected",
+  "@settings_statusRejected": {
+    "description": "Rejected status title"
+  },
+  "settings_statusRejectedDesc": "Your authority request was not approved. You may submit a new request",
+  "@settings_statusRejectedDesc": {
+    "description": "Rejected status description"
   }
 }

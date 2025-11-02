@@ -1631,4 +1631,139 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get report_spamFailed => 'Failed to mark report as spam';
+
+  @override
+  String get settings_requestAuthorityDialog => 'Request Authority Role';
+
+  @override
+  String get settings_requestAuthorityDesc =>
+      'Fill in the form below to request authority role. All fields marked with * are required.';
+
+  @override
+  String get settings_idNumber => 'ID Number';
+
+  @override
+  String get settings_idNumberHint => 'Enter your ID number';
+
+  @override
+  String get settings_idNumberRequired => 'ID number is required';
+
+  @override
+  String get settings_organization => 'Organization';
+
+  @override
+  String get settings_organizationHint => 'Enter your organization name';
+
+  @override
+  String get settings_organizationRequired => 'Organization is required';
+
+  @override
+  String get settings_location => 'Location';
+
+  @override
+  String get settings_locationHint => 'Select your location';
+
+  @override
+  String get settings_locationRequired => 'Location is required';
+
+  @override
+  String get settings_referrerCode => 'Referrer Code';
+
+  @override
+  String get settings_referrerCodeHint =>
+      'Enter 6-digit referrer code (optional)';
+
+  @override
+  String get settings_referrerCodeInvalid => 'Referrer code must be 6 digits';
+
+  @override
+  String get settings_remarks => 'Remarks';
+
+  @override
+  String get settings_remarksHint => 'Additional information (optional)';
+
+  @override
+  String get settings_requestSubmitted => 'Request submitted successfully';
+
+  @override
+  String get settings_requestSubmittedDesc =>
+      'Your authority role request has been submitted for review. You will be notified once it\'s processed.';
+
+  @override
+  String get settings_requestFailed => 'Failed to submit request';
+
+  @override
+  String get settings_hasPendingRequest => 'You already have a pending request';
+
+  @override
+  String get location_johor => 'Johor';
+
+  @override
+  String get location_kedah => 'Kedah';
+
+  @override
+  String get location_kelantan => 'Kelantan';
+
+  @override
+  String get location_malacca => 'Malacca';
+
+  @override
+  String get location_negeriSembilan => 'Negeri Sembilan';
+
+  @override
+  String get location_pahang => 'Pahang';
+
+  @override
+  String get location_penang => 'Penang';
+
+  @override
+  String get location_perak => 'Perak';
+
+  @override
+  String get location_perlis => 'Perlis';
+
+  @override
+  String get location_sabah => 'Sabah';
+
+  @override
+  String get location_sarawak => 'Sarawak';
+
+  @override
+  String get location_selangor => 'Selangor';
+
+  @override
+  String get location_terengganu => 'Terengganu';
+
+  @override
+  String get location_kualaLumpur => 'Kuala Lumpur';
+
+  @override
+  String get location_labuan => 'Labuan';
+
+  @override
+  String get location_putrajaya => 'Putrajaya';
+
+  @override
+  String get settings_requestPending => 'Request Pending';
+
+  @override
+  String get settings_statusPending => 'Request Under Review';
+
+  @override
+  String get settings_statusPendingDesc =>
+      'Your authority request is being reviewed by administrators';
+
+  @override
+  String get settings_statusApproved => 'Request Approved';
+
+  @override
+  String get settings_statusApprovedDesc =>
+      'Your authority request has been approved';
+
+  @override
+  String get settings_statusRejected => 'Request Rejected';
+
+  @override
+  String get settings_statusRejectedDesc =>
+      'Your authority request was not approved. You may submit a new request';
 }

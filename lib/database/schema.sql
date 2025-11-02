@@ -102,7 +102,6 @@ CREATE TABLE IF NOT EXISTS public.user_notifications (
 -- =====================================
 -- REPORT ISSUES TABLE 
 -- =====================================
-
 CREATE TABLE IF NOT EXISTS public.report_issues (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT,                                  -- 由AI或用户生成的标题
@@ -165,6 +164,30 @@ CREATE TABLE IF NOT EXISTS public.issue_votes (
   UNIQUE(issue_id, user_id, vote_type)
 );
 
+
+-- =====================================
+-- AUTHORITY REQUESTS TABLE
+-- =====================================
+CREATE TABLE IF NOT EXISTS public.requests (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  id_number TEXT NOT NULL,
+  organization TEXT NOT NULL,
+  location TEXT NOT NULL,
+  referrer_code TEXT,
+  remarks TEXT,
+  status TEXT DEFAULT 'pending' CHECK (
+    status IN ('pending', 'approved', 'rejected')
+  ),
+  reviewed_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  reviewed_comment TEXT,
+  reviewed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  deleted_at TIMESTAMPTZ,
+  is_deleted BOOLEAN DEFAULT FALSE
+);
+
 -- =====================================
 -- INDEXES
 -- =====================================
@@ -200,6 +223,13 @@ CREATE INDEX IF NOT EXISTS idx_report_issues_created_by ON public.report_issues(
 CREATE INDEX IF NOT EXISTS idx_report_issues_reviewed_by ON public.report_issues(reviewed_by);
 CREATE INDEX IF NOT EXISTS idx_report_issues_location ON public.report_issues(latitude, longitude);
 CREATE INDEX IF NOT EXISTS idx_report_issues_issue_type_ids ON public.report_issues USING GIN(issue_type_ids);
+
+-- REQUESTS
+CREATE INDEX IF NOT EXISTS idx_requests_user_id ON public.requests(user_id);
+CREATE INDEX IF NOT EXISTS idx_requests_status ON public.requests(status);
+CREATE INDEX IF NOT EXISTS idx_requests_reviewed_by ON public.requests(reviewed_by);
+CREATE INDEX IF NOT EXISTS idx_requests_created_at ON public.requests(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_requests_is_deleted ON public.requests(is_deleted);
 
 -- =====================================
 -- 说明

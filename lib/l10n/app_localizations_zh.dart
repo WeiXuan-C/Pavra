@@ -1583,4 +1583,133 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get report_spamFailed => '标记报告为垃圾失败';
+
+  @override
+  String get settings_requestAuthorityDialog => '申请权限角色';
+
+  @override
+  String get settings_requestAuthorityDesc => '填写以下表格以申请权限角色。标有 * 的字段为必填项。';
+
+  @override
+  String get settings_idNumber => '身份证号码';
+
+  @override
+  String get settings_idNumberHint => '输入您的身份证号码';
+
+  @override
+  String get settings_idNumberRequired => '身份证号码为必填项';
+
+  @override
+  String get settings_organization => '组织机构';
+
+  @override
+  String get settings_organizationHint => '输入您的组织机构名称';
+
+  @override
+  String get settings_organizationRequired => '组织机构为必填项';
+
+  @override
+  String get settings_location => '地区';
+
+  @override
+  String get settings_locationHint => '选择您的地区';
+
+  @override
+  String get settings_locationRequired => '地区为必填项';
+
+  @override
+  String get settings_referrerCode => '推荐码';
+
+  @override
+  String get settings_referrerCodeHint => '输入6位推荐码（可选）';
+
+  @override
+  String get settings_referrerCodeInvalid => '推荐码必须为6位数字';
+
+  @override
+  String get settings_remarks => '备注';
+
+  @override
+  String get settings_remarksHint => '附加信息（可选）';
+
+  @override
+  String get settings_requestSubmitted => '申请提交成功';
+
+  @override
+  String get settings_requestSubmittedDesc => '您的权限角色申请已提交审核。处理完成后将通知您。';
+
+  @override
+  String get settings_requestFailed => '提交申请失败';
+
+  @override
+  String get settings_hasPendingRequest => '您已有待处理的申请';
+
+  @override
+  String get location_johor => '柔佛';
+
+  @override
+  String get location_kedah => '吉打';
+
+  @override
+  String get location_kelantan => '吉兰丹';
+
+  @override
+  String get location_malacca => '马六甲';
+
+  @override
+  String get location_negeriSembilan => '森美兰';
+
+  @override
+  String get location_pahang => '彭亨';
+
+  @override
+  String get location_penang => '槟城';
+
+  @override
+  String get location_perak => '霹雳';
+
+  @override
+  String get location_perlis => '玻璃市';
+
+  @override
+  String get location_sabah => '沙巴';
+
+  @override
+  String get location_sarawak => '砂拉越';
+
+  @override
+  String get location_selangor => '雪兰莪';
+
+  @override
+  String get location_terengganu => '登嘉楼';
+
+  @override
+  String get location_kualaLumpur => '吉隆坡';
+
+  @override
+  String get location_labuan => '纳闽';
+
+  @override
+  String get location_putrajaya => '布城';
+
+  @override
+  String get settings_requestPending => '申请处理中';
+
+  @override
+  String get settings_statusPending => '申请审核中';
+
+  @override
+  String get settings_statusPendingDesc => '您的权限申请正在由管理员审核中';
+
+  @override
+  String get settings_statusApproved => '申请已批准';
+
+  @override
+  String get settings_statusApprovedDesc => '您的权限申请已获批准';
+
+  @override
+  String get settings_statusRejected => '申请被拒绝';
+
+  @override
+  String get settings_statusRejectedDesc => '您的权限申请未获批准。您可以提交新的申请';
 }

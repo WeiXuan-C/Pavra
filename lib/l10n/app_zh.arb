@@ -2113,5 +2113,177 @@
   "report_spamFailed": "标记报告为垃圾失败",
   "@report_spamFailed": {
     "description": "报告垃圾标记失败消息"
+  },
+  "settings_requestAuthorityDialog": "申请权限角色",
+  "@settings_requestAuthorityDialog": {
+    "description": "申请权限对话框标题"
+  },
+  "settings_requestAuthorityDesc": "填写以下表格以申请权限角色。标有 * 的字段为必填项。",
+  "@settings_requestAuthorityDesc": {
+    "description": "申请权限对话框描述"
+  },
+  "settings_idNumber": "身份证号码",
+  "@settings_idNumber": {
+    "description": "身份证号码字段标签"
+  },
+  "settings_idNumberHint": "输入您的身份证号码",
+  "@settings_idNumberHint": {
+    "description": "身份证号码字段提示"
+  },
+  "settings_idNumberRequired": "身份证号码为必填项",
+  "@settings_idNumberRequired": {
+    "description": "身份证号码必填错误"
+  },
+  "settings_organization": "组织机构",
+  "@settings_organization": {
+    "description": "组织机构字段标签"
+  },
+  "settings_organizationHint": "输入您的组织机构名称",
+  "@settings_organizationHint": {
+    "description": "组织机构字段提示"
+  },
+  "settings_organizationRequired": "组织机构为必填项",
+  "@settings_organizationRequired": {
+    "description": "组织机构必填错误"
+  },
+  "settings_location": "地区",
+  "@settings_location": {
+    "description": "地区字段标签"
+  },
+  "settings_locationHint": "选择您的地区",
+  "@settings_locationHint": {
+    "description": "地区字段提示"
+  },
+  "settings_locationRequired": "地区为必填项",
+  "@settings_locationRequired": {
+    "description": "地区必填错误"
+  },
+  "settings_referrerCode": "推荐码",
+  "@settings_referrerCode": {
+    "description": "推荐码字段标签"
+  },
+  "settings_referrerCodeHint": "输入6位推荐码（可选）",
+  "@settings_referrerCodeHint": {
+    "description": "推荐码字段提示"
+  },
+  "settings_referrerCodeInvalid": "推荐码必须为6位数字",
+  "@settings_referrerCodeInvalid": {
+    "description": "推荐码无效错误"
+  },
+  "settings_remarks": "备注",
+  "@settings_remarks": {
+    "description": "备注字段标签"
+  },
+  "settings_remarksHint": "附加信息（可选）",
+  "@settings_remarksHint": {
+    "description": "备注字段提示"
+  },
+  "settings_requestSubmitted": "申请提交成功",
+  "@settings_requestSubmitted": {
+    "description": "申请提交成功消息"
+  },
+  "settings_requestSubmittedDesc": "您的权限角色申请已提交审核。处理完成后将通知您。",
+  "@settings_requestSubmittedDesc": {
+    "description": "申请提交详细消息"
+  },
+  "settings_requestFailed": "提交申请失败",
+  "@settings_requestFailed": {
+    "description": "申请失败错误消息"
+  },
+  "settings_hasPendingRequest": "您已有待处理的申请",
+  "@settings_hasPendingRequest": {
+    "description": "已有待处理申请消息"
+  },
+  "location_johor": "柔佛",
+  "@location_johor": {
+    "description": "柔佛州"
+  },
+  "location_kedah": "吉打",
+  "@location_kedah": {
+    "description": "吉打州"
+  },
+  "location_kelantan": "吉兰丹",
+  "@location_kelantan": {
+    "description": "吉兰丹州"
+  },
+  "location_malacca": "马六甲",
+  "@location_malacca": {
+    "description": "马六甲州"
+  },
+  "location_negeriSembilan": "森美兰",
+  "@location_negeriSembilan": {
+    "description": "森美兰州"
+  },
+  "location_pahang": "彭亨",
+  "@location_pahang": {
+    "description": "彭亨州"
+  },
+  "location_penang": "槟城",
+  "@location_penang": {
+    "description": "槟城州"
+  },
+  "location_perak": "霹雳",
+  "@location_perak": {
+    "description": "霹雳州"
+  },
+  "location_perlis": "玻璃市",
+  "@location_perlis": {
+    "description": "玻璃市州"
+  },
+  "location_sabah": "沙巴",
+  "@location_sabah": {
+    "description": "沙巴州"
+  },
+  "location_sarawak": "砂拉越",
+  "@location_sarawak": {
+    "description": "砂拉越州"
+  },
+  "location_selangor": "雪兰莪",
+  "@location_selangor": {
+    "description": "雪兰莪州"
+  },
+  "location_terengganu": "登嘉楼",
+  "@location_terengganu": {
+    "description": "登嘉楼州"
+  },
+  "location_kualaLumpur": "吉隆坡",
+  "@location_kualaLumpur": {
+    "description": "吉隆坡联邦直辖区"
+  },
+  "location_labuan": "纳闽",
+  "@location_labuan": {
+    "description": "纳闽联邦直辖区"
+  },
+  "location_putrajaya": "布城",
+  "@location_putrajaya": {
+    "description": "布城联邦直辖区"
+  },
+  "settings_requestPending": "申请处理中",
+  "@settings_requestPending": {
+    "description": "申请待处理按钮文本"
+  },
+  "settings_statusPending": "申请审核中",
+  "@settings_statusPending": {
+    "description": "待处理状态标题"
+  },
+  "settings_statusPendingDesc": "您的权限申请正在由管理员审核中",
+  "@settings_statusPendingDesc": {
+    "description": "待处理状态描述"
+  },
+  "settings_statusApproved": "申请已批准",
+  "@settings_statusApproved": {
+    "description": "已批准状态标题"
+  },
+  "settings_statusApprovedDesc": "您的权限申请已获批准",
+  "@settings_statusApprovedDesc": {
+    "description": "已批准状态描述"
+  },
+  "settings_statusRejected": "申请被拒绝",
+  "@settings_statusRejected": {
+    "description": "已拒绝状态标题"
+  },
+  "settings_statusRejectedDesc": "您的权限申请未获批准。您可以提交新的申请",
+  "@settings_statusRejectedDesc": {
+    "description": "已拒绝状态描述"
   }
 }
