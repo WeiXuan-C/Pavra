@@ -2285,5 +2285,117 @@
   "settings_statusRejectedDesc": "您的权限申请未获批准。您可以提交新的申请",
   "@settings_statusRejectedDesc": {
     "description": "已拒绝状态描述"
+  },
+  "profile_viewProfile": "查看您的个人资料",
+  "@profile_viewProfile": {
+    "description": "个人资料查看副标题"
+  },
+  "requests_managementTitle": "申请管理",
+  "@requests_managementTitle": {
+    "description": "申请管理标题"
+  },
+  "requests_managementSubtitle": "查看和管理权限申请",
+  "@requests_managementSubtitle": {
+    "description": "申请管理副标题"
+  },
+  "requests_tabAll": "全部",
+  "@requests_tabAll": {
+    "description": "全部申请标签"
+  },
+  "requests_tabPending": "待处理",
+  "@requests_tabPending": {
+    "description": "待处理申请标签"
+  },
+  "requests_tabApproved": "已批准",
+  "@requests_tabApproved": {
+    "description": "已批准申请标签"
+  },
+  "requests_tabRejected": "已拒绝",
+  "@requests_tabRejected": {
+    "description": "已拒绝申请标签"
+  },
+  "requests_noRequests": "未找到申请",
+  "@requests_noRequests": {
+    "description": "无申请消息"
+  },
+  "requests_userId": "用户ID",
+  "@requests_userId": {
+    "description": "用户ID标签"
+  },
+  "requests_detailTitle": "申请详情",
+  "@requests_detailTitle": {
+    "description": "申请详情对话框标题"
+  },
+  "requests_requestInfo": "申请信息",
+  "@requests_requestInfo": {
+    "description": "申请信息部分标题"
+  },
+  "requests_userInfo": "用户信息",
+  "@requests_userInfo": {
+    "description": "用户信息部分标题"
+  },
+  "requests_reviewInfo": "审核信息",
+  "@requests_reviewInfo": {
+    "description": "审核信息部分标题"
+  },
+  "requests_createdAt": "创建时间",
+  "@requests_createdAt": {
+    "description": "创建时间标签"
+  },
+  "requests_reviewedBy": "审核人",
+  "@requests_reviewedBy": {
+    "description": "审核人标签"
+  },
+  "requests_reviewedAt": "审核时间",
+  "@requests_reviewedAt": {
+    "description": "审核时间标签"
+  },
+  "requests_reviewComment": "审核意见",
+  "@requests_reviewComment": {
+    "description": "审核意见标签"
+  },
+  "requests_reviewCommentHint": "给申请人的可选意见",
+  "@requests_reviewCommentHint": {
+    "description": "审核意见提示"
+  },
+  "requests_reviewAction": "审核操作",
+  "@requests_reviewAction": {
+    "description": "审核操作部分标题"
+  },
+  "requests_approve": "批准",
+  "@requests_approve": {
+    "description": "批准按钮文本"
+  },
+  "requests_reject": "拒绝",
+  "@requests_reject": {
+    "description": "拒绝按钮文本"
+  },
+  "requests_confirmApprove": "确认批准",
+  "@requests_confirmApprove": {
+    "description": "确认批准对话框标题"
+  },
+  "requests_confirmApproveMessage": "您确定要批准此权限申请吗？",
+  "@requests_confirmApproveMessage": {
+    "description": "确认批准对话框消息"
+  },
+  "requests_confirmReject": "确认拒绝",
+  "@requests_confirmReject": {
+    "description": "确认拒绝对话框标题"
+  },
+  "requests_confirmRejectMessage": "您确定要拒绝此权限申请吗？",
+  "@requests_confirmRejectMessage": {
+    "description": "确认拒绝对话框消息"
+  },
+  "requests_approveSuccess": "申请批准成功",
+  "@requests_approveSuccess": {
+    "description": "批准成功消息"
+  },
+  "requests_rejectSuccess": "申请拒绝成功",
+  "@requests_rejectSuccess": {
+    "description": "拒绝成功消息"
+  },
+  "common_copied": "已复制到剪贴板",
+  "@common_copied": {
+    "description": "已复制到剪贴板消息"
   }
 }

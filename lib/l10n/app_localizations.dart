@@ -3481,6 +3481,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your authority request was not approved. You may submit a new request'**
   String get settings_statusRejectedDesc;
+
+  /// Profile view subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'View your profile information'**
+  String get profile_viewProfile;
+
+  /// Requests management title
+  ///
+  /// In en, this message translates to:
+  /// **'Requests Management'**
+  String get requests_managementTitle;
+
+  /// Requests management subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'View and manage authority requests'**
+  String get requests_managementSubtitle;
+
+  /// All requests tab
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get requests_tabAll;
+
+  /// Pending requests tab
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get requests_tabPending;
+
+  /// Approved requests tab
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get requests_tabApproved;
+
+  /// Rejected requests tab
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get requests_tabRejected;
+
+  /// No requests message
+  ///
+  /// In en, this message translates to:
+  /// **'No requests found'**
+  String get requests_noRequests;
+
+  /// User ID label
+  ///
+  /// In en, this message translates to:
+  /// **'User ID'**
+  String get requests_userId;
+
+  /// Request detail dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Request Details'**
+  String get requests_detailTitle;
+
+  /// Request information section title
+  ///
+  /// In en, this message translates to:
+  /// **'Request Information'**
+  String get requests_requestInfo;
+
+  /// User information section title
+  ///
+  /// In en, this message translates to:
+  /// **'User Information'**
+  String get requests_userInfo;
+
+  /// Review information section title
+  ///
+  /// In en, this message translates to:
+  /// **'Review Information'**
+  String get requests_reviewInfo;
+
+  /// Created at label
+  ///
+  /// In en, this message translates to:
+  /// **'Created At'**
+  String get requests_createdAt;
+
+  /// Reviewed by label
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed By'**
+  String get requests_reviewedBy;
+
+  /// Reviewed at label
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed At'**
+  String get requests_reviewedAt;
+
+  /// Review comment label
+  ///
+  /// In en, this message translates to:
+  /// **'Review Comment'**
+  String get requests_reviewComment;
+
+  /// Review comment hint
+  ///
+  /// In en, this message translates to:
+  /// **'Optional comment for the applicant'**
+  String get requests_reviewCommentHint;
+
+  /// Review action section title
+  ///
+  /// In en, this message translates to:
+  /// **'Review Action'**
+  String get requests_reviewAction;
+
+  /// Approve button text
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get requests_approve;
+
+  /// Reject button text
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get requests_reject;
+
+  /// Confirm approve dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Approval'**
+  String get requests_confirmApprove;
+
+  /// Confirm approve dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to approve this authority request?'**
+  String get requests_confirmApproveMessage;
+
+  /// Confirm reject dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Rejection'**
+  String get requests_confirmReject;
+
+  /// Confirm reject dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to reject this authority request?'**
+  String get requests_confirmRejectMessage;
+
+  /// Approve success message
+  ///
+  /// In en, this message translates to:
+  /// **'Request approved successfully'**
+  String get requests_approveSuccess;
+
+  /// Reject success message
+  ///
+  /// In en, this message translates to:
+  /// **'Request rejected successfully'**
+  String get requests_rejectSuccess;
+
+  /// Copied to clipboard message
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard'**
+  String get common_copied;
 }
 
 class _AppLocalizationsDelegate

@@ -32,6 +32,8 @@ class _AppInfoCardState extends State<AppInfoCard> {
   DateTime? _lastTapTime;
 
   String? _requestStatus;
+  String? _reviewedComment;
+  DateTime? _reviewedAt;
   bool _isLoadingStatus = false;
 
   @override
@@ -58,13 +60,18 @@ class _AppInfoCardState extends State<AppInfoCard> {
       );
 
       if (requests.isNotEmpty && mounted) {
+        final latestRequest = requests.first;
         setState(() {
-          _requestStatus = requests.first.status;
+          _requestStatus = latestRequest.status;
+          _reviewedComment = latestRequest.reviewedComment;
+          _reviewedAt = latestRequest.reviewedAt;
           _isLoadingStatus = false;
         });
       } else if (mounted) {
         setState(() {
           _requestStatus = null;
+          _reviewedComment = null;
+          _reviewedAt = null;
           _isLoadingStatus = false;
         });
       }
@@ -72,6 +79,8 @@ class _AppInfoCardState extends State<AppInfoCard> {
       if (mounted) {
         setState(() {
           _requestStatus = null;
+          _reviewedComment = null;
+          _reviewedAt = null;
           _isLoadingStatus = false;
         });
       }
@@ -411,7 +420,11 @@ class _AppInfoCardState extends State<AppInfoCard> {
                       ),
                     )
                   else if (_requestStatus != null) ...[
-                    RequestStatusCard(status: _requestStatus!),
+                    RequestStatusCard(
+                      status: _requestStatus!,
+                      reviewedComment: _reviewedComment,
+                      reviewedAt: _reviewedAt,
+                    ),
                     const SizedBox(height: 12),
                   ],
 

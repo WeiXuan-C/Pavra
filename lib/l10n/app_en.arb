@@ -2114,7 +2114,6 @@
   "@report_spamFailed": {
     "description": "Report spam failed message"
   },
-
   "settings_requestAuthorityDialog": "Request Authority Role",
   "@settings_requestAuthorityDialog": {
     "description": "Request authority dialog title"
@@ -2258,8 +2257,7 @@
   "location_putrajaya": "Putrajaya",
   "@location_putrajaya": {
     "description": "Putrajaya federal territory"
-  }
-,
+  },
   "settings_requestPending": "Request Pending",
   "@settings_requestPending": {
     "description": "Request pending button text"
@@ -2287,5 +2285,117 @@
   "settings_statusRejectedDesc": "Your authority request was not approved. You may submit a new request",
   "@settings_statusRejectedDesc": {
     "description": "Rejected status description"
+  },
+  "profile_viewProfile": "View your profile information",
+  "@profile_viewProfile": {
+    "description": "Profile view subtitle"
+  },
+  "requests_managementTitle": "Requests Management",
+  "@requests_managementTitle": {
+    "description": "Requests management title"
+  },
+  "requests_managementSubtitle": "View and manage authority requests",
+  "@requests_managementSubtitle": {
+    "description": "Requests management subtitle"
+  },
+  "requests_tabAll": "All",
+  "@requests_tabAll": {
+    "description": "All requests tab"
+  },
+  "requests_tabPending": "Pending",
+  "@requests_tabPending": {
+    "description": "Pending requests tab"
+  },
+  "requests_tabApproved": "Approved",
+  "@requests_tabApproved": {
+    "description": "Approved requests tab"
+  },
+  "requests_tabRejected": "Rejected",
+  "@requests_tabRejected": {
+    "description": "Rejected requests tab"
+  },
+  "requests_noRequests": "No requests found",
+  "@requests_noRequests": {
+    "description": "No requests message"
+  },
+  "requests_userId": "User ID",
+  "@requests_userId": {
+    "description": "User ID label"
+  },
+  "requests_detailTitle": "Request Details",
+  "@requests_detailTitle": {
+    "description": "Request detail dialog title"
+  },
+  "requests_requestInfo": "Request Information",
+  "@requests_requestInfo": {
+    "description": "Request information section title"
+  },
+  "requests_userInfo": "User Information",
+  "@requests_userInfo": {
+    "description": "User information section title"
+  },
+  "requests_reviewInfo": "Review Information",
+  "@requests_reviewInfo": {
+    "description": "Review information section title"
+  },
+  "requests_createdAt": "Created At",
+  "@requests_createdAt": {
+    "description": "Created at label"
+  },
+  "requests_reviewedBy": "Reviewed By",
+  "@requests_reviewedBy": {
+    "description": "Reviewed by label"
+  },
+  "requests_reviewedAt": "Reviewed At",
+  "@requests_reviewedAt": {
+    "description": "Reviewed at label"
+  },
+  "requests_reviewComment": "Review Comment",
+  "@requests_reviewComment": {
+    "description": "Review comment label"
+  },
+  "requests_reviewCommentHint": "Optional comment for the applicant",
+  "@requests_reviewCommentHint": {
+    "description": "Review comment hint"
+  },
+  "requests_reviewAction": "Review Action",
+  "@requests_reviewAction": {
+    "description": "Review action section title"
+  },
+  "requests_approve": "Approve",
+  "@requests_approve": {
+    "description": "Approve button text"
+  },
+  "requests_reject": "Reject",
+  "@requests_reject": {
+    "description": "Reject button text"
+  },
+  "requests_confirmApprove": "Confirm Approval",
+  "@requests_confirmApprove": {
+    "description": "Confirm approve dialog title"
+  },
+  "requests_confirmApproveMessage": "Are you sure you want to approve this authority request?",
+  "@requests_confirmApproveMessage": {
+    "description": "Confirm approve dialog message"
+  },
+  "requests_confirmReject": "Confirm Rejection",
+  "@requests_confirmReject": {
+    "description": "Confirm reject dialog title"
+  },
+  "requests_confirmRejectMessage": "Are you sure you want to reject this authority request?",
+  "@requests_confirmRejectMessage": {
+    "description": "Confirm reject dialog message"
+  },
+  "requests_approveSuccess": "Request approved successfully",
+  "@requests_approveSuccess": {
+    "description": "Approve success message"
+  },
+  "requests_rejectSuccess": "Request rejected successfully",
+  "@requests_rejectSuccess": {
+    "description": "Reject success message"
+  },
+  "common_copied": "Copied to clipboard",
+  "@common_copied": {
+    "description": "Copied to clipboard message"
   }
 }

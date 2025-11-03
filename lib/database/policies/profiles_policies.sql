@@ -34,22 +34,35 @@ CREATE POLICY "profiles_insert_service" ON public.profiles
 CREATE POLICY "profiles_insert_own" ON public.profiles
   FOR INSERT
   TO authenticated
-  WITH CHECK ((SELECT auth.uid()) = id);
+  WITH CHECK ((select auth.uid()) = id);
 
--- 3. UPDATE Policy
--- 用户只能更新自己的 profile
+-- 3. UPDATE Policies
+-- Policy 3a: Users can update their own profile
 CREATE POLICY "profiles_update_own" ON public.profiles
   FOR UPDATE
   TO authenticated
-  USING ((SELECT auth.uid()) = id)
-  WITH CHECK ((SELECT auth.uid()) = id);
+  USING ((select auth.uid()) = id)
+  WITH CHECK ((select auth.uid()) = id);
+
+-- Policy 3b: Developers can update other users' roles (for request approval)
+CREATE POLICY "profiles_update_role_by_developer" ON public.profiles
+  FOR UPDATE
+  TO authenticated
+  USING (
+    -- Must be a developer
+    (SELECT role FROM public.profiles WHERE id = (select auth.uid())) = 'developer'
+  )
+  WITH CHECK (
+    -- Must be a developer
+    (SELECT role FROM public.profiles WHERE id = (select auth.uid())) = 'developer'
+  );
 
 -- 4. DELETE Policy
 -- 用户可以删除自己的 profile
 CREATE POLICY "profiles_delete_own" ON public.profiles
   FOR DELETE
   TO authenticated
-  USING ((SELECT auth.uid()) = id);
+  USING ((select auth.uid()) = id);
 
 -- =====================================
 -- POLICY 说明
@@ -66,6 +79,9 @@ COMMENT ON POLICY "profiles_insert_own" ON public.profiles IS
 
 COMMENT ON POLICY "profiles_update_own" ON public.profiles IS 
   '用户只能更新自己的 profile';
+
+COMMENT ON POLICY "profiles_update_role_by_developer" ON public.profiles IS 
+  'Developers can update any user profile (especially role field for request approval)';
 
 COMMENT ON POLICY "profiles_delete_own" ON public.profiles IS 
   '用户可以删除自己的 profile';

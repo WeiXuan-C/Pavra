@@ -131,6 +131,39 @@ class AuthorityRequestApi {
     }
   }
 
+  /// Get all requests with optional status filter (for developer review)
+  Future<List<Map<String, dynamic>>> getAllRequests({
+    String? status,
+    int page = 1,
+    int pageSize = 50,
+  }) async {
+    try {
+      return await _db
+          .selectWithPagination(
+            table: _tableName,
+            columns: '*',
+            page: page,
+            pageSize: pageSize,
+            orderBy: 'created_at',
+            ascending: false,
+          )
+          .then((results) {
+            return results.where((r) {
+              if (r['is_deleted'] == true) return false;
+              if (status != null && r['status'] != status) return false;
+              return true;
+            }).toList();
+          });
+    } catch (e) {
+      developer.log(
+        'Error getting all requests: $e',
+        name: 'AuthorityRequestApi',
+        error: e,
+      );
+      rethrow;
+    }
+  }
+
   /// Check if user has pending request
   Future<bool> hasPendingRequest(String userId) async {
     try {
@@ -162,6 +195,11 @@ class AuthorityRequestApi {
     String? reviewedComment,
   }) async {
     try {
+      developer.log(
+        'Updating request status: requestId=$requestId, status=$status',
+        name: 'AuthorityRequestApi',
+      );
+
       final data = {
         'status': status,
         'reviewed_by': reviewedBy,
@@ -171,12 +209,19 @@ class AuthorityRequestApi {
         'updated_at': DateTime.now().toIso8601String(),
       };
 
-      return await _db.update(
+      final result = await _db.update<Map<String, dynamic>>(
         table: _tableName,
         data: data,
         matchColumn: 'id',
         matchValue: requestId,
       );
+
+      developer.log(
+        'Update result: ${result.length} records updated',
+        name: 'AuthorityRequestApi',
+      );
+
+      return result;
     } catch (e) {
       developer.log(
         'Error updating request status: $e',

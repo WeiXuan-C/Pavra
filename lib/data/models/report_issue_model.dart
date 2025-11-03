@@ -63,8 +63,6 @@ class ReportIssueModel {
       reviewedAt: json['reviewed_at'] != null
           ? DateTime.parse(json['reviewed_at'] as String)
           : null,
-      verifiedVotes: json['verified_votes'] as int? ?? 0,
-      spamVotes: json['spam_votes'] as int? ?? 0,
       createdBy: json['created_by'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
@@ -89,8 +87,6 @@ class ReportIssueModel {
       'reviewed_by': reviewedBy,
       'reviewed_comment': reviewedComment,
       'reviewed_at': reviewedAt?.toIso8601String(),
-      'verified_votes': verifiedVotes,
-      'spam_votes': spamVotes,
       'created_by': createdBy,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),

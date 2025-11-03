@@ -1712,4 +1712,88 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settings_statusRejectedDesc => '您的权限申请未获批准。您可以提交新的申请';
+
+  @override
+  String get profile_viewProfile => '查看您的个人资料';
+
+  @override
+  String get requests_managementTitle => '申请管理';
+
+  @override
+  String get requests_managementSubtitle => '查看和管理权限申请';
+
+  @override
+  String get requests_tabAll => '全部';
+
+  @override
+  String get requests_tabPending => '待处理';
+
+  @override
+  String get requests_tabApproved => '已批准';
+
+  @override
+  String get requests_tabRejected => '已拒绝';
+
+  @override
+  String get requests_noRequests => '未找到申请';
+
+  @override
+  String get requests_userId => '用户ID';
+
+  @override
+  String get requests_detailTitle => '申请详情';
+
+  @override
+  String get requests_requestInfo => '申请信息';
+
+  @override
+  String get requests_userInfo => '用户信息';
+
+  @override
+  String get requests_reviewInfo => '审核信息';
+
+  @override
+  String get requests_createdAt => '创建时间';
+
+  @override
+  String get requests_reviewedBy => '审核人';
+
+  @override
+  String get requests_reviewedAt => '审核时间';
+
+  @override
+  String get requests_reviewComment => '审核意见';
+
+  @override
+  String get requests_reviewCommentHint => '给申请人的可选意见';
+
+  @override
+  String get requests_reviewAction => '审核操作';
+
+  @override
+  String get requests_approve => '批准';
+
+  @override
+  String get requests_reject => '拒绝';
+
+  @override
+  String get requests_confirmApprove => '确认批准';
+
+  @override
+  String get requests_confirmApproveMessage => '您确定要批准此权限申请吗？';
+
+  @override
+  String get requests_confirmReject => '确认拒绝';
+
+  @override
+  String get requests_confirmRejectMessage => '您确定要拒绝此权限申请吗？';
+
+  @override
+  String get requests_approveSuccess => '申请批准成功';
+
+  @override
+  String get requests_rejectSuccess => '申请拒绝成功';
+
+  @override
+  String get common_copied => '已复制到剪贴板';
 }

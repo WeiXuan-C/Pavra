@@ -119,8 +119,6 @@ CREATE TABLE IF NOT EXISTS public.report_issues (
   reviewed_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,  -- Authority 审核人
   reviewed_comment TEXT,                     -- Authority 备注
   reviewed_at TIMESTAMPTZ,    
-  verified_votes INT DEFAULT 0,              -- 用户确认“报告真实”的票数
-  spam_votes INT DEFAULT 0,    
   created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now(),
@@ -186,6 +184,21 @@ CREATE TABLE IF NOT EXISTS public.requests (
   updated_at TIMESTAMPTZ DEFAULT now(),
   deleted_at TIMESTAMPTZ,
   is_deleted BOOLEAN DEFAULT FALSE
+);
+
+-- =====================================
+-- USER REPUTATION SCORE  TABLE
+-- =====================================
+CREATE TABLE IF NOT EXISTS public.reputations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  action_type TEXT DEFAULT 'UPLOAD_ISSUE' CHECK (
+    action_type IN ('UPLOAD_ISSUE', 'ISSUE_REVIEWED', 'AUTHORITY_REJECTED', 'ISSUE_SPAM')
+  ),
+  change_amount INT NOT NULL,
+  score_before INT NOT NULL,
+  score_after INT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- =====================================

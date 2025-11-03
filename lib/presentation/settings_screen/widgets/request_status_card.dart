@@ -5,8 +5,15 @@ import '../../../l10n/app_localizations.dart';
 /// Displays the current status of authority request
 class RequestStatusCard extends StatelessWidget {
   final String status;
+  final String? reviewedComment;
+  final DateTime? reviewedAt;
 
-  const RequestStatusCard({super.key, required this.status});
+  const RequestStatusCard({
+    super.key,
+    required this.status,
+    this.reviewedComment,
+    this.reviewedAt,
+  });
 
   Color _getStatusColor(ThemeData theme, String status) {
     switch (status) {
@@ -68,41 +75,110 @@ class RequestStatusCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: _getStatusColor(theme, status).withOpacity(0.1),
+        color: _getStatusColor(theme, status).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: _getStatusColor(theme, status), width: 1),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            _getStatusIcon(status),
-            color: _getStatusColor(theme, status),
-            size: 20,
+          Row(
+            children: [
+              Icon(
+                _getStatusIcon(status),
+                color: _getStatusColor(theme, status),
+                size: 20,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _getStatusTitle(l10n, status),
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: _getStatusColor(theme, status),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _getStatusDescription(l10n, status),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _getStatusTitle(l10n, status),
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    color: _getStatusColor(theme, status),
-                    fontWeight: FontWeight.bold,
-                  ),
+          // Show review info for rejected requests
+          if (status == 'rejected' &&
+              (reviewedComment != null || reviewedAt != null)) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.5,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  _getStatusDescription(l10n, status),
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (reviewedAt != null) ...[
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.access_time,
+                          size: 14,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          '${l10n.requests_reviewedAt}: ${_formatDateTime(reviewedAt!)}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                  if (reviewedComment != null &&
+                      reviewedComment!.isNotEmpty) ...[
+                    if (reviewedAt != null) const SizedBox(height: 6),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.comment_outlined,
+                          size: 14,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            '${l10n.requests_reviewComment}: $reviewedComment',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
+  }
+
+  String _formatDateTime(DateTime date) {
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
   }
 }

@@ -308,6 +308,150 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     }
   }
 
+  // ========== Authority Actions ==========
+
+  Future<void> _handleAuthorityVerify() async {
+    if (_isProcessing) return;
+
+    // Show confirmation dialog
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Verify Report'),
+        content: const Text(
+          'Are you sure you want to verify this report as legitimate? '
+          'This will mark the report status as "reviewed".',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Verify'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    setState(() {
+      _isProcessing = true;
+    });
+
+    try {
+      debugPrint('🔄 Authority verifying report: ${widget.report.id}');
+
+      await _reportApi.markAsReviewed(widget.report.id);
+
+      HapticFeedback.heavyImpact();
+      if (!mounted) return;
+
+      Fluttertoast.showToast(
+        msg: 'Report verified successfully',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+      );
+
+      // Pop back to refresh the list
+      Navigator.pop(context, true);
+    } catch (e) {
+      debugPrint('❌ Error verifying report: $e');
+      if (!mounted) return;
+
+      Fluttertoast.showToast(
+        msg: 'Failed to verify report: $e',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _handleAuthorityMarkSpam() async {
+    if (_isProcessing) return;
+
+    // Show confirmation dialog
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Mark as Spam'),
+        content: const Text(
+          'Are you sure you want to mark this report as spam? '
+          'This will change the report status to "spam".',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Mark as Spam'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    setState(() {
+      _isProcessing = true;
+    });
+
+    try {
+      debugPrint('🔄 Authority marking report as spam: ${widget.report.id}');
+
+      await _reportApi.markAsSpam(widget.report.id);
+
+      HapticFeedback.heavyImpact();
+      if (!mounted) return;
+
+      Fluttertoast.showToast(
+        msg: 'Report marked as spam',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+      );
+
+      // Pop back to refresh the list
+      Navigator.pop(context, true);
+    } catch (e) {
+      debugPrint('❌ Error marking report as spam: $e');
+      if (!mounted) return;
+
+      Fluttertoast.showToast(
+        msg: 'Failed to mark as spam: $e',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -1005,6 +1149,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     // Check if current user is the creator of this report
     final authProvider = context.watch<AuthProvider>();
     final currentUserId = authProvider.user?.id;
+    final userRole = authProvider.userProfile?.role ?? 'user';
     final isOwnReport =
         currentUserId != null && widget.report.createdBy == currentUserId;
 
@@ -1013,6 +1158,16 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       return const SizedBox.shrink();
     }
 
+    // Authority users see different buttons
+    if (userRole == 'authority') {
+      return _buildAuthorityActionButtons(theme, l10n);
+    }
+
+    // Regular users see voting buttons
+    return _buildUserVotingButtons(theme, l10n);
+  }
+
+  Widget _buildUserVotingButtons(ThemeData theme, AppLocalizations l10n) {
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
@@ -1097,6 +1252,107 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                       )
                     : Text(
                         _userVote == 'verify' ? 'Verified' : 'Verify',
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAuthorityActionButtons(ThemeData theme, AppLocalizations l10n) {
+    final isReviewed = widget.report.status == 'reviewed';
+    final isSpam = widget.report.status == 'spam';
+
+    return Container(
+      padding: EdgeInsets.all(4.w),
+      decoration: BoxDecoration(
+        color: theme.scaffoldBackgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: _isProcessing || isSpam
+                    ? null
+                    : _handleAuthorityMarkSpam,
+                style: OutlinedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 2.h),
+                  side: BorderSide(
+                    color: isSpam ? Colors.red : Colors.grey,
+                    width: isSpam ? 2.5 : 2,
+                  ),
+                  foregroundColor: isSpam ? Colors.red : Colors.grey,
+                  backgroundColor: isSpam
+                      ? Colors.red.withValues(alpha: 0.1)
+                      : null,
+                ),
+                icon: Icon(
+                  isSpam ? Icons.report : Icons.report_outlined,
+                  size: 20,
+                ),
+                label: _isProcessing
+                    ? SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                        ),
+                      )
+                    : Text(
+                        isSpam ? 'Marked as Spam' : 'Mark as Spam',
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+              ),
+            ),
+            SizedBox(width: 3.w),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: _isProcessing || isReviewed
+                    ? null
+                    : _handleAuthorityVerify,
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 2.h),
+                  backgroundColor: isReviewed
+                      ? Colors.green
+                      : theme.colorScheme.primary,
+                  foregroundColor: Colors.white,
+                  elevation: isReviewed ? 4 : 2,
+                ),
+                icon: Icon(
+                  isReviewed ? Icons.verified : Icons.verified_outlined,
+                  size: 20,
+                ),
+                label: _isProcessing
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
+                        ),
+                      )
+                    : Text(
+                        isReviewed ? 'Verified' : 'Verify Report',
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,

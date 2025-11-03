@@ -1766,4 +1766,91 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settings_statusRejectedDesc =>
       'Your authority request was not approved. You may submit a new request';
+
+  @override
+  String get profile_viewProfile => 'View your profile information';
+
+  @override
+  String get requests_managementTitle => 'Requests Management';
+
+  @override
+  String get requests_managementSubtitle =>
+      'View and manage authority requests';
+
+  @override
+  String get requests_tabAll => 'All';
+
+  @override
+  String get requests_tabPending => 'Pending';
+
+  @override
+  String get requests_tabApproved => 'Approved';
+
+  @override
+  String get requests_tabRejected => 'Rejected';
+
+  @override
+  String get requests_noRequests => 'No requests found';
+
+  @override
+  String get requests_userId => 'User ID';
+
+  @override
+  String get requests_detailTitle => 'Request Details';
+
+  @override
+  String get requests_requestInfo => 'Request Information';
+
+  @override
+  String get requests_userInfo => 'User Information';
+
+  @override
+  String get requests_reviewInfo => 'Review Information';
+
+  @override
+  String get requests_createdAt => 'Created At';
+
+  @override
+  String get requests_reviewedBy => 'Reviewed By';
+
+  @override
+  String get requests_reviewedAt => 'Reviewed At';
+
+  @override
+  String get requests_reviewComment => 'Review Comment';
+
+  @override
+  String get requests_reviewCommentHint => 'Optional comment for the applicant';
+
+  @override
+  String get requests_reviewAction => 'Review Action';
+
+  @override
+  String get requests_approve => 'Approve';
+
+  @override
+  String get requests_reject => 'Reject';
+
+  @override
+  String get requests_confirmApprove => 'Confirm Approval';
+
+  @override
+  String get requests_confirmApproveMessage =>
+      'Are you sure you want to approve this authority request?';
+
+  @override
+  String get requests_confirmReject => 'Confirm Rejection';
+
+  @override
+  String get requests_confirmRejectMessage =>
+      'Are you sure you want to reject this authority request?';
+
+  @override
+  String get requests_approveSuccess => 'Request approved successfully';
+
+  @override
+  String get requests_rejectSuccess => 'Request rejected successfully';
+
+  @override
+  String get common_copied => 'Copied to clipboard';
 }

@@ -3,11 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../core/app_export.dart';
 import '../../l10n/app_localizations.dart';
+import '../../core/providers/auth_provider.dart';
 import '../map_view_screen/map_view_screen.dart';
 import '../report_screen/report_screen.dart';
 import '../notification_screen/notification_screen.dart';
 import '../notification_screen/notification_provider.dart';
 import '../profile_screen/profile_screen.dart';
+import '../requests_management_screen/requests_management_screen.dart';
 
 /// Main Layout
 /// Provides centralized navigation bar for all main app screens
@@ -28,13 +30,24 @@ class _MainLayoutState extends State<MainLayout> {
   // Report screen filter type: 0 = Home, 1 = My Reports, 2 = All Reports
   int _reportFilterType = 0;
 
+  // Profile/Requests screen type: 0 = Profile, 1 = Requests Management
+  int _profileScreenType = 0;
+
   // List of main screens
-  List<Widget> get _screens => [
+  List<Widget> _getScreens(bool isDeveloper) => [
     const MapViewScreen(),
     ReportScreen(filterType: _reportFilterType),
     const NotificationScreen(),
-    const ProfileScreen(),
+    _getProfileScreen(isDeveloper),
   ];
+
+  Widget _getProfileScreen(bool isDeveloper) {
+    if (!isDeveloper || _profileScreenType == 0) {
+      return const ProfileScreen();
+    }
+
+    return const RequestsManagementScreen();
+  }
 
   @override
   void initState() {
@@ -57,6 +70,16 @@ class _MainLayoutState extends State<MainLayout> {
       return;
     }
 
+    // If tapping on Profile tab (index 3) and user is developer, show dropdown menu
+    if (index == 3 && _currentIndex == 3) {
+      final authProvider = context.read<AuthProvider>();
+      final isDeveloper = authProvider.userProfile?.role == 'developer';
+      if (isDeveloper) {
+        _showProfileFilterMenu();
+        return;
+      }
+    }
+
     setState(() {
       _currentIndex = index;
     });
@@ -68,6 +91,59 @@ class _MainLayoutState extends State<MainLayout> {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  /// Show profile filter dropdown menu (for developers)
+  void _showProfileFilterMenu() {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: theme.cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: 2.h),
+            Container(
+              width: 10.w,
+              height: 0.5.h,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            SizedBox(height: 2.h),
+            _buildFilterOption(
+              icon: Icons.person_outline,
+              title: l10n.nav_profile,
+              subtitle: l10n.profile_viewProfile,
+              isSelected: _profileScreenType == 0,
+              onTap: () {
+                Navigator.pop(context);
+                setState(() => _profileScreenType = 0);
+              },
+            ),
+            Divider(height: 1),
+            _buildFilterOption(
+              icon: Icons.assignment_outlined,
+              title: l10n.requests_managementTitle,
+              subtitle: l10n.requests_managementSubtitle,
+              isSelected: _profileScreenType == 1,
+              onTap: () {
+                Navigator.pop(context);
+                setState(() => _profileScreenType = 1);
+              },
+            ),
+            SizedBox(height: 2.h),
+          ],
+        ),
+      ),
+    );
   }
 
   /// Show report filter dropdown menu
@@ -207,6 +283,8 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final authProvider = context.watch<AuthProvider>();
+    final isDeveloper = authProvider.userProfile?.role == 'developer';
 
     return Scaffold(
       body: PageView(
@@ -214,7 +292,7 @@ class _MainLayoutState extends State<MainLayout> {
         onPageChanged: _onPageChanged,
         physics:
             const NeverScrollableScrollPhysics(), // Disable swipe navigation
-        children: _screens,
+        children: _getScreens(isDeveloper),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -327,16 +405,31 @@ class _MainLayoutState extends State<MainLayout> {
             ),
             label: l10n.notification_title,
           ),
-          // Profile
+          // Profile (with dropdown indicator for developers)
           BottomNavigationBarItem(
-            icon: CustomIconWidget(
-              iconName: 'person',
-              color: _currentIndex == 3
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.6),
-              size: 6.w,
+            icon: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                CustomIconWidget(
+                  iconName: 'person',
+                  color: _currentIndex == 3
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.6),
+                  size: 6.w,
+                ),
+                if (isDeveloper && _currentIndex == 3)
+                  Positioned(
+                    right: -2.w,
+                    top: -1.h,
+                    child: Icon(
+                      Icons.arrow_drop_down,
+                      size: 4.w,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+              ],
             ),
             label: l10n.nav_profile,
           ),

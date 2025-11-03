@@ -71,6 +71,23 @@ class AuthorityRequestRepository {
         .toList();
   }
 
+  /// Get all requests with optional status filter
+  Future<List<AuthorityRequestModel>> getAllRequests({
+    String? status,
+    int page = 1,
+    int pageSize = 50,
+  }) async {
+    final jsonList = await _api.getAllRequests(
+      status: status,
+      page: page,
+      pageSize: pageSize,
+    );
+
+    return jsonList
+        .map((json) => AuthorityRequestModel.fromJson(json))
+        .toList();
+  }
+
   /// Check if user has pending request
   Future<bool> hasPendingRequest(String userId) async {
     return await _api.hasPendingRequest(userId);
@@ -91,6 +108,12 @@ class AuthorityRequestRepository {
       reviewedBy: reviewedBy,
       reviewedComment: reviewedComment,
     );
+
+    if (jsonList.isEmpty) {
+      throw Exception(
+        'Failed to update request: No record found with ID $requestId',
+      );
+    }
 
     return AuthorityRequestModel.fromJson(jsonList.first);
   }
