@@ -1796,4 +1796,89 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get common_copied => '已复制到剪贴板';
+
+  @override
+  String get reputation_history => '信誉记录';
+
+  @override
+  String get reputation_noHistory => '暂无信誉记录';
+
+  @override
+  String get reputation_loadError => '加载信誉记录失败';
+
+  @override
+  String get reputation_uploadIssue => '提交报告';
+
+  @override
+  String get reputation_issueReviewed => '报告已验证';
+
+  @override
+  String get reputation_authorityRejected => '报告被拒绝';
+
+  @override
+  String get reputation_issueSpam => '报告被标记为垃圾';
+
+  @override
+  String get reputation_insufficientTitle => '信誉不足';
+
+  @override
+  String get reputation_insufficientMessage =>
+      '您的信誉分数低于40分。您需要保持良好的信誉才能创建报告。请通过积极为社区做出贡献来提高您的信誉。';
+
+  @override
+  String get reputation_insufficientAuthorityMessage =>
+      '您的信誉分数低于40分。您需要保持良好的信誉才能申请权限角色。请通过提交高质量的报告来提高您的信誉。';
+
+  @override
+  String get reputation_title => '信誉分数';
+
+  @override
+  String get reputation_currentScore => '当前分数';
+
+  @override
+  String get reputation_statusExcellent => '优秀';
+
+  @override
+  String get reputation_statusGood => '良好';
+
+  @override
+  String get reputation_statusLow => '较低';
+
+  @override
+  String get reputation_advice => '提示与建议';
+
+  @override
+  String get reputation_adviceExcellent => '做得很好！您的信誉非常优秀。继续提交高质量的报告以保持您的良好声誉。';
+
+  @override
+  String get reputation_adviceGood => '您做得不错！继续提交高质量的报告以提高您的信誉。';
+
+  @override
+  String get reputation_adviceLow => '您的信誉较低。专注于提交高质量的报告以提高您的声誉并恢复完全访问权限。';
+
+  @override
+  String get reputation_howToIncrease => '如何增加分数：';
+
+  @override
+  String get reputation_increaseUpload => '每提交一份报告 +1 分';
+
+  @override
+  String get reputation_increaseReviewed => '报告被权限用户验证 +5 分';
+
+  @override
+  String get reputation_howToDecrease => '什么会降低分数：';
+
+  @override
+  String get reputation_decreaseRejected => '报告被拒绝 -10 分';
+
+  @override
+  String get reputation_decreaseSpam => '报告被标记为垃圾 -15 分';
+
+  @override
+  String get reputation_recentActivity => '最近活动';
+
+  @override
+  String reputation_recentTrend(int change) {
+    return '最近趋势：$change 分';
+  }
 }

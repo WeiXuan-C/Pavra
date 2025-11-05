@@ -1,12 +1,15 @@
 import 'package:supabase_flutter/supabase_flutter.dart' show SupabaseClient;
 import '../../models/report_issue_model.dart';
 import '../../models/issue_photo_model.dart';
+import '../../../core/services/reputation_service.dart';
+import 'dart:developer' as developer;
 
 /// Remote data source for report issues
 /// Note: Only receives SupabaseClient via dependency injection from API layer
 /// Does not directly access Supabase.instance
 class ReportIssueRemoteSource {
   final SupabaseClient _supabase;
+  final _reputationService = ReputationService();
 
   ReportIssueRemoteSource(this._supabase);
 
@@ -110,7 +113,27 @@ class ReportIssueRemoteSource {
 
   /// Submit report issue (change status from draft to submitted)
   Future<ReportIssueModel> submitReportIssue(String id) async {
-    return updateReportIssue(id, {'status': 'submitted'});
+    final result = await updateReportIssue(id, {'status': 'submitted'});
+
+    // Add reputation for submitting issue
+    if (result.createdBy != null) {
+      try {
+        await _reputationService.addReputationForUpload(result.createdBy!);
+        developer.log(
+          '✅ Added reputation for issue submission: ${result.id}',
+          name: 'ReportIssueRemoteSource',
+        );
+      } catch (e) {
+        developer.log(
+          '⚠️ Failed to add reputation for submission: $e',
+          name: 'ReportIssueRemoteSource',
+          error: e,
+        );
+        // Don't fail the submission if reputation update fails
+      }
+    }
+
+    return result;
   }
 
   /// Delete report issue (only draft status) - Soft delete
@@ -185,6 +208,10 @@ class ReportIssueRemoteSource {
     final userId = _supabase.auth.currentUser?.id;
     if (userId == null) throw Exception('User not authenticated');
 
+    // Get the issue first to know who created it
+    final issue = await fetchReportIssueById(id);
+    if (issue == null) throw Exception('Issue not found');
+
     final updates = {
       'status': status,
       'reviewed_by': userId,
@@ -192,6 +219,36 @@ class ReportIssueRemoteSource {
       'reviewed_at': DateTime.now().toIso8601String(),
     };
 
-    return updateReportIssue(id, updates);
+    final result = await updateReportIssue(id, updates);
+
+    // Update reputation based on status change
+    if (issue.createdBy != null) {
+      try {
+        if (status == 'spam') {
+          // Deduct reputation for spam
+          await _reputationService.deductReputationForSpam(issue.createdBy!);
+          developer.log(
+            '✅ Deducted reputation for spam issue: ${result.id}',
+            name: 'ReportIssueRemoteSource',
+          );
+        } else if (status == 'reviewed') {
+          // Add reputation for reviewed issue
+          await _reputationService.addReputationForReview(issue.createdBy!);
+          developer.log(
+            '✅ Added reputation for reviewed issue: ${result.id}',
+            name: 'ReportIssueRemoteSource',
+          );
+        }
+      } catch (e) {
+        developer.log(
+          '⚠️ Failed to update reputation for review: $e',
+          name: 'ReportIssueRemoteSource',
+          error: e,
+        );
+        // Don't fail the review if reputation update fails
+      }
+    }
+
+    return result;
   }
 }

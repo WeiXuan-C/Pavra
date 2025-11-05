@@ -192,13 +192,13 @@ CREATE TABLE IF NOT EXISTS public.requests (
 CREATE TABLE IF NOT EXISTS public.reputations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  action_type TEXT DEFAULT 'UPLOAD_ISSUE' CHECK (
-    action_type IN ('UPLOAD_ISSUE', 'ISSUE_REVIEWED', 'AUTHORITY_REJECTED', 'ISSUE_SPAM')
+  action_type TEXT NOT NULL CHECK (
+    action_type IN ('UPLOAD_ISSUE', 'ISSUE_REVIEWED', 'AUTHORITY_REJECTED', 'ISSUE_SPAM', 'OTHERS')
   ),
   change_amount INT NOT NULL,
-  score_before INT NOT NULL,
-  score_after INT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  score_before INT NOT NULL CHECK (score_before >= 0 AND score_before <= 100),
+  score_after INT NOT NULL CHECK (score_after >= 0 AND score_after <= 100),
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
 -- =====================================
@@ -243,6 +243,12 @@ CREATE INDEX IF NOT EXISTS idx_requests_status ON public.requests(status);
 CREATE INDEX IF NOT EXISTS idx_requests_reviewed_by ON public.requests(reviewed_by);
 CREATE INDEX IF NOT EXISTS idx_requests_created_at ON public.requests(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_requests_is_deleted ON public.requests(is_deleted);
+
+-- REPUTATIONS
+CREATE INDEX IF NOT EXISTS idx_reputations_user_id ON public.reputations(user_id);
+CREATE INDEX IF NOT EXISTS idx_reputations_created_at ON public.reputations(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_reputations_user_created ON public.reputations(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_reputations_action_type ON public.reputations(action_type);
 
 -- =====================================
 -- 说明

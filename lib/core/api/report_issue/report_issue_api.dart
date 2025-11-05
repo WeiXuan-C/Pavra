@@ -275,24 +275,29 @@ class ReportIssueApi {
   // ========== Authority Actions ==========
 
   /// Authority: Mark report as reviewed (verified)
-  Future<ReportIssueModel> markAsReviewed(String issueId) async {
+  Future<ReportIssueModel> markAsReviewed(
+    String issueId, {
+    String? comment,
+  }) async {
     try {
-      return await _repository.updateReportIssue(issueId, {
-        'status': 'reviewed',
-        'updated_at': DateTime.now().toIso8601String(),
-      });
+      return await _repository.reviewReportIssue(
+        id: issueId,
+        status: 'reviewed',
+        comment: comment,
+      );
     } catch (e) {
       throw Exception('Failed to mark as reviewed: $e');
     }
   }
 
   /// Authority: Mark report as spam
-  Future<ReportIssueModel> markAsSpam(String issueId) async {
+  Future<ReportIssueModel> markAsSpam(String issueId, {String? comment}) async {
     try {
-      return await _repository.updateReportIssue(issueId, {
-        'status': 'spam',
-        'updated_at': DateTime.now().toIso8601String(),
-      });
+      return await _repository.reviewReportIssue(
+        id: issueId,
+        status: 'spam',
+        comment: comment,
+      );
     } catch (e) {
       throw Exception('Failed to mark as spam: $e');
     }

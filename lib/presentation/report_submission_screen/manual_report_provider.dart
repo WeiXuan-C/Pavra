@@ -187,6 +187,9 @@ class ManualReportProvider extends ChangeNotifier {
 
       await _reportApi.submitReport(_draftReport!.id);
 
+      // Note: Reputation is automatically added in the remote source layer
+      // No need to add it here to avoid duplicates
+
       // Clear draft after successful submission
       _draftReport = null;
     } catch (e) {

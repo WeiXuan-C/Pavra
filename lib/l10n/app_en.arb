@@ -2397,5 +2397,118 @@
   "common_copied": "Copied to clipboard",
   "@common_copied": {
     "description": "Copied to clipboard message"
+  },
+  "reputation_history": "Reputation History",
+  "@reputation_history": {
+    "description": "Reputation history section title"
+  },
+  "reputation_noHistory": "No reputation history yet",
+  "@reputation_noHistory": {
+    "description": "No reputation history message"
+  },
+  "reputation_loadError": "Failed to load reputation history",
+  "@reputation_loadError": {
+    "description": "Reputation load error message"
+  },
+  "reputation_uploadIssue": "Report Submitted",
+  "@reputation_uploadIssue": {
+    "description": "Reputation action for uploading issue"
+  },
+  "reputation_issueReviewed": "Report Verified",
+  "@reputation_issueReviewed": {
+    "description": "Reputation action for issue reviewed"
+  },
+  "reputation_authorityRejected": "Report Rejected",
+  "@reputation_authorityRejected": {
+    "description": "Reputation action for authority rejection"
+  },
+  "reputation_issueSpam": "Report Marked as Spam",
+  "@reputation_issueSpam": {
+    "description": "Reputation action for spam issue"
+  },
+  "reputation_insufficientTitle": "Insufficient Reputation",
+  "@reputation_insufficientTitle": {
+    "description": "Insufficient reputation dialog title"
+  },
+  "reputation_insufficientMessage": "Your reputation score is below 40. You need to maintain a good reputation to create reports. Please improve your reputation by contributing positively to the community.",
+  "@reputation_insufficientMessage": {
+    "description": "Insufficient reputation message for creating reports"
+  },
+  "reputation_insufficientAuthorityMessage": "Your reputation score is below 40. You need to maintain a good reputation to request authority role. Please improve your reputation by submitting quality reports.",
+  "@reputation_insufficientAuthorityMessage": {
+    "description": "Insufficient reputation message for authority request"
+  },
+  "reputation_title": "Reputation Score",
+  "@reputation_title": {
+    "description": "Reputation section title"
+  },
+  "reputation_currentScore": "Current Score",
+  "@reputation_currentScore": {
+    "description": "Current reputation score label"
+  },
+  "reputation_statusExcellent": "Excellent Standing",
+  "@reputation_statusExcellent": {
+    "description": "Excellent reputation status"
+  },
+  "reputation_statusGood": "Good Standing",
+  "@reputation_statusGood": {
+    "description": "Good reputation status"
+  },
+  "reputation_statusLow": "Low Standing",
+  "@reputation_statusLow": {
+    "description": "Low reputation status"
+  },
+  "reputation_advice": "Tips & Advice",
+  "@reputation_advice": {
+    "description": "Advice section title"
+  },
+  "reputation_adviceExcellent": "Great job! Your reputation is excellent. Keep contributing quality reports to maintain your standing.",
+  "@reputation_adviceExcellent": {
+    "description": "Advice for excellent reputation"
+  },
+  "reputation_adviceGood": "You're doing well! Continue submitting quality reports to improve your reputation.",
+  "@reputation_adviceGood": {
+    "description": "Advice for good reputation"
+  },
+  "reputation_adviceLow": "Your reputation is low. Focus on submitting quality reports to improve your standing and regain full access.",
+  "@reputation_adviceLow": {
+    "description": "Advice for low reputation"
+  },
+  "reputation_howToIncrease": "How to Increase Score:",
+  "@reputation_howToIncrease": {
+    "description": "How to increase score section"
+  },
+  "reputation_increaseUpload": "+1 point for each report submitted",
+  "@reputation_increaseUpload": {
+    "description": "Increase score by uploading"
+  },
+  "reputation_increaseReviewed": "+5 points when your report is verified by authorities",
+  "@reputation_increaseReviewed": {
+    "description": "Increase score when reviewed"
+  },
+  "reputation_howToDecrease": "What Decreases Score:",
+  "@reputation_howToDecrease": {
+    "description": "What decreases score section"
+  },
+  "reputation_decreaseRejected": "-10 points if your report is rejected",
+  "@reputation_decreaseRejected": {
+    "description": "Decrease score when rejected"
+  },
+  "reputation_decreaseSpam": "-15 points if your report is marked as spam",
+  "@reputation_decreaseSpam": {
+    "description": "Decrease score when marked as spam"
+  },
+  "reputation_recentActivity": "Recent Activity",
+  "@reputation_recentActivity": {
+    "description": "Recent activity section title"
+  },
+  "reputation_recentTrend": "Recent trend: {change} points",
+  "@reputation_recentTrend": {
+    "description": "Recent trend message",
+    "placeholders": {
+      "change": {
+        "type": "int"
+      }
+    }
   }
 }

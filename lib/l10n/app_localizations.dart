@@ -3649,6 +3649,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copied to clipboard'**
   String get common_copied;
+
+  /// Reputation history section title
+  ///
+  /// In en, this message translates to:
+  /// **'Reputation History'**
+  String get reputation_history;
+
+  /// No reputation history message
+  ///
+  /// In en, this message translates to:
+  /// **'No reputation history yet'**
+  String get reputation_noHistory;
+
+  /// Reputation load error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load reputation history'**
+  String get reputation_loadError;
+
+  /// Reputation action for uploading issue
+  ///
+  /// In en, this message translates to:
+  /// **'Report Submitted'**
+  String get reputation_uploadIssue;
+
+  /// Reputation action for issue reviewed
+  ///
+  /// In en, this message translates to:
+  /// **'Report Verified'**
+  String get reputation_issueReviewed;
+
+  /// Reputation action for authority rejection
+  ///
+  /// In en, this message translates to:
+  /// **'Report Rejected'**
+  String get reputation_authorityRejected;
+
+  /// Reputation action for spam issue
+  ///
+  /// In en, this message translates to:
+  /// **'Report Marked as Spam'**
+  String get reputation_issueSpam;
+
+  /// Insufficient reputation dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient Reputation'**
+  String get reputation_insufficientTitle;
+
+  /// Insufficient reputation message for creating reports
+  ///
+  /// In en, this message translates to:
+  /// **'Your reputation score is below 40. You need to maintain a good reputation to create reports. Please improve your reputation by contributing positively to the community.'**
+  String get reputation_insufficientMessage;
+
+  /// Insufficient reputation message for authority request
+  ///
+  /// In en, this message translates to:
+  /// **'Your reputation score is below 40. You need to maintain a good reputation to request authority role. Please improve your reputation by submitting quality reports.'**
+  String get reputation_insufficientAuthorityMessage;
+
+  /// Reputation section title
+  ///
+  /// In en, this message translates to:
+  /// **'Reputation Score'**
+  String get reputation_title;
+
+  /// Current reputation score label
+  ///
+  /// In en, this message translates to:
+  /// **'Current Score'**
+  String get reputation_currentScore;
+
+  /// Excellent reputation status
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent Standing'**
+  String get reputation_statusExcellent;
+
+  /// Good reputation status
+  ///
+  /// In en, this message translates to:
+  /// **'Good Standing'**
+  String get reputation_statusGood;
+
+  /// Low reputation status
+  ///
+  /// In en, this message translates to:
+  /// **'Low Standing'**
+  String get reputation_statusLow;
+
+  /// Advice section title
+  ///
+  /// In en, this message translates to:
+  /// **'Tips & Advice'**
+  String get reputation_advice;
+
+  /// Advice for excellent reputation
+  ///
+  /// In en, this message translates to:
+  /// **'Great job! Your reputation is excellent. Keep contributing quality reports to maintain your standing.'**
+  String get reputation_adviceExcellent;
+
+  /// Advice for good reputation
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re doing well! Continue submitting quality reports to improve your reputation.'**
+  String get reputation_adviceGood;
+
+  /// Advice for low reputation
+  ///
+  /// In en, this message translates to:
+  /// **'Your reputation is low. Focus on submitting quality reports to improve your standing and regain full access.'**
+  String get reputation_adviceLow;
+
+  /// How to increase score section
+  ///
+  /// In en, this message translates to:
+  /// **'How to Increase Score:'**
+  String get reputation_howToIncrease;
+
+  /// Increase score by uploading
+  ///
+  /// In en, this message translates to:
+  /// **'+1 point for each report submitted'**
+  String get reputation_increaseUpload;
+
+  /// Increase score when reviewed
+  ///
+  /// In en, this message translates to:
+  /// **'+5 points when your report is verified by authorities'**
+  String get reputation_increaseReviewed;
+
+  /// What decreases score section
+  ///
+  /// In en, this message translates to:
+  /// **'What Decreases Score:'**
+  String get reputation_howToDecrease;
+
+  /// Decrease score when rejected
+  ///
+  /// In en, this message translates to:
+  /// **'-10 points if your report is rejected'**
+  String get reputation_decreaseRejected;
+
+  /// Decrease score when marked as spam
+  ///
+  /// In en, this message translates to:
+  /// **'-15 points if your report is marked as spam'**
+  String get reputation_decreaseSpam;
+
+  /// Recent activity section title
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Activity'**
+  String get reputation_recentActivity;
+
+  /// Recent trend message
+  ///
+  /// In en, this message translates to:
+  /// **'Recent trend: {change} points'**
+  String reputation_recentTrend(int change);
 }
 
 class _AppLocalizationsDelegate

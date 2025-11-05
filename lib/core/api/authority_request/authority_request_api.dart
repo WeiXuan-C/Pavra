@@ -1,10 +1,12 @@
 import 'dart:developer' as developer;
 import '../../supabase/database_service.dart';
+import '../../services/reputation_service.dart';
 
 /// Authority Request API
 /// Handles authority request operations with the database
 class AuthorityRequestApi {
   final _db = DatabaseService();
+  final _reputationService = ReputationService();
 
   static const String _tableName = 'requests';
 
@@ -200,6 +202,12 @@ class AuthorityRequestApi {
         name: 'AuthorityRequestApi',
       );
 
+      // Get the request first to know who created it
+      final request = await getRequestById(requestId);
+      if (request == null) {
+        throw Exception('Request not found with ID: $requestId');
+      }
+
       final data = {
         'status': status,
         'reviewed_by': reviewedBy,
@@ -220,6 +228,26 @@ class AuthorityRequestApi {
         'Update result: ${result.length} records updated',
         name: 'AuthorityRequestApi',
       );
+
+      // Deduct reputation if request is rejected
+      if (status == 'rejected' && request['user_id'] != null) {
+        try {
+          await _reputationService.deductReputationForRejection(
+            request['user_id'] as String,
+          );
+          developer.log(
+            '✅ Deducted reputation for rejected request: $requestId',
+            name: 'AuthorityRequestApi',
+          );
+        } catch (e) {
+          developer.log(
+            '⚠️ Failed to deduct reputation for rejection: $e',
+            name: 'AuthorityRequestApi',
+            error: e,
+          );
+          // Don't fail the rejection if reputation update fails
+        }
+      }
 
       return result;
     } catch (e) {

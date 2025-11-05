@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../core/providers/auth_provider.dart';
+import '../../../core/services/reputation_service.dart';
 import '../../../data/repositories/user_repository.dart';
 import '../../../data/repositories/authority_request_repository.dart';
 import 'authority_request_dialog.dart';
@@ -261,6 +262,27 @@ class _AppInfoCardState extends State<AppInfoCard> {
     final userId = authProvider.user?.id;
 
     if (userId == null) return;
+
+    // Check reputation score
+    final reputationService = ReputationService();
+    final canRequest = await reputationService.canRequestAuthority(userId);
+
+    if (!canRequest && context.mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.reputation_insufficientTitle),
+          content: Text(l10n.reputation_insufficientAuthorityMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.common_ok),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
 
     try {
       final hasPending = await widget.requestRepository.hasPendingRequest(

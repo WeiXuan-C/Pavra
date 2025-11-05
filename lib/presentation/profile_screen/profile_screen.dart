@@ -11,6 +11,7 @@ import '../../core/supabase/storage_service.dart';
 import '../layouts/header_layout.dart';
 import 'widgets/edit_profile_dialog.dart';
 import 'widgets/statistics_analysis_widget.dart';
+import 'widgets/reputation_history_widget.dart';
 
 /// Profile Screen
 /// Displays user profile information and app settings
@@ -319,6 +320,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
 
                 const SizedBox(height: 24),
+
+                // Reputation History Section (only for regular users)
+                if (profile.role == 'user') ...[
+                  ReputationHistoryWidget(userId: user.id),
+                  const SizedBox(height: 24),
+                ],
 
                 // Statistics Analysis Section
                 const StatisticsAnalysisWidget(),

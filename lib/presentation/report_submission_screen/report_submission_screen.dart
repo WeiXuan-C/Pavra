@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../core/providers/auth_provider.dart';
+import '../../core/services/reputation_service.dart';
 import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
 import './widgets/description_input_widget.dart';
@@ -84,6 +87,40 @@ class _ReportSubmissionScreenState extends State<ReportSubmissionScreen> {
   @override
   void initState() {
     super.initState();
+    _checkReputationAndInitialize();
+  }
+
+  Future<void> _checkReputationAndInitialize() async {
+    final authProvider = context.read<AuthProvider>();
+    final userId = authProvider.user?.id;
+
+    if (userId != null) {
+      final reputationService = ReputationService();
+      final canCreate = await reputationService.canCreateReport(userId);
+
+      if (!canCreate && mounted) {
+        final l10n = AppLocalizations.of(context);
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            title: Text(l10n.reputation_insufficientTitle),
+            content: Text(l10n.reputation_insufficientMessage),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(); // Go back to previous screen
+                },
+                child: Text(l10n.common_ok),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+    }
+
     _initializeScreen();
   }
 

@@ -2397,5 +2397,118 @@
   "common_copied": "已复制到剪贴板",
   "@common_copied": {
     "description": "已复制到剪贴板消息"
+  },
+  "reputation_history": "信誉记录",
+  "@reputation_history": {
+    "description": "信誉记录部分标题"
+  },
+  "reputation_noHistory": "暂无信誉记录",
+  "@reputation_noHistory": {
+    "description": "无信誉记录消息"
+  },
+  "reputation_loadError": "加载信誉记录失败",
+  "@reputation_loadError": {
+    "description": "信誉加载错误消息"
+  },
+  "reputation_uploadIssue": "提交报告",
+  "@reputation_uploadIssue": {
+    "description": "上传问题的信誉操作"
+  },
+  "reputation_issueReviewed": "报告已验证",
+  "@reputation_issueReviewed": {
+    "description": "问题已审核的信誉操作"
+  },
+  "reputation_authorityRejected": "报告被拒绝",
+  "@reputation_authorityRejected": {
+    "description": "权限拒绝的信誉操作"
+  },
+  "reputation_issueSpam": "报告被标记为垃圾",
+  "@reputation_issueSpam": {
+    "description": "垃圾问题的信誉操作"
+  },
+  "reputation_insufficientTitle": "信誉不足",
+  "@reputation_insufficientTitle": {
+    "description": "信誉不足对话框标题"
+  },
+  "reputation_insufficientMessage": "您的信誉分数低于40分。您需要保持良好的信誉才能创建报告。请通过积极为社区做出贡献来提高您的信誉。",
+  "@reputation_insufficientMessage": {
+    "description": "创建报告的信誉不足消息"
+  },
+  "reputation_insufficientAuthorityMessage": "您的信誉分数低于40分。您需要保持良好的信誉才能申请权限角色。请通过提交高质量的报告来提高您的信誉。",
+  "@reputation_insufficientAuthorityMessage": {
+    "description": "申请权限的信誉不足消息"
+  },
+  "reputation_title": "信誉分数",
+  "@reputation_title": {
+    "description": "信誉部分标题"
+  },
+  "reputation_currentScore": "当前分数",
+  "@reputation_currentScore": {
+    "description": "当前信誉分数标签"
+  },
+  "reputation_statusExcellent": "优秀",
+  "@reputation_statusExcellent": {
+    "description": "优秀信誉状态"
+  },
+  "reputation_statusGood": "良好",
+  "@reputation_statusGood": {
+    "description": "良好信誉状态"
+  },
+  "reputation_statusLow": "较低",
+  "@reputation_statusLow": {
+    "description": "较低信誉状态"
+  },
+  "reputation_advice": "提示与建议",
+  "@reputation_advice": {
+    "description": "建议部分标题"
+  },
+  "reputation_adviceExcellent": "做得很好！您的信誉非常优秀。继续提交高质量的报告以保持您的良好声誉。",
+  "@reputation_adviceExcellent": {
+    "description": "优秀信誉的建议"
+  },
+  "reputation_adviceGood": "您做得不错！继续提交高质量的报告以提高您的信誉。",
+  "@reputation_adviceGood": {
+    "description": "良好信誉的建议"
+  },
+  "reputation_adviceLow": "您的信誉较低。专注于提交高质量的报告以提高您的声誉并恢复完全访问权限。",
+  "@reputation_adviceLow": {
+    "description": "较低信誉的建议"
+  },
+  "reputation_howToIncrease": "如何增加分数：",
+  "@reputation_howToIncrease": {
+    "description": "如何增加分数部分"
+  },
+  "reputation_increaseUpload": "每提交一份报告 +1 分",
+  "@reputation_increaseUpload": {
+    "description": "通过上传增加分数"
+  },
+  "reputation_increaseReviewed": "报告被权限用户验证 +5 分",
+  "@reputation_increaseReviewed": {
+    "description": "审核通过时增加分数"
+  },
+  "reputation_howToDecrease": "什么会降低分数：",
+  "@reputation_howToDecrease": {
+    "description": "什么会降低分数部分"
+  },
+  "reputation_decreaseRejected": "报告被拒绝 -10 分",
+  "@reputation_decreaseRejected": {
+    "description": "被拒绝时降低分数"
+  },
+  "reputation_decreaseSpam": "报告被标记为垃圾 -15 分",
+  "@reputation_decreaseSpam": {
+    "description": "被标记为垃圾时降低分数"
+  },
+  "reputation_recentActivity": "最近活动",
+  "@reputation_recentActivity": {
+    "description": "最近活动部分标题"
+  },
+  "reputation_recentTrend": "最近趋势：{change} 分",
+  "@reputation_recentTrend": {
+    "description": "最近趋势消息",
+    "placeholders": {
+      "change": {
+        "type": "int"
+      }
+    }
   }
 }

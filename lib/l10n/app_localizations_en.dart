@@ -1853,4 +1853,95 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get common_copied => 'Copied to clipboard';
+
+  @override
+  String get reputation_history => 'Reputation History';
+
+  @override
+  String get reputation_noHistory => 'No reputation history yet';
+
+  @override
+  String get reputation_loadError => 'Failed to load reputation history';
+
+  @override
+  String get reputation_uploadIssue => 'Report Submitted';
+
+  @override
+  String get reputation_issueReviewed => 'Report Verified';
+
+  @override
+  String get reputation_authorityRejected => 'Report Rejected';
+
+  @override
+  String get reputation_issueSpam => 'Report Marked as Spam';
+
+  @override
+  String get reputation_insufficientTitle => 'Insufficient Reputation';
+
+  @override
+  String get reputation_insufficientMessage =>
+      'Your reputation score is below 40. You need to maintain a good reputation to create reports. Please improve your reputation by contributing positively to the community.';
+
+  @override
+  String get reputation_insufficientAuthorityMessage =>
+      'Your reputation score is below 40. You need to maintain a good reputation to request authority role. Please improve your reputation by submitting quality reports.';
+
+  @override
+  String get reputation_title => 'Reputation Score';
+
+  @override
+  String get reputation_currentScore => 'Current Score';
+
+  @override
+  String get reputation_statusExcellent => 'Excellent Standing';
+
+  @override
+  String get reputation_statusGood => 'Good Standing';
+
+  @override
+  String get reputation_statusLow => 'Low Standing';
+
+  @override
+  String get reputation_advice => 'Tips & Advice';
+
+  @override
+  String get reputation_adviceExcellent =>
+      'Great job! Your reputation is excellent. Keep contributing quality reports to maintain your standing.';
+
+  @override
+  String get reputation_adviceGood =>
+      'You\'re doing well! Continue submitting quality reports to improve your reputation.';
+
+  @override
+  String get reputation_adviceLow =>
+      'Your reputation is low. Focus on submitting quality reports to improve your standing and regain full access.';
+
+  @override
+  String get reputation_howToIncrease => 'How to Increase Score:';
+
+  @override
+  String get reputation_increaseUpload => '+1 point for each report submitted';
+
+  @override
+  String get reputation_increaseReviewed =>
+      '+5 points when your report is verified by authorities';
+
+  @override
+  String get reputation_howToDecrease => 'What Decreases Score:';
+
+  @override
+  String get reputation_decreaseRejected =>
+      '-10 points if your report is rejected';
+
+  @override
+  String get reputation_decreaseSpam =>
+      '-15 points if your report is marked as spam';
+
+  @override
+  String get reputation_recentActivity => 'Recent Activity';
+
+  @override
+  String reputation_recentTrend(int change) {
+    return 'Recent trend: $change points';
+  }
 }
