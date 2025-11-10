@@ -1,5 +1,5 @@
-import 'package:pavra_server_client/pavra_server_client.dart';
 import 'package:flutter/material.dart';
+import 'package:pavra_server_client/pavra_server_client.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 
 /// Sets up a global client object that can be used to talk to the server from
