@@ -44,9 +44,49 @@ class ReportIssueRemoteSource {
     }
 
     final response = await query;
-    return (response as List)
+    final reports = (response as List)
         .map((json) => ReportIssueModel.fromJson(json))
         .toList();
+
+    // Fetch vote counts for all reports
+    for (var report in reports) {
+      final voteCounts = await _getVoteCounts(report.id);
+      // Update the report with vote counts
+      final index = reports.indexOf(report);
+      reports[index] = report.copyWith(
+        verifiedVotes: voteCounts['verify'] ?? 0,
+        spamVotes: voteCounts['spam'] ?? 0,
+      );
+    }
+
+    return reports;
+  }
+
+  /// Get vote counts for a report
+  Future<Map<String, int>> _getVoteCounts(String issueId) async {
+    try {
+      final response = await _supabase
+          .from('issue_votes')
+          .select('vote_type')
+          .eq('issue_id', issueId);
+
+      final votes = response as List;
+      int verifyCount = 0;
+      int spamCount = 0;
+
+      for (var vote in votes) {
+        if (vote['vote_type'] == 'verify') {
+          verifyCount++;
+        } else if (vote['vote_type'] == 'spam') {
+          spamCount++;
+        }
+      }
+
+      return {'verify': verifyCount, 'spam': spamCount};
+    } catch (e) {
+      developer.log('Error fetching vote counts: $e');
+      return {'verify': 0, 'spam': 0};
+    }
   }
 
   /// Fetch single report issue by ID
@@ -59,7 +99,14 @@ class ReportIssueRemoteSource {
         .maybeSingle();
 
     if (response == null) return null;
-    return ReportIssueModel.fromJson(response);
+    
+    final report = ReportIssueModel.fromJson(response);
+    final voteCounts = await _getVoteCounts(id);
+    
+    return report.copyWith(
+      verifiedVotes: voteCounts['verify'] ?? 0,
+      spamVotes: voteCounts['spam'] ?? 0,
+    );
   }
 
   /// Create new report issue

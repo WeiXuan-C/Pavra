@@ -2,24 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../core/providers/auth_provider.dart';
-import '../../../core/services/reputation_service.dart';
 import '../../../data/repositories/user_repository.dart';
-import '../../../data/repositories/authority_request_repository.dart';
-import 'authority_request_dialog.dart';
-import 'request_status_card.dart';
 
 /// App Info Card
 /// Displays app version, developer mode, and authority request
 class AppInfoCard extends StatefulWidget {
   final UserRepository userRepository;
-  final AuthorityRequestRepository requestRepository;
-  final VoidCallback onRequestStatusChanged;
 
   const AppInfoCard({
     super.key,
     required this.userRepository,
-    required this.requestRepository,
-    required this.onRequestStatusChanged,
   });
 
   @override
@@ -32,60 +24,9 @@ class _AppInfoCardState extends State<AppInfoCard> {
   int _versionTapCount = 0;
   DateTime? _lastTapTime;
 
-  String? _requestStatus;
-  String? _reviewedComment;
-  DateTime? _reviewedAt;
-  bool _isLoadingStatus = false;
-
   @override
   void initState() {
     super.initState();
-    _loadRequestStatus();
-  }
-
-  Future<void> _loadRequestStatus() async {
-    final authProvider = context.read<AuthProvider>();
-    final userId = authProvider.user?.id;
-
-    if (userId == null) return;
-
-    setState(() {
-      _isLoadingStatus = true;
-    });
-
-    try {
-      final requests = await widget.requestRepository.getRequestsByUserId(
-        userId,
-        page: 1,
-        pageSize: 1,
-      );
-
-      if (requests.isNotEmpty && mounted) {
-        final latestRequest = requests.first;
-        setState(() {
-          _requestStatus = latestRequest.status;
-          _reviewedComment = latestRequest.reviewedComment;
-          _reviewedAt = latestRequest.reviewedAt;
-          _isLoadingStatus = false;
-        });
-      } else if (mounted) {
-        setState(() {
-          _requestStatus = null;
-          _reviewedComment = null;
-          _reviewedAt = null;
-          _isLoadingStatus = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _requestStatus = null;
-          _reviewedComment = null;
-          _reviewedAt = null;
-          _isLoadingStatus = false;
-        });
-      }
-    }
   }
 
   void _handleVersionTap(BuildContext context, String userRole) {
@@ -256,109 +197,6 @@ class _AppInfoCardState extends State<AppInfoCard> {
     }
   }
 
-  Future<void> _requestAuthority(BuildContext context) async {
-    final l10n = AppLocalizations.of(context);
-    final authProvider = context.read<AuthProvider>();
-    final userId = authProvider.user?.id;
-
-    if (userId == null) return;
-
-    // Check reputation score
-    final reputationService = ReputationService();
-    final canRequest = await reputationService.canRequestAuthority(userId);
-
-    if (!canRequest && context.mounted) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(l10n.reputation_insufficientTitle),
-          content: Text(l10n.reputation_insufficientAuthorityMessage),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(l10n.common_ok),
-            ),
-          ],
-        ),
-      );
-      return;
-    }
-
-    try {
-      final hasPending = await widget.requestRepository.hasPendingRequest(
-        userId,
-      );
-      if (hasPending && context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.settings_hasPendingRequest)),
-        );
-        return;
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('${l10n.common_error}: $e')));
-      }
-      return;
-    }
-
-    if (context.mounted) {
-      final result = await showDialog<Map<String, String>>(
-        context: context,
-        builder: (context) => const AuthorityRequestDialog(),
-      );
-
-      if (result != null && context.mounted) {
-        await _submitAuthorityRequest(context, userId, result);
-      }
-    }
-  }
-
-  Future<void> _submitAuthorityRequest(
-    BuildContext context,
-    String userId,
-    Map<String, String> data,
-  ) async {
-    final l10n = AppLocalizations.of(context);
-
-    try {
-      await widget.requestRepository.createRequest(
-        userId: userId,
-        idNumber: data['idNumber']!,
-        organization: data['organization']!,
-        location: data['location']!,
-        referrerCode: data['referrerCode'],
-        remarks: data['remarks'],
-      );
-
-      await _loadRequestStatus();
-      widget.onRequestStatusChanged();
-
-      if (context.mounted) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(l10n.settings_requestSubmitted),
-            content: Text(l10n.settings_requestSubmittedDesc),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(l10n.common_ok),
-              ),
-            ],
-          ),
-        );
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.settings_requestFailed}: $e')),
-        );
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -428,49 +266,6 @@ class _AppInfoCardState extends State<AppInfoCard> {
                     ],
                   ),
                 ),
-
-                // Request Authority Section (only for regular users)
-                if (userRole == 'user') ...[
-                  const Divider(height: 24),
-
-                  // Status indicator
-                  if (_isLoadingStatus)
-                    const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  else if (_requestStatus != null) ...[
-                    RequestStatusCard(
-                      status: _requestStatus!,
-                      reviewedComment: _reviewedComment,
-                      reviewedAt: _reviewedAt,
-                    ),
-                    const SizedBox(height: 12),
-                  ],
-
-                  // Request button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: _requestStatus == 'pending'
-                          ? null
-                          : () => _requestAuthority(context),
-                      icon: const Icon(Icons.admin_panel_settings),
-                      label: Text(
-                        _requestStatus == 'pending'
-                            ? l10n.settings_requestPending
-                            : l10n.settings_requestAuthority,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.primaryContainer,
-                        foregroundColor: theme.colorScheme.onPrimaryContainer,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                  ),
-                ],
               ],
             ),
           ),

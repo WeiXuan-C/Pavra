@@ -124,9 +124,11 @@ class _MapViewScreenState extends State<MapViewScreen> {
   Future<void> _initializeMap() async {
     await _getCurrentLocation();
     _createMarkers();
-    setState(() {
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> _getCurrentLocation() async {

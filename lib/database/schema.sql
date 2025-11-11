@@ -116,9 +116,6 @@ CREATE TABLE IF NOT EXISTS public.report_issues (
   status TEXT DEFAULT 'draft' CHECK (
     status IN ('draft', 'submitted', 'reviewed', 'spam', 'discard')
   ),
-  reviewed_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,  -- Authority 审核人
-  reviewed_comment TEXT,                     -- Authority 备注
-  reviewed_at TIMESTAMPTZ,    
   created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now(),
@@ -233,7 +230,6 @@ CREATE INDEX IF NOT EXISTS idx_user_notifications_unread ON public.user_notifica
 CREATE INDEX IF NOT EXISTS idx_report_issues_status ON public.report_issues(status);
 CREATE INDEX IF NOT EXISTS idx_report_issues_severity ON public.report_issues(severity);
 CREATE INDEX IF NOT EXISTS idx_report_issues_created_by ON public.report_issues(created_by);
-CREATE INDEX IF NOT EXISTS idx_report_issues_reviewed_by ON public.report_issues(reviewed_by);
 CREATE INDEX IF NOT EXISTS idx_report_issues_location ON public.report_issues(latitude, longitude);
 CREATE INDEX IF NOT EXISTS idx_report_issues_issue_type_ids ON public.report_issues USING GIN(issue_type_ids);
 

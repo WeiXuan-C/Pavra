@@ -36,6 +36,7 @@ class _ReportScreenState extends State<ReportScreen> {
   int _totalReports = 0;
   int _reviewedReports = 0;
   int _inProgressReports = 0;
+  int _currentTabCount = 0; // 当前标签页的报告数量
 
   @override
   void initState() {
@@ -103,13 +104,11 @@ class _ReportScreenState extends State<ReportScreen> {
           createdBy: user.id,
         );
 
-        // Filter reports with status: draft, submitted, reviewed, spam
+        // Filter reports with status: draft, submitted (exclude discard)
         final filteredReports = allReports.where((report) {
           return [
             'draft',
             'submitted',
-            'reviewed',
-            'spam',
           ].contains(report.status);
         }).toList();
 
@@ -120,19 +119,19 @@ class _ReportScreenState extends State<ReportScreen> {
         final recentReports = filteredReports.take(3).toList();
 
         // Calculate stats
-        final reviewed = filteredReports
-            .where((r) => r.status == 'reviewed')
-            .length;
-        final inProgress = filteredReports
+        final submitted = filteredReports
             .where((r) => r.status == 'submitted')
+            .length;
+        final drafts = filteredReports
+            .where((r) => r.status == 'draft')
             .length;
 
         if (mounted) {
           setState(() {
             _recentReports = recentReports;
             _totalReports = filteredReports.length;
-            _reviewedReports = reviewed;
-            _inProgressReports = inProgress;
+            _reviewedReports = submitted;
+            _inProgressReports = drafts;
             _isLoading = false;
           });
         }
@@ -176,16 +175,26 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   String _getTitle(AppLocalizations l10n) {
+    String baseTitle;
     switch (widget.filterType) {
       case 0:
-        return l10n.report_title;
+        baseTitle = l10n.report_title;
+        break;
       case 1:
-        return l10n.report_myReports;
+        baseTitle = l10n.report_myReports;
+        break;
       case 2:
-        return l10n.report_allReports;
+        baseTitle = l10n.report_allReports;
+        break;
       default:
-        return l10n.report_title;
+        baseTitle = l10n.report_title;
     }
+    
+    // 为 My Reports 和 All Reports 添加数量
+    if (widget.filterType == 1 || widget.filterType == 2) {
+      return '$baseTitle ($_currentTabCount)';
+    }
+    return baseTitle;
   }
 
   Widget _buildBody(
@@ -413,9 +422,9 @@ class _ReportScreenState extends State<ReportScreen> {
             Expanded(
               child: _buildStatCard(
                 theme,
-                icon: Icons.check_circle_outline,
+                icon: Icons.send_outlined,
                 value: _reviewedReports.toString(),
-                label: l10n.report_reviewed,
+                label: l10n.report_statusSubmitted,
                 color: Colors.green,
               ),
             ),
@@ -423,9 +432,9 @@ class _ReportScreenState extends State<ReportScreen> {
             Expanded(
               child: _buildStatCard(
                 theme,
-                icon: Icons.pending_outlined,
+                icon: Icons.edit_outlined,
                 value: _inProgressReports.toString(),
-                label: l10n.report_inProgress,
+                label: l10n.report_statusDraft,
                 color: Colors.orange,
               ),
             ),
@@ -646,12 +655,10 @@ class _ReportScreenState extends State<ReportScreen> {
   Color _getStatusColor(String status) {
     switch (status) {
       case 'draft':
-        return Colors.grey;
+        return Colors.orange; // Orange for draft (matching My Contribution)
       case 'submitted':
-        return Colors.orange;
-      case 'reviewed':
-        return Colors.green;
-      case 'spam':
+        return Colors.green; // Green for submitted (matching My Contribution)
+      case 'discard':
         return Colors.red;
       default:
         return Colors.grey;
@@ -664,10 +671,8 @@ class _ReportScreenState extends State<ReportScreen> {
         return l10n.report_statusDraft;
       case 'submitted':
         return l10n.report_statusSubmitted;
-      case 'reviewed':
-        return l10n.report_statusReviewed;
-      case 'spam':
-        return l10n.report_statusSpam;
+      case 'discard':
+        return l10n.report_statusDiscarded;
       default:
         return status;
     }
@@ -676,6 +681,11 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget _buildMyReportsTab(BuildContext context) {
     return ReportListTab(
       filterType: ReportFilterType.myReports,
+      onCountChanged: (count) {
+        setState(() {
+          _currentTabCount = count;
+        });
+      },
       onReportTap: (report) {
         Navigator.push(
           context,
@@ -694,6 +704,11 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget _buildAllReportsTab(BuildContext context) {
     return ReportListTab(
       filterType: ReportFilterType.allReports,
+      onCountChanged: (count) {
+        setState(() {
+          _currentTabCount = count;
+        });
+      },
       onReportTap: (report) {
         Navigator.push(
           context,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../l10n/app_localizations.dart';
 import '../../data/repositories/user_repository.dart';
-import '../../data/repositories/authority_request_repository.dart';
 import '../layouts/header_layout.dart';
 import 'widgets/theme_settings_card.dart';
 import 'widgets/notification_settings_card.dart';
@@ -21,12 +20,6 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   final _userRepository = UserRepository();
-  final _requestRepository = AuthorityRequestRepository();
-
-  void _onRequestStatusChanged() {
-    // Callback to refresh UI if needed
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +43,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             // App Info & Authority Request
             AppInfoCard(
               userRepository: _userRepository,
-              requestRepository: _requestRepository,
-              onRequestStatusChanged: _onRequestStatusChanged,
             ),
           ],
         ),
