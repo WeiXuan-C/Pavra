@@ -37,6 +37,8 @@ class ReputationApi {
     required int changeAmount,
     required int scoreBefore,
     required int scoreAfter,
+    String? relatedIssueId,
+    String? notes,
   }) async {
     try {
       final data = {
@@ -45,6 +47,8 @@ class ReputationApi {
         'change_amount': changeAmount,
         'score_before': scoreBefore,
         'score_after': scoreAfter,
+        if (relatedIssueId != null) 'related_issue_id': relatedIssueId,
+        if (notes != null) 'notes': notes,
       };
 
       print('🔍 [ReputationApi] Inserting reputation record: $data');

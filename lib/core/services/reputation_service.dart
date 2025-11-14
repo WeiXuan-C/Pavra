@@ -19,41 +19,74 @@ class ReputationService {
     _reputationApi = ReputationApi(_supabase);
   }
 
-  /// Add reputation points for uploading an issue
-  /// Returns the new reputation score
-  Future<int> addReputationForUpload(String userId) async {
+  /// Add reputation points for uploading an issue (+1)
+  Future<int> addReputationForUpload(String userId, {String? issueId}) async {
     return await _addReputation(
       userId: userId,
       actionType: 'UPLOAD_ISSUE',
       changeAmount: 1,
+      relatedIssueId: issueId,
       alwaysRecord: true, // Always record even if at max
     );
   }
 
-  /// Add reputation points for issue being reviewed
-  Future<int> addReputationForReview(String userId) async {
+  /// Add reputation points for issue being verified (+5)
+  Future<int> addReputationForVerified(String userId, {String? issueId}) async {
     return await _addReputation(
       userId: userId,
-      actionType: 'ISSUE_REVIEWED',
+      actionType: 'ISSUE_VERIFIED',
       changeAmount: 5,
+      relatedIssueId: issueId,
     );
   }
 
-  /// Deduct reputation points for authority rejection
-  Future<int> deductReputationForRejection(String userId) async {
+  /// Add reputation points for helpful vote (+2)
+  Future<int> addReputationForHelpfulVote(String userId, {String? issueId}) async {
     return await _addReputation(
       userId: userId,
-      actionType: 'AUTHORITY_REJECTED',
-      changeAmount: -10,
+      actionType: 'HELPFUL_VOTE',
+      changeAmount: 2,
+      relatedIssueId: issueId,
     );
   }
 
-  /// Deduct reputation points for spam issue
-  Future<int> deductReputationForSpam(String userId) async {
+  /// Add reputation points for issue resolved (+10)
+  Future<int> addReputationForResolved(String userId, {String? issueId}) async {
+    return await _addReputation(
+      userId: userId,
+      actionType: 'ISSUE_RESOLVED',
+      changeAmount: 10,
+      relatedIssueId: issueId,
+    );
+  }
+
+  /// Deduct reputation points for spam issue (-15)
+  Future<int> deductReputationForSpam(String userId, {String? issueId}) async {
     return await _addReputation(
       userId: userId,
       actionType: 'ISSUE_SPAM',
       changeAmount: -15,
+      relatedIssueId: issueId,
+    );
+  }
+
+  /// Deduct reputation points for rejected issue (-10)
+  Future<int> deductReputationForRejection(String userId, {String? issueId}) async {
+    return await _addReputation(
+      userId: userId,
+      actionType: 'ISSUE_REJECTED',
+      changeAmount: -10,
+      relatedIssueId: issueId,
+    );
+  }
+
+  /// Deduct reputation points for duplicate report (-5)
+  Future<int> deductReputationForDuplicate(String userId, {String? issueId}) async {
+    return await _addReputation(
+      userId: userId,
+      actionType: 'DUPLICATE_REPORT',
+      changeAmount: -5,
+      relatedIssueId: issueId,
     );
   }
 
@@ -62,6 +95,8 @@ class ReputationService {
     required String userId,
     required String actionType,
     required int changeAmount,
+    String? relatedIssueId,
+    String? notes,
     bool alwaysRecord = false,
   }) async {
     try {
@@ -122,6 +157,8 @@ class ReputationService {
         changeAmount: changeAmount,
         scoreBefore: scoreBefore,
         scoreAfter: scoreAfter,
+        relatedIssueId: relatedIssueId,
+        notes: notes,
       );
 
       developer.log(

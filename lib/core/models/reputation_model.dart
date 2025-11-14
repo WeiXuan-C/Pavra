@@ -3,11 +3,12 @@
 class ReputationModel {
   final String id;
   final String userId;
-  final String
-  actionType; // 'UPLOAD_ISSUE', 'ISSUE_REVIEWED', 'AUTHORITY_REJECTED', 'ISSUE_SPAM'
+  final String actionType; // See schema.sql for all action types
   final int changeAmount;
   final int scoreBefore;
   final int scoreAfter;
+  final String? relatedIssueId;
+  final String? notes;
   final DateTime createdAt;
 
   ReputationModel({
@@ -17,6 +18,8 @@ class ReputationModel {
     required this.changeAmount,
     required this.scoreBefore,
     required this.scoreAfter,
+    this.relatedIssueId,
+    this.notes,
     required this.createdAt,
   });
 
@@ -28,6 +31,8 @@ class ReputationModel {
       changeAmount: json['change_amount'] as int,
       scoreBefore: json['score_before'] as int,
       scoreAfter: json['score_after'] as int,
+      relatedIssueId: json['related_issue_id'] as String?,
+      notes: json['notes'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
@@ -40,6 +45,8 @@ class ReputationModel {
       'change_amount': changeAmount,
       'score_before': scoreBefore,
       'score_after': scoreAfter,
+      'related_issue_id': relatedIssueId,
+      'notes': notes,
       'created_at': createdAt.toIso8601String(),
     };
   }

@@ -102,7 +102,7 @@ class _AiAnalysisDialogState extends State<AiAnalysisDialog> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                '${l10n.report_confidence}: ${confidence.toUpperCase()}',
+                '${l10n.report_confidence}: ${_getConfidenceText(confidence, l10n)}',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: _getConfidenceColor(confidence, theme),
                   fontWeight: FontWeight.w600,
@@ -170,14 +170,38 @@ class _AiAnalysisDialogState extends State<AiAnalysisDialog> {
               ),
               SizedBox(height: 1.h),
               Wrap(
-                spacing: 1.w,
+                spacing: 2.w,
                 runSpacing: 1.h,
                 children: issueTypes.map((type) {
-                  return Chip(
-                    label: Text(type),
-                    backgroundColor: theme.colorScheme.primaryContainer,
-                    labelStyle: TextStyle(
-                      color: theme.colorScheme.onPrimaryContainer,
+                  return Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 3.w,
+                      vertical: 1.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.label,
+                          size: 16,
+                          color: theme.colorScheme.onPrimaryContainer,
+                        ),
+                        SizedBox(width: 1.w),
+                        Text(
+                          type,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onPrimaryContainer,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }).toList(),
@@ -212,7 +236,7 @@ class _AiAnalysisDialogState extends State<AiAnalysisDialog> {
                   ),
                   SizedBox(width: 2.w),
                   Text(
-                    severity.toUpperCase(),
+                    _getSeverityText(severity, l10n),
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: _getSeverityColor(severity, theme),
                       fontWeight: FontWeight.w600,
@@ -240,6 +264,19 @@ class _AiAnalysisDialogState extends State<AiAnalysisDialog> {
     );
   }
 
+  String _getConfidenceText(String confidence, AppLocalizations l10n) {
+    switch (confidence.toLowerCase()) {
+      case 'high':
+        return l10n.report_confidenceHigh;
+      case 'medium':
+        return l10n.report_confidenceMedium;
+      case 'low':
+        return l10n.report_confidenceLow;
+      default:
+        return confidence;
+    }
+  }
+
   Color _getConfidenceColor(String confidence, ThemeData theme) {
     switch (confidence.toLowerCase()) {
       case 'high':
@@ -250,6 +287,23 @@ class _AiAnalysisDialogState extends State<AiAnalysisDialog> {
         return Colors.red;
       default:
         return theme.colorScheme.primary;
+    }
+  }
+
+  String _getSeverityText(String severity, AppLocalizations l10n) {
+    switch (severity.toLowerCase()) {
+      case 'minor':
+        return l10n.report_severityMinor;
+      case 'low':
+        return l10n.report_severityLow;
+      case 'moderate':
+        return l10n.report_severityModerate;
+      case 'high':
+        return l10n.report_severityHigh;
+      case 'critical':
+        return l10n.report_severityCritical;
+      default:
+        return severity;
     }
   }
 

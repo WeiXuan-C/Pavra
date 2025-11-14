@@ -1269,30 +1269,7 @@
   "@report_suggestions": {
     "description": "Suggestions section title"
   },
-  "report_aiAnalysis": "AI Analysis",
-  "@report_aiAnalysis": {
-    "description": "AI Analysis dialog title"
-  },
-  "report_confidence": "Confidence",
-  "@report_confidence": {
-    "description": "AI confidence label"
-  },
-  "report_noDescription": "No description provided",
-  "@report_noDescription": {
-    "description": "No description fallback text"
-  },
-  "report_suggestedIssueTypes": "Suggested Issue Types",
-  "@report_suggestedIssueTypes": {
-    "description": "Suggested issue types label"
-  },
-  "report_suggestedSeverity": "Suggested Severity",
-  "@report_suggestedSeverity": {
-    "description": "Suggested severity label"
-  },
-  "report_applySuggestions": "Apply Suggestions",
-  "@report_applySuggestions": {
-    "description": "Apply suggestions button"
-  },
+
   "report_analyzingImage": "Analyzing Image with AI",
   "@report_analyzingImage": {
     "description": "Analyzing image progress title"
@@ -2510,5 +2487,117 @@
         "type": "int"
       }
     }
+  },
+  "reputation_maxReached": "You've reached maximum reputation! Your contributions are still tracked and appreciated.",
+  "@reputation_maxReached": {
+    "description": "Message when user reaches maximum reputation score"
+  },
+  "reputation_actionUploadIssue": "Report Submitted",
+  "@reputation_actionUploadIssue": {
+    "description": "Reputation action: User submits a report (+1 point)"
+  },
+  "reputation_actionFirstReporter": "First Reporter",
+  "@reputation_actionFirstReporter": {
+    "description": "Reputation action: First to report in location (+5 points)"
+  },
+  "reputation_actionDuplicateReport": "Duplicate Report",
+  "@reputation_actionDuplicateReport": {
+    "description": "Reputation action: Duplicate of existing report (-5 points)"
+  },
+  "reputation_actionAbuseReport": "System Abuse",
+  "@reputation_actionAbuseReport": {
+    "description": "Reputation action: System abuse detected (-25 points)"
+  },
+  "reputation_actionManualAdjustment": "Manual Adjustment",
+  "@reputation_actionManualAdjustment": {
+    "description": "Reputation action: Admin manual correction (±any points)"
+  },
+  "reputation_actionOthers": "Other Action",
+  "@reputation_actionOthers": {
+    "description": "Reputation action: For future extensions"
+  },
+  "report_sortLatest": "Latest",
+  "@report_sortLatest": {
+    "description": "Sort option: Latest reports first"
+  },
+  "report_sortPriority": "Priority",
+  "@report_sortPriority": {
+    "description": "Sort option: By priority/severity"
+  },
+  "report_sortLatestFirst": "Latest First",
+  "@report_sortLatestFirst": {
+    "description": "Sort option label: Latest reports first"
+  },
+  "report_sortByPriority": "By Priority",
+  "@report_sortByPriority": {
+    "description": "Sort option label: Sort by priority"
+  },
+  "report_filterDraft": "Draft",
+  "@report_filterDraft": {
+    "description": "Filter option: Draft reports"
+  },
+  "report_filterSubmitted": "Submitted",
+  "@report_filterSubmitted": {
+    "description": "Filter option: Submitted reports"
+  },
+  "report_search": "Search",
+  "@report_search": {
+    "description": "Search button tooltip"
+  },
+  "report_viewGrid": "Grid View",
+  "@report_viewGrid": {
+    "description": "Grid view tooltip"
+  },
+  "report_viewList": "List View",
+  "@report_viewList": {
+    "description": "List view tooltip"
+  },
+  "report_reachedEnd": "You've reached the end",
+  "@report_reachedEnd": {
+    "description": "Message when user reaches end of report list"
+  },
+  "report_noMoreReports": "No more reports to show",
+  "@report_noMoreReports": {
+    "description": "Message when no more reports to display"
+  },
+  "report_aiAnalysis": "AI Analysis Result",
+  "@report_aiAnalysis": {
+    "description": "AI analysis dialog title"
+  },
+  "report_confidence": "Confidence Level",
+  "@report_confidence": {
+    "description": "AI analysis confidence level label"
+  },
+  "report_confidenceHigh": "High",
+  "@report_confidenceHigh": {
+    "description": "High confidence level"
+  },
+  "report_confidenceMedium": "Medium",
+  "@report_confidenceMedium": {
+    "description": "Medium confidence level"
+  },
+  "report_confidenceLow": "Low",
+  "@report_confidenceLow": {
+    "description": "Low confidence level"
+  },
+  "report_suggestedIssueTypes": "Suggested Issue Types",
+  "@report_suggestedIssueTypes": {
+    "description": "AI suggested issue types label"
+  },
+  "report_suggestedSeverity": "Suggested Severity",
+  "@report_suggestedSeverity": {
+    "description": "AI suggested severity label"
+  },
+  "report_applySuggestions": "Apply Suggestions",
+  "@report_applySuggestions": {
+    "description": "Button to apply AI suggestions"
+  },
+  "report_noDescription": "No description available",
+  "@report_noDescription": {
+    "description": "Message when no description is available"
+  },
+  "report_reportSubmittedMessageNew": "Your road safety report has been successfully submitted. Thank you for contributing to community safety!",
+  "@report_reportSubmittedMessageNew": {
+    "description": "Report submitted success message (without authority reference)"
   }
 }

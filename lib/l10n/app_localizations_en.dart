@@ -982,24 +982,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get report_suggestions => 'Suggestions';
 
   @override
-  String get report_aiAnalysis => 'AI Analysis';
-
-  @override
-  String get report_confidence => 'Confidence';
-
-  @override
-  String get report_noDescription => 'No description provided';
-
-  @override
-  String get report_suggestedIssueTypes => 'Suggested Issue Types';
-
-  @override
-  String get report_suggestedSeverity => 'Suggested Severity';
-
-  @override
-  String get report_applySuggestions => 'Apply Suggestions';
-
-  @override
   String get report_analyzingImage => 'Analyzing Image with AI';
 
   @override
@@ -1944,4 +1926,90 @@ class AppLocalizationsEn extends AppLocalizations {
   String reputation_recentTrend(int change) {
     return 'Recent trend: $change points';
   }
+
+  @override
+  String get reputation_maxReached =>
+      'You\'ve reached maximum reputation! Your contributions are still tracked and appreciated.';
+
+  @override
+  String get reputation_actionUploadIssue => 'Report Submitted';
+
+  @override
+  String get reputation_actionFirstReporter => 'First Reporter';
+
+  @override
+  String get reputation_actionDuplicateReport => 'Duplicate Report';
+
+  @override
+  String get reputation_actionAbuseReport => 'System Abuse';
+
+  @override
+  String get reputation_actionManualAdjustment => 'Manual Adjustment';
+
+  @override
+  String get reputation_actionOthers => 'Other Action';
+
+  @override
+  String get report_sortLatest => 'Latest';
+
+  @override
+  String get report_sortPriority => 'Priority';
+
+  @override
+  String get report_sortLatestFirst => 'Latest First';
+
+  @override
+  String get report_sortByPriority => 'By Priority';
+
+  @override
+  String get report_filterDraft => 'Draft';
+
+  @override
+  String get report_filterSubmitted => 'Submitted';
+
+  @override
+  String get report_search => 'Search';
+
+  @override
+  String get report_viewGrid => 'Grid View';
+
+  @override
+  String get report_viewList => 'List View';
+
+  @override
+  String get report_reachedEnd => 'You\'ve reached the end';
+
+  @override
+  String get report_noMoreReports => 'No more reports to show';
+
+  @override
+  String get report_aiAnalysis => 'AI Analysis Result';
+
+  @override
+  String get report_confidence => 'Confidence Level';
+
+  @override
+  String get report_confidenceHigh => 'High';
+
+  @override
+  String get report_confidenceMedium => 'Medium';
+
+  @override
+  String get report_confidenceLow => 'Low';
+
+  @override
+  String get report_suggestedIssueTypes => 'Suggested Issue Types';
+
+  @override
+  String get report_suggestedSeverity => 'Suggested Severity';
+
+  @override
+  String get report_applySuggestions => 'Apply Suggestions';
+
+  @override
+  String get report_noDescription => 'No description available';
+
+  @override
+  String get report_reportSubmittedMessageNew =>
+      'Your road safety report has been successfully submitted. Thank you for contributing to community safety!';
 }

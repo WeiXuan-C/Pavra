@@ -31,6 +31,8 @@ class ReputationRepository {
     required int changeAmount,
     required int scoreBefore,
     required int scoreAfter,
+    String? relatedIssueId,
+    String? notes,
   }) async {
     return await _api.addReputationRecord(
       userId: userId,
@@ -38,6 +40,8 @@ class ReputationRepository {
       changeAmount: changeAmount,
       scoreBefore: scoreBefore,
       scoreAfter: scoreAfter,
+      relatedIssueId: relatedIssueId,
+      notes: notes,
     );
   }
 

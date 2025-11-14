@@ -1964,42 +1964,6 @@ abstract class AppLocalizations {
   /// **'Suggestions'**
   String get report_suggestions;
 
-  /// AI Analysis dialog title
-  ///
-  /// In en, this message translates to:
-  /// **'AI Analysis'**
-  String get report_aiAnalysis;
-
-  /// AI confidence label
-  ///
-  /// In en, this message translates to:
-  /// **'Confidence'**
-  String get report_confidence;
-
-  /// No description fallback text
-  ///
-  /// In en, this message translates to:
-  /// **'No description provided'**
-  String get report_noDescription;
-
-  /// Suggested issue types label
-  ///
-  /// In en, this message translates to:
-  /// **'Suggested Issue Types'**
-  String get report_suggestedIssueTypes;
-
-  /// Suggested severity label
-  ///
-  /// In en, this message translates to:
-  /// **'Suggested Severity'**
-  String get report_suggestedSeverity;
-
-  /// Apply suggestions button
-  ///
-  /// In en, this message translates to:
-  /// **'Apply Suggestions'**
-  String get report_applySuggestions;
-
   /// Analyzing image progress title
   ///
   /// In en, this message translates to:
@@ -3134,31 +3098,31 @@ abstract class AppLocalizations {
   /// **'Severity'**
   String get report_severity;
 
-  /// Minor severity level
+  /// Severity level: Minor
   ///
   /// In en, this message translates to:
   /// **'Minor'**
   String get report_severityMinor;
 
-  /// Low severity level
+  /// Severity level: Low
   ///
   /// In en, this message translates to:
   /// **'Low'**
   String get report_severityLow;
 
-  /// Moderate severity level
+  /// Severity level: Moderate
   ///
   /// In en, this message translates to:
   /// **'Moderate'**
   String get report_severityModerate;
 
-  /// High severity level
+  /// Severity level: High
   ///
   /// In en, this message translates to:
   /// **'High'**
   String get report_severityHigh;
 
-  /// Critical severity level
+  /// Severity level: Critical
   ///
   /// In en, this message translates to:
   /// **'Critical'**
@@ -3811,6 +3775,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recent trend: {change} points'**
   String reputation_recentTrend(int change);
+
+  /// Message when user reaches maximum reputation score
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reached maximum reputation! Your contributions are still tracked and appreciated.'**
+  String get reputation_maxReached;
+
+  /// Reputation action: User submits a report (+1 point)
+  ///
+  /// In en, this message translates to:
+  /// **'Report Submitted'**
+  String get reputation_actionUploadIssue;
+
+  /// Reputation action: First to report in location (+5 points)
+  ///
+  /// In en, this message translates to:
+  /// **'First Reporter'**
+  String get reputation_actionFirstReporter;
+
+  /// Reputation action: Duplicate of existing report (-5 points)
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate Report'**
+  String get reputation_actionDuplicateReport;
+
+  /// Reputation action: System abuse detected (-25 points)
+  ///
+  /// In en, this message translates to:
+  /// **'System Abuse'**
+  String get reputation_actionAbuseReport;
+
+  /// Reputation action: Admin manual correction (±any points)
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Adjustment'**
+  String get reputation_actionManualAdjustment;
+
+  /// Reputation action: For future extensions
+  ///
+  /// In en, this message translates to:
+  /// **'Other Action'**
+  String get reputation_actionOthers;
+
+  /// Sort option: Latest reports first
+  ///
+  /// In en, this message translates to:
+  /// **'Latest'**
+  String get report_sortLatest;
+
+  /// Sort option: By priority/severity
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get report_sortPriority;
+
+  /// Sort option label: Latest reports first
+  ///
+  /// In en, this message translates to:
+  /// **'Latest First'**
+  String get report_sortLatestFirst;
+
+  /// Sort option label: Sort by priority
+  ///
+  /// In en, this message translates to:
+  /// **'By Priority'**
+  String get report_sortByPriority;
+
+  /// Filter option: Draft reports
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get report_filterDraft;
+
+  /// Filter option: Submitted reports
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted'**
+  String get report_filterSubmitted;
+
+  /// Search button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get report_search;
+
+  /// Grid view tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Grid View'**
+  String get report_viewGrid;
+
+  /// List view tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'List View'**
+  String get report_viewList;
+
+  /// Message when user reaches end of report list
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reached the end'**
+  String get report_reachedEnd;
+
+  /// Message when no more reports to display
+  ///
+  /// In en, this message translates to:
+  /// **'No more reports to show'**
+  String get report_noMoreReports;
+
+  /// AI analysis dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'AI Analysis Result'**
+  String get report_aiAnalysis;
+
+  /// AI analysis confidence level label
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence Level'**
+  String get report_confidence;
+
+  /// High confidence level
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get report_confidenceHigh;
+
+  /// Medium confidence level
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get report_confidenceMedium;
+
+  /// Low confidence level
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get report_confidenceLow;
+
+  /// AI suggested issue types label
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested Issue Types'**
+  String get report_suggestedIssueTypes;
+
+  /// AI suggested severity label
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested Severity'**
+  String get report_suggestedSeverity;
+
+  /// Button to apply AI suggestions
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Suggestions'**
+  String get report_applySuggestions;
+
+  /// Message when no description is available
+  ///
+  /// In en, this message translates to:
+  /// **'No description available'**
+  String get report_noDescription;
+
+  /// Report submitted success message (without authority reference)
+  ///
+  /// In en, this message translates to:
+  /// **'Your road safety report has been successfully submitted. Thank you for contributing to community safety!'**
+  String get report_reportSubmittedMessageNew;
 }
 
 class _AppLocalizationsDelegate

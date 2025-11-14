@@ -236,7 +236,7 @@ class _ReportListTabState extends State<ReportListTab> {
                     children: [
                       // 排序芯片
                       _buildModernChip(
-                        label: _sortBy == 'date' ? 'Latest' : 'Priority',
+                        label: _sortBy == 'date' ? l10n.report_sortLatest : l10n.report_sortPriority,
                         icon: Icons.swap_vert,
                         isSelected: true,
                         onTap: () {
@@ -264,7 +264,7 @@ class _ReportListTabState extends State<ReportListTab> {
                                   SizedBox(height: 3.h),
                                   _buildBottomSheetOption(
                                     context,
-                                    'Latest First',
+                                    l10n.report_sortLatestFirst,
                                     Icons.access_time,
                                     _sortBy == 'date',
                                     () {
@@ -275,7 +275,7 @@ class _ReportListTabState extends State<ReportListTab> {
                                   ),
                                   _buildBottomSheetOption(
                                     context,
-                                    'By Priority',
+                                    l10n.report_sortByPriority,
                                     Icons.priority_high,
                                     _sortBy == 'severity',
                                     () {
@@ -296,7 +296,7 @@ class _ReportListTabState extends State<ReportListTab> {
                       if (widget.filterType == ReportFilterType.myReports) ...[
                         SizedBox(width: 2.w),
                         _buildModernChip(
-                          label: 'Draft',
+                          label: l10n.report_filterDraft,
                           icon: Icons.edit_outlined,
                           isSelected: _selectedStatuses.contains('draft'),
                           color: Colors.orange,
@@ -305,7 +305,7 @@ class _ReportListTabState extends State<ReportListTab> {
                         ),
                         SizedBox(width: 2.w),
                         _buildModernChip(
-                          label: 'Submitted',
+                          label: l10n.report_filterSubmitted,
                           icon: Icons.send_outlined,
                           isSelected: _selectedStatuses.contains('submitted'),
                           color: Colors.green,
@@ -331,7 +331,7 @@ class _ReportListTabState extends State<ReportListTab> {
                       delegate: ReportSearchDelegate(_filteredReports, widget.onReportTap),
                     );
                   },
-                  tooltip: 'Search',
+                  tooltip: l10n.report_search,
                 ),
               
               // 视图切换 - 单个按钮
@@ -345,7 +345,7 @@ class _ReportListTabState extends State<ReportListTab> {
                     _isGridView = !_isGridView;
                   });
                 },
-                tooltip: _isGridView ? 'List View' : 'Grid View',
+                tooltip: _isGridView ? l10n.report_viewList : l10n.report_viewGrid,
               ),
             ],
           ),
@@ -547,7 +547,7 @@ class _ReportListTabState extends State<ReportListTab> {
           Text(
             _filteredReports.isEmpty 
                 ? l10n.report_noReports 
-                : "You've reached the end",
+                : l10n.report_reachedEnd,
             style: theme.textTheme.bodyLarge?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               fontWeight: FontWeight.w500,
@@ -556,7 +556,7 @@ class _ReportListTabState extends State<ReportListTab> {
           if (_filteredReports.isNotEmpty) ...[
             SizedBox(height: 0.5.h),
             Text(
-              'No more reports to show',
+              l10n.report_noMoreReports,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
               ),

@@ -376,6 +376,12 @@ class _ReputationStatusCard extends StatelessWidget {
             _getStatusColor(score),
           ),
 
+          // Max score notice
+          if (score == 100) ...[
+            const SizedBox(height: 12),
+            _buildMaxScoreNotice(context),
+          ],
+
           const SizedBox(height: 12),
           const Divider(height: 1),
           const SizedBox(height: 12),
@@ -500,6 +506,32 @@ class _ReputationStatusCard extends StatelessWidget {
     );
   }
 
+  Widget _buildMaxScoreNotice(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.amber.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.amber[700]!, width: 1.5),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.stars, color: Colors.amber[700], size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              AppLocalizations.of(context).reputation_maxReached,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Colors.amber[900],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Color _getStatusColor(int score) {
     if (score >= 70) return Colors.green;
     if (score >= 40) return Colors.orange;
@@ -557,26 +589,51 @@ class _ReputationHistoryItem extends StatelessWidget {
             ],
           ),
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: isAtMax
-                ? Colors.amber.withValues(alpha: 0.1)
-                : isPositive
-                ? Colors.green.withValues(alpha: 0.1)
-                : Colors.red.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Text(
-            isAtMax ? 'MAX' : '${isPositive ? '+' : ''}${record.changeAmount}',
-            style: TextStyle(
+        Tooltip(
+          message: isAtMax
+              ? 'Already at maximum score (100/100)'
+              : isPositive
+              ? 'Gained ${record.changeAmount} point${record.changeAmount > 1 ? 's' : ''}'
+              : 'Lost ${record.changeAmount.abs()} point${record.changeAmount.abs() > 1 ? 's' : ''}',
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
               color: isAtMax
-                  ? Colors.amber[700]
+                  ? Colors.amber.withValues(alpha: 0.1)
                   : isPositive
-                  ? Colors.green[700]
-                  : Colors.red[700],
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
+                  ? Colors.green.withValues(alpha: 0.1)
+                  : Colors.red.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: isAtMax
+                  ? Border.all(color: Colors.amber[700]!, width: 1.5)
+                  : null,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isAtMax) ...[
+                  Icon(
+                    Icons.stars,
+                    size: 14,
+                    color: Colors.amber[700],
+                  ),
+                  const SizedBox(width: 4),
+                ],
+                Text(
+                  isAtMax
+                      ? 'MAX'
+                      : '${isPositive ? '+' : ''}${record.changeAmount}',
+                  style: TextStyle(
+                    color: isAtMax
+                        ? Colors.amber[700]
+                        : isPositive
+                        ? Colors.green[700]
+                        : Colors.red[700],
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -589,12 +646,109 @@ class _ReputationHistoryItem extends StatelessWidget {
     AppLocalizations l10n,
   ) {
     switch (actionType) {
+      // Positive actions
       case 'UPLOAD_ISSUE':
         return {
-          'label': l10n.reputation_uploadIssue,
+          'label': l10n.reputation_actionUploadIssue,
           'icon': Icons.upload_file,
           'color': Colors.green,
         };
+      case 'ISSUE_VERIFIED':
+        return {
+          'label': 'Report Verified',
+          'icon': Icons.verified,
+          'color': Colors.blue,
+        };
+      case 'HELPFUL_VOTE':
+        return {
+          'label': 'Helpful Vote',
+          'icon': Icons.thumb_up,
+          'color': Colors.green,
+        };
+      case 'ISSUE_RESOLVED':
+        return {
+          'label': 'Issue Resolved',
+          'icon': Icons.check_circle,
+          'color': Colors.green[700]!,
+        };
+      case 'QUALITY_REPORT':
+        return {
+          'label': 'Quality Report Bonus',
+          'icon': Icons.star,
+          'color': Colors.amber,
+        };
+      case 'CONSECUTIVE_REPORTS':
+        return {
+          'label': 'Consistency Bonus',
+          'icon': Icons.trending_up,
+          'color': Colors.green,
+        };
+      case 'FIRST_REPORTER':
+        return {
+          'label': l10n.reputation_actionFirstReporter,
+          'icon': Icons.emoji_events,
+          'color': Colors.orange,
+        };
+      case 'COMMUNITY_CONTRIBUTION':
+        return {
+          'label': 'Community Contribution',
+          'icon': Icons.volunteer_activism,
+          'color': Colors.purple,
+        };
+      
+      // Negative actions
+      case 'ISSUE_SPAM':
+        return {
+          'label': l10n.reputation_issueSpam,
+          'icon': Icons.report,
+          'color': Colors.red,
+        };
+      case 'ISSUE_REJECTED':
+        return {
+          'label': 'Report Rejected',
+          'icon': Icons.block,
+          'color': Colors.orange,
+        };
+      case 'DUPLICATE_REPORT':
+        return {
+          'label': l10n.reputation_actionDuplicateReport,
+          'icon': Icons.content_copy,
+          'color': Colors.orange[700]!,
+        };
+      case 'FALSE_INFORMATION':
+        return {
+          'label': 'False Information',
+          'icon': Icons.warning,
+          'color': Colors.red[700]!,
+        };
+      case 'ABUSE_REPORT':
+        return {
+          'label': l10n.reputation_actionAbuseReport,
+          'icon': Icons.gavel,
+          'color': Colors.red[900]!,
+        };
+      case 'INACTIVE_PENALTY':
+        return {
+          'label': 'Inactivity Penalty',
+          'icon': Icons.schedule,
+          'color': Colors.grey,
+        };
+      
+      // Special actions
+      case 'MANUAL_ADJUSTMENT':
+        return {
+          'label': l10n.reputation_actionManualAdjustment,
+          'icon': Icons.admin_panel_settings,
+          'color': Colors.blue[700]!,
+        };
+      case 'APPEAL_APPROVED':
+        return {
+          'label': 'Appeal Approved',
+          'icon': Icons.how_to_reg,
+          'color': Colors.green,
+        };
+      
+      // Legacy/deprecated
       case 'ISSUE_REVIEWED':
         return {
           'label': l10n.reputation_issueReviewed,
@@ -607,12 +761,14 @@ class _ReputationHistoryItem extends StatelessWidget {
           'icon': Icons.block,
           'color': Colors.orange,
         };
-      case 'ISSUE_SPAM':
+      
+      case 'OTHERS':
         return {
-          'label': l10n.reputation_issueSpam,
-          'icon': Icons.report,
-          'color': Colors.red,
+          'label': l10n.reputation_actionOthers,
+          'icon': Icons.info,
+          'color': Colors.grey,
         };
+      
       default:
         return {'label': actionType, 'icon': Icons.info, 'color': Colors.grey};
     }

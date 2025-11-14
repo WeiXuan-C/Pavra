@@ -50,61 +50,107 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
-      appBar: HeaderLayout(
-        title: l10n.nav_profile,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.pushNamed(context, '/settings');
-            },
-          ),
-        ],
-      ),
-      body: Consumer3<AuthProvider, LocaleProvider, ThemeProvider>(
-        builder: (context, authProvider, localeProvider, themeProvider, child) {
-          final user = authProvider.user;
-          final profile = authProvider.userProfile;
+    return Consumer3<AuthProvider, LocaleProvider, ThemeProvider>(
+      builder: (context, authProvider, localeProvider, themeProvider, child) {
+        final user = authProvider.user;
+        final profile = authProvider.userProfile;
 
-          if (user == null) {
-            return Center(child: Text(l10n.home_noUserLoggedIn));
-          }
-
-          // Show warning if profile is null
-          if (profile == null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.warning, size: 64, color: Colors.orange),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Profile not loaded',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        return Scaffold(
+          appBar: HeaderLayout(
+            title: l10n.nav_profile,
+            actions: [
+              // Show developer badge in header if user is developer
+              if (profile?.role == 'developer')
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.purple,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.code, size: 16, color: Colors.white),
+                          const SizedBox(width: 6),
+                          Text(
+                            l10n.profile_roleDeveloper,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  Text('User ID: ${user.id}'),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      await authProvider.reloadUserProfile();
-                    },
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Reload Profile'),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Try reloading the profile or restarting the app',
-                    style: Theme.of(context).textTheme.bodySmall,
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                ),
+              IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/settings');
+                },
               ),
-            );
-          }
+            ],
+          ),
+          body: _buildBody(context, user, profile, l10n, authProvider),
+        );
+      },
+    );
+  }
 
-          return SingleChildScrollView(
+  Widget _buildBody(
+    BuildContext context,
+    dynamic user,
+    dynamic profile,
+    AppLocalizations l10n,
+    AuthProvider authProvider,
+  ) {
+
+    if (user == null) {
+      return Center(child: Text(l10n.home_noUserLoggedIn));
+    }
+
+    // Show warning if profile is null
+    if (profile == null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.warning, size: 64, color: Colors.orange),
+            const SizedBox(height: 16),
+            const Text(
+              'Profile not loaded',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text('User ID: ${user.id}'),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () async {
+                await authProvider.reloadUserProfile();
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text('Reload Profile'),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Try reloading the profile or restarting the app',
+              style: Theme.of(context).textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -299,8 +345,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 value: user.id,
                               ),
                               const Divider(height: 24),
-                              _RoleRow(role: profile.role),
-                              const Divider(height: 24),
                               _InfoRow(
                                 icon: Icons.update,
                                 label: l10n.home_lastUpdated,
@@ -354,9 +398,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           );
-        },
-      ),
-    );
   }
 
   /// Handle logout
@@ -533,91 +574,4 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
-/// Role Row Widget with badge
-class _RoleRow extends StatelessWidget {
-  final String role;
 
-  const _RoleRow({required this.role});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-
-    // Get role display info
-    final roleInfo = _getRoleInfo(role, l10n);
-
-    return Row(
-      children: [
-        Icon(Icons.badge_outlined, size: 20, color: Colors.grey[600]),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10n.profile_role,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: roleInfo['color'],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(roleInfo['icon'], size: 16, color: Colors.white),
-                        const SizedBox(width: 6),
-                        Text(
-                          roleInfo['label'],
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Map<String, dynamic> _getRoleInfo(String role, AppLocalizations l10n) {
-    switch (role.toLowerCase()) {
-      case 'developer':
-        return {
-          'label': l10n.profile_roleDeveloper,
-          'icon': Icons.code,
-          'color': Colors.purple,
-        };
-      case 'authority':
-        return {
-          'label': l10n.profile_roleAuthority,
-          'icon': Icons.admin_panel_settings,
-          'color': Colors.blue,
-        };
-      case 'user':
-      default:
-        return {
-          'label': l10n.profile_roleUser,
-          'icon': Icons.person,
-          'color': Colors.green,
-        };
-    }
-  }
-}

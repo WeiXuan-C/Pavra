@@ -953,24 +953,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get report_suggestions => '建议';
 
   @override
-  String get report_aiAnalysis => 'AI 分析';
-
-  @override
-  String get report_confidence => '信心水平';
-
-  @override
-  String get report_noDescription => '未提供描述';
-
-  @override
-  String get report_suggestedIssueTypes => '建议的问题类型';
-
-  @override
-  String get report_suggestedSeverity => '建议的严重程度';
-
-  @override
-  String get report_applySuggestions => '应用建议';
-
-  @override
   String get report_analyzingImage => '正在用 AI 分析图片';
 
   @override
@@ -1881,4 +1863,88 @@ class AppLocalizationsZh extends AppLocalizations {
   String reputation_recentTrend(int change) {
     return '最近趋势：$change 分';
   }
+
+  @override
+  String get reputation_maxReached => '您已达到最高信誉！您的贡献仍会被记录和感谢。';
+
+  @override
+  String get reputation_actionUploadIssue => '提交报告';
+
+  @override
+  String get reputation_actionFirstReporter => '首位报告者';
+
+  @override
+  String get reputation_actionDuplicateReport => '重复报告';
+
+  @override
+  String get reputation_actionAbuseReport => '系统滥用';
+
+  @override
+  String get reputation_actionManualAdjustment => '手动调整';
+
+  @override
+  String get reputation_actionOthers => '其他操作';
+
+  @override
+  String get report_sortLatest => '最新';
+
+  @override
+  String get report_sortPriority => '优先级';
+
+  @override
+  String get report_sortLatestFirst => '最新优先';
+
+  @override
+  String get report_sortByPriority => '按优先级';
+
+  @override
+  String get report_filterDraft => '草稿';
+
+  @override
+  String get report_filterSubmitted => '已提交';
+
+  @override
+  String get report_search => '搜索';
+
+  @override
+  String get report_viewGrid => '网格视图';
+
+  @override
+  String get report_viewList => '列表视图';
+
+  @override
+  String get report_reachedEnd => '已到达底部';
+
+  @override
+  String get report_noMoreReports => '没有更多报告了';
+
+  @override
+  String get report_aiAnalysis => 'AI 分析结果';
+
+  @override
+  String get report_confidence => '置信水平';
+
+  @override
+  String get report_confidenceHigh => '高';
+
+  @override
+  String get report_confidenceMedium => '中';
+
+  @override
+  String get report_confidenceLow => '低';
+
+  @override
+  String get report_suggestedIssueTypes => '建议的问题类型';
+
+  @override
+  String get report_suggestedSeverity => '建议的严重程度';
+
+  @override
+  String get report_applySuggestions => '应用建议';
+
+  @override
+  String get report_noDescription => '无描述';
+
+  @override
+  String get report_reportSubmittedMessageNew => '您的道路安全报告已成功提交。感谢您为社区安全做出贡献！';
 }

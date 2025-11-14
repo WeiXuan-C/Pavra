@@ -162,10 +162,13 @@ class ReportIssueRemoteSource {
   Future<ReportIssueModel> submitReportIssue(String id) async {
     final result = await updateReportIssue(id, {'status': 'submitted'});
 
-    // Add reputation for submitting issue
+    // Add reputation for submitting issue (+1)
     if (result.createdBy != null) {
       try {
-        await _reputationService.addReputationForUpload(result.createdBy!);
+        await _reputationService.addReputationForUpload(
+          result.createdBy!,
+          issueId: result.id,
+        );
         developer.log(
           '✅ Added reputation for issue submission: ${result.id}',
           name: 'ReportIssueRemoteSource',
@@ -272,17 +275,23 @@ class ReportIssueRemoteSource {
     if (issue.createdBy != null) {
       try {
         if (status == 'spam') {
-          // Deduct reputation for spam
-          await _reputationService.deductReputationForSpam(issue.createdBy!);
+          // Deduct reputation for spam (-15)
+          await _reputationService.deductReputationForSpam(
+            issue.createdBy!,
+            issueId: result.id,
+          );
           developer.log(
             '✅ Deducted reputation for spam issue: ${result.id}',
             name: 'ReportIssueRemoteSource',
           );
         } else if (status == 'reviewed') {
-          // Add reputation for reviewed issue
-          await _reputationService.addReputationForReview(issue.createdBy!);
+          // Add reputation for verified issue (+5)
+          await _reputationService.addReputationForVerified(
+            issue.createdBy!,
+            issueId: result.id,
+          );
           developer.log(
-            '✅ Added reputation for reviewed issue: ${result.id}',
+            '✅ Added reputation for verified issue: ${result.id}',
             name: 'ReportIssueRemoteSource',
           );
         }

@@ -1269,30 +1269,7 @@
   "@report_suggestions": {
     "description": "建议部分标题"
   },
-  "report_aiAnalysis": "AI 分析",
-  "@report_aiAnalysis": {
-    "description": "AI 分析对话框标题"
-  },
-  "report_confidence": "信心水平",
-  "@report_confidence": {
-    "description": "AI 信心标签"
-  },
-  "report_noDescription": "未提供描述",
-  "@report_noDescription": {
-    "description": "无描述后备文本"
-  },
-  "report_suggestedIssueTypes": "建议的问题类型",
-  "@report_suggestedIssueTypes": {
-    "description": "建议的问题类型标签"
-  },
-  "report_suggestedSeverity": "建议的严重程度",
-  "@report_suggestedSeverity": {
-    "description": "建议的严重程度标签"
-  },
-  "report_applySuggestions": "应用建议",
-  "@report_applySuggestions": {
-    "description": "应用建议按钮"
-  },
+
   "report_analyzingImage": "正在用 AI 分析图片",
   "@report_analyzingImage": {
     "description": "分析图片进度标题"
@@ -2510,5 +2487,117 @@
         "type": "int"
       }
     }
+  },
+  "reputation_maxReached": "您已达到最高信誉！您的贡献仍会被记录和感谢。",
+  "@reputation_maxReached": {
+    "description": "用户达到最高信誉分数时的消息"
+  },
+  "reputation_actionUploadIssue": "提交报告",
+  "@reputation_actionUploadIssue": {
+    "description": "信誉操作：用户提交报告（+1 分）"
+  },
+  "reputation_actionFirstReporter": "首位报告者",
+  "@reputation_actionFirstReporter": {
+    "description": "信誉操作：首位在该位置报告（+5 分）"
+  },
+  "reputation_actionDuplicateReport": "重复报告",
+  "@reputation_actionDuplicateReport": {
+    "description": "信誉操作：重复已存在的报告（-5 分）"
+  },
+  "reputation_actionAbuseReport": "系统滥用",
+  "@reputation_actionAbuseReport": {
+    "description": "信誉操作：检测到系统滥用（-25 分）"
+  },
+  "reputation_actionManualAdjustment": "手动调整",
+  "@reputation_actionManualAdjustment": {
+    "description": "信誉操作：管理员手动修正（±任意分数）"
+  },
+  "reputation_actionOthers": "其他操作",
+  "@reputation_actionOthers": {
+    "description": "信誉操作：用于未来扩展"
+  },
+  "report_sortLatest": "最新",
+  "@report_sortLatest": {
+    "description": "排序选项：最新报告优先"
+  },
+  "report_sortPriority": "优先级",
+  "@report_sortPriority": {
+    "description": "排序选项：按优先级/严重程度"
+  },
+  "report_sortLatestFirst": "最新优先",
+  "@report_sortLatestFirst": {
+    "description": "排序选项标签：最新报告优先"
+  },
+  "report_sortByPriority": "按优先级",
+  "@report_sortByPriority": {
+    "description": "排序选项标签：按优先级排序"
+  },
+  "report_filterDraft": "草稿",
+  "@report_filterDraft": {
+    "description": "筛选选项：草稿报告"
+  },
+  "report_filterSubmitted": "已提交",
+  "@report_filterSubmitted": {
+    "description": "筛选选项：已提交报告"
+  },
+  "report_search": "搜索",
+  "@report_search": {
+    "description": "搜索按钮提示"
+  },
+  "report_viewGrid": "网格视图",
+  "@report_viewGrid": {
+    "description": "网格视图提示"
+  },
+  "report_viewList": "列表视图",
+  "@report_viewList": {
+    "description": "列表视图提示"
+  },
+  "report_reachedEnd": "已到达底部",
+  "@report_reachedEnd": {
+    "description": "用户到达报告列表底部时的消息"
+  },
+  "report_noMoreReports": "没有更多报告了",
+  "@report_noMoreReports": {
+    "description": "没有更多报告可显示时的消息"
+  },
+  "report_confidenceHigh": "高",
+  "@report_confidenceHigh": {
+    "description": "AI分析置信度：高"
+  },
+  "report_confidenceMedium": "中",
+  "@report_confidenceMedium": {
+    "description": "AI分析置信度：中"
+  },
+  "report_confidenceLow": "低",
+  "@report_confidenceLow": {
+    "description": "AI分析置信度：低"
+  },
+  "report_aiAnalysis": "AI 分析结果",
+  "@report_aiAnalysis": {
+    "description": "AI分析对话框标题"
+  },
+  "report_confidence": "置信水平",
+  "@report_confidence": {
+    "description": "AI分析置信水平标签"
+  },
+  "report_suggestedIssueTypes": "建议的问题类型",
+  "@report_suggestedIssueTypes": {
+    "description": "AI建议的问题类型标签"
+  },
+  "report_suggestedSeverity": "建议的严重程度",
+  "@report_suggestedSeverity": {
+    "description": "AI建议的严重程度标签"
+  },
+  "report_applySuggestions": "应用建议",
+  "@report_applySuggestions": {
+    "description": "应用AI建议的按钮"
+  },
+  "report_noDescription": "无描述",
+  "@report_noDescription": {
+    "description": "无描述可用时的消息"
+  },
+  "report_reportSubmittedMessageNew": "您的道路安全报告已成功提交。感谢您为社区安全做出贡献！",
+  "@report_reportSubmittedMessageNew": {
+    "description": "报告提交成功的新消息（不提及权限部门）"
   }
 }

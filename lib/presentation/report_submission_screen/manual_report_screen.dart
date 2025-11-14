@@ -827,11 +827,13 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
       );
 
       // Submit the draft (changes status from 'draft' to 'submitted')
+      // Note: Reputation (+1) is automatically added in the data layer
       final reportId = provider.draftReport?.id ?? 'Unknown';
       debugPrint('Submitting draft with ID: $reportId');
       await provider.submitDraft();
 
       debugPrint('=== Report submitted successfully ===');
+
       HapticFeedback.heavyImpact();
 
       if (!mounted) return;
@@ -900,7 +902,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                l10n.report_reportSubmittedMessage,
+                l10n.report_reportSubmittedMessageNew,
                 style: theme.textTheme.bodyMedium,
               ),
               SizedBox(height: 2.h),
@@ -918,14 +920,6 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
                       '${l10n.report_reportId}: $reportId',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         fontFamily: 'monospace',
-                      ),
-                    ),
-                    SizedBox(height: 1.h),
-                    Text(
-                      l10n.report_estimatedResponse,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
