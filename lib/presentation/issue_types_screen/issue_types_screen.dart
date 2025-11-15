@@ -277,7 +277,7 @@ class _IssueTypesScreenState extends State<IssueTypesScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Icon',
+                                l10n.iconPicker_icon,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.onSurface.withValues(
                                     alpha: 0.6,
@@ -285,7 +285,7 @@ class _IssueTypesScreenState extends State<IssueTypesScreen> {
                                 ),
                               ),
                               Text(
-                                selectedIcon ?? 'Select icon',
+                                selectedIcon ?? l10n.iconPicker_selectIcon,
                                 style: theme.textTheme.bodyMedium,
                               ),
                             ],
@@ -402,7 +402,7 @@ class _IssueTypesScreenState extends State<IssueTypesScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Icon',
+                                l10n.iconPicker_icon,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: theme.colorScheme.onSurface.withValues(
                                     alpha: 0.6,
@@ -410,7 +410,7 @@ class _IssueTypesScreenState extends State<IssueTypesScreen> {
                                 ),
                               ),
                               Text(
-                                selectedIcon ?? 'Select icon',
+                                selectedIcon ?? l10n.iconPicker_selectIcon,
                                 style: theme.textTheme.bodyMedium,
                               ),
                             ],

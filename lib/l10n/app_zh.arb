@@ -2599,5 +2599,249 @@
   "report_reportSubmittedMessageNew": "您的道路安全报告已成功提交。感谢您为社区安全做出贡献！",
   "@report_reportSubmittedMessageNew": {
     "description": "报告提交成功的新消息（不提及权限部门）"
+  },
+  "iconPicker_title": "选择图标",
+  "@iconPicker_title": {
+    "description": "图标选择器对话框标题"
+  },
+  "iconPicker_searchHint": "搜索图标...",
+  "@iconPicker_searchHint": {
+    "description": "图标搜索输入提示"
+  },
+  "iconPicker_selectIcon": "选择图标",
+  "@iconPicker_selectIcon": {
+    "description": "选择图标占位符文本"
+  },
+  "iconPicker_icon": "图标",
+  "@iconPicker_icon": {
+    "description": "图标标签"
+  },
+  "report_searchReports": "搜索报告...",
+  "@report_searchReports": {
+    "description": "搜索字段占位符"
+  },
+  "report_searchByTitleLocation": "按标题、位置或描述搜索",
+  "@report_searchByTitleLocation": {
+    "description": "搜索提示消息"
+  },
+  "report_noResultsFound": "未找到结果",
+  "@report_noResultsFound": {
+    "description": "无搜索结果消息"
+  },
+  "report_tryDifferentKeywords": "尝试不同的关键词",
+  "@report_tryDifferentKeywords": {
+    "description": "搜索建议消息"
+  },
+  "reportDetail_title": "报告详情",
+  "@reportDetail_title": {
+    "description": "报告详情屏幕标题"
+  },
+  "reportDetail_photos": "照片",
+  "@reportDetail_photos": {
+    "description": "照片部分标题"
+  },
+  "reportDetail_noPhotos": "无可用照片",
+  "@reportDetail_noPhotos": {
+    "description": "无照片消息"
+  },
+  "reportDetail_swipePhotos": "滑动查看更多照片",
+  "@reportDetail_swipePhotos": {
+    "description": "照片滑动说明"
+  },
+  "reportDetail_loadingPhoto": "正在加载照片 {current}/{total}",
+  "@reportDetail_loadingPhoto": {
+    "description": "加载照片进度消息",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reportDetail_failedToLoad": "加载照片失败",
+  "@reportDetail_failedToLoad": {
+    "description": "照片加载错误消息"
+  },
+  "reportDetail_noLocation": "无位置信息",
+  "@reportDetail_noLocation": {
+    "description": "无位置消息"
+  },
+  "reportDetail_coordinates": "坐标",
+  "@reportDetail_coordinates": {
+    "description": "坐标标签"
+  },
+  "reportDetail_noIssueTypes": "未选择问题类型",
+  "@reportDetail_noIssueTypes": {
+    "description": "无问题类型消息"
+  },
+  "reportDetail_severity": "严重程度",
+  "@reportDetail_severity": {
+    "description": "严重程度部分标题"
+  },
+  "reportDetail_severityMinor": "轻微问题 - 低优先级",
+  "@reportDetail_severityMinor": {
+    "description": "轻微严重程度描述"
+  },
+  "reportDetail_severityLow": "低严重程度 - 可稍后处理",
+  "@reportDetail_severityLow": {
+    "description": "低严重程度描述"
+  },
+  "reportDetail_severityModerate": "中等严重程度 - 需要关注",
+  "@reportDetail_severityModerate": {
+    "description": "中等严重程度描述"
+  },
+  "reportDetail_severityHigh": "高严重程度 - 需要及时处理",
+  "@reportDetail_severityHigh": {
+    "description": "高严重程度描述"
+  },
+  "reportDetail_severityCritical": "严重 - 需要立即处理",
+  "@reportDetail_severityCritical": {
+    "description": "严重程度描述"
+  },
+  "reportDetail_severityUnspecified": "未指定严重程度",
+  "@reportDetail_severityUnspecified": {
+    "description": "未指定严重程度描述"
+  },
+  "reportDetail_noDescription": "未提供描述",
+  "@reportDetail_noDescription": {
+    "description": "无描述消息"
+  },
+  "reportDetail_communityVotes": "社区投票",
+  "@reportDetail_communityVotes": {
+    "description": "社区投票部分标题"
+  },
+  "reportDetail_verified": "已验证",
+  "@reportDetail_verified": {
+    "description": "已验证投票标签"
+  },
+  "reportDetail_spam": "垃圾信息",
+  "@reportDetail_spam": {
+    "description": "垃圾信息投票标签"
+  },
+  "reportDetail_markSpam": "标记为垃圾",
+  "@reportDetail_markSpam": {
+    "description": "标记为垃圾按钮文本"
+  },
+  "reportDetail_verify": "验证",
+  "@reportDetail_verify": {
+    "description": "验证按钮文本"
+  },
+  "reportDetail_reportVerified": "报告已验证",
+  "@reportDetail_reportVerified": {
+    "description": "报告已验证提示消息"
+  },
+  "reportDetail_verificationRemoved": "已移除验证",
+  "@reportDetail_verificationRemoved": {
+    "description": "已移除验证提示消息"
+  },
+  "reportDetail_markedAsSpam": "已标记为垃圾",
+  "@reportDetail_markedAsSpam": {
+    "description": "已标记为垃圾提示消息"
+  },
+  "reportDetail_spamVoteRemoved": "已移除垃圾投票",
+  "@reportDetail_spamVoteRemoved": {
+    "description": "已移除垃圾投票提示消息"
+  },
+  "reportDetail_failedToVote": "投票失败：{error}",
+  "@reportDetail_failedToVote": {
+    "description": "投票失败错误消息",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "reportDetail_verifyReport": "验证报告",
+  "@reportDetail_verifyReport": {
+    "description": "权限验证对话框标题"
+  },
+  "reportDetail_verifyReportConfirm": "您确定要验证此报告为合法吗？这将把报告状态标记为\"已审核\"。",
+  "@reportDetail_verifyReportConfirm": {
+    "description": "权限验证确认消息"
+  },
+  "reportDetail_markAsSpam": "标记为垃圾",
+  "@reportDetail_markAsSpam": {
+    "description": "权限标记垃圾对话框标题"
+  },
+  "reportDetail_markAsSpamConfirm": "您确定要将此报告标记为垃圾吗？这将把报告状态更改为\"垃圾\"。",
+  "@reportDetail_markAsSpamConfirm": {
+    "description": "权限标记垃圾确认消息"
+  },
+  "reportDetail_reportVerifiedSuccess": "报告验证成功",
+  "@reportDetail_reportVerifiedSuccess": {
+    "description": "权限验证成功消息"
+  },
+  "reportDetail_reportMarkedSpam": "报告已标记为垃圾",
+  "@reportDetail_reportMarkedSpam": {
+    "description": "权限标记垃圾成功消息"
+  },
+  "reportDetail_failedToVerify": "验证报告失败：{error}",
+  "@reportDetail_failedToVerify": {
+    "description": "权限验证错误消息",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "reportDetail_failedToMarkSpam": "标记为垃圾失败：{error}",
+  "@reportDetail_failedToMarkSpam": {
+    "description": "权限标记垃圾错误消息",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "reportDetail_verifyReportButton": "验证报告",
+  "@reportDetail_verifyReportButton": {
+    "description": "权限验证按钮文本"
+  },
+  "reportDetail_markedAsSpamButton": "已标记为垃圾",
+  "@reportDetail_markedAsSpamButton": {
+    "description": "权限已标记垃圾按钮文本（禁用状态）"
+  },
+  "reportDetail_reportId": "报告ID：{id}",
+  "@reportDetail_reportId": {
+    "description": "报告ID标签",
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "common_untitled": "无标题",
+  "@common_untitled": {
+    "description": "无标题项目的标签"
+  },
+  "status_draft": "草稿",
+  "@status_draft": {
+    "description": "草稿状态标签"
+  },
+  "status_submitted": "已提交",
+  "@status_submitted": {
+    "description": "已提交状态标签"
+  },
+  "status_reviewed": "已审核",
+  "@status_reviewed": {
+    "description": "已审核状态标签"
+  },
+  "status_spam": "垃圾信息",
+  "@status_spam": {
+    "description": "垃圾信息状态标签"
+  },
+  "reportDetail_communityBelievesLegit": "社区认为这是合法的",
+  "@reportDetail_communityBelievesLegit": {
+    "description": "验证票数领先时的消息"
+  },
+  "reportDetail_communitySuspectsSpam": "社区怀疑这可能是垃圾信息",
+  "@reportDetail_communitySuspectsSpam": {
+    "description": "垃圾票数领先时的消息"
+  },
+  "common_pleaseWait": "请稍候，正在处理...",
+  "@common_pleaseWait": {
+    "description": "处理时的请稍候消息"
   }
 }

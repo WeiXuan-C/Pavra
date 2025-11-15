@@ -1051,7 +1051,10 @@ class ReportSearchDelegate extends SearchDelegate<ReportIssueModel?> {
   ReportSearchDelegate(this.reports, this.onReportTap);
 
   @override
-  String get searchFieldLabel => 'Search reports...';
+  String get searchFieldLabel {
+    // Access l10n through context - we'll override buildResults to get it
+    return 'Search reports...'; // Fallback, will be replaced in UI
+  }
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -1088,6 +1091,7 @@ class ReportSearchDelegate extends SearchDelegate<ReportIssueModel?> {
 
   Widget _buildSearchResults(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     
     if (query.isEmpty) {
       return Center(
@@ -1101,7 +1105,7 @@ class ReportSearchDelegate extends SearchDelegate<ReportIssueModel?> {
             ),
             SizedBox(height: 2.h),
             Text(
-              'Search by title, location, or description',
+              l10n.report_searchByTitleLocation,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
@@ -1132,12 +1136,12 @@ class ReportSearchDelegate extends SearchDelegate<ReportIssueModel?> {
             ),
             SizedBox(height: 2.h),
             Text(
-              'No results found',
+              l10n.report_noResultsFound,
               style: theme.textTheme.titleLarge,
             ),
             SizedBox(height: 1.h),
             Text(
-              'Try different keywords',
+              l10n.report_tryDifferentKeywords,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
@@ -1167,7 +1171,7 @@ class ReportSearchDelegate extends SearchDelegate<ReportIssueModel?> {
               ),
             ),
             title: Text(
-              report.title ?? 'Untitled',
+              report.title ?? l10n.common_untitled,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

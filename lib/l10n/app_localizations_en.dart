@@ -2012,4 +2012,186 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get report_reportSubmittedMessageNew =>
       'Your road safety report has been successfully submitted. Thank you for contributing to community safety!';
+
+  @override
+  String get iconPicker_title => 'Select Icon';
+
+  @override
+  String get iconPicker_searchHint => 'Search icons...';
+
+  @override
+  String get iconPicker_selectIcon => 'Select icon';
+
+  @override
+  String get iconPicker_icon => 'Icon';
+
+  @override
+  String get report_searchReports => 'Search reports...';
+
+  @override
+  String get report_searchByTitleLocation =>
+      'Search by title, location, or description';
+
+  @override
+  String get report_noResultsFound => 'No results found';
+
+  @override
+  String get report_tryDifferentKeywords => 'Try different keywords';
+
+  @override
+  String get reportDetail_title => 'Report Details';
+
+  @override
+  String get reportDetail_photos => 'Photos';
+
+  @override
+  String get reportDetail_noPhotos => 'No photos available';
+
+  @override
+  String get reportDetail_swipePhotos => 'Swipe to view more photos';
+
+  @override
+  String reportDetail_loadingPhoto(int current, int total) {
+    return 'Loading photo $current/$total';
+  }
+
+  @override
+  String get reportDetail_failedToLoad => 'Failed to load photo';
+
+  @override
+  String get reportDetail_noLocation => 'No location';
+
+  @override
+  String get reportDetail_coordinates => 'Coordinates';
+
+  @override
+  String get reportDetail_noIssueTypes => 'No issue types selected';
+
+  @override
+  String get reportDetail_severity => 'Severity';
+
+  @override
+  String get reportDetail_severityMinor => 'Minor issue - Low priority';
+
+  @override
+  String get reportDetail_severityLow =>
+      'Low severity - Can be addressed later';
+
+  @override
+  String get reportDetail_severityModerate =>
+      'Moderate severity - Needs attention';
+
+  @override
+  String get reportDetail_severityHigh =>
+      'High severity - Requires prompt action';
+
+  @override
+  String get reportDetail_severityCritical =>
+      'Critical - Immediate action required';
+
+  @override
+  String get reportDetail_severityUnspecified => 'Severity level not specified';
+
+  @override
+  String get reportDetail_noDescription => 'No description provided';
+
+  @override
+  String get reportDetail_communityVotes => 'Community Votes';
+
+  @override
+  String get reportDetail_verified => 'Verified';
+
+  @override
+  String get reportDetail_spam => 'Spam';
+
+  @override
+  String get reportDetail_markSpam => 'Mark Spam';
+
+  @override
+  String get reportDetail_verify => 'Verify';
+
+  @override
+  String get reportDetail_reportVerified => 'Report verified';
+
+  @override
+  String get reportDetail_verificationRemoved => 'Verification removed';
+
+  @override
+  String get reportDetail_markedAsSpam => 'Marked as spam';
+
+  @override
+  String get reportDetail_spamVoteRemoved => 'Spam vote removed';
+
+  @override
+  String reportDetail_failedToVote(String error) {
+    return 'Failed to vote: $error';
+  }
+
+  @override
+  String get reportDetail_verifyReport => 'Verify Report';
+
+  @override
+  String get reportDetail_verifyReportConfirm =>
+      'Are you sure you want to verify this report as legitimate? This will mark the report status as \"reviewed\".';
+
+  @override
+  String get reportDetail_markAsSpam => 'Mark as Spam';
+
+  @override
+  String get reportDetail_markAsSpamConfirm =>
+      'Are you sure you want to mark this report as spam? This will change the report status to \"spam\".';
+
+  @override
+  String get reportDetail_reportVerifiedSuccess =>
+      'Report verified successfully';
+
+  @override
+  String get reportDetail_reportMarkedSpam => 'Report marked as spam';
+
+  @override
+  String reportDetail_failedToVerify(String error) {
+    return 'Failed to verify report: $error';
+  }
+
+  @override
+  String reportDetail_failedToMarkSpam(String error) {
+    return 'Failed to mark as spam: $error';
+  }
+
+  @override
+  String get reportDetail_verifyReportButton => 'Verify Report';
+
+  @override
+  String get reportDetail_markedAsSpamButton => 'Marked as Spam';
+
+  @override
+  String reportDetail_reportId(String id) {
+    return 'Report ID: $id';
+  }
+
+  @override
+  String get common_untitled => 'Untitled';
+
+  @override
+  String get status_draft => 'Draft';
+
+  @override
+  String get status_submitted => 'Submitted';
+
+  @override
+  String get status_reviewed => 'Reviewed';
+
+  @override
+  String get status_spam => 'Spam';
+
+  @override
+  String get reportDetail_communityBelievesLegit =>
+      'Community believes this is legitimate';
+
+  @override
+  String get reportDetail_communitySuspectsSpam =>
+      'Community suspects this might be spam';
+
+  @override
+  String get common_pleaseWait => 'Please wait, processing...';
 }

@@ -60,7 +60,7 @@ class _IconPickerDialogState extends State<IconPickerDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Select Icon', style: theme.textTheme.titleLarge),
+                Text(l10n.iconPicker_title, style: theme.textTheme.titleLarge),
                 IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
@@ -73,7 +73,7 @@ class _IconPickerDialogState extends State<IconPickerDialog> {
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search icons...',
+                hintText: l10n.iconPicker_searchHint,
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),

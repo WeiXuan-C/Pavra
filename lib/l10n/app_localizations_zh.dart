@@ -1947,4 +1947,178 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get report_reportSubmittedMessageNew => '您的道路安全报告已成功提交。感谢您为社区安全做出贡献！';
+
+  @override
+  String get iconPicker_title => '选择图标';
+
+  @override
+  String get iconPicker_searchHint => '搜索图标...';
+
+  @override
+  String get iconPicker_selectIcon => '选择图标';
+
+  @override
+  String get iconPicker_icon => '图标';
+
+  @override
+  String get report_searchReports => '搜索报告...';
+
+  @override
+  String get report_searchByTitleLocation => '按标题、位置或描述搜索';
+
+  @override
+  String get report_noResultsFound => '未找到结果';
+
+  @override
+  String get report_tryDifferentKeywords => '尝试不同的关键词';
+
+  @override
+  String get reportDetail_title => '报告详情';
+
+  @override
+  String get reportDetail_photos => '照片';
+
+  @override
+  String get reportDetail_noPhotos => '无可用照片';
+
+  @override
+  String get reportDetail_swipePhotos => '滑动查看更多照片';
+
+  @override
+  String reportDetail_loadingPhoto(int current, int total) {
+    return '正在加载照片 $current/$total';
+  }
+
+  @override
+  String get reportDetail_failedToLoad => '加载照片失败';
+
+  @override
+  String get reportDetail_noLocation => '无位置信息';
+
+  @override
+  String get reportDetail_coordinates => '坐标';
+
+  @override
+  String get reportDetail_noIssueTypes => '未选择问题类型';
+
+  @override
+  String get reportDetail_severity => '严重程度';
+
+  @override
+  String get reportDetail_severityMinor => '轻微问题 - 低优先级';
+
+  @override
+  String get reportDetail_severityLow => '低严重程度 - 可稍后处理';
+
+  @override
+  String get reportDetail_severityModerate => '中等严重程度 - 需要关注';
+
+  @override
+  String get reportDetail_severityHigh => '高严重程度 - 需要及时处理';
+
+  @override
+  String get reportDetail_severityCritical => '严重 - 需要立即处理';
+
+  @override
+  String get reportDetail_severityUnspecified => '未指定严重程度';
+
+  @override
+  String get reportDetail_noDescription => '未提供描述';
+
+  @override
+  String get reportDetail_communityVotes => '社区投票';
+
+  @override
+  String get reportDetail_verified => '已验证';
+
+  @override
+  String get reportDetail_spam => '垃圾信息';
+
+  @override
+  String get reportDetail_markSpam => '标记为垃圾';
+
+  @override
+  String get reportDetail_verify => '验证';
+
+  @override
+  String get reportDetail_reportVerified => '报告已验证';
+
+  @override
+  String get reportDetail_verificationRemoved => '已移除验证';
+
+  @override
+  String get reportDetail_markedAsSpam => '已标记为垃圾';
+
+  @override
+  String get reportDetail_spamVoteRemoved => '已移除垃圾投票';
+
+  @override
+  String reportDetail_failedToVote(String error) {
+    return '投票失败：$error';
+  }
+
+  @override
+  String get reportDetail_verifyReport => '验证报告';
+
+  @override
+  String get reportDetail_verifyReportConfirm =>
+      '您确定要验证此报告为合法吗？这将把报告状态标记为\"已审核\"。';
+
+  @override
+  String get reportDetail_markAsSpam => '标记为垃圾';
+
+  @override
+  String get reportDetail_markAsSpamConfirm =>
+      '您确定要将此报告标记为垃圾吗？这将把报告状态更改为\"垃圾\"。';
+
+  @override
+  String get reportDetail_reportVerifiedSuccess => '报告验证成功';
+
+  @override
+  String get reportDetail_reportMarkedSpam => '报告已标记为垃圾';
+
+  @override
+  String reportDetail_failedToVerify(String error) {
+    return '验证报告失败：$error';
+  }
+
+  @override
+  String reportDetail_failedToMarkSpam(String error) {
+    return '标记为垃圾失败：$error';
+  }
+
+  @override
+  String get reportDetail_verifyReportButton => '验证报告';
+
+  @override
+  String get reportDetail_markedAsSpamButton => '已标记为垃圾';
+
+  @override
+  String reportDetail_reportId(String id) {
+    return '报告ID：$id';
+  }
+
+  @override
+  String get common_untitled => '无标题';
+
+  @override
+  String get status_draft => '草稿';
+
+  @override
+  String get status_submitted => '已提交';
+
+  @override
+  String get status_reviewed => '已审核';
+
+  @override
+  String get status_spam => '垃圾信息';
+
+  @override
+  String get reportDetail_communityBelievesLegit => '社区认为这是合法的';
+
+  @override
+  String get reportDetail_communitySuspectsSpam => '社区怀疑这可能是垃圾信息';
+
+  @override
+  String get common_pleaseWait => '请稍候，正在处理...';
 }

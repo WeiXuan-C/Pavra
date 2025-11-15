@@ -3098,31 +3098,31 @@ abstract class AppLocalizations {
   /// **'Severity'**
   String get report_severity;
 
-  /// Severity level: Minor
+  /// Minor severity level
   ///
   /// In en, this message translates to:
   /// **'Minor'**
   String get report_severityMinor;
 
-  /// Severity level: Low
+  /// Low severity level
   ///
   /// In en, this message translates to:
   /// **'Low'**
   String get report_severityLow;
 
-  /// Severity level: Moderate
+  /// Moderate severity level
   ///
   /// In en, this message translates to:
   /// **'Moderate'**
   String get report_severityModerate;
 
-  /// Severity level: High
+  /// High severity level
   ///
   /// In en, this message translates to:
   /// **'High'**
   String get report_severityHigh;
 
-  /// Severity level: Critical
+  /// Critical severity level
   ///
   /// In en, this message translates to:
   /// **'Critical'**
@@ -3943,6 +3943,330 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your road safety report has been successfully submitted. Thank you for contributing to community safety!'**
   String get report_reportSubmittedMessageNew;
+
+  /// Icon picker dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Select Icon'**
+  String get iconPicker_title;
+
+  /// Icon search input hint
+  ///
+  /// In en, this message translates to:
+  /// **'Search icons...'**
+  String get iconPicker_searchHint;
+
+  /// Select icon placeholder text
+  ///
+  /// In en, this message translates to:
+  /// **'Select icon'**
+  String get iconPicker_selectIcon;
+
+  /// Icon label
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get iconPicker_icon;
+
+  /// Search field placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Search reports...'**
+  String get report_searchReports;
+
+  /// Search hint message
+  ///
+  /// In en, this message translates to:
+  /// **'Search by title, location, or description'**
+  String get report_searchByTitleLocation;
+
+  /// No search results message
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get report_noResultsFound;
+
+  /// Search suggestion message
+  ///
+  /// In en, this message translates to:
+  /// **'Try different keywords'**
+  String get report_tryDifferentKeywords;
+
+  /// Report detail screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Report Details'**
+  String get reportDetail_title;
+
+  /// Photos section title
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get reportDetail_photos;
+
+  /// No photos message
+  ///
+  /// In en, this message translates to:
+  /// **'No photos available'**
+  String get reportDetail_noPhotos;
+
+  /// Photo swipe instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe to view more photos'**
+  String get reportDetail_swipePhotos;
+
+  /// Loading photo progress message
+  ///
+  /// In en, this message translates to:
+  /// **'Loading photo {current}/{total}'**
+  String reportDetail_loadingPhoto(int current, int total);
+
+  /// Photo load error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load photo'**
+  String get reportDetail_failedToLoad;
+
+  /// No location message
+  ///
+  /// In en, this message translates to:
+  /// **'No location'**
+  String get reportDetail_noLocation;
+
+  /// Coordinates label
+  ///
+  /// In en, this message translates to:
+  /// **'Coordinates'**
+  String get reportDetail_coordinates;
+
+  /// No issue types message
+  ///
+  /// In en, this message translates to:
+  /// **'No issue types selected'**
+  String get reportDetail_noIssueTypes;
+
+  /// Severity section title
+  ///
+  /// In en, this message translates to:
+  /// **'Severity'**
+  String get reportDetail_severity;
+
+  /// Minor severity description
+  ///
+  /// In en, this message translates to:
+  /// **'Minor issue - Low priority'**
+  String get reportDetail_severityMinor;
+
+  /// Low severity description
+  ///
+  /// In en, this message translates to:
+  /// **'Low severity - Can be addressed later'**
+  String get reportDetail_severityLow;
+
+  /// Moderate severity description
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate severity - Needs attention'**
+  String get reportDetail_severityModerate;
+
+  /// High severity description
+  ///
+  /// In en, this message translates to:
+  /// **'High severity - Requires prompt action'**
+  String get reportDetail_severityHigh;
+
+  /// Critical severity description
+  ///
+  /// In en, this message translates to:
+  /// **'Critical - Immediate action required'**
+  String get reportDetail_severityCritical;
+
+  /// Unspecified severity description
+  ///
+  /// In en, this message translates to:
+  /// **'Severity level not specified'**
+  String get reportDetail_severityUnspecified;
+
+  /// No description message
+  ///
+  /// In en, this message translates to:
+  /// **'No description provided'**
+  String get reportDetail_noDescription;
+
+  /// Community votes section title
+  ///
+  /// In en, this message translates to:
+  /// **'Community Votes'**
+  String get reportDetail_communityVotes;
+
+  /// Verified vote label
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get reportDetail_verified;
+
+  /// Spam vote label
+  ///
+  /// In en, this message translates to:
+  /// **'Spam'**
+  String get reportDetail_spam;
+
+  /// Mark spam button text
+  ///
+  /// In en, this message translates to:
+  /// **'Mark Spam'**
+  String get reportDetail_markSpam;
+
+  /// Verify button text
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get reportDetail_verify;
+
+  /// Report verified toast message
+  ///
+  /// In en, this message translates to:
+  /// **'Report verified'**
+  String get reportDetail_reportVerified;
+
+  /// Verification removed toast message
+  ///
+  /// In en, this message translates to:
+  /// **'Verification removed'**
+  String get reportDetail_verificationRemoved;
+
+  /// Marked as spam toast message
+  ///
+  /// In en, this message translates to:
+  /// **'Marked as spam'**
+  String get reportDetail_markedAsSpam;
+
+  /// Spam vote removed toast message
+  ///
+  /// In en, this message translates to:
+  /// **'Spam vote removed'**
+  String get reportDetail_spamVoteRemoved;
+
+  /// Failed to vote error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to vote: {error}'**
+  String reportDetail_failedToVote(String error);
+
+  /// Authority verify dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Report'**
+  String get reportDetail_verifyReport;
+
+  /// Authority verify confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to verify this report as legitimate? This will mark the report status as \"reviewed\".'**
+  String get reportDetail_verifyReportConfirm;
+
+  /// Authority mark spam dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Spam'**
+  String get reportDetail_markAsSpam;
+
+  /// Authority mark spam confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to mark this report as spam? This will change the report status to \"spam\".'**
+  String get reportDetail_markAsSpamConfirm;
+
+  /// Authority verify success message
+  ///
+  /// In en, this message translates to:
+  /// **'Report verified successfully'**
+  String get reportDetail_reportVerifiedSuccess;
+
+  /// Authority mark spam success message
+  ///
+  /// In en, this message translates to:
+  /// **'Report marked as spam'**
+  String get reportDetail_reportMarkedSpam;
+
+  /// Authority verify error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to verify report: {error}'**
+  String reportDetail_failedToVerify(String error);
+
+  /// Authority mark spam error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to mark as spam: {error}'**
+  String reportDetail_failedToMarkSpam(String error);
+
+  /// Authority verify button text
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Report'**
+  String get reportDetail_verifyReportButton;
+
+  /// Authority marked spam button text (disabled state)
+  ///
+  /// In en, this message translates to:
+  /// **'Marked as Spam'**
+  String get reportDetail_markedAsSpamButton;
+
+  /// Report ID label
+  ///
+  /// In en, this message translates to:
+  /// **'Report ID: {id}'**
+  String reportDetail_reportId(String id);
+
+  /// Untitled label for items without title
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled'**
+  String get common_untitled;
+
+  /// Draft status label
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get status_draft;
+
+  /// Submitted status label
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted'**
+  String get status_submitted;
+
+  /// Reviewed status label
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed'**
+  String get status_reviewed;
+
+  /// Spam status label
+  ///
+  /// In en, this message translates to:
+  /// **'Spam'**
+  String get status_spam;
+
+  /// Message when verified votes are winning
+  ///
+  /// In en, this message translates to:
+  /// **'Community believes this is legitimate'**
+  String get reportDetail_communityBelievesLegit;
+
+  /// Message when spam votes are winning
+  ///
+  /// In en, this message translates to:
+  /// **'Community suspects this might be spam'**
+  String get reportDetail_communitySuspectsSpam;
+
+  /// Please wait message when processing
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait, processing...'**
+  String get common_pleaseWait;
 }
 
 class _AppLocalizationsDelegate

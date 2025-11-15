@@ -2599,5 +2599,249 @@
   "report_reportSubmittedMessageNew": "Your road safety report has been successfully submitted. Thank you for contributing to community safety!",
   "@report_reportSubmittedMessageNew": {
     "description": "Report submitted success message (without authority reference)"
+  },
+  "iconPicker_title": "Select Icon",
+  "@iconPicker_title": {
+    "description": "Icon picker dialog title"
+  },
+  "iconPicker_searchHint": "Search icons...",
+  "@iconPicker_searchHint": {
+    "description": "Icon search input hint"
+  },
+  "iconPicker_selectIcon": "Select icon",
+  "@iconPicker_selectIcon": {
+    "description": "Select icon placeholder text"
+  },
+  "iconPicker_icon": "Icon",
+  "@iconPicker_icon": {
+    "description": "Icon label"
+  },
+  "report_searchReports": "Search reports...",
+  "@report_searchReports": {
+    "description": "Search field placeholder"
+  },
+  "report_searchByTitleLocation": "Search by title, location, or description",
+  "@report_searchByTitleLocation": {
+    "description": "Search hint message"
+  },
+  "report_noResultsFound": "No results found",
+  "@report_noResultsFound": {
+    "description": "No search results message"
+  },
+  "report_tryDifferentKeywords": "Try different keywords",
+  "@report_tryDifferentKeywords": {
+    "description": "Search suggestion message"
+  },
+  "reportDetail_title": "Report Details",
+  "@reportDetail_title": {
+    "description": "Report detail screen title"
+  },
+  "reportDetail_photos": "Photos",
+  "@reportDetail_photos": {
+    "description": "Photos section title"
+  },
+  "reportDetail_noPhotos": "No photos available",
+  "@reportDetail_noPhotos": {
+    "description": "No photos message"
+  },
+  "reportDetail_swipePhotos": "Swipe to view more photos",
+  "@reportDetail_swipePhotos": {
+    "description": "Photo swipe instruction"
+  },
+  "reportDetail_loadingPhoto": "Loading photo {current}/{total}",
+  "@reportDetail_loadingPhoto": {
+    "description": "Loading photo progress message",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reportDetail_failedToLoad": "Failed to load photo",
+  "@reportDetail_failedToLoad": {
+    "description": "Photo load error message"
+  },
+  "reportDetail_noLocation": "No location",
+  "@reportDetail_noLocation": {
+    "description": "No location message"
+  },
+  "reportDetail_coordinates": "Coordinates",
+  "@reportDetail_coordinates": {
+    "description": "Coordinates label"
+  },
+  "reportDetail_noIssueTypes": "No issue types selected",
+  "@reportDetail_noIssueTypes": {
+    "description": "No issue types message"
+  },
+  "reportDetail_severity": "Severity",
+  "@reportDetail_severity": {
+    "description": "Severity section title"
+  },
+  "reportDetail_severityMinor": "Minor issue - Low priority",
+  "@reportDetail_severityMinor": {
+    "description": "Minor severity description"
+  },
+  "reportDetail_severityLow": "Low severity - Can be addressed later",
+  "@reportDetail_severityLow": {
+    "description": "Low severity description"
+  },
+  "reportDetail_severityModerate": "Moderate severity - Needs attention",
+  "@reportDetail_severityModerate": {
+    "description": "Moderate severity description"
+  },
+  "reportDetail_severityHigh": "High severity - Requires prompt action",
+  "@reportDetail_severityHigh": {
+    "description": "High severity description"
+  },
+  "reportDetail_severityCritical": "Critical - Immediate action required",
+  "@reportDetail_severityCritical": {
+    "description": "Critical severity description"
+  },
+  "reportDetail_severityUnspecified": "Severity level not specified",
+  "@reportDetail_severityUnspecified": {
+    "description": "Unspecified severity description"
+  },
+  "reportDetail_noDescription": "No description provided",
+  "@reportDetail_noDescription": {
+    "description": "No description message"
+  },
+  "reportDetail_communityVotes": "Community Votes",
+  "@reportDetail_communityVotes": {
+    "description": "Community votes section title"
+  },
+  "reportDetail_verified": "Verified",
+  "@reportDetail_verified": {
+    "description": "Verified vote label"
+  },
+  "reportDetail_spam": "Spam",
+  "@reportDetail_spam": {
+    "description": "Spam vote label"
+  },
+  "reportDetail_markSpam": "Mark Spam",
+  "@reportDetail_markSpam": {
+    "description": "Mark spam button text"
+  },
+  "reportDetail_verify": "Verify",
+  "@reportDetail_verify": {
+    "description": "Verify button text"
+  },
+  "reportDetail_reportVerified": "Report verified",
+  "@reportDetail_reportVerified": {
+    "description": "Report verified toast message"
+  },
+  "reportDetail_verificationRemoved": "Verification removed",
+  "@reportDetail_verificationRemoved": {
+    "description": "Verification removed toast message"
+  },
+  "reportDetail_markedAsSpam": "Marked as spam",
+  "@reportDetail_markedAsSpam": {
+    "description": "Marked as spam toast message"
+  },
+  "reportDetail_spamVoteRemoved": "Spam vote removed",
+  "@reportDetail_spamVoteRemoved": {
+    "description": "Spam vote removed toast message"
+  },
+  "reportDetail_failedToVote": "Failed to vote: {error}",
+  "@reportDetail_failedToVote": {
+    "description": "Failed to vote error message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "reportDetail_verifyReport": "Verify Report",
+  "@reportDetail_verifyReport": {
+    "description": "Authority verify dialog title"
+  },
+  "reportDetail_verifyReportConfirm": "Are you sure you want to verify this report as legitimate? This will mark the report status as \"reviewed\".",
+  "@reportDetail_verifyReportConfirm": {
+    "description": "Authority verify confirmation message"
+  },
+  "reportDetail_markAsSpam": "Mark as Spam",
+  "@reportDetail_markAsSpam": {
+    "description": "Authority mark spam dialog title"
+  },
+  "reportDetail_markAsSpamConfirm": "Are you sure you want to mark this report as spam? This will change the report status to \"spam\".",
+  "@reportDetail_markAsSpamConfirm": {
+    "description": "Authority mark spam confirmation message"
+  },
+  "reportDetail_reportVerifiedSuccess": "Report verified successfully",
+  "@reportDetail_reportVerifiedSuccess": {
+    "description": "Authority verify success message"
+  },
+  "reportDetail_reportMarkedSpam": "Report marked as spam",
+  "@reportDetail_reportMarkedSpam": {
+    "description": "Authority mark spam success message"
+  },
+  "reportDetail_failedToVerify": "Failed to verify report: {error}",
+  "@reportDetail_failedToVerify": {
+    "description": "Authority verify error message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "reportDetail_failedToMarkSpam": "Failed to mark as spam: {error}",
+  "@reportDetail_failedToMarkSpam": {
+    "description": "Authority mark spam error message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "reportDetail_verifyReportButton": "Verify Report",
+  "@reportDetail_verifyReportButton": {
+    "description": "Authority verify button text"
+  },
+  "reportDetail_markedAsSpamButton": "Marked as Spam",
+  "@reportDetail_markedAsSpamButton": {
+    "description": "Authority marked spam button text (disabled state)"
+  },
+  "reportDetail_reportId": "Report ID: {id}",
+  "@reportDetail_reportId": {
+    "description": "Report ID label",
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "common_untitled": "Untitled",
+  "@common_untitled": {
+    "description": "Untitled label for items without title"
+  },
+  "status_draft": "Draft",
+  "@status_draft": {
+    "description": "Draft status label"
+  },
+  "status_submitted": "Submitted",
+  "@status_submitted": {
+    "description": "Submitted status label"
+  },
+  "status_reviewed": "Reviewed",
+  "@status_reviewed": {
+    "description": "Reviewed status label"
+  },
+  "status_spam": "Spam",
+  "@status_spam": {
+    "description": "Spam status label"
+  },
+  "reportDetail_communityBelievesLegit": "Community believes this is legitimate",
+  "@reportDetail_communityBelievesLegit": {
+    "description": "Message when verified votes are winning"
+  },
+  "reportDetail_communitySuspectsSpam": "Community suspects this might be spam",
+  "@reportDetail_communitySuspectsSpam": {
+    "description": "Message when spam votes are winning"
+  },
+  "common_pleaseWait": "Please wait, processing...",
+  "@common_pleaseWait": {
+    "description": "Please wait message when processing"
   }
 }

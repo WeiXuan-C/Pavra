@@ -198,8 +198,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           _verifiedVotes = (_verifiedVotes - 1).clamp(0, 999999);
         });
 
+        final l10n = AppLocalizations.of(context);
         Fluttertoast.showToast(
-          msg: 'Verification removed',
+          msg: l10n.reportDetail_verificationRemoved,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );
@@ -219,8 +220,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           _verifiedVotes++;
         });
 
+        final l10n = AppLocalizations.of(context);
         Fluttertoast.showToast(
-          msg: 'Report verified',
+          msg: l10n.reportDetail_reportVerified,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );
@@ -229,8 +231,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       debugPrint('Error voting: $e');
       if (!mounted) return;
 
+      final l10n = AppLocalizations.of(context);
       Fluttertoast.showToast(
-        msg: 'Failed to vote: $e',
+        msg: l10n.reportDetail_failedToVote(e.toString()),
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
       );
@@ -263,8 +266,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           _spamVotes = (_spamVotes - 1).clamp(0, 999999);
         });
 
+        final l10n = AppLocalizations.of(context);
         Fluttertoast.showToast(
-          msg: 'Spam vote removed',
+          msg: l10n.reportDetail_spamVoteRemoved,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );
@@ -284,8 +288,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           _spamVotes++;
         });
 
+        final l10n = AppLocalizations.of(context);
         Fluttertoast.showToast(
-          msg: 'Marked as spam',
+          msg: l10n.reportDetail_markedAsSpam,
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );
@@ -314,14 +319,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     if (_isProcessing) return;
 
     // Show confirmation dialog
+    final l10n = AppLocalizations.of(context);
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Verify Report'),
-        content: const Text(
-          'Are you sure you want to verify this report as legitimate? '
-          'This will mark the report status as "reviewed".',
-        ),
+        title: Text(l10n.reportDetail_verifyReport),
+        content: Text(l10n.reportDetail_verifyReportConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -353,8 +356,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       HapticFeedback.heavyImpact();
       if (!mounted) return;
 
+      final l10n = AppLocalizations.of(context);
       Fluttertoast.showToast(
-        msg: 'Report verified successfully',
+        msg: l10n.reportDetail_reportVerifiedSuccess,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.green,
@@ -366,8 +370,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       debugPrint('❌ Error verifying report: $e');
       if (!mounted) return;
 
+      final l10n = AppLocalizations.of(context);
       Fluttertoast.showToast(
-        msg: 'Failed to verify report: $e',
+        msg: l10n.reportDetail_failedToVerify(e.toString()),
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
@@ -385,14 +390,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     if (_isProcessing) return;
 
     // Show confirmation dialog
+    final l10n = AppLocalizations.of(context);
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Mark as Spam'),
-        content: const Text(
-          'Are you sure you want to mark this report as spam? '
-          'This will change the report status to "spam".',
-        ),
+        title: Text(l10n.reportDetail_markAsSpam),
+        content: Text(l10n.reportDetail_markAsSpamConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -424,8 +427,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       HapticFeedback.heavyImpact();
       if (!mounted) return;
 
+      final l10n = AppLocalizations.of(context);
       Fluttertoast.showToast(
-        msg: 'Report marked as spam',
+        msg: l10n.reportDetail_reportMarkedSpam,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
@@ -437,8 +441,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       debugPrint('❌ Error marking report as spam: $e');
       if (!mounted) return;
 
+      final l10n = AppLocalizations.of(context);
       Fluttertoast.showToast(
-        msg: 'Failed to mark as spam: $e',
+        msg: l10n.reportDetail_failedToMarkSpam(e.toString()),
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
@@ -457,9 +462,27 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: HeaderLayout(title: 'Report Details'),
-      body: Column(
+    return PopScope(
+      canPop: !_isProcessing,
+      onPopInvoked: (bool didPop) {
+        if (didPop) {
+          // Successfully popped, return true to indicate changes were made
+          // This helps refresh the previous screen if needed
+          return;
+        }
+        // If processing, show a message
+        if (_isProcessing) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n.common_pleaseWait),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        appBar: HeaderLayout(title: l10n.reportDetail_title),
+        body: Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
@@ -487,6 +510,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           ),
           _buildActionButtons(theme, l10n),
         ],
+      ),
       ),
     );
   }
@@ -518,7 +542,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                   ),
                 ),
                 Text(
-                  'Report ID: ${widget.report.id}',
+                  l10n.reportDetail_reportId(widget.report.id),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
@@ -567,7 +591,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             ),
             SizedBox(height: 2.h),
             Text(
-              'No photos available',
+              l10n.reportDetail_noPhotos,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
@@ -597,7 +621,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             ),
             SizedBox(width: 2.w),
             Text(
-              'Photos',
+              l10n.reportDetail_photos,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -662,7 +686,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                                   ),
                                   SizedBox(height: 2.h),
                                   Text(
-                                    'Loading photo ${index + 1}/${sortedPhotos.length}',
+                                    l10n.reportDetail_loadingPhoto(index + 1, sortedPhotos.length),
                                     style: theme.textTheme.bodySmall?.copyWith(
                                       color: theme.colorScheme.onSurface
                                           .withValues(alpha: 0.6),
@@ -696,7 +720,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                                 ),
                                 SizedBox(height: 2.h),
                                 Text(
-                                  'Failed to load photo',
+                                  l10n.reportDetail_failedToLoad,
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: theme.colorScheme.onSurface
                                         .withValues(alpha: 0.6),
@@ -739,7 +763,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         SizedBox(height: 1.h),
         Center(
           child: Text(
-            'Swipe to view more photos',
+            l10n.reportDetail_swipePhotos,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               fontStyle: FontStyle.italic,
@@ -751,75 +775,144 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   Widget _buildInfoSection(ThemeData theme, AppLocalizations l10n) {
-    return Container(
-      padding: EdgeInsets.all(4.w),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.location_on,
-                color: theme.colorScheme.primary,
-                size: 24,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              Icons.location_on,
+              color: theme.colorScheme.primary,
+              size: 24,
+            ),
+            SizedBox(width: 2.w),
+            Text(
+              l10n.report_location,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
               ),
-              SizedBox(width: 2.w),
+            ),
+          ],
+        ),
+        SizedBox(height: 2.h),
+        Container(
+          padding: EdgeInsets.all(4.w),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Column(
+            children: [
+              // Address
+              _buildLocationItem(
+                theme,
+                l10n,
+                icon: Icons.place,
+                label: l10n.report_address,
+                value: widget.report.address ?? l10n.reportDetail_noLocation,
+                color: theme.colorScheme.primary,
+              ),
+              
+              // Coordinates (if available)
+              if (widget.report.latitude != null &&
+                  widget.report.longitude != null) ...[
+                SizedBox(height: 2.h),
+                Divider(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                  height: 1,
+                ),
+                SizedBox(height: 2.h),
+                _buildLocationItem(
+                  theme,
+                  l10n,
+                  icon: Icons.my_location,
+                  label: l10n.reportDetail_coordinates,
+                  value: '${widget.report.latitude!.toStringAsFixed(6)}, ${widget.report.longitude!.toStringAsFixed(6)}',
+                  color: Colors.blue,
+                  isCopyable: true,
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLocationItem(
+    ThemeData theme,
+    AppLocalizations l10n, {
+    required IconData icon,
+    required String label,
+    required String value,
+    required Color color,
+    bool isCopyable = false,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Icon
+        Container(
+          padding: EdgeInsets.all(2.w),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(
+            icon,
+            color: color,
+            size: 20,
+          ),
+        ),
+        
+        SizedBox(width: 3.w),
+        
+        // Label and value
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Text(
-                l10n.report_location,
-                style: theme.textTheme.titleMedium?.copyWith(
+                label,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 0.5.h),
+              Text(
+                value,
+                style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 2.h),
-          _buildInfoRow(
-            theme,
-            l10n.report_address,
-            widget.report.address ?? 'No location',
-          ),
-          if (widget.report.latitude != null &&
-              widget.report.longitude != null) ...[
-            SizedBox(height: 1.h),
-            _buildInfoRow(
-              theme,
-              'Coordinates',
-              '${widget.report.latitude!.toStringAsFixed(6)}, ${widget.report.longitude!.toStringAsFixed(6)}',
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(ThemeData theme, String label, String value) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 30.w,
-          child: Text(
-            label,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-          ),
         ),
-        Expanded(
-          child: Text(
-            value,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
+        
+        // Copy button for coordinates
+        if (isCopyable)
+          IconButton(
+            icon: Icon(
+              Icons.copy,
+              size: 20,
+              color: theme.colorScheme.primary.withValues(alpha: 0.7),
             ),
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: value));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(l10n.common_copied),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            },
+            tooltip: 'Copy coordinates',
           ),
-        ),
       ],
     );
   }
@@ -845,7 +938,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           const Center(child: CircularProgressIndicator())
         else if (_issueTypes.isEmpty)
           Text(
-            'No issue types selected',
+            l10n.reportDetail_noIssueTypes,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
@@ -908,7 +1001,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             ),
             SizedBox(width: 2.w),
             Text(
-              'Severity',
+              l10n.reportDetail_severity,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -993,19 +1086,20 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   String _getSeverityDescription(String severity) {
+    final l10n = AppLocalizations.of(context);
     switch (severity.toLowerCase()) {
       case 'minor':
-        return 'Minor issue - Low priority';
+        return l10n.reportDetail_severityMinor;
       case 'low':
-        return 'Low severity - Can be addressed later';
+        return l10n.reportDetail_severityLow;
       case 'moderate':
-        return 'Moderate severity - Needs attention';
+        return l10n.reportDetail_severityModerate;
       case 'high':
-        return 'High severity - Requires prompt action';
+        return l10n.reportDetail_severityHigh;
       case 'critical':
-        return 'Critical - Immediate action required';
+        return l10n.reportDetail_severityCritical;
       default:
-        return 'Severity level not specified';
+        return l10n.reportDetail_severityUnspecified;
     }
   }
 
@@ -1039,7 +1133,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             ),
           ),
           child: Text(
-            widget.report.description ?? 'No description provided',
+            widget.report.description ?? l10n.reportDetail_noDescription,
             style: theme.textTheme.bodyMedium,
           ),
         ),
@@ -1052,96 +1146,246 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return Container(
-      padding: EdgeInsets.all(4.w),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+    // Determine which side is winning
+    final isVerifiedWinning = _verifiedVotes > _spamVotes;
+    final isSpamWinning = _spamVotes > _verifiedVotes;
+    final isTied = _verifiedVotes == _spamVotes;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              Icons.how_to_vote,
+              color: theme.colorScheme.primary,
+              size: 24,
+            ),
+            SizedBox(width: 2.w),
+            Text(
+              l10n.reportDetail_communityVotes,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+        SizedBox(height: 2.h),
+        
+        // Vote counts in a modern card layout
+        Container(
+          padding: EdgeInsets.all(4.w),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Column(
             children: [
-              Icon(
-                Icons.how_to_vote,
-                color: theme.colorScheme.primary,
-                size: 24,
+              // Verified votes
+              _buildVoteRow(
+                theme,
+                l10n,
+                icon: Icons.verified,
+                label: l10n.reportDetail_verified,
+                count: _verifiedVotes,
+                color: Colors.green,
+                isWinning: isVerifiedWinning,
+                total: _verifiedVotes + _spamVotes,
               ),
-              SizedBox(width: 2.w),
-              Text(
-                'Community Votes',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
+              
+              SizedBox(height: 2.h),
+              
+              // Divider with VS
+              Row(
+                children: [
+                  Expanded(
+                    child: Divider(
+                      color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                      thickness: 1,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 3.w),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 3.w,
+                        vertical: 0.5.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        'VS',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Divider(
+                      color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                      thickness: 1,
+                    ),
+                  ),
+                ],
+              ),
+              
+              SizedBox(height: 2.h),
+              
+              // Spam votes
+              _buildVoteRow(
+                theme,
+                l10n,
+                icon: Icons.report,
+                label: l10n.reportDetail_spam,
+                count: _spamVotes,
+                color: Colors.red,
+                isWinning: isSpamWinning,
+                total: _verifiedVotes + _spamVotes,
+              ),
+              
+              // Result indicator
+              if (!isTied && (_verifiedVotes + _spamVotes) > 0) ...[
+                SizedBox(height: 2.h),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.5.h),
+                  decoration: BoxDecoration(
+                    color: (isVerifiedWinning ? Colors.green : Colors.red)
+                        .withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: (isVerifiedWinning ? Colors.green : Colors.red)
+                          .withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        isVerifiedWinning ? Icons.trending_up : Icons.trending_down,
+                        size: 18,
+                        color: isVerifiedWinning ? Colors.green.shade700 : Colors.red.shade700,
+                      ),
+                      SizedBox(width: 2.w),
+                      Expanded(
+                        child: Text(
+                          isVerifiedWinning
+                              ? l10n.reportDetail_communityBelievesLegit
+                              : l10n.reportDetail_communitySuspectsSpam,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
-          SizedBox(height: 2.h),
-          Row(
-            children: [
-              Expanded(
-                child: _buildVoteCount(
-                  theme,
-                  icon: Icons.check_circle,
-                  label: 'Verified',
-                  count: _verifiedVotes,
-                  color: Colors.green,
-                ),
-              ),
-              SizedBox(width: 3.w),
-              Expanded(
-                child: _buildVoteCount(
-                  theme,
-                  icon: Icons.report,
-                  label: 'Spam',
-                  count: _spamVotes,
-                  color: Colors.red,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildVoteCount(
-    ThemeData theme, {
+  Widget _buildVoteRow(
+    ThemeData theme,
+    AppLocalizations l10n, {
     required IconData icon,
     required String label,
     required int count,
     required Color color,
+    required bool isWinning,
+    required int total,
   }) {
-    return Container(
-      padding: EdgeInsets.all(3.w),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 32),
-          SizedBox(height: 1.h),
-          Text(
-            count.toString(),
-            style: theme.textTheme.titleLarge?.copyWith(
-              color: color,
-              fontWeight: FontWeight.bold,
-            ),
+    final percentage = total > 0 ? (count / total * 100).toStringAsFixed(0) : '0';
+    
+    return Row(
+      children: [
+        // Icon
+        Container(
+          padding: EdgeInsets.all(2.5.w),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(12),
           ),
-          Text(
-            label,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
+          child: Icon(icon, color: color, size: 28),
+        ),
+        
+        SizedBox(width: 3.w),
+        
+        // Label and count
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    label,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  if (isWinning) ...[
+                    SizedBox(width: 2.w),
+                    Icon(
+                      Icons.emoji_events,
+                      size: 16,
+                      color: Colors.amber,
+                    ),
+                  ],
+                ],
+              ),
+              SizedBox(height: 0.5.h),
+              // Progress bar
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: total > 0 ? count / total : 0,
+                  backgroundColor: color.withValues(alpha: 0.1),
+                  valueColor: AlwaysStoppedAnimation<Color>(color),
+                  minHeight: 6,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        
+        SizedBox(width: 3.w),
+        
+        // Count and percentage
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              count.toString(),
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: color,
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+              ),
+            ),
+            Text(
+              '$percentage%',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -1213,7 +1457,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                         ),
                       )
                     : Text(
-                        _userVote == 'spam' ? 'Spam' : 'Mark Spam',
+                        _userVote == 'spam' ? l10n.reportDetail_spam : l10n.reportDetail_markSpam,
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -1251,7 +1495,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                         ),
                       )
                     : Text(
-                        _userVote == 'verify' ? 'Verified' : 'Verify',
+                        _userVote == 'verify' ? l10n.reportDetail_verified : l10n.reportDetail_verify,
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -1314,7 +1558,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                         ),
                       )
                     : Text(
-                        isSpam ? 'Marked as Spam' : 'Mark as Spam',
+                        isSpam ? l10n.reportDetail_markedAsSpamButton : l10n.reportDetail_markAsSpam,
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -1352,7 +1596,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                         ),
                       )
                     : Text(
-                        isReviewed ? 'Verified' : 'Verify Report',
+                        isReviewed ? l10n.reportDetail_verified : l10n.reportDetail_verifyReportButton,
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -1384,13 +1628,13 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   String _getStatusLabel(String status, AppLocalizations l10n) {
     switch (status) {
       case 'draft':
-        return 'Draft';
+        return l10n.status_draft;
       case 'submitted':
-        return 'Submitted';
+        return l10n.status_submitted;
       case 'reviewed':
-        return 'Reviewed';
+        return l10n.status_reviewed;
       case 'spam':
-        return 'Spam';
+        return l10n.status_spam;
       default:
         return status;
     }
@@ -1416,15 +1660,15 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   String _getSeverityLabel(String severity, AppLocalizations l10n) {
     switch (severity.toLowerCase()) {
       case 'minor':
-        return 'Minor';
+        return l10n.severity_minor;
       case 'low':
-        return 'Low';
+        return l10n.severity_low;
       case 'moderate':
-        return 'Moderate';
+        return l10n.severity_moderate;
       case 'high':
-        return 'High';
+        return l10n.severity_high;
       case 'critical':
-        return 'Critical';
+        return l10n.severity_critical;
       default:
         return severity;
     }
