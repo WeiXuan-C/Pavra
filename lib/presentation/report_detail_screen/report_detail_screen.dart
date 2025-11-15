@@ -464,7 +464,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
 
     return PopScope(
       canPop: !_isProcessing,
-      onPopInvoked: (bool didPop) {
+      onPopInvokedWithResult: (bool didPop, dynamic result) {
         if (didPop) {
           // Successfully popped, return true to indicate changes were made
           // This helps refresh the previous screen if needed

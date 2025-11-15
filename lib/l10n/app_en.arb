@@ -2843,5 +2843,189 @@
   "common_pleaseWait": "Please wait, processing...",
   "@common_pleaseWait": {
     "description": "Please wait message when processing"
+  },
+  "savedRoute_title": "Saved Routes",
+  "@savedRoute_title": {
+    "description": "Saved routes screen title"
+  },
+  "savedRoute_addRoute": "Add Route",
+  "@savedRoute_addRoute": {
+    "description": "Add route button"
+  },
+  "savedRoute_editRoute": "Edit Route",
+  "@savedRoute_editRoute": {
+    "description": "Edit route button"
+  },
+  "savedRoute_routeName": "Route Name",
+  "@savedRoute_routeName": {
+    "description": "Route name field label"
+  },
+  "savedRoute_routeNameHint": "e.g., Home to Work",
+  "@savedRoute_routeNameHint": {
+    "description": "Route name hint"
+  },
+  "savedRoute_from": "From",
+  "@savedRoute_from": {
+    "description": "From location label"
+  },
+  "savedRoute_to": "To",
+  "@savedRoute_to": {
+    "description": "To location label"
+  },
+  "savedRoute_selectLocation": "Select Location",
+  "@savedRoute_selectLocation": {
+    "description": "Select location button"
+  },
+  "savedRoute_useCurrentLocation": "Use Current Location",
+  "@savedRoute_useCurrentLocation": {
+    "description": "Use current location button"
+  },
+  "savedRoute_useSavedLocation": "Use Saved Location",
+  "@savedRoute_useSavedLocation": {
+    "description": "Use saved location button"
+  },
+  "savedRoute_monitoring": "Monitoring",
+  "@savedRoute_monitoring": {
+    "description": "Monitoring toggle label"
+  },
+  "savedRoute_monitoringDesc": "Get alerts when on this route",
+  "@savedRoute_monitoringDesc": {
+    "description": "Monitoring description"
+  },
+  "savedRoute_distance": "Distance",
+  "@savedRoute_distance": {
+    "description": "Distance label"
+  },
+  "savedRoute_noRoutes": "No Saved Routes",
+  "@savedRoute_noRoutes": {
+    "description": "No routes message"
+  },
+  "savedRoute_noRoutesDesc": "Create routes to get alerts along your frequent paths",
+  "@savedRoute_noRoutesDesc": {
+    "description": "No routes description"
+  },
+  "savedRoute_deleteRoute": "Delete Route",
+  "@savedRoute_deleteRoute": {
+    "description": "Delete route dialog title"
+  },
+  "savedRoute_deleteConfirm": "Are you sure you want to delete this route?",
+  "@savedRoute_deleteConfirm": {
+    "description": "Delete confirmation message"
+  },
+  "savedRoute_routeCreated": "Route created successfully",
+  "@savedRoute_routeCreated": {
+    "description": "Route created success message"
+  },
+  "savedRoute_routeUpdated": "Route updated successfully",
+  "@savedRoute_routeUpdated": {
+    "description": "Route updated success message"
+  },
+  "savedRoute_routeDeleted": "Route deleted",
+  "@savedRoute_routeDeleted": {
+    "description": "Route deleted message"
+  },
+  "savedRoute_monitoringEnabled": "Monitoring enabled for this route",
+  "@savedRoute_monitoringEnabled": {
+    "description": "Monitoring enabled message"
+  },
+  "savedRoute_monitoringDisabled": "Monitoring disabled for this route",
+  "@savedRoute_monitoringDisabled": {
+    "description": "Monitoring disabled message"
+  },
+  "savedLocation_title": "Saved Locations",
+  "@savedLocation_title": {
+    "description": "Saved locations screen title"
+  },
+  "savedLocation_addLocation": "Add Location",
+  "@savedLocation_addLocation": {
+    "description": "Add location button"
+  },
+  "savedLocation_editLocation": "Edit Location",
+  "@savedLocation_editLocation": {
+    "description": "Edit location button"
+  },
+  "savedLocation_label": "Label",
+  "@savedLocation_label": {
+    "description": "Location label field"
+  },
+  "savedLocation_labelHint": "e.g., Home, Work, School",
+  "@savedLocation_labelHint": {
+    "description": "Location label hint"
+  },
+  "savedLocation_locationName": "Location Name",
+  "@savedLocation_locationName": {
+    "description": "Location name field"
+  },
+  "savedLocation_locationNameHint": "Enter location name",
+  "@savedLocation_locationNameHint": {
+    "description": "Location name hint"
+  },
+  "savedLocation_address": "Address",
+  "@savedLocation_address": {
+    "description": "Address field"
+  },
+  "savedLocation_noLocations": "No Saved Locations",
+  "@savedLocation_noLocations": {
+    "description": "No locations message"
+  },
+  "savedLocation_noLocationsDesc": "Save frequently visited places for quick access",
+  "@savedLocation_noLocationsDesc": {
+    "description": "No locations description"
+  },
+  "savedLocation_deleteLocation": "Delete Location",
+  "@savedLocation_deleteLocation": {
+    "description": "Delete location dialog title"
+  },
+  "savedLocation_deleteConfirm": "Are you sure you want to delete this location?",
+  "@savedLocation_deleteConfirm": {
+    "description": "Delete confirmation message"
+  },
+  "savedLocation_locationSaved": "Location saved successfully",
+  "@savedLocation_locationSaved": {
+    "description": "Location saved success message"
+  },
+  "savedLocation_locationDeleted": "Location deleted",
+  "@savedLocation_locationDeleted": {
+    "description": "Location deleted message"
+  },
+  "savedLocation_home": "Home",
+  "@savedLocation_home": {
+    "description": "Home location label"
+  },
+  "savedLocation_work": "Work",
+  "@savedLocation_work": {
+    "description": "Work location label"
+  },
+  "savedLocation_school": "School",
+  "@savedLocation_school": {
+    "description": "School location label"
+  },
+  "savedLocation_getDirections": "Get Directions",
+  "@savedLocation_getDirections": {
+    "description": "Get directions button"
+  },
+  "common_nameRequired": "Name is required",
+  "@common_nameRequired": {
+    "description": "Name required validation"
+  },
+  "common_locationRequired": "Location is required",
+  "@common_locationRequired": {
+    "description": "Location required validation"
+  },
+  "savedLocation_searchLocation": "Search Location",
+  "@savedLocation_searchLocation": {
+    "description": "Search location field label"
+  },
+  "savedLocation_searchPlaceholder": "Search for a place...",
+  "@savedLocation_searchPlaceholder": {
+    "description": "Search location placeholder"
+  },
+  "savedLocation_fetchingAddress": "Fetching address...",
+  "@savedLocation_fetchingAddress": {
+    "description": "Fetching address loading message"
+  },
+  "savedLocation_tapMapToSelect": "Tap anywhere on the map to select a location, or drag the marker to adjust",
+  "@savedLocation_tapMapToSelect": {
+    "description": "Instruction to select location on map"
   }
 }

@@ -2121,4 +2121,142 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get common_pleaseWait => '请稍候，正在处理...';
+
+  @override
+  String get savedRoute_title => '保存的路线';
+
+  @override
+  String get savedRoute_addRoute => '添加路线';
+
+  @override
+  String get savedRoute_editRoute => '编辑路线';
+
+  @override
+  String get savedRoute_routeName => '路线名称';
+
+  @override
+  String get savedRoute_routeNameHint => '例如：家到公司';
+
+  @override
+  String get savedRoute_from => '起点';
+
+  @override
+  String get savedRoute_to => '终点';
+
+  @override
+  String get savedRoute_selectLocation => '选择位置';
+
+  @override
+  String get savedRoute_useCurrentLocation => '使用当前位置';
+
+  @override
+  String get savedRoute_useSavedLocation => '使用保存的位置';
+
+  @override
+  String get savedRoute_monitoring => '监控中';
+
+  @override
+  String get savedRoute_monitoringDesc => '在此路线上时接收警报';
+
+  @override
+  String get savedRoute_distance => '距离';
+
+  @override
+  String get savedRoute_noRoutes => '没有保存的路线';
+
+  @override
+  String get savedRoute_noRoutesDesc => '创建路线以在常用路径上接收警报';
+
+  @override
+  String get savedRoute_deleteRoute => '删除路线';
+
+  @override
+  String get savedRoute_deleteConfirm => '您确定要删除此路线吗？';
+
+  @override
+  String get savedRoute_routeCreated => '路线创建成功';
+
+  @override
+  String get savedRoute_routeUpdated => '路线更新成功';
+
+  @override
+  String get savedRoute_routeDeleted => '路线已删除';
+
+  @override
+  String get savedRoute_monitoringEnabled => '已为此路线启用监控';
+
+  @override
+  String get savedRoute_monitoringDisabled => '已为此路线禁用监控';
+
+  @override
+  String get savedLocation_title => '保存的位置';
+
+  @override
+  String get savedLocation_addLocation => '添加位置';
+
+  @override
+  String get savedLocation_editLocation => '编辑位置';
+
+  @override
+  String get savedLocation_label => '标签';
+
+  @override
+  String get savedLocation_labelHint => '例如：家、公司、学校';
+
+  @override
+  String get savedLocation_locationName => '位置名称';
+
+  @override
+  String get savedLocation_locationNameHint => '输入位置名称';
+
+  @override
+  String get savedLocation_address => '地址';
+
+  @override
+  String get savedLocation_noLocations => '没有保存的位置';
+
+  @override
+  String get savedLocation_noLocationsDesc => '保存常去的地方以便快速访问';
+
+  @override
+  String get savedLocation_deleteLocation => '删除位置';
+
+  @override
+  String get savedLocation_deleteConfirm => '您确定要删除此位置吗？';
+
+  @override
+  String get savedLocation_locationSaved => '位置保存成功';
+
+  @override
+  String get savedLocation_locationDeleted => '位置已删除';
+
+  @override
+  String get savedLocation_home => '家';
+
+  @override
+  String get savedLocation_work => '公司';
+
+  @override
+  String get savedLocation_school => '学校';
+
+  @override
+  String get savedLocation_getDirections => '获取路线';
+
+  @override
+  String get common_nameRequired => '名称为必填项';
+
+  @override
+  String get common_locationRequired => '位置为必填项';
+
+  @override
+  String get savedLocation_searchLocation => '搜索位置';
+
+  @override
+  String get savedLocation_searchPlaceholder => '搜索地点...';
+
+  @override
+  String get savedLocation_fetchingAddress => '正在获取地址...';
+
+  @override
+  String get savedLocation_tapMapToSelect => '点击地图上的任意位置选择地点，或拖动标记进行调整';
 }

@@ -2194,4 +2194,149 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get common_pleaseWait => 'Please wait, processing...';
+
+  @override
+  String get savedRoute_title => 'Saved Routes';
+
+  @override
+  String get savedRoute_addRoute => 'Add Route';
+
+  @override
+  String get savedRoute_editRoute => 'Edit Route';
+
+  @override
+  String get savedRoute_routeName => 'Route Name';
+
+  @override
+  String get savedRoute_routeNameHint => 'e.g., Home to Work';
+
+  @override
+  String get savedRoute_from => 'From';
+
+  @override
+  String get savedRoute_to => 'To';
+
+  @override
+  String get savedRoute_selectLocation => 'Select Location';
+
+  @override
+  String get savedRoute_useCurrentLocation => 'Use Current Location';
+
+  @override
+  String get savedRoute_useSavedLocation => 'Use Saved Location';
+
+  @override
+  String get savedRoute_monitoring => 'Monitoring';
+
+  @override
+  String get savedRoute_monitoringDesc => 'Get alerts when on this route';
+
+  @override
+  String get savedRoute_distance => 'Distance';
+
+  @override
+  String get savedRoute_noRoutes => 'No Saved Routes';
+
+  @override
+  String get savedRoute_noRoutesDesc =>
+      'Create routes to get alerts along your frequent paths';
+
+  @override
+  String get savedRoute_deleteRoute => 'Delete Route';
+
+  @override
+  String get savedRoute_deleteConfirm =>
+      'Are you sure you want to delete this route?';
+
+  @override
+  String get savedRoute_routeCreated => 'Route created successfully';
+
+  @override
+  String get savedRoute_routeUpdated => 'Route updated successfully';
+
+  @override
+  String get savedRoute_routeDeleted => 'Route deleted';
+
+  @override
+  String get savedRoute_monitoringEnabled =>
+      'Monitoring enabled for this route';
+
+  @override
+  String get savedRoute_monitoringDisabled =>
+      'Monitoring disabled for this route';
+
+  @override
+  String get savedLocation_title => 'Saved Locations';
+
+  @override
+  String get savedLocation_addLocation => 'Add Location';
+
+  @override
+  String get savedLocation_editLocation => 'Edit Location';
+
+  @override
+  String get savedLocation_label => 'Label';
+
+  @override
+  String get savedLocation_labelHint => 'e.g., Home, Work, School';
+
+  @override
+  String get savedLocation_locationName => 'Location Name';
+
+  @override
+  String get savedLocation_locationNameHint => 'Enter location name';
+
+  @override
+  String get savedLocation_address => 'Address';
+
+  @override
+  String get savedLocation_noLocations => 'No Saved Locations';
+
+  @override
+  String get savedLocation_noLocationsDesc =>
+      'Save frequently visited places for quick access';
+
+  @override
+  String get savedLocation_deleteLocation => 'Delete Location';
+
+  @override
+  String get savedLocation_deleteConfirm =>
+      'Are you sure you want to delete this location?';
+
+  @override
+  String get savedLocation_locationSaved => 'Location saved successfully';
+
+  @override
+  String get savedLocation_locationDeleted => 'Location deleted';
+
+  @override
+  String get savedLocation_home => 'Home';
+
+  @override
+  String get savedLocation_work => 'Work';
+
+  @override
+  String get savedLocation_school => 'School';
+
+  @override
+  String get savedLocation_getDirections => 'Get Directions';
+
+  @override
+  String get common_nameRequired => 'Name is required';
+
+  @override
+  String get common_locationRequired => 'Location is required';
+
+  @override
+  String get savedLocation_searchLocation => 'Search Location';
+
+  @override
+  String get savedLocation_searchPlaceholder => 'Search for a place...';
+
+  @override
+  String get savedLocation_fetchingAddress => 'Fetching address...';
+
+  @override
+  String get savedLocation_tapMapToSelect =>
+      'Tap anywhere on the map to select a location, or drag the marker to adjust';
 }

@@ -4267,6 +4267,282 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please wait, processing...'**
   String get common_pleaseWait;
+
+  /// Saved routes screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Routes'**
+  String get savedRoute_title;
+
+  /// Add route button
+  ///
+  /// In en, this message translates to:
+  /// **'Add Route'**
+  String get savedRoute_addRoute;
+
+  /// Edit route button
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Route'**
+  String get savedRoute_editRoute;
+
+  /// Route name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Route Name'**
+  String get savedRoute_routeName;
+
+  /// Route name hint
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Home to Work'**
+  String get savedRoute_routeNameHint;
+
+  /// From location label
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get savedRoute_from;
+
+  /// To location label
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get savedRoute_to;
+
+  /// Select location button
+  ///
+  /// In en, this message translates to:
+  /// **'Select Location'**
+  String get savedRoute_selectLocation;
+
+  /// Use current location button
+  ///
+  /// In en, this message translates to:
+  /// **'Use Current Location'**
+  String get savedRoute_useCurrentLocation;
+
+  /// Use saved location button
+  ///
+  /// In en, this message translates to:
+  /// **'Use Saved Location'**
+  String get savedRoute_useSavedLocation;
+
+  /// Monitoring toggle label
+  ///
+  /// In en, this message translates to:
+  /// **'Monitoring'**
+  String get savedRoute_monitoring;
+
+  /// Monitoring description
+  ///
+  /// In en, this message translates to:
+  /// **'Get alerts when on this route'**
+  String get savedRoute_monitoringDesc;
+
+  /// Distance label
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get savedRoute_distance;
+
+  /// No routes message
+  ///
+  /// In en, this message translates to:
+  /// **'No Saved Routes'**
+  String get savedRoute_noRoutes;
+
+  /// No routes description
+  ///
+  /// In en, this message translates to:
+  /// **'Create routes to get alerts along your frequent paths'**
+  String get savedRoute_noRoutesDesc;
+
+  /// Delete route dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Route'**
+  String get savedRoute_deleteRoute;
+
+  /// Delete confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this route?'**
+  String get savedRoute_deleteConfirm;
+
+  /// Route created success message
+  ///
+  /// In en, this message translates to:
+  /// **'Route created successfully'**
+  String get savedRoute_routeCreated;
+
+  /// Route updated success message
+  ///
+  /// In en, this message translates to:
+  /// **'Route updated successfully'**
+  String get savedRoute_routeUpdated;
+
+  /// Route deleted message
+  ///
+  /// In en, this message translates to:
+  /// **'Route deleted'**
+  String get savedRoute_routeDeleted;
+
+  /// Monitoring enabled message
+  ///
+  /// In en, this message translates to:
+  /// **'Monitoring enabled for this route'**
+  String get savedRoute_monitoringEnabled;
+
+  /// Monitoring disabled message
+  ///
+  /// In en, this message translates to:
+  /// **'Monitoring disabled for this route'**
+  String get savedRoute_monitoringDisabled;
+
+  /// Saved locations screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Locations'**
+  String get savedLocation_title;
+
+  /// Add location button
+  ///
+  /// In en, this message translates to:
+  /// **'Add Location'**
+  String get savedLocation_addLocation;
+
+  /// Edit location button
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Location'**
+  String get savedLocation_editLocation;
+
+  /// Location label field
+  ///
+  /// In en, this message translates to:
+  /// **'Label'**
+  String get savedLocation_label;
+
+  /// Location label hint
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Home, Work, School'**
+  String get savedLocation_labelHint;
+
+  /// Location name field
+  ///
+  /// In en, this message translates to:
+  /// **'Location Name'**
+  String get savedLocation_locationName;
+
+  /// Location name hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter location name'**
+  String get savedLocation_locationNameHint;
+
+  /// Address field
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get savedLocation_address;
+
+  /// No locations message
+  ///
+  /// In en, this message translates to:
+  /// **'No Saved Locations'**
+  String get savedLocation_noLocations;
+
+  /// No locations description
+  ///
+  /// In en, this message translates to:
+  /// **'Save frequently visited places for quick access'**
+  String get savedLocation_noLocationsDesc;
+
+  /// Delete location dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Location'**
+  String get savedLocation_deleteLocation;
+
+  /// Delete confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this location?'**
+  String get savedLocation_deleteConfirm;
+
+  /// Location saved success message
+  ///
+  /// In en, this message translates to:
+  /// **'Location saved successfully'**
+  String get savedLocation_locationSaved;
+
+  /// Location deleted message
+  ///
+  /// In en, this message translates to:
+  /// **'Location deleted'**
+  String get savedLocation_locationDeleted;
+
+  /// Home location label
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get savedLocation_home;
+
+  /// Work location label
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get savedLocation_work;
+
+  /// School location label
+  ///
+  /// In en, this message translates to:
+  /// **'School'**
+  String get savedLocation_school;
+
+  /// Get directions button
+  ///
+  /// In en, this message translates to:
+  /// **'Get Directions'**
+  String get savedLocation_getDirections;
+
+  /// Name required validation
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get common_nameRequired;
+
+  /// Location required validation
+  ///
+  /// In en, this message translates to:
+  /// **'Location is required'**
+  String get common_locationRequired;
+
+  /// Search location field label
+  ///
+  /// In en, this message translates to:
+  /// **'Search Location'**
+  String get savedLocation_searchLocation;
+
+  /// Search location placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a place...'**
+  String get savedLocation_searchPlaceholder;
+
+  /// Fetching address loading message
+  ///
+  /// In en, this message translates to:
+  /// **'Fetching address...'**
+  String get savedLocation_fetchingAddress;
+
+  /// Instruction to select location on map
+  ///
+  /// In en, this message translates to:
+  /// **'Tap anywhere on the map to select a location, or drag the marker to adjust'**
+  String get savedLocation_tapMapToSelect;
 }
 
 class _AppLocalizationsDelegate

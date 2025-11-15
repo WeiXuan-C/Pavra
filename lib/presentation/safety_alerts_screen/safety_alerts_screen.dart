@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../core/api/saved_route/saved_route_api.dart';
+import '../../core/providers/auth_provider.dart';
+import '../../data/models/saved_route_model.dart';
+import '../../data/repositories/saved_route_repository.dart';
 import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
 import './widgets/alert_card_widget.dart';
 import './widgets/alert_toggle_widget.dart';
+import './widgets/empty_routes_widget.dart';
 import './widgets/mini_map_widget.dart';
 import './widgets/radius_slider_widget.dart';
-import './widgets/route_monitoring_widget.dart';
+import './widgets/saved_route_card_widget.dart';
+import './widgets/saved_route_form_dialog.dart';
 
 class SafetyAlertsScreen extends StatefulWidget {
   const SafetyAlertsScreen({super.key});
@@ -19,12 +26,17 @@ class SafetyAlertsScreen extends StatefulWidget {
 class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
+  late SavedRouteRepository _routeRepository;
+  
   double _alertRadius = 5.0;
   bool _roadDamageEnabled = true;
   bool _constructionEnabled = true;
   bool _weatherEnabled = false;
   bool _trafficEnabled = true;
   bool _isRefreshing = false;
+  bool _isLoadingRoutes = true;
+  
+  List<SavedRouteModel> _savedRoutes = [];
 
   // Mock data for safety alerts
   final List<Map<String, dynamic>> _alerts = [
@@ -95,38 +107,54 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
     },
   ];
 
-  // Mock data for saved routes
-  final List<Map<String, dynamic>> _savedRoutes = [
-    {
-      "id": 1,
-      "name": "Home to Work",
-      "from": "123 Residential Ave",
-      "to": "456 Business District",
-      "distance": "12.3 miles",
-      "isMonitoring": true,
-    },
-    {
-      "id": 2,
-      "name": "School Route",
-      "from": "Home",
-      "to": "Lincoln Elementary",
-      "distance": "3.7 miles",
-      "isMonitoring": true,
-    },
-    {
-      "id": 3,
-      "name": "Weekend Shopping",
-      "from": "Home",
-      "to": "Westfield Mall",
-      "distance": "8.9 miles",
-      "isMonitoring": false,
-    },
-  ];
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      _initRepository();
+      _loadRoutes();
+      _isInitialized = true;
+    }
+  }
+
+  bool _isInitialized = false;
+
+  void _initRepository() {
+    final authProvider = context.read<AuthProvider>();
+    _routeRepository = SavedRouteRepository(
+      SavedRouteApi(authProvider.supabaseClient),
+    );
+  }
+
+  Future<void> _loadRoutes() async {
+    setState(() => _isLoadingRoutes = true);
+
+    try {
+      final routes = await _routeRepository.getSavedRoutes();
+      if (mounted) {
+        setState(() {
+          _savedRoutes = routes;
+          _isLoadingRoutes = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading routes: $e');
+      if (mounted) {
+        setState(() => _isLoadingRoutes = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load routes: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -184,10 +212,144 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
     );
   }
 
-  void _toggleRouteMonitoring(int routeIndex, bool isMonitoring) {
-    setState(() {
-      _savedRoutes[routeIndex]['isMonitoring'] = isMonitoring;
-    });
+  Future<void> _toggleRouteMonitoring(String routeId, bool isMonitoring) async {
+    try {
+      await _routeRepository.toggleRouteMonitoring(routeId, isMonitoring);
+      await _loadRoutes();
+      
+      if (mounted) {
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              isMonitoring
+                  ? l10n.savedRoute_monitoringEnabled
+                  : l10n.savedRoute_monitoringDisabled,
+            ),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update monitoring: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _showRouteForm([SavedRouteModel? route]) async {
+    final result = await showDialog<Map<String, dynamic>>(
+      context: context,
+      builder: (context) => SavedRouteFormDialog(route: route),
+    );
+
+    if (result != null) {
+      try {
+        if (route == null) {
+          // Create new route
+          await _routeRepository.createRoute(
+            name: result['name'],
+            fromLocationName: result['fromLocationName'],
+            fromLatitude: result['fromLatitude'],
+            fromLongitude: result['fromLongitude'],
+            fromAddress: result['fromAddress'],
+            toLocationName: result['toLocationName'],
+            toLatitude: result['toLatitude'],
+            toLongitude: result['toLongitude'],
+            toAddress: result['toAddress'],
+            isMonitoring: result['isMonitoring'],
+          );
+          
+          if (mounted) {
+            final l10n = AppLocalizations.of(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(l10n.savedRoute_routeCreated)),
+            );
+          }
+        } else {
+          // Update existing route
+          await _routeRepository.updateRoute(route.id, result);
+          
+          if (mounted) {
+            final l10n = AppLocalizations.of(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(l10n.savedRoute_routeUpdated)),
+            );
+          }
+        }
+        
+        await _loadRoutes();
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to save route: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _deleteRoute(SavedRouteModel route) async {
+    final l10n = AppLocalizations.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.savedRoute_deleteRoute),
+        content: Text(l10n.savedRoute_deleteConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.common_cancel),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: Text(l10n.common_delete),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await _routeRepository.deleteRoute(route.id);
+        await _loadRoutes();
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n.savedRoute_routeDeleted),
+              action: SnackBarAction(
+                label: l10n.alerts_undo,
+                onPressed: () {
+                  // TODO: Implement undo
+                },
+              ),
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to delete route: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
   }
 
   List<Map<String, dynamic>> get _filteredAlerts {
@@ -318,84 +480,104 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
           ),
 
           // Routes Tab
-          SingleChildScrollView(
-            padding: EdgeInsets.symmetric(vertical: 2.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-                  child: Row(
-                    children: [
-                      Text(
-                        l10n.alerts_savedRoutes,
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const Spacer(),
-                      TextButton.icon(
-                        onPressed: () {
-                          // Navigate to add route screen
+          _isLoadingRoutes
+              ? const Center(child: CircularProgressIndicator())
+              : _savedRoutes.isEmpty
+                  ? EmptyRoutesWidget(
+                      onAddRoute: () => _showRouteForm(),
+                    )
+                  : RefreshIndicator(
+                      onRefresh: _loadRoutes,
+                      child: ListView.builder(
+                        padding: EdgeInsets.symmetric(vertical: 2.h),
+                        itemCount: _savedRoutes.length + 2, // +2 for header and info
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            // Header
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 4.w,
+                                vertical: 1.h,
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    l10n.savedRoute_title,
+                                    style: theme.textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  TextButton.icon(
+                                    onPressed: () => _showRouteForm(),
+                                    icon: const Icon(Icons.add, size: 20),
+                                    label: Text(l10n.savedRoute_addRoute),
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else if (index <= _savedRoutes.length) {
+                            // Route cards
+                            final route = _savedRoutes[index - 1];
+                            return SavedRouteCardWidget(
+                              route: route,
+                              onMonitoringToggle: (isMonitoring) =>
+                                  _toggleRouteMonitoring(route.id, isMonitoring),
+                              onEdit: () => _showRouteForm(route),
+                              onDelete: () => _deleteRoute(route),
+                            );
+                          } else {
+                            // Info card at bottom
+                            return Container(
+                              margin: EdgeInsets.all(4.w),
+                              padding: EdgeInsets.all(4.w),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.1,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.2,
+                                  ),
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.info_outline,
+                                        color: theme.colorScheme.primary,
+                                        size: 20,
+                                      ),
+                                      SizedBox(width: 2.w),
+                                      Text(
+                                        l10n.alerts_routeMonitoring,
+                                        style: theme.textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: theme.colorScheme.primary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 1.h),
+                                  Text(
+                                    l10n.alerts_routeMonitoringInfo,
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: theme.colorScheme.onSurface.withValues(
+                                        alpha: 0.8,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
                         },
-                        icon: Icon(Icons.add, size: 20),
-                        label: Text(l10n.alerts_addRoute),
                       ),
-                    ],
-                  ),
-                ),
-                RouteMonitoringWidget(
-                  savedRoutes: _savedRoutes,
-                  onRouteToggle: _toggleRouteMonitoring,
-                ),
-                SizedBox(height: 2.h),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4.w),
-                  padding: EdgeInsets.all(4.w),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withAlpha(
-                      26,
-                    ), // 0.1 * 255 ≈ 26
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: theme.colorScheme.primary.withAlpha(
-                        51,
-                      ), // 0.2 * 255 ≈ 51
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.info_outline,
-                            color: theme.colorScheme.primary,
-                            size: 20,
-                          ),
-                          SizedBox(width: 2.w),
-                          Text(
-                            l10n.alerts_routeMonitoring,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 1.h),
-                      Text(
-                        l10n.alerts_routeMonitoringInfo,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurface.withAlpha(204),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

@@ -325,7 +325,6 @@ class _ReportListTabState extends State<ReportListTab> {
                 IconButton(
                   icon: Icon(Icons.search, size: 24),
                   onPressed: () {
-                    // TODO: 实现搜索功能
                     showSearch(
                       context: context,
                       delegate: ReportSearchDelegate(_filteredReports, widget.onReportTap),

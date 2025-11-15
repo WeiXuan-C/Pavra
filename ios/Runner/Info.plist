@@ -66,5 +66,9 @@
 			</array>
 		</dict>
 	</array>
+	
+	<!-- Google Maps API Key -->
+	<key>GMSApiKey</key>
+	<string>AIzaSyA6TR3OKPNvhuFpRXvObP9t0O_Qthgqo2Y</string>
 </dict>
 </plist>

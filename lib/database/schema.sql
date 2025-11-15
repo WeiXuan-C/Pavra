@@ -257,6 +257,155 @@ CREATE INDEX IF NOT EXISTS idx_reputations_user_created ON public.reputations(us
 CREATE INDEX IF NOT EXISTS idx_reputations_action_type ON public.reputations(action_type);
 
 -- =====================================
+-- SAVED ROUTES TABLE
+-- =====================================
+CREATE TABLE IF NOT EXISTS public.saved_routes (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    from_location_name VARCHAR(255) NOT NULL,
+    from_latitude DOUBLE PRECISION NOT NULL,
+    from_longitude DOUBLE PRECISION NOT NULL,
+    from_address TEXT,
+    to_location_name VARCHAR(255) NOT NULL,
+    to_latitude DOUBLE PRECISION NOT NULL,
+    to_longitude DOUBLE PRECISION NOT NULL,
+    to_address TEXT,
+    distance_km DOUBLE PRECISION,
+    is_monitoring BOOLEAN DEFAULT false,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    deleted_at TIMESTAMP WITH TIME ZONE,
+    is_deleted BOOLEAN DEFAULT false
+);
+
+-- =====================================
+-- SAVED LOCATIONS TABLE
+-- =====================================
+CREATE TABLE IF NOT EXISTS public.saved_locations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    label VARCHAR(100) NOT NULL,
+    location_name VARCHAR(255) NOT NULL,
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+    address TEXT,
+    icon VARCHAR(50) DEFAULT 'place',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    deleted_at TIMESTAMP WITH TIME ZONE,
+    is_deleted BOOLEAN DEFAULT false,
+    UNIQUE(user_id, label)
+);
+
+-- =====================================
+-- INDEXES (continued)
+-- =====================================
+
+-- SAVED ROUTES
+CREATE INDEX IF NOT EXISTS idx_saved_routes_user_id ON public.saved_routes(user_id);
+CREATE INDEX IF NOT EXISTS idx_saved_routes_is_monitoring ON public.saved_routes(is_monitoring);
+CREATE INDEX IF NOT EXISTS idx_saved_routes_deleted ON public.saved_routes(is_deleted);
+
+-- SAVED LOCATIONS
+CREATE INDEX IF NOT EXISTS idx_saved_locations_user_id ON public.saved_locations(user_id);
+CREATE INDEX IF NOT EXISTS idx_saved_locations_deleted ON public.saved_locations(is_deleted);
+
+-- =====================================
+-- FUNCTIONS
+-- =====================================
+
+-- Function to update updated_at timestamp (with security settings)
+CREATE OR REPLACE FUNCTION update_saved_routes_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp;
+
+-- =====================================
+-- TRIGGERS
+-- =====================================
+
+-- Trigger for saved_routes updated_at
+CREATE TRIGGER trigger_update_saved_routes_updated_at
+    BEFORE UPDATE ON public.saved_routes
+    FOR EACH ROW
+    EXECUTE FUNCTION update_saved_routes_updated_at();
+
+-- Trigger for saved_locations updated_at
+CREATE TRIGGER trigger_update_saved_locations_updated_at
+    BEFORE UPDATE ON public.saved_locations
+    FOR EACH ROW
+    EXECUTE FUNCTION update_saved_routes_updated_at();
+
+-- =====================================
+-- ROW LEVEL SECURITY (RLS)
+-- =====================================
+
+-- Enable RLS on saved_routes
+ALTER TABLE public.saved_routes ENABLE ROW LEVEL SECURITY;
+
+-- Enable RLS on saved_locations
+ALTER TABLE public.saved_locations ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for saved_routes (Optimized for performance)
+-- Using (select auth.uid()) instead of auth.uid() prevents re-evaluation for each row
+CREATE POLICY "saved_routes_select_policy"
+    ON public.saved_routes
+    FOR SELECT
+    USING ((select auth.uid()) = user_id);
+
+CREATE POLICY "saved_routes_insert_policy"
+    ON public.saved_routes
+    FOR INSERT
+    WITH CHECK ((select auth.uid()) = user_id);
+
+CREATE POLICY "saved_routes_update_policy"
+    ON public.saved_routes
+    FOR UPDATE
+    USING ((select auth.uid()) = user_id)
+    WITH CHECK ((select auth.uid()) = user_id);
+
+CREATE POLICY "saved_routes_delete_policy"
+    ON public.saved_routes
+    FOR DELETE
+    USING ((select auth.uid()) = user_id);
+
+-- RLS Policies for saved_locations (Optimized for performance)
+CREATE POLICY "saved_locations_select_policy"
+    ON public.saved_locations
+    FOR SELECT
+    USING ((select auth.uid()) = user_id);
+
+CREATE POLICY "saved_locations_insert_policy"
+    ON public.saved_locations
+    FOR INSERT
+    WITH CHECK ((select auth.uid()) = user_id);
+
+CREATE POLICY "saved_locations_update_policy"
+    ON public.saved_locations
+    FOR UPDATE
+    USING ((select auth.uid()) = user_id)
+    WITH CHECK ((select auth.uid()) = user_id);
+
+CREATE POLICY "saved_locations_delete_policy"
+    ON public.saved_locations
+    FOR DELETE
+    USING ((select auth.uid()) = user_id);
+
+-- =====================================
+-- PERMISSIONS
+-- =====================================
+
+-- Grant permissions to authenticated users
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.saved_routes TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.saved_locations TO authenticated;
+
+-- =====================================
 -- 说明
 -- =====================================
 -- 
@@ -266,3 +415,11 @@ CREATE INDEX IF NOT EXISTS idx_reputations_action_type ON public.reputations(act
 -- 3. 执行 policies/profiles_policies.sql
 -- 4. 执行 policies/action_log_policies.sql
 -- 5. 执行 policies/notification_policies.sql
+--
+-- 新增表：
+-- - saved_routes: 用户保存的常用路线
+-- - saved_locations: 用户保存的常用地点（家、公司等）
+--
+-- 安全优化：
+-- - RLS 策略使用 (select auth.uid()) 提升性能
+-- - 函数使用 SECURITY DEFINER 和固定 search_path 防止安全漏洞
