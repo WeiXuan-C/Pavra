@@ -4,9 +4,52 @@
 -- This file defines access control policies for the reputations table
 -- Ensures users can only view their own reputation history
 -- Only the system (service role) can insert/update reputation records
+--
+-- IMPORTANT: This file includes automatic cleanup of duplicate policies
+-- to prevent performance issues. Safe to run multiple times.
+--
+-- Expected Policies After Execution:
+-- 1. "Users and developers can view reputation records" (SELECT, authenticated)
+-- 2. "Service role can insert reputation records" (INSERT, service_role)
+-- 3. "Authenticated users can insert reputation records" (INSERT, authenticated)
+-- 4. "Developers can delete reputation records" (DELETE, authenticated)
+-- =============================================
 
 -- Enable Row Level Security
 ALTER TABLE public.reputations ENABLE ROW LEVEL SECURITY;
+
+-- =============================================
+-- CLEANUP: Remove any duplicate policies first
+-- =============================================
+
+-- Drop all old SELECT policy variations
+DO $$ 
+BEGIN
+  EXECUTE 'DROP POLICY IF EXISTS "Users can view own reputation history" ON public.reputations';
+  EXECUTE 'DROP POLICY IF EXISTS "Developers can view all reputation records" ON public.reputations';
+  EXECUTE 'DROP POLICY IF EXISTS "Users and developers can view reputation records" ON public.reputations';
+EXCEPTION
+  WHEN OTHERS THEN NULL;
+END $$;
+
+-- Drop all old INSERT policy variations
+DO $$ 
+BEGIN
+  EXECUTE 'DROP POLICY IF EXISTS "Authenticated users can insert own reputation records" ON public.reputations';
+  EXECUTE 'DROP POLICY IF EXISTS "Authorities can insert reputation records for others" ON public.reputations';
+  EXECUTE 'DROP POLICY IF EXISTS "Authenticated users can insert reputation records" ON public.reputations';
+  EXECUTE 'DROP POLICY IF EXISTS "Service role can insert reputation records" ON public.reputations';
+EXCEPTION
+  WHEN OTHERS THEN NULL;
+END $$;
+
+-- Drop old DELETE policy variations
+DO $$ 
+BEGIN
+  EXECUTE 'DROP POLICY IF EXISTS "Developers can delete reputation records" ON public.reputations';
+EXCEPTION
+  WHEN OTHERS THEN NULL;
+END $$;
 
 -- =============================================
 -- SELECT Policies
@@ -14,10 +57,6 @@ ALTER TABLE public.reputations ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Users can view own reputation history, developers can view all
 -- Combined policy for optimal performance (avoids multiple permissive policies)
-DROP POLICY IF EXISTS "Users can view own reputation history" ON public.reputations;
-DROP POLICY IF EXISTS "Developers can view all reputation records" ON public.reputations;
-DROP POLICY IF EXISTS "Users and developers can view reputation records" ON public.reputations;
-
 CREATE POLICY "Users and developers can view reputation records"
 ON public.reputations
 FOR SELECT
@@ -40,7 +79,6 @@ USING (
 
 -- Policy: Only service role can insert reputation records
 -- This ensures reputation changes are controlled server-side
-DROP POLICY IF EXISTS "Service role can insert reputation records" ON public.reputations;
 CREATE POLICY "Service role can insert reputation records"
 ON public.reputations
 FOR INSERT
@@ -50,10 +88,6 @@ WITH CHECK (true);
 -- Policy: Authenticated users can insert reputation records
 -- Combined policy for optimal performance (avoids multiple permissive policies)
 -- Users can insert their own records, authorities/developers can insert for anyone
-DROP POLICY IF EXISTS "Authenticated users can insert own reputation records" ON public.reputations;
-DROP POLICY IF EXISTS "Authorities can insert reputation records for others" ON public.reputations;
-DROP POLICY IF EXISTS "Authenticated users can insert reputation records" ON public.reputations;
-
 CREATE POLICY "Authenticated users can insert reputation records"
 ON public.reputations
 FOR INSERT
@@ -229,6 +263,62 @@ GRANT DELETE ON public.reputations TO authenticated;
 GRANT ALL ON public.reputations TO service_role;
 
 -- =============================================
+-- Verification
+-- =============================================
+
+-- Query to verify policies are correctly set up
+-- Run this after applying the policies to confirm no duplicates exist
+DO $$
+DECLARE
+  policy_count INTEGER;
+  select_count INTEGER;
+  insert_count INTEGER;
+  delete_count INTEGER;
+BEGIN
+  -- Count total policies
+  SELECT COUNT(*) INTO policy_count
+  FROM pg_policies
+  WHERE tablename = 'reputations';
+  
+  -- Count by command type
+  SELECT COUNT(*) INTO select_count
+  FROM pg_policies
+  WHERE tablename = 'reputations' AND cmd = 'SELECT';
+  
+  SELECT COUNT(*) INTO insert_count
+  FROM pg_policies
+  WHERE tablename = 'reputations' AND cmd = 'INSERT';
+  
+  SELECT COUNT(*) INTO delete_count
+  FROM pg_policies
+  WHERE tablename = 'reputations' AND cmd = 'DELETE';
+  
+  RAISE NOTICE 'Total policies: %', policy_count;
+  RAISE NOTICE 'SELECT policies: %', select_count;
+  RAISE NOTICE 'INSERT policies: %', insert_count;
+  RAISE NOTICE 'DELETE policies: %', delete_count;
+  
+  -- Validate expected counts
+  IF select_count != 1 THEN
+    RAISE WARNING 'Expected 1 SELECT policy, found %', select_count;
+  END IF;
+  
+  IF insert_count != 2 THEN
+    RAISE WARNING 'Expected 2 INSERT policies (service_role + authenticated), found %', insert_count;
+  END IF;
+  
+  IF delete_count != 1 THEN
+    RAISE WARNING 'Expected 1 DELETE policy, found %', delete_count;
+  END IF;
+  
+  IF policy_count = 4 THEN
+    RAISE NOTICE '✓ All policies configured correctly!';
+  ELSE
+    RAISE WARNING 'Expected 4 total policies, found %', policy_count;
+  END IF;
+END $$;
+
+-- =============================================
 -- Notes
 -- =============================================
 -- 1. Reputation records are immutable (no UPDATE policy)
@@ -238,3 +328,4 @@ GRANT ALL ON public.reputations TO service_role;
 -- 5. Authenticated users can insert their own records
 -- 6. Scores are automatically constrained to 0-100 range
 -- 7. Indexes are created for optimal query performance
+-- 8. All duplicate policies are cleaned up before creating new ones
