@@ -24,6 +24,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
   MapType _currentMapType = MapType.normal;
   bool _isLoading = true;
   bool _showTraffic = false;
+  bool _hasLocationPermission = false;
 
   // Filter state
   Map<String, bool> _filters = {
@@ -135,6 +136,21 @@ class _MapViewScreenState extends State<MapViewScreen> {
     try {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
+        debugPrint('Location services are disabled');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Please enable location services in device settings'),
+              duration: Duration(seconds: 3),
+              action: SnackBarAction(
+                label: 'Settings',
+                onPressed: () async {
+                  await Geolocator.openLocationSettings();
+                },
+              ),
+            ),
+          );
+        }
         return;
       }
 
@@ -142,12 +158,36 @@ class _MapViewScreenState extends State<MapViewScreen> {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
+          debugPrint('Location permission denied');
           return;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
+        debugPrint('Location permission denied forever');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Location permission permanently denied. Please enable in app settings.'),
+              duration: Duration(seconds: 3),
+              action: SnackBarAction(
+                label: 'Settings',
+                onPressed: () async {
+                  await Geolocator.openAppSettings();
+                },
+              ),
+            ),
+          );
+        }
         return;
+      }
+
+      // Update permission state
+      if (mounted) {
+        setState(() {
+          _hasLocationPermission = permission == LocationPermission.whileInUse || 
+                                   permission == LocationPermission.always;
+        });
       }
 
       _currentPosition = await Geolocator.getCurrentPosition(
@@ -156,7 +196,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
       // Circle will be created in _buildLocationCircle() during build
     } catch (e) {
-      // Handle location error silently
+      debugPrint('Error getting location: $e');
     }
   }
 
@@ -223,6 +263,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
+    
     if (_currentPosition != null) {
       _mapController!.animateCamera(
         CameraUpdate.newLatLngZoom(
@@ -387,7 +428,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                   circles: _buildLocationCircle(theme),
                   mapType: _currentMapType,
                   trafficEnabled: _showTraffic,
-                  myLocationEnabled: true,
+                  myLocationEnabled: _hasLocationPermission,
                   myLocationButtonEnabled: false,
                   zoomControlsEnabled: false,
                   mapToolbarEnabled: false,

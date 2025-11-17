@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -7,13 +10,15 @@ plugins {
     id("com.google.gms.google-services")
 }
 
-// Load .env file
-def envFile = rootProject.file("../../.env")
-def envProperties = new Properties()
+// Load .env file (Kotlin syntax)
+val envFile = rootProject.file("../.env")
+val envProperties = Properties()
 if (envFile.exists()) {
-    envFile.withInputStream { stream ->
+    FileInputStream(envFile).use { stream ->
         envProperties.load(stream)
     }
+} else {
+    println("WARNING: .env file not found at ${envFile.absolutePath}")
 }
 
 android {
@@ -39,9 +44,6 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        
-        // Load Google Maps API Key from .env
-        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = envProperties.getProperty("GOOGLE_MAPS_API_KEY", "")
     }
 
     buildTypes {

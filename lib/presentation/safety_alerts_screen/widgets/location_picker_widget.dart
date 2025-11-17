@@ -32,6 +32,7 @@ class _LocationPickerWidgetState extends State<LocationPickerWidget> {
   double? _latitude;
   double? _longitude;
   bool _isFetchingAddress = false;
+  bool _hasLocationPermission = false;
   Set<Marker> _markers = {};
 
   @override
@@ -42,11 +43,64 @@ class _LocationPickerWidgetState extends State<LocationPickerWidget> {
     _latitude = widget.initialLatitude;
     _longitude = widget.initialLongitude;
     
+    // Check location permissions
+    _checkLocationPermission();
+    
     if (_latitude != null && _longitude != null) {
       _updateMarker(_latitude!, _longitude!);
     } else {
       // Set default location to show map immediately
       _initializeDefaultLocation();
+    }
+  }
+
+  Future<void> _checkLocationPermission() async {
+    try {
+      // Check if location service is enabled
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        debugPrint('Location services are disabled');
+        if (mounted) {
+          // Show a snackbar to inform user
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Please enable location services in device settings'),
+                  duration: Duration(seconds: 3),
+                  action: SnackBarAction(
+                    label: 'Settings',
+                    onPressed: () async {
+                      await Geolocator.openLocationSettings();
+                    },
+                  ),
+                ),
+              );
+            }
+          });
+        }
+        return;
+      }
+
+      // Check and request permission
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      
+      if (mounted) {
+        setState(() {
+          _hasLocationPermission = permission == LocationPermission.whileInUse || 
+                                   permission == LocationPermission.always;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error checking location permission: $e');
+      if (mounted) {
+        setState(() {
+          _hasLocationPermission = false;
+        });
+      }
     }
   }
 
@@ -414,7 +468,7 @@ class _LocationPickerWidgetState extends State<LocationPickerWidget> {
                                   ),
                                   markers: _markers,
                                   onTap: _onMapTap,
-                                  myLocationEnabled: true,
+                                  myLocationEnabled: _hasLocationPermission,
                                   myLocationButtonEnabled: false,
                                   zoomControlsEnabled: false,
                                   mapToolbarEnabled: false,

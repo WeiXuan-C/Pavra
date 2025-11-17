@@ -59,7 +59,7 @@ app.*.map.json
 
 # Google Services (contains API keys)
 **/google-services.json
-android/app/google-services.json
+/android/app/google-services.json
 **/GoogleService-Info.plist
 ios/Runner/GoogleService-Info.plist
 
