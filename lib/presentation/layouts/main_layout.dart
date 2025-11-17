@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../core/app_export.dart';
+import '../../core/providers/auth_provider.dart';
 import '../../l10n/app_localizations.dart';
 import '../map_view_screen/map_view_screen.dart';
 import '../report_screen/report_screen.dart';
@@ -45,6 +46,30 @@ class _MainLayoutState extends State<MainLayout> {
     super.initState();
     _currentIndex = widget.initialIndex;
     _pageController = PageController(initialPage: _currentIndex);
+    
+    // Load notifications early to show badge count
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadNotificationCount();
+    });
+  }
+  
+  /// Load notification count for badge display
+  void _loadNotificationCount() {
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final userId = authProvider.user?.id;
+      final userRole = authProvider.userProfile?.role;
+      
+      if (userId != null) {
+        context.read<NotificationProvider>().loadNotifications(
+          userId,
+          userRole: userRole,
+        );
+      }
+    } catch (e) {
+      // Silently fail if auth provider is not available
+      debugPrint('Failed to load notification count: $e');
+    }
   }
 
   @override
