@@ -21,8 +21,18 @@
     
     function loadGoogleMapsAPI() {
         // Load Google Maps JavaScript API with Places library
+        // Note: API key should be injected during build process
+        // For now, it will be loaded from a meta tag in index.html
+        var apiKey = document.querySelector('meta[name="google-maps-api-key"]')?.content;
+        
+        if (!apiKey) {
+            console.warn('[Google Maps] API key not found in meta tag. Maps may not work.');
+            // Fallback to environment-injected key (set during build)
+            apiKey = '{{GOOGLE_MAPS_API_KEY}}'; // This will be replaced during build
+        }
+        
         var script = document.createElement('script');
-        script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA6TR3OKPNvhuFpRXvObP9t0O_Qthgqo2Y&libraries=places';
+        script.src = 'https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&libraries=places';
         script.async = true;
         script.defer = true;
         script.onload = function() {

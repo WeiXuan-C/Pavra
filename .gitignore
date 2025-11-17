@@ -18,9 +18,15 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# env
+# env - All environment files with sensitive keys
 .env
+.env.*
+!.env.example
 /assets/.env
+/pavra_server/**/.env
+*.env.local
+*.env.production
+*.env.development
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -50,3 +56,14 @@ app.*.map.json
 
 # Serverpod passwords (contains sensitive credentials)
 **/config/passwords.yaml
+
+# Google Services (contains API keys)
+**/google-services.json
+android/app/google-services.json
+**/GoogleService-Info.plist
+ios/Runner/GoogleService-Info.plist
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3

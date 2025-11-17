@@ -7,6 +7,15 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+// Load .env file
+def envFile = rootProject.file("../../.env")
+def envProperties = new Properties()
+if (envFile.exists()) {
+    envFile.withInputStream { stream ->
+        envProperties.load(stream)
+    }
+}
+
 android {
     namespace = "com.pavra.app"
     compileSdk = flutter.compileSdkVersion
@@ -30,6 +39,9 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        
+        // Load Google Maps API Key from .env
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = envProperties.getProperty("GOOGLE_MAPS_API_KEY", "")
     }
 
     buildTypes {

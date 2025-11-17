@@ -20,13 +20,25 @@ class ApiConfig {
 
   /// OneSignal App ID
   static String get oneSignalAppId {
-    return Platform.environment['ONESIGNAL_APP_ID'] ??
-        '2eebafba-17aa-49a6-91aa-f9f7f2f72aca';
+    final appId = Platform.environment['ONESIGNAL_APP_ID'];
+    if (appId == null || appId.isEmpty) {
+      throw Exception(
+        'ONESIGNAL_APP_ID not found in environment variables. '
+        'Please add it to your .env file.',
+      );
+    }
+    return appId;
   }
 
   /// OneSignal API Key
   static String get oneSignalApiKey {
-    return Platform.environment['ONESIGNAL_API_KEY'] ??
-        'os_v2_app_f3v27oqxvje2nenk7h37f5zkzlnemkqsxkuezzffpgs3ug34lfz4gluj5rzlhqysuixzw5yr6lp4t36yxkj3r7camutveielpkqx24i';
+    final apiKey = Platform.environment['ONESIGNAL_API_KEY'];
+    if (apiKey == null || apiKey.isEmpty) {
+      throw Exception(
+        'ONESIGNAL_API_KEY not found in environment variables. '
+        'Please add it to your .env file.',
+      );
+    }
+    return apiKey;
   }
 }

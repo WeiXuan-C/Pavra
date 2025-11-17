@@ -21,7 +21,7 @@ SET search_path = public
 AS $$
 DECLARE
   backend_url TEXT := 'https://pavra-production.up.railway.app/notificationEndpoint/handleNotificationCreated';
-  service_secret TEXT := 'x6J4HmEUvObeJUxgvgr5Tmhp6JkP3voc';
+  service_secret TEXT := 'pavra_super_secret_key_userx3C!'; -- MUST match SERVICE_SECRET in .env
 BEGIN
   -- 只处理 status = 'sent' 且未删除的通知
   IF NEW.status = 'sent' AND NEW.is_deleted = FALSE THEN

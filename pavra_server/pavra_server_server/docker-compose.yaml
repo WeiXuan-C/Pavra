@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: pavra_server
-      POSTGRES_PASSWORD: "vlbmYnnZP3thvSs_5npLnJHkUgXJbL2w"
+      POSTGRES_PASSWORD: ${POSTGRES_DEV_PASSWORD:-vlbmYnnZP3thvSs_5npLnJHkUgXJbL2w}
     volumes:
       - pavra_server_data:/var/lib/postgresql/data
 
@@ -15,7 +15,7 @@ services:
     image: redis:6.2.6
     ports:
       - "8091:6379"
-    command: redis-server --requirepass "kf8NixMlZ95YSBHCoc0PnxYYRbg-eOQe"
+    command: redis-server --requirepass "${REDIS_DEV_PASSWORD:-kf8NixMlZ95YSBHCoc0PnxYYRbg-eOQe}"
     environment:
       - REDIS_REPLICATION_MODE=master
 
@@ -27,7 +27,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: pavra_server_test
-      POSTGRES_PASSWORD: "ef6Av5Kvrwtzx94BwS-lgoWVcD6_a6_I"
+      POSTGRES_PASSWORD: ${POSTGRES_TEST_PASSWORD:-ef6Av5Kvrwtzx94BwS-lgoWVcD6_a6_I}
     volumes:
       - pavra_server_test_data:/var/lib/postgresql/data
 
@@ -35,7 +35,7 @@ services:
     image: redis:6.2.6
     ports:
       - "9091:6379"
-    command: redis-server --requirepass "eQUgyPQqOEhkT4qXqM8a1ZGeZV0S8tAi"
+    command: redis-server --requirepass "${REDIS_TEST_PASSWORD:-eQUgyPQqOEhkT4qXqM8a1ZGeZV0S8tAi}"
     environment:
       - REDIS_REPLICATION_MODE=master
 

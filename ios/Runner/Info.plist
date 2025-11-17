@@ -67,7 +67,8 @@
 		</dict>
 	</array>
 	
-	<!-- Google Maps API Key -->
+	<!-- Google Maps API Key - Loaded dynamically in AppDelegate.swift -->
+	<!-- Keeping this for backwards compatibility, but actual key is loaded from .env -->
 	<key>GMSApiKey</key>
 	<string>AIzaSyA6TR3OKPNvhuFpRXvObP9t0O_Qthgqo2Y</string>
 </dict>
