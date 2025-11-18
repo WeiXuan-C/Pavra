@@ -1,25 +1,132 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../../core/providers/auth_provider.dart';
+import '../../../data/models/detection_model.dart';
+import '../../../data/models/detection_type.dart';
 import '../../../l10n/app_localizations.dart';
+import '../ai_detection_provider.dart';
+import 'detection_filter_sheet.dart';
+import 'detection_map_widget.dart';
 
-class DetectionHistoryPanel extends StatelessWidget {
-  final List<Map<String, dynamic>> recentDetections;
+class DetectionHistoryPanel extends StatefulWidget {
   final VoidCallback onClose;
-  final Function(Map<String, dynamic>) onDetectionTap;
+  final Function(DetectionModel) onDetectionTap;
 
   const DetectionHistoryPanel({
     super.key,
-    required this.recentDetections,
     required this.onClose,
     required this.onDetectionTap,
   });
 
   @override
+  State<DetectionHistoryPanel> createState() => _DetectionHistoryPanelState();
+}
+
+class _DetectionHistoryPanelState extends State<DetectionHistoryPanel> {
+  bool _isRefreshing = false;
+  bool _isMapView = false;
+  DetectionType? _filterType;
+  int? _filterSeverity;
+  DateTime? _filterStartDate;
+  DateTime? _filterEndDate;
+
+  Future<void> _refreshHistory() async {
+    if (_isRefreshing) return;
+
+    setState(() {
+      _isRefreshing = true;
+    });
+
+    try {
+      final authProvider = context.read<AuthProvider>();
+      final userId = authProvider.user?.id;
+
+      if (userId != null) {
+        final aiProvider = context.read<AiDetectionProvider>();
+        await aiProvider.loadHistory(
+          userId,
+          filterType: _filterType,
+          filterSeverity: _filterSeverity,
+          startDate: _filterStartDate,
+          endDate: _filterEndDate,
+        );
+      }
+    } catch (e) {
+      debugPrint('Error refreshing history: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to refresh history'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isRefreshing = false;
+        });
+      }
+    }
+  }
+
+  void _showFilterSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DetectionFilterSheet(
+        selectedType: _filterType,
+        selectedSeverity: _filterSeverity,
+        startDate: _filterStartDate,
+        endDate: _filterEndDate,
+        onTypeChanged: (type) {
+          setState(() {
+            _filterType = type;
+          });
+        },
+        onSeverityChanged: (severity) {
+          setState(() {
+            _filterSeverity = severity;
+          });
+        },
+        onDateRangeChanged: (start, end) {
+          setState(() {
+            _filterStartDate = start;
+            _filterEndDate = end;
+          });
+        },
+        onApply: () {
+          _refreshHistory();
+        },
+        onClear: () {
+          setState(() {
+            _filterType = null;
+            _filterSeverity = null;
+            _filterStartDate = null;
+            _filterEndDate = null;
+          });
+          _refreshHistory();
+        },
+      ),
+    );
+  }
+
+  bool get _hasActiveFilters =>
+      _filterType != null ||
+      _filterSeverity != null ||
+      _filterStartDate != null ||
+      _filterEndDate != null;
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final aiProvider = context.watch<AiDetectionProvider>();
+    final detections = aiProvider.detectionHistory;
 
     return Container(
       width: 80.w,
@@ -55,8 +162,69 @@ class DetectionHistoryPanel extends StatelessWidget {
                     ),
                   ),
                 ),
+                // Map/List toggle button
                 GestureDetector(
-                  onTap: onClose,
+                  onTap: () {
+                    setState(() {
+                      _isMapView = !_isMapView;
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(1.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: theme.colorScheme.onPrimary.withValues(alpha: 0.2),
+                    ),
+                    child: Icon(
+                      _isMapView ? Icons.list : Icons.map,
+                      color: theme.colorScheme.onPrimary,
+                      size: 20,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 2.w),
+                // Filter button
+                GestureDetector(
+                  onTap: _showFilterSheet,
+                  child: Container(
+                    padding: EdgeInsets.all(1.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _hasActiveFilters
+                          ? theme.colorScheme.secondary
+                          : theme.colorScheme.onPrimary.withValues(alpha: 0.2),
+                    ),
+                    child: Stack(
+                      children: [
+                        CustomIconWidget(
+                          iconName: 'filter_list',
+                          color: theme.colorScheme.onPrimary,
+                          size: 20,
+                        ),
+                        if (_hasActiveFilters)
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: theme.colorScheme.primary,
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(width: 2.w),
+                GestureDetector(
+                  onTap: widget.onClose,
                   child: Container(
                     padding: EdgeInsets.all(1.w),
                     decoration: BoxDecoration(
@@ -76,17 +244,26 @@ class DetectionHistoryPanel extends StatelessWidget {
 
           // Content
           Expanded(
-            child: recentDetections.isEmpty
+            child: detections.isEmpty
                 ? _buildEmptyState(context, l10n)
-                : ListView.separated(
-                    padding: EdgeInsets.all(4.w),
-                    itemCount: recentDetections.length,
-                    separatorBuilder: (context, index) => SizedBox(height: 2.h),
-                    itemBuilder: (context, index) {
-                      final detection = recentDetections[index];
-                      return _buildDetectionCard(context, detection);
-                    },
-                  ),
+                : _isMapView
+                    ? DetectionMapWidget(
+                        detections: detections,
+                        aiProvider: aiProvider,
+                        onDetectionTap: widget.onDetectionTap,
+                      )
+                    : RefreshIndicator(
+                        onRefresh: _refreshHistory,
+                        child: ListView.separated(
+                          padding: EdgeInsets.all(4.w),
+                          itemCount: detections.length,
+                          separatorBuilder: (context, index) => SizedBox(height: 2.h),
+                          itemBuilder: (context, index) {
+                            final detection = detections[index];
+                            return _buildDetectionCard(context, detection);
+                          },
+                        ),
+                      ),
           ),
         ],
       ),
@@ -126,39 +303,48 @@ class DetectionHistoryPanel extends StatelessWidget {
 
   Widget _buildDetectionCard(
     BuildContext context,
-    Map<String, dynamic> detection,
+    DetectionModel detection,
   ) {
     final theme = Theme.of(context);
-    final String type = detection['type'] as String;
-    final double confidence = detection['confidence'] as double;
-    final DateTime timestamp = detection['timestamp'] as DateTime;
-    final String? imageUrl = detection['imageUrl'] as String?;
-    final String location =
-        detection['location'] as String? ?? 'Unknown Location';
+    final aiProvider = context.read<AiDetectionProvider>();
 
-    Color typeColor;
+    // Get alert color from provider
+    final alertColor = aiProvider.getAlertColor(detection);
+
+    // Get icon based on detection type
     IconData typeIcon;
-
-    switch (type.toLowerCase()) {
+    switch (detection.type.value) {
       case 'pothole':
-        typeColor = theme.colorScheme.error;
         typeIcon = Icons.warning;
         break;
-      case 'crack':
-        typeColor = theme.colorScheme.tertiary;
+      case 'road_crack':
         typeIcon = Icons.linear_scale;
         break;
       case 'obstacle':
-        typeColor = theme.colorScheme.secondary;
+      case 'debris':
         typeIcon = Icons.block;
         break;
+      case 'accident':
+        typeIcon = Icons.car_crash;
+        break;
+      case 'flood':
+        typeIcon = Icons.water;
+        break;
+      case 'uneven_surface':
+        typeIcon = Icons.terrain;
+        break;
       default:
-        typeColor = theme.colorScheme.primary;
         typeIcon = Icons.info;
     }
 
+    // Format location
+    String location = 'Unknown Location';
+    if (detection.latitude != null && detection.longitude != null) {
+      location = '${detection.latitude!.toStringAsFixed(4)}, ${detection.longitude!.toStringAsFixed(4)}';
+    }
+
     return GestureDetector(
-      onTap: () => onDetectionTap(detection),
+      onTap: () => widget.onDetectionTap(detection),
       child: Container(
         padding: EdgeInsets.all(3.w),
         decoration: BoxDecoration(
@@ -181,21 +367,20 @@ class DetectionHistoryPanel extends StatelessWidget {
               height: 15.w,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: typeColor.withValues(alpha: 0.1),
+                color: alertColor.withValues(alpha: 0.1),
               ),
-              child: imageUrl != null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: CustomImageWidget(
-                        imageUrl: imageUrl,
-                        width: 15.w,
-                        height: 15.w,
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : Center(
-                      child: Icon(typeIcon, color: typeColor, size: 6.w),
-                    ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: CustomImageWidget(
+                  imageUrl: detection.imageUrl,
+                  width: 15.w,
+                  height: 15.w,
+                  fit: BoxFit.cover,
+                  errorWidget: Center(
+                    child: Icon(typeIcon, color: alertColor, size: 6.w),
+                  ),
+                ),
+              ),
             ),
 
             SizedBox(width: 3.w),
@@ -213,11 +398,11 @@ class DetectionHistoryPanel extends StatelessWidget {
                           vertical: 0.5.h,
                         ),
                         decoration: BoxDecoration(
-                          color: typeColor,
+                          color: alertColor,
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          type.toUpperCase(),
+                          detection.type.displayName.toUpperCase(),
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: Colors.white,
                             fontSize: 8.sp,
@@ -227,7 +412,7 @@ class DetectionHistoryPanel extends StatelessWidget {
                       ),
                       SizedBox(width: 2.w),
                       Text(
-                        '${(confidence * 100).toInt()}%',
+                        '${(detection.confidence * 100).toInt()}%',
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(
                             alpha: 0.7,
@@ -235,23 +420,66 @@ class DetectionHistoryPanel extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
+                      SizedBox(width: 1.w),
+                      // Severity indicator
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 1.5.w,
+                          vertical: 0.3.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                        child: Text(
+                          'L${detection.severity}',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            fontSize: 7.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 1.h),
                   Text(
-                    location,
+                    detection.description,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface,
                     ),
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 0.5.h),
-                  Text(
-                    _formatTimestamp(timestamp, context),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                    ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        size: 12,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      ),
+                      SizedBox(width: 1.w),
+                      Expanded(
+                        child: Text(
+                          location,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                            fontSize: 9.sp,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      SizedBox(width: 2.w),
+                      Text(
+                        _formatTimestamp(detection.createdAt, context),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                          fontSize: 9.sp,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

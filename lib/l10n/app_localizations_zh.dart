@@ -332,6 +332,9 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get camera_manualDetection => '手动AI检测';
+
+  @override
   String get time_justNow => '刚刚';
 
   @override

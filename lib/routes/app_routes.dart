@@ -8,6 +8,7 @@ class AppRoutes {
   static const String cameraDetection = '/camera-detection-screen';
   static const String mapView = '/map-view-screen';
   static const String reportSubmission = '/report-submission-screen';
+  static const String manualReport = '/manual-report-screen';
   static const String safetyAlerts = '/safety-alerts-screen';
   static const String notifications = '/notifications';
   static const String profile = '/profile';

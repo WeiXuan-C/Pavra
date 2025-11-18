@@ -334,6 +334,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get camera_manualDetection => 'Manual AI Detection';
+
+  @override
   String get time_justNow => 'Just now';
 
   @override

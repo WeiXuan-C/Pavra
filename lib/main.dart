@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import '../core/app_export.dart';
@@ -14,6 +15,9 @@ import 'core/providers/auth_provider.dart';
 import 'core/providers/locale_provider.dart';
 import 'core/providers/theme_provider.dart';
 import 'presentation/notification_screen/notification_provider.dart';
+import 'presentation/camera_detection_screen/ai_detection_provider.dart';
+import 'data/repositories/ai_detection_repository.dart';
+import 'data/sources/local/detection_queue_manager.dart';
 import 'core/middleware/route_guard.dart';
 import 'l10n/app_localizations.dart';
 
@@ -122,6 +126,9 @@ void main() async {
     // Don't block app startup if OneSignal fails
   }
 
+  // Initialize SharedPreferences for detection queue
+  final prefs = await SharedPreferences.getInstance();
+
   bool hasShownError = false;
 
   // 🚨 CRITICAL: Custom error handling - DO NOT REMOVE
@@ -172,6 +179,12 @@ void main() async {
           },
         ),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProvider(
+          create: (_) => AiDetectionProvider(
+            repository: AiDetectionRepository(),
+            queueManager: DetectionQueueManager(prefs),
+          ),
+        ),
       ],
       child: MyApp(),
     ),

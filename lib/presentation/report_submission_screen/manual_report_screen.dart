@@ -12,6 +12,8 @@ import '../../core/api/report_issue/issue_type_api.dart';
 import '../../core/providers/auth_provider.dart';
 import '../../core/services/location_service.dart';
 import '../../data/models/issue_photo_model.dart';
+import '../../data/models/detection_model.dart';
+import '../../data/models/detection_type.dart';
 import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
 import './manual_report_provider.dart';
@@ -56,10 +58,184 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   @override
   void initState() {
     super.initState();
-    // Get location when screen loads
+    // Get location when screen loads (unless provided from AI detection)
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _getCurrentLocation();
+      _loadArgumentsAndInitialize();
     });
+  }
+
+  /// Load arguments from navigation and initialize
+  Future<void> _loadArgumentsAndInitialize() async {
+    // Get arguments passed from camera detection screen
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    
+    if (args != null && args['fromAiDetection'] == true) {
+      // Load AI detection data
+      final detectionData = args['detectionData'] as DetectionModel?;
+      final latitude = args['latitude'] as double?;
+      final longitude = args['longitude'] as double?;
+      final capturedPhoto = args['capturedPhoto'] as XFile?;
+      
+      if (detectionData != null) {
+        await _loadAiDetectionData(detectionData, latitude, longitude, capturedPhoto);
+      }
+    } else {
+      // Normal flow: get current location
+      await _getCurrentLocation();
+    }
+  }
+
+  /// Load AI detection data into form
+  Future<void> _loadAiDetectionData(
+    DetectionModel detection,
+    double? latitude,
+    double? longitude,
+    XFile? capturedPhoto,
+  ) async {
+    debugPrint('=== Loading AI detection data ===');
+    debugPrint('Detection type: ${detection.type.value}');
+    debugPrint('Severity: ${detection.severity}');
+    debugPrint('Description: ${detection.description}');
+    debugPrint('Has captured photo: ${capturedPhoto != null}');
+    
+    // Set description
+    setState(() {
+      _descriptionController.text = detection.description;
+      _severity = detection.severity.toDouble();
+    });
+    
+    // Upload captured photo if available
+    if (capturedPhoto != null && mounted) {
+      final provider = context.read<ManualReportProvider>();
+      try {
+        debugPrint('Uploading AI detection photo...');
+        
+        // Read file bytes
+        final bytes = await capturedPhoto.readAsBytes();
+        
+        // Determine MIME type
+        String? mimeType;
+        if (capturedPhoto.name.toLowerCase().endsWith('.jpg') ||
+            capturedPhoto.name.toLowerCase().endsWith('.jpeg')) {
+          mimeType = 'image/jpeg';
+        } else if (capturedPhoto.name.toLowerCase().endsWith('.png')) {
+          mimeType = 'image/png';
+        } else if (capturedPhoto.name.toLowerCase().endsWith('.webp')) {
+          mimeType = 'image/webp';
+        }
+        
+        // Upload to storage
+        await provider.uploadPhoto(
+          fileName: capturedPhoto.name,
+          fileBytes: bytes,
+          mimeType: mimeType,
+          photoType: 'main',
+          isPrimary: true,
+        );
+        
+        debugPrint('AI detection photo uploaded successfully');
+      } catch (e) {
+        debugPrint('Error uploading AI detection photo: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to upload photo: $e'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      }
+    }
+    
+    // Set location if provided
+    if (latitude != null && longitude != null) {
+      setState(() {
+        _latitude = latitude;
+        _longitude = longitude;
+        _isLoadingLocation = true;
+      });
+      
+      try {
+        // Get address from coordinates
+        final addressData = await _locationService.getAddressFromCoordinates(
+          latitude,
+          longitude,
+        );
+        
+        if (mounted) {
+          setState(() {
+            _address = addressData['fullAddress'] ?? '';
+            _locationController.text = _address;
+            _isLoadingLocation = false;
+          });
+        }
+      } catch (e) {
+        debugPrint('Error getting address: $e');
+        if (mounted) {
+          setState(() {
+            _isLoadingLocation = false;
+          });
+        }
+      }
+    } else {
+      // Fallback to current location
+      await _getCurrentLocation();
+    }
+    
+    debugPrint('=== AI detection data loaded ===');
+  }
+
+  /// Auto-select issue type based on AI detection
+  void _autoSelectIssueTypeFromAI(ManualReportProvider provider) {
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    
+    if (args == null || args['fromAiDetection'] != true) return;
+    
+    final detectionData = args['detectionData'] as DetectionModel?;
+    if (detectionData == null) return;
+    
+    // Map detection type to issue type name
+    String issueTypeName = '';
+    switch (detectionData.type) {
+      case DetectionType.pothole:
+        issueTypeName = 'pothole';
+        break;
+      case DetectionType.roadCrack:
+        issueTypeName = 'road crack';
+        break;
+      case DetectionType.unevenSurface:
+        issueTypeName = 'uneven surface';
+        break;
+      case DetectionType.flood:
+        issueTypeName = 'flooding';
+        break;
+      case DetectionType.accident:
+        issueTypeName = 'accident';
+        break;
+      case DetectionType.debris:
+        issueTypeName = 'debris';
+        break;
+      case DetectionType.obstacle:
+        issueTypeName = 'obstacle';
+        break;
+      case DetectionType.normal:
+        return; // Don't select anything for normal
+    }
+    
+    // Find matching issue type
+    final matchingType = provider.availableIssueTypes.firstWhere(
+      (type) => type.name.toLowerCase().contains(issueTypeName.toLowerCase()),
+      orElse: () => provider.availableIssueTypes.first,
+    );
+    
+    if (!_selectedIssueTypeIds.contains(matchingType.id)) {
+      setState(() {
+        _selectedIssueTypeIds.add(matchingType.id);
+        _isIssueTypeSectionExpanded = true; // Expand to show selection
+      });
+      
+      debugPrint('Auto-selected issue type: ${matchingType.name} (${matchingType.id})');
+    }
   }
 
   @override
@@ -1070,6 +1246,13 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
                     setState(() {
                       _isDraftLoaded = true;
                     });
+                  });
+                }
+                
+                // Auto-select issue type from AI detection (only once)
+                if (!_isDraftLoaded && provider.availableIssueTypes.isNotEmpty) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _autoSelectIssueTypeFromAI(provider);
                   });
                 }
 

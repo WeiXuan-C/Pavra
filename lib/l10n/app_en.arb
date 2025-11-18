@@ -433,6 +433,10 @@
       }
     }
   },
+  "camera_manualDetection": "Manual AI Detection",
+  "@camera_manualDetection": {
+    "description": "Manual AI detection button tooltip"
+  },
   "time_justNow": "Just now",
   "@time_justNow": {
     "description": "Timestamp for very recent activity"

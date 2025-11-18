@@ -433,6 +433,10 @@
       }
     }
   },
+  "camera_manualDetection": "手动AI检测",
+  "@camera_manualDetection": {
+    "description": "手动AI检测按钮提示"
+  },
   "time_justNow": "刚刚",
   "@time_justNow": {
     "description": "最近活动的时间戳"

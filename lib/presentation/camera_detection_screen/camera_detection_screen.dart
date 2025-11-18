@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
@@ -7,15 +6,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/app_export.dart';
+import '../../core/providers/auth_provider.dart';
+import '../../core/services/audio_alert_service.dart';
+import '../../core/services/location_service.dart';
+import '../../core/services/network_status_service.dart';
+import '../../data/models/detection_exception.dart';
+import '../../data/models/detection_model.dart';
+import '../../data/models/detection_type.dart';
 import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
+import './ai_detection_provider.dart';
 import './widgets/camera_controls_widget.dart';
 import './widgets/camera_preview_widget.dart';
+import './widgets/detection_alert_widget.dart';
 import './widgets/detection_history_panel.dart';
-import './widgets/detection_metrics_sheet.dart';
+import './widgets/queue_status_widget.dart';
 import './widgets/status_bar_widget.dart';
 
 class CameraDetectionScreen extends StatefulWidget {
@@ -37,20 +46,21 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
   // Detection related
   bool _isDetectionActive = true;
   Timer? _detectionTimer;
-  final List<Map<String, dynamic>> _detectedIssues = [];
-  final List<Map<String, dynamic>> _recentDetections = [];
-  final Map<String, int> _detectionStats = {
-    'pothole': 0,
-    'crack': 0,
-    'obstacle': 0,
-  };
 
   // GPS related
-  final bool _isGpsActive = true;
-  final String _gpsAccuracy = 'High (±3m)';
+  bool _isGpsActive = false;
+  String _gpsAccuracy = 'Searching...';
+  double? _latitude;
+  double? _longitude;
+
+  // Services
+  final LocationService _locationService = LocationService();
+  final AudioAlertService _audioAlertService = AudioAlertService();
+  final NetworkStatusService _networkStatusService = NetworkStatusService();
 
   // UI related
   bool _isHistoryPanelOpen = false;
+  DetectionModel? _currentAlert;
 
   // Animation controllers
   AnimationController? _pulseController;
@@ -61,8 +71,76 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
     super.initState();
     _initializeControllers();
     _initializeCamera();
-    _startDetectionSimulation();
-    _generateMockDetections();
+    _initializeGPS();
+    _initializeAudioService();
+    _initializeNetworkMonitoring();
+    _startAutoDetection();
+  }
+
+  Future<void> _initializeAudioService() async {
+    await _audioAlertService.initialize();
+  }
+
+  Future<void> _initializeNetworkMonitoring() async {
+    try {
+      await _networkStatusService.initialize();
+      
+      // Listen to network status changes
+      _networkStatusService.statusStream.listen((isConnected) {
+        if (isConnected && mounted) {
+          // Auto-retry queued detections when network is restored
+          _autoRetryQueue();
+        }
+      });
+    } catch (e) {
+      debugPrint('Error initializing network monitoring: $e');
+    }
+  }
+
+  Future<void> _autoRetryQueue() async {
+    try {
+      final aiProvider = context.read<AiDetectionProvider>();
+      final successCount = await aiProvider.retryQueuedDetections();
+      
+      if (successCount > 0 && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Successfully processed $successCount queued detection(s)'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error auto-retrying queue: $e');
+    }
+  }
+
+  Future<void> _initializeGPS() async {
+    try {
+      final position = await _locationService.getCurrentPosition();
+
+      if (position != null && mounted) {
+        setState(() {
+          _isGpsActive = true;
+          _latitude = position.latitude;
+          _longitude = position.longitude;
+          _gpsAccuracy = 'High (±${position.accuracy.toInt()}m)';
+        });
+      } else if (mounted) {
+        setState(() {
+          _isGpsActive = false;
+          _gpsAccuracy = 'Unavailable';
+        });
+      }
+    } catch (e) {
+      debugPrint('GPS error: $e');
+      if (mounted) {
+        setState(() {
+          _isGpsActive = false;
+          _gpsAccuracy = 'Unavailable';
+        });
+      }
+    }
   }
 
   void _initializeControllers() {
@@ -129,165 +207,132 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
     }
   }
 
-  void _startDetectionSimulation() {
-    _detectionTimer = Timer.periodic(Duration(seconds: 3), (timer) {
-      if (_isDetectionActive && mounted) {
-        _simulateDetection();
+  void _startAutoDetection() {
+    // Cancel existing timer if any
+    _detectionTimer?.cancel();
+    
+    // Auto-detect every 10 seconds when detection is active (increased from 5s)
+    // Only trigger if not already processing
+    _detectionTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+      if (_isDetectionActive && mounted && !_isCapturing) {
+        final aiProvider = context.read<AiDetectionProvider>();
+        // Don't trigger if already processing
+        if (!aiProvider.isProcessing) {
+          _captureAndProcessFrame(isManual: false);
+        } else {
+          debugPrint('Skipping auto-detection: previous detection still processing');
+        }
       }
     });
   }
 
-  void _simulateDetection() {
-    final random = Random();
-    if (random.nextDouble() < 0.3) {
-      // 30% chance of detection
-      final types = ['pothole', 'crack', 'obstacle'];
-      final type = types[random.nextInt(types.length)];
-      final confidence = 0.6 + (random.nextDouble() * 0.4);
-
-      final detection = {
-        'id': DateTime.now().millisecondsSinceEpoch.toString(),
-        'type': type,
-        'confidence': confidence,
-        'x': random.nextDouble() * 0.6 + 0.2,
-        'y': random.nextDouble() * 0.6 + 0.2,
-        'width': 0.1 + random.nextDouble() * 0.1,
-        'height': 0.1 + random.nextDouble() * 0.1,
-        'timestamp': DateTime.now(),
-        'location': _generateMockLocation(),
-        'imageUrl': _generateMockImageUrl(),
-      };
-
-      setState(() {
-        _detectedIssues.add(detection);
-        _recentDetections.insert(0, detection);
-        if (_recentDetections.length > 10) {
-          _recentDetections.removeLast();
-        }
-        _detectionStats[type] = (_detectionStats[type] ?? 0) + 1;
-      });
-
-      // Remove detection after 5 seconds
-      Timer(Duration(seconds: 5), () {
-        if (mounted) {
-          setState(() {
-            _detectedIssues.removeWhere((d) => d['id'] == detection['id']);
-          });
-        }
-      });
-
-      // Haptic feedback
-      HapticFeedback.lightImpact();
-    }
-  }
-
-  void _generateMockDetections() {
-    final mockDetections = [
-      {
-        'id': '1',
-        'type': 'pothole',
-        'confidence': 0.89,
-        'timestamp': DateTime.now().subtract(Duration(minutes: 5)),
-        'location': 'Main Street & 5th Avenue',
-        'imageUrl':
-            'https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg',
-      },
-      {
-        'id': '2',
-        'type': 'crack',
-        'confidence': 0.76,
-        'timestamp': DateTime.now().subtract(Duration(minutes: 12)),
-        'location': 'Highway 101, Mile 23',
-        'imageUrl':
-            'https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg',
-      },
-      {
-        'id': '3',
-        'type': 'obstacle',
-        'confidence': 0.92,
-        'timestamp': DateTime.now().subtract(Duration(minutes: 18)),
-        'location': 'Oak Street Bridge',
-        'imageUrl':
-            'https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg',
-      },
-    ];
-
-    setState(() {
-      _recentDetections.addAll(mockDetections);
-      _detectionStats['pothole'] = 3;
-      _detectionStats['crack'] = 2;
-      _detectionStats['obstacle'] = 1;
-    });
-  }
-
-  String _generateMockLocation() {
-    final locations = [
-      'Main Street & 1st Ave',
-      'Highway 101, Mile 15',
-      'Oak Street Bridge',
-      'Downtown Plaza',
-      'Industrial Blvd',
-      'Riverside Drive',
-    ];
-    return locations[Random().nextInt(locations.length)];
-  }
-
-  String _generateMockImageUrl() {
-    final urls = [
-      'https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg',
-      'https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg',
-      'https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg',
-      'https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg',
-    ];
-    return urls[Random().nextInt(urls.length)];
-  }
-
   Future<void> _capturePhoto() async {
+    await _captureAndProcessFrame(isManual: true);
+  }
+
+  Future<void> _captureAndProcessFrame({bool isManual = false}) async {
     if (_cameraController == null || !_cameraController!.value.isInitialized) {
       return;
     }
+
+    if (_isCapturing) return;
 
     setState(() {
       _isCapturing = true;
     });
 
     try {
+      // Capture photo
       final XFile photo = await _cameraController!.takePicture();
+      
+      // Store the photo for potential report submission
+      _lastCapturedPhoto = photo;
 
-      // Simulate processing time
-      await Future.delayed(Duration(milliseconds: 500));
+      if (!mounted) return;
 
-      // Add to recent detections with current detected issues
-      if (_detectedIssues.isNotEmpty) {
-        final captureDetection = {
-          'id': DateTime.now().millisecondsSinceEpoch.toString(),
-          'type': 'captured',
-          'confidence': 1.0,
-          'timestamp': DateTime.now(),
-          'location': _generateMockLocation(),
-          'imageUrl': photo.path,
-          'detectedIssues': List.from(_detectedIssues),
-        };
+      // Get user ID
+      final authProvider = context.read<AuthProvider>();
+      final userId = authProvider.user?.id;
 
-        setState(() {
-          _recentDetections.insert(0, captureDetection);
-          if (_recentDetections.length > 10) {
-            _recentDetections.removeLast();
-          }
-        });
+      if (userId == null) {
+        throw Exception('User not authenticated');
       }
 
-      // Show success feedback
+      // Get GPS coordinates
+      if (_latitude == null || _longitude == null) {
+        await _initializeGPS();
+      }
+
+      if (!mounted) return;
+
+      final latitude = _latitude ?? 0.0;
+      final longitude = _longitude ?? 0.0;
+
+      // Process with AI with timeout protection
+      final aiProvider = context.read<AiDetectionProvider>();
+      
+      // Add a timeout wrapper to prevent indefinite waiting
+      await aiProvider.processFrame(photo, latitude, longitude, userId).timeout(
+        Duration(seconds: 35), // Slightly longer than API timeout
+        onTimeout: () {
+          throw DetectionException.timeout(
+            'Detection is taking too long. Please try again.',
+          );
+        },
+      );
+
+      // Get latest detection
+      final latestDetection = aiProvider.latestDetection;
+
+      if (latestDetection != null) {
+        // Play audio alert for high severity
+        if (aiProvider.shouldPlaySound(latestDetection)) {
+          _audioAlertService.playAlertSound();
+        }
+
+        // Haptic feedback
+        if (latestDetection.issueDetected) {
+          HapticFeedback.mediumImpact();
+        } else {
+          HapticFeedback.lightImpact();
+        }
+
+        // Only show alert if issue is detected
+        if (latestDetection.issueDetected && latestDetection.type != DetectionType.normal) {
+          setState(() {
+            _currentAlert = latestDetection;
+          });
+
+          // Auto-dismiss alert after 15 seconds
+          Timer(Duration(seconds: 15), () {
+            if (mounted && _currentAlert?.id == latestDetection.id) {
+              setState(() {
+                _currentAlert = null;
+              });
+            }
+          });
+        }
+      }
+    } on DetectionException catch (e) {
+      debugPrint('Detection exception: ${e.message}');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Photo captured successfully'),
-            duration: Duration(seconds: 2),
+            content: Text(e.message),
+            backgroundColor: Colors.orange,
           ),
         );
       }
     } catch (e) {
-      debugPrint('Capture error: $e');
+      debugPrint('Unexpected error during detection: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error processing image'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } finally {
       setState(() {
         _isCapturing = false;
@@ -300,33 +345,64 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
-      if (image != null) {
-        // Simulate AI processing
-        await Future.delayed(Duration(milliseconds: 1000));
+      if (image != null && mounted) {
+        // Get user ID
+        final authProvider = context.read<AuthProvider>();
+        final userId = authProvider.user?.id;
 
-        final galleryDetection = {
-          'id': DateTime.now().millisecondsSinceEpoch.toString(),
-          'type': 'pothole',
-          'confidence': 0.85,
-          'timestamp': DateTime.now(),
-          'location': 'Gallery Image',
-          'imageUrl': image.path,
-        };
+        if (userId == null) {
+          throw Exception('User not authenticated');
+        }
 
-        setState(() {
-          _recentDetections.insert(0, galleryDetection);
-          _detectionStats['pothole'] = (_detectionStats['pothole'] ?? 0) + 1;
-        });
+        // Get GPS coordinates
+        if (_latitude == null || _longitude == null) {
+          await _initializeGPS();
+        }
+
+        if (!mounted) return;
+
+        final latitude = _latitude ?? 0.0;
+        final longitude = _longitude ?? 0.0;
+
+        // Process with AI
+        final aiProvider = context.read<AiDetectionProvider>();
+        await aiProvider.processFrame(image, latitude, longitude, userId);
+
+        // Get latest detection
+        final latestDetection = aiProvider.latestDetection;
+
+        if (latestDetection != null && latestDetection.issueDetected) {
+          setState(() {
+            _currentAlert = latestDetection;
+          });
+
+          // Auto-dismiss after 15 seconds
+          Timer(Duration(seconds: 15), () {
+            if (mounted && _currentAlert?.id == latestDetection.id) {
+              setState(() {
+                _currentAlert = null;
+              });
+            }
+          });
+        }
 
         if (mounted) {
           final l10n = AppLocalizations.of(context);
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(l10n.camera_imageProcessed)));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.camera_imageProcessed)),
+          );
         }
       }
     } catch (e) {
       debugPrint('Gallery error: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error processing gallery image'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -352,12 +428,29 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
     });
 
     if (_isDetectionActive) {
-      _startDetectionSimulation();
+      _startAutoDetection();
+      if (mounted) {
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Auto-detection enabled (every 10s)'),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
     } else {
       _detectionTimer?.cancel();
-      setState(() {
-        _detectedIssues.clear();
-      });
+      if (mounted) {
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Auto-detection disabled. Use capture button for manual detection.'),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
     }
   }
 
@@ -386,46 +479,57 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
     // Could trigger manual focus or detection
   }
 
-  void _onDetectionTap(Map<String, dynamic> detection) {
-    final l10n = AppLocalizations.of(context);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.camera_detectionDetails),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${l10n.camera_type}: ${detection['type']}'),
-            Text(
-              '${l10n.camera_confidence}: ${(detection['confidence'] * 100).toInt()}%',
-            ),
-            Text('${l10n.camera_location}: ${detection['location']}'),
-            Text('${l10n.camera_time}: ${detection['timestamp']}'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(l10n.camera_close),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.pushNamed(context, '/report-submission-screen');
-            },
-            child: Text(l10n.camera_submitReport),
-          ),
-        ],
-      ),
-    );
+  void _onDetectionTap(DetectionModel detection) {
+    // Show detection details and allow submitting report
+    setState(() {
+      _currentAlert = detection;
+    });
+  }
+
+  void _dismissAlert() {
+    setState(() {
+      _currentAlert = null;
+    });
+  }
+
+  // Store the last captured photo for report submission
+  XFile? _lastCapturedPhoto;
+
+  void _submitReportFromAlert() {
+    if (_currentAlert == null) return;
+
+    // Navigate to manual report screen with detection data
+    Navigator.pushNamed(
+      context,
+      '/manual-report-screen',
+      arguments: {
+        'detectionData': _currentAlert,
+        'latitude': _latitude,
+        'longitude': _longitude,
+        'fromAiDetection': true,
+        'capturedPhoto': _lastCapturedPhoto, // Pass the photo file
+      },
+    ).then((_) {
+      // Dismiss the alert after returning from manual report screen
+      if (mounted) {
+        _dismissAlert();
+      }
+    });
   }
 
   @override
   void dispose() {
-    _cameraController?.dispose();
+    // Dispose camera controller with error handling
+    try {
+      _cameraController?.dispose();
+    } catch (e) {
+      debugPrint('Error disposing camera controller: $e');
+    }
+
     _detectionTimer?.cancel();
     _pulseController?.dispose();
+    _audioAlertService.dispose();
+    _networkStatusService.dispose();
     super.dispose();
   }
 
@@ -454,12 +558,109 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
                     // Status Bar
                     Padding(
                       padding: EdgeInsets.all(4.w),
-                      child: StatusBarWidget(
-                        isGpsActive: _isGpsActive,
-                        gpsAccuracy: _gpsAccuracy,
-                        isDetectionActive: _isDetectionActive,
-                        onDetectionToggle: _toggleDetection,
+                      child: Column(
+                        children: [
+                          StatusBarWidget(
+                            isGpsActive: _isGpsActive,
+                            gpsAccuracy: _gpsAccuracy,
+                            isDetectionActive: _isDetectionActive,
+                            onDetectionToggle: _toggleDetection,
+                          ),
+
+                          // Processing indicator (non-blocking)
+                          Consumer<AiDetectionProvider>(
+                            builder: (context, aiProvider, child) {
+                              if (!aiProvider.isProcessing) {
+                                return SizedBox.shrink();
+                              }
+
+                              return Container(
+                                margin: EdgeInsets.only(top: 1.h),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 3.w,
+                                  vertical: 0.8.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.primary
+                                      .withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: theme.colorScheme.primary
+                                        .withValues(alpha: 0.3),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(
+                                      width: 12,
+                                      height: 12,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          theme.colorScheme.primary,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 2.w),
+                                    Text(
+                                      'Analyzing... (max 30s)',
+                                      style:
+                                          theme.textTheme.labelSmall?.copyWith(
+                                        color: theme.colorScheme.primary,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
+                    ),
+
+                    // Queue Status Widget
+                    Consumer<AiDetectionProvider>(
+                      builder: (context, aiProvider, child) {
+                        if (aiProvider.queueSize == 0) {
+                          return SizedBox.shrink();
+                        }
+
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 4.w),
+                          child: QueueStatusWidget(
+                            queueSize: aiProvider.queueSize,
+                            onRetry: () async {
+                              final scaffoldMessenger = ScaffoldMessenger.of(context);
+                              try {
+                                final successCount =
+                                    await aiProvider.retryQueuedDetections();
+                                if (mounted) {
+                                  scaffoldMessenger.showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Successfully processed $successCount detection(s)',
+                                      ),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                }
+                              } catch (e) {
+                                if (mounted) {
+                                  scaffoldMessenger.showSnackBar(
+                                    SnackBar(
+                                      content: Text('Failed to retry queue'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                          ),
+                        );
+                      },
                     ),
 
                     // Camera Preview
@@ -469,7 +670,7 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
                         child: CameraPreviewWidget(
                           cameraController: _cameraController,
                           isDetectionActive: _isDetectionActive,
-                          detectedIssues: _detectedIssues,
+                          detectedIssues: [],
                           onCrosshairTap: _onCrosshairTap,
                         ),
                       ),
@@ -492,113 +693,99 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
                 Positioned(
                   right: 4.w,
                   top: 20.h,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isHistoryPanelOpen = !_isHistoryPanelOpen;
-                      });
-                    },
-                    child: AnimatedBuilder(
-                      animation: _pulseAnimation!,
-                      builder: (context, child) {
-                        return Transform.scale(
-                          scale: _recentDetections.isNotEmpty
-                              ? _pulseAnimation!.value
-                              : 1.0,
-                          child: Container(
-                            padding: EdgeInsets.all(3.w),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: theme.colorScheme.shadow,
-                                  blurRadius: 8,
-                                  offset: Offset(0, 4),
+                  child: Consumer<AiDetectionProvider>(
+                    builder: (context, aiProvider, child) {
+                      final historyCount = aiProvider.detectionHistory.length;
+
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isHistoryPanelOpen = !_isHistoryPanelOpen;
+                          });
+                        },
+                        child: AnimatedBuilder(
+                          animation: _pulseAnimation!,
+                          builder: (context, child) {
+                            return Transform.scale(
+                              scale: historyCount > 0
+                                  ? _pulseAnimation!.value
+                                  : 1.0,
+                              child: Container(
+                                padding: EdgeInsets.all(3.w),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.primary,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: theme.colorScheme.shadow,
+                                      blurRadius: 8,
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            child: Stack(
-                              children: [
-                                CustomIconWidget(
-                                  iconName: 'history',
-                                  color: theme.colorScheme.onPrimary,
-                                  size: 24,
-                                ),
-                                if (_recentDetections.isNotEmpty)
-                                  Positioned(
-                                    top: -1,
-                                    right: -1,
-                                    child: Container(
-                                      width: 5.w,
-                                      height: 5.w,
-                                      decoration: BoxDecoration(
-                                        color: theme.colorScheme.error,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          '${_recentDetections.length > 9 ? '9+' : _recentDetections.length}',
-                                          style: theme.textTheme.labelSmall
-                                              ?.copyWith(
+                                child: Stack(
+                                  children: [
+                                    CustomIconWidget(
+                                      iconName: 'history',
+                                      color: theme.colorScheme.onPrimary,
+                                      size: 24,
+                                    ),
+                                    if (historyCount > 0)
+                                      Positioned(
+                                        top: -1,
+                                        right: -1,
+                                        child: Container(
+                                          width: 5.w,
+                                          height: 5.w,
+                                          decoration: BoxDecoration(
+                                            color: theme.colorScheme.error,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              '${historyCount > 9 ? '9+' : historyCount}',
+                                              style: theme
+                                                  .textTheme.labelSmall
+                                                  ?.copyWith(
                                                 color:
                                                     theme.colorScheme.onError,
                                                 fontSize: 8.sp,
                                                 fontWeight: FontWeight.bold,
                                               ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-
-                // Metrics Button
-                Positioned(
-                  right: 4.w,
-                  top: 30.h,
-                  child: GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (context) => DetectionMetricsSheet(
-                          detectionHistory: _recentDetections,
-                          detectionStats: _detectionStats,
-                          onClose: () {
-                            Navigator.of(context).pop();
+                                  ],
+                                ),
+                              ),
+                            );
                           },
                         ),
                       );
                     },
-                    child: Container(
-                      padding: EdgeInsets.all(3.w),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.secondary,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: theme.colorScheme.shadow,
-                            blurRadius: 8,
-                            offset: Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: CustomIconWidget(
-                        iconName: 'analytics',
-                        color: theme.colorScheme.onSecondary,
-                        size: 24,
-                      ),
-                    ),
                   ),
                 ),
+
+                // Detection Alert Widget
+                if (_currentAlert != null)
+                  Positioned(
+                    top: 12.h,
+                    left: 4.w,
+                    right: 4.w,
+                    child: Consumer<AiDetectionProvider>(
+                      builder: (context, aiProvider, child) {
+                        if (_currentAlert == null) return SizedBox.shrink();
+
+                        return DetectionAlertWidget(
+                          detection: _currentAlert!,
+                          alertColor: aiProvider.getAlertColor(_currentAlert!),
+                          onDismiss: _dismissAlert,
+                          onSubmitReport: _submitReportFromAlert,
+                        );
+                      },
+                    ),
+                  ),
 
                 // History Panel
                 if (_isHistoryPanelOpen)
@@ -607,7 +794,6 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
                     top: 0,
                     bottom: 0,
                     child: DetectionHistoryPanel(
-                      recentDetections: _recentDetections,
                       onClose: () {
                         setState(() {
                           _isHistoryPanelOpen = false;

@@ -408,4 +408,50 @@ class ManualReportProvider extends ChangeNotifier {
       photoType: photoType,
     );
   }
+
+  /// Add photo from existing URL (for AI detection images)
+  /// This creates a photo record without uploading a new file
+  Future<IssuePhotoModel> addPhotoFromUrl({
+    required String photoUrl,
+    String photoType = 'main',
+    bool isPrimary = false,
+  }) async {
+    if (_draftReport == null) {
+      throw Exception('No draft report available');
+    }
+
+    // Validate photo count
+    final validationError = canAddPhoto(photoType);
+    if (validationError != null) {
+      throw Exception(validationError);
+    }
+
+    _isUploadingPhoto = true;
+    _uploadProgress = 0.5;
+    notifyListeners();
+
+    try {
+      // Create photo record in database
+      final photo = await _reportApi.createPhotoRecord(
+        issueId: _draftReport!.id,
+        photoUrl: photoUrl,
+        photoType: photoType,
+        isPrimary: isPrimary,
+      );
+
+      _uploadedPhotos.add(photo);
+      _uploadProgress = 1.0;
+      notifyListeners();
+
+      return photo;
+    } catch (e) {
+      _error = 'Failed to add photo: $e';
+      notifyListeners();
+      rethrow;
+    } finally {
+      _isUploadingPhoto = false;
+      _uploadProgress = 0.0;
+      notifyListeners();
+    }
+  }
 }

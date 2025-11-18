@@ -46,9 +46,9 @@ dependencies:
   flutter_svg: ^2.2.1
   sizer: ^3.1.3
   cached_network_image: ^3.4.1
-  camera: ^0.11.2
-  camera_android_camerax: ^0.6.10
-  camera_avfoundation: ^0.9.20
+  camera: ^0.11.0+2
+  camera_android_camerax: ^0.6.9+1
+  camera_avfoundation: ^0.9.17+3
   fl_chart: ^1.1.1
   image_picker: ^1.2.0
   permission_handler: ^12.0.1
@@ -66,6 +66,8 @@ dependencies:
   timeago: ^3.7.0
   shimmer: ^3.0.0
   logger: ^2.5.0
+  image: ^4.3.0
+  audioplayers: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -96,6 +98,7 @@ flutter:
   assets:
     - .env
     - assets/images/
+    - assets/sounds/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

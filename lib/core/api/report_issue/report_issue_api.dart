@@ -202,6 +202,27 @@ class ReportIssueApi {
     return uploadedPhotos;
   }
 
+  /// Create photo record from existing URL (for AI detection images)
+  /// This creates a database record without uploading a new file
+  Future<IssuePhotoModel> createPhotoRecord({
+    required String issueId,
+    required String photoUrl,
+    String photoType = 'main',
+    bool isPrimary = false,
+  }) async {
+    try {
+      // Save to database only (photo already exists at URL)
+      return await _repository.uploadIssuePhoto(
+        issueId: issueId,
+        photoUrl: photoUrl,
+        photoType: photoType,
+        isPrimary: isPrimary,
+      );
+    } catch (e) {
+      throw Exception('Failed to create photo record: $e');
+    }
+  }
+
   /// Delete photo from both database and storage
   Future<void> deletePhoto(String photoId, String photoUrl) async {
     try {

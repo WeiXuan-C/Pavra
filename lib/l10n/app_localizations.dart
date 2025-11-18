@@ -740,6 +740,12 @@ abstract class AppLocalizations {
   /// **'{burstMode} • Tap to capture • Long press to exit'**
   String camera_burstModeInstructions(String burstMode);
 
+  /// Manual AI detection button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Manual AI Detection'**
+  String get camera_manualDetection;
+
   /// Timestamp for very recent activity
   ///
   /// In en, this message translates to:

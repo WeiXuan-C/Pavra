@@ -7,20 +7,24 @@ class CameraControlsWidget extends StatelessWidget {
   final VoidCallback onCapturePressed;
   final VoidCallback onGalleryPressed;
   final VoidCallback onFlashToggle;
+  final VoidCallback? onManualDetectionPressed;
   final bool isFlashOn;
   final bool isCapturing;
   final bool isBurstMode;
   final VoidCallback onBurstModeToggle;
+  final bool isManualDetecting;
 
   const CameraControlsWidget({
     super.key,
     required this.onCapturePressed,
     required this.onGalleryPressed,
     required this.onFlashToggle,
+    this.onManualDetectionPressed,
     required this.isFlashOn,
     required this.isCapturing,
     required this.isBurstMode,
     required this.onBurstModeToggle,
+    this.isManualDetecting = false,
   });
 
   @override
@@ -63,6 +67,17 @@ class CameraControlsWidget extends StatelessWidget {
                   onPressed: onGalleryPressed,
                   size: 12.w,
                 ),
+
+                // Manual AI Detection Button
+                if (onManualDetectionPressed != null)
+                  _buildControlButton(
+                    context: context,
+                    icon: 'psychology',
+                    onPressed: onManualDetectionPressed!,
+                    size: 12.w,
+                    isActive: isManualDetecting,
+                    tooltip: l10n.camera_manualDetection,
+                  ),
 
                 // Capture Button
                 GestureDetector(
@@ -166,9 +181,10 @@ class CameraControlsWidget extends StatelessWidget {
     required VoidCallback onPressed,
     required double size,
     bool isActive = false,
+    String? tooltip,
   }) {
     final theme = Theme.of(context);
-    return GestureDetector(
+    final button = GestureDetector(
       onTap: onPressed,
       child: Container(
         width: size,
@@ -198,6 +214,14 @@ class CameraControlsWidget extends StatelessWidget {
         ),
       ),
     );
+
+    if (tooltip != null) {
+      return Tooltip(
+        message: tooltip,
+        child: button,
+      );
+    }
+    return button;
   }
 
   Widget _buildBurstModeIndicator(BuildContext context) {
