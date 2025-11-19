@@ -430,7 +430,6 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
     if (_isDetectionActive) {
       _startAutoDetection();
       if (mounted) {
-        final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Auto-detection enabled (every 10s)'),
@@ -442,7 +441,6 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
     } else {
       _detectionTimer?.cancel();
       if (mounted) {
-        final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Auto-detection disabled. Use capture button for manual detection.'),

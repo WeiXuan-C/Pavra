@@ -3031,5 +3031,62 @@
   "savedLocation_tapMapToSelect": "Tap anywhere on the map to select a location, or drag the marker to adjust",
   "@savedLocation_tapMapToSelect": {
     "description": "Instruction to select location on map"
+  },
+  "camera_autoDetectionEnabled": "Auto-detection enabled (every 10s)",
+  "@camera_autoDetectionEnabled": {
+    "description": "Message when auto-detection is enabled"
+  },
+  "camera_autoDetectionDisabled": "Auto-detection disabled. Use capture button for manual detection.",
+  "@camera_autoDetectionDisabled": {
+    "description": "Message when auto-detection is disabled"
+  },
+  "camera_analyzing": "Analyzing... (max 30s)",
+  "@camera_analyzing": {
+    "description": "Message shown during AI analysis with timeout info"
+  },
+  "camera_queuedDetections": "Queued Detections",
+  "@camera_queuedDetections": {
+    "description": "Label for queued detections count"
+  },
+  "camera_retryQueue": "Retry Queue",
+  "@camera_retryQueue": {
+    "description": "Button to retry queued detections"
+  },
+  "camera_queueProcessed": "Successfully processed {count} queued detection(s)",
+  "@camera_queueProcessed": {
+    "description": "Success message after processing queue",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "camera_detectionTimeout": "Detection is taking too long. Please try again.",
+  "@camera_detectionTimeout": {
+    "description": "Error message when detection times out"
+  },
+  "camera_processingError": "Error processing image",
+  "@camera_processingError": {
+    "description": "Generic error message for image processing"
+  },
+  "camera_userNotAuthenticated": "User not authenticated",
+  "@camera_userNotAuthenticated": {
+    "description": "Error when user is not logged in"
+  },
+  "camera_issueDetected": "Issue Detected",
+  "@camera_issueDetected": {
+    "description": "Label when an issue is detected"
+  },
+  "camera_noIssueDetected": "No Issue Detected",
+  "@camera_noIssueDetected": {
+    "description": "Label when no issue is detected"
+  },
+  "camera_viewHistory": "View History",
+  "@camera_viewHistory": {
+    "description": "Button to view detection history"
+  },
+  "camera_skippingAutoDetection": "Skipping auto-detection: previous detection still processing",
+  "@camera_skippingAutoDetection": {
+    "description": "Debug message when auto-detection is skipped"
   }
 }

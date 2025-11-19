@@ -3031,5 +3031,62 @@
   "savedLocation_tapMapToSelect": "点击地图上的任意位置选择地点，或拖动标记进行调整",
   "@savedLocation_tapMapToSelect": {
     "description": "在地图上选择位置的说明"
+  },
+  "camera_autoDetectionEnabled": "自动检测已启用（每10秒）",
+  "@camera_autoDetectionEnabled": {
+    "description": "自动检测启用时的消息"
+  },
+  "camera_autoDetectionDisabled": "自动检测已禁用。使用拍摄按钮进行手动检测。",
+  "@camera_autoDetectionDisabled": {
+    "description": "自动检测禁用时的消息"
+  },
+  "camera_analyzing": "分析中...（最多30秒）",
+  "@camera_analyzing": {
+    "description": "AI分析期间显示的消息，包含超时信息"
+  },
+  "camera_queuedDetections": "排队的检测",
+  "@camera_queuedDetections": {
+    "description": "排队检测数量的标签"
+  },
+  "camera_retryQueue": "重试队列",
+  "@camera_retryQueue": {
+    "description": "重试排队检测的按钮"
+  },
+  "camera_queueProcessed": "成功处理了 {count} 个排队的检测",
+  "@camera_queueProcessed": {
+    "description": "处理队列后的成功消息",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "camera_detectionTimeout": "检测时间过长。请重试。",
+  "@camera_detectionTimeout": {
+    "description": "检测超时时的错误消息"
+  },
+  "camera_processingError": "处理图像时出错",
+  "@camera_processingError": {
+    "description": "图像处理的通用错误消息"
+  },
+  "camera_userNotAuthenticated": "用户未认证",
+  "@camera_userNotAuthenticated": {
+    "description": "用户未登录时的错误"
+  },
+  "camera_issueDetected": "检测到问题",
+  "@camera_issueDetected": {
+    "description": "检测到问题时的标签"
+  },
+  "camera_noIssueDetected": "未检测到问题",
+  "@camera_noIssueDetected": {
+    "description": "未检测到问题时的标签"
+  },
+  "camera_viewHistory": "查看历史",
+  "@camera_viewHistory": {
+    "description": "查看检测历史的按钮"
+  },
+  "camera_skippingAutoDetection": "跳过自动检测：上一次检测仍在处理中",
+  "@camera_skippingAutoDetection": {
+    "description": "跳过自动检测时的调试消息"
   }
 }

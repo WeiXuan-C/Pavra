@@ -25,7 +25,7 @@ class DetectionLoadingOverlay extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      color: Colors.black.withOpacity(0.5),
+      color: Colors.black.withValues(alpha: 0.5),
       child: Center(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
@@ -34,7 +34,7 @@ class DetectionLoadingOverlay extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withValues(alpha: 0.3),
                 blurRadius: 16,
                 offset: Offset(0, 4),
               ),
@@ -72,7 +72,7 @@ class DetectionLoadingOverlay extends StatelessWidget {
               Text(
                 'Detecting road conditions',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
             ],
