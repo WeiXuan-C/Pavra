@@ -383,54 +383,6 @@ class _ReputationStatusCard extends StatelessWidget {
           ],
 
           const SizedBox(height: 12),
-          const Divider(height: 1),
-          const SizedBox(height: 12),
-
-          // How to increase score
-          Text(
-            l10n.reputation_howToIncrease,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: Colors.green[700],
-            ),
-          ),
-          const SizedBox(height: 8),
-          _buildAdviceItem(
-            context,
-            l10n.reputation_increaseUpload,
-            Colors.green,
-            icon: Icons.add_circle_outline,
-          ),
-          _buildAdviceItem(
-            context,
-            l10n.reputation_increaseReviewed,
-            Colors.green,
-            icon: Icons.add_circle_outline,
-          ),
-
-          const SizedBox(height: 12),
-
-          // How score decreases
-          Text(
-            l10n.reputation_howToDecrease,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: Colors.red[700],
-            ),
-          ),
-          const SizedBox(height: 8),
-          _buildAdviceItem(
-            context,
-            l10n.reputation_decreaseRejected,
-            Colors.red,
-            icon: Icons.remove_circle_outline,
-          ),
-          _buildAdviceItem(
-            context,
-            l10n.reputation_decreaseSpam,
-            Colors.red,
-            icon: Icons.remove_circle_outline,
-          ),
 
           // Recent trend
           if (history != null && history!.isNotEmpty) ...[

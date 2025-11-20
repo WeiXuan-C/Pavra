@@ -920,6 +920,60 @@ abstract class AppLocalizations {
   /// **'away'**
   String get map_away;
 
+  /// Report issue button text
+  ///
+  /// In en, this message translates to:
+  /// **'Report Issue'**
+  String get map_reportIssue;
+
+  /// Location services disabled message
+  ///
+  /// In en, this message translates to:
+  /// **'Please enable location services in device settings'**
+  String get map_locationServicesDisabled;
+
+  /// Location permission denied message
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission permanently denied. Please enable in app settings.'**
+  String get map_locationPermissionDenied;
+
+  /// Failed to load issues error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load nearby issues'**
+  String get map_failedToLoadIssues;
+
+  /// Alert radius indicator message
+  ///
+  /// In en, this message translates to:
+  /// **'Showing issues within {radius} miles'**
+  String map_showingIssuesWithin(String radius);
+
+  /// Refresh button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get map_refresh;
+
+  /// Current location button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Current Location'**
+  String get map_currentLocation;
+
+  /// Map type button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Map Type'**
+  String get map_mapType;
+
+  /// Traffic toggle button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Traffic'**
+  String get map_traffic;
+
   /// Report issue screen title
   ///
   /// In en, this message translates to:
@@ -4549,6 +4603,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap anywhere on the map to select a location, or drag the marker to adjust'**
   String get savedLocation_tapMapToSelect;
+
+  /// Message when auto-detection is enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-detection enabled (every 10s)'**
+  String get camera_autoDetectionEnabled;
+
+  /// Message when auto-detection is disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-detection disabled. Use capture button for manual detection.'**
+  String get camera_autoDetectionDisabled;
+
+  /// Message shown during AI analysis with timeout info
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing... (max 30s)'**
+  String get camera_analyzing;
+
+  /// Label for queued detections count
+  ///
+  /// In en, this message translates to:
+  /// **'Queued Detections'**
+  String get camera_queuedDetections;
+
+  /// Button to retry queued detections
+  ///
+  /// In en, this message translates to:
+  /// **'Retry Queue'**
+  String get camera_retryQueue;
+
+  /// Success message after processing queue
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully processed {count} queued detection(s)'**
+  String camera_queueProcessed(int count);
+
+  /// Error message when detection times out
+  ///
+  /// In en, this message translates to:
+  /// **'Detection is taking too long. Please try again.'**
+  String get camera_detectionTimeout;
+
+  /// Generic error message for image processing
+  ///
+  /// In en, this message translates to:
+  /// **'Error processing image'**
+  String get camera_processingError;
+
+  /// Error when user is not logged in
+  ///
+  /// In en, this message translates to:
+  /// **'User not authenticated'**
+  String get camera_userNotAuthenticated;
+
+  /// Label when an issue is detected
+  ///
+  /// In en, this message translates to:
+  /// **'Issue Detected'**
+  String get camera_issueDetected;
+
+  /// Label when no issue is detected
+  ///
+  /// In en, this message translates to:
+  /// **'No Issue Detected'**
+  String get camera_noIssueDetected;
+
+  /// Button to view detection history
+  ///
+  /// In en, this message translates to:
+  /// **'View History'**
+  String get camera_viewHistory;
+
+  /// Debug message when auto-detection is skipped
+  ///
+  /// In en, this message translates to:
+  /// **'Skipping auto-detection: previous detection still processing'**
+  String get camera_skippingAutoDetection;
 }
 
 class _AppLocalizationsDelegate

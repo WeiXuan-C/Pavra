@@ -36,8 +36,8 @@ class IssueDetailBottomSheet extends StatelessWidget {
             ),
           ),
 
-          // Issue image
-          if (issue['imageUrl'] != null)
+          // Issue image - from issue_photos table
+          if (issue['issue_photos'] != null && (issue['issue_photos'] as List).isNotEmpty)
             Container(
               width: double.infinity,
               height: 25.h,
@@ -49,7 +49,7 @@ class IssueDetailBottomSheet extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(3.w),
                 child: CustomImageWidget(
-                  imageUrl: issue['imageUrl'] as String,
+                  imageUrl: (issue['issue_photos'] as List).first['photo_url'] as String,
                   width: double.infinity,
                   height: 25.h,
                   fit: BoxFit.cover,
@@ -62,7 +62,7 @@ class IssueDetailBottomSheet extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  issue['type'] as String? ?? 'Road Issue',
+                  issue['title'] as String? ?? 'Road Issue',
                   style: theme.textTheme.titleLarge,
                 ),
               ),
@@ -70,12 +70,12 @@ class IssueDetailBottomSheet extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
                 decoration: BoxDecoration(
                   color: _getSeverityColor(
-                    issue['severity'] as String? ?? 'minor',
+                    issue['severity'] as String? ?? 'moderate',
                   ),
                   borderRadius: BorderRadius.circular(2.w),
                 ),
                 child: Text(
-                  (issue['severity'] as String? ?? 'minor').toUpperCase(),
+                  (issue['severity'] as String? ?? 'moderate').toUpperCase(),
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -117,7 +117,7 @@ class IssueDetailBottomSheet extends StatelessWidget {
               ),
               SizedBox(width: 2.w),
               Text(
-                'Reported ${_formatDate(issue['reportedAt'] as DateTime? ?? DateTime.now())}',
+                'Reported ${_formatDate(_parseDate(issue['created_at']))}',
                 style: theme.textTheme.bodyMedium,
               ),
             ],
@@ -135,7 +135,7 @@ class IssueDetailBottomSheet extends StatelessWidget {
               ),
               SizedBox(width: 2.w),
               Text(
-                'Status: ${issue['status'] as String? ?? 'Reported'}',
+                'Status: ${_formatStatus(issue['status'] as String? ?? 'submitted')}',
                 style: theme.textTheme.bodyMedium,
               ),
             ],
@@ -197,14 +197,29 @@ class IssueDetailBottomSheet extends StatelessWidget {
   Color _getSeverityColor(String severity) {
     switch (severity.toLowerCase()) {
       case 'critical':
+      case 'high':
         return AppTheme.lightTheme.colorScheme.error;
       case 'moderate':
         return Colors.orange;
+      case 'low':
       case 'minor':
         return Colors.amber;
       default:
         return AppTheme.lightTheme.colorScheme.primary;
     }
+  }
+
+  DateTime _parseDate(dynamic dateValue) {
+    if (dateValue == null) return DateTime.now();
+    if (dateValue is DateTime) return dateValue;
+    if (dateValue is String) {
+      try {
+        return DateTime.parse(dateValue);
+      } catch (e) {
+        return DateTime.now();
+      }
+    }
+    return DateTime.now();
   }
 
   String _formatDate(DateTime date) {
@@ -219,6 +234,23 @@ class IssueDetailBottomSheet extends StatelessWidget {
       return '${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} ago';
     } else {
       return 'Just now';
+    }
+  }
+
+  String _formatStatus(String status) {
+    switch (status.toLowerCase()) {
+      case 'draft':
+        return 'Draft';
+      case 'submitted':
+        return 'Submitted';
+      case 'reviewed':
+        return 'Reviewed';
+      case 'spam':
+        return 'Marked as Spam';
+      case 'discard':
+        return 'Discarded';
+      default:
+        return status;
     }
   }
 }

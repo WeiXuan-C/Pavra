@@ -4,6 +4,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../core/app_export.dart';
+import '../../core/supabase/supabase_client.dart';
+import '../../core/services/map_service.dart';
+import '../../l10n/app_localizations.dart';
 import './widgets/issue_detail_bottom_sheet.dart';
 import './widgets/map_filter_bottom_sheet.dart';
 import './widgets/map_search_bar.dart';
@@ -25,96 +28,28 @@ class _MapViewScreenState extends State<MapViewScreen> {
   bool _isLoading = true;
   bool _showTraffic = false;
   bool _hasLocationPermission = false;
+  
+  final MapService _mapService = MapService();
+  double _alertRadiusMiles = 5.0;
+  List<Map<String, dynamic>> _roadIssues = [];
 
-  // Filter state
+  // Filter state - matching database schema
   Map<String, bool> _filters = {
-    'potholes': true,
-    'cracks': true,
-    'obstacles': true,
-    'lighting': true,
+    // Severity filters
     'critical': true,
+    'high': true,
     'moderate': true,
+    'low': true,
     'minor': true,
-    'reported': true,
-    'in_progress': true,
-    'resolved': false,
+    // Status filters
+    'draft': false,
+    'submitted': true,
+    'reviewed': true,
+    'spam': false,
+    'discard': false,
   };
 
-  // Mock data for road issues
-  final List<Map<String, dynamic>> _roadIssues = [
-    {
-      'id': '1',
-      'type': 'Pothole',
-      'severity': 'critical',
-      'status': 'reported',
-      'latitude': 37.7749,
-      'longitude': -122.4194,
-      'address': 'Main Street, Downtown San Francisco',
-      'description':
-          'Large pothole causing traffic disruption and potential vehicle damage.',
-      'reportedAt': DateTime.now().subtract(Duration(hours: 2)),
-      'imageUrl':
-          'https://images.pexels.com/photos/1004409/pexels-photo-1004409.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'distance': 150,
-    },
-    {
-      'id': '2',
-      'type': 'Road Crack',
-      'severity': 'moderate',
-      'status': 'in_progress',
-      'latitude': 37.7849,
-      'longitude': -122.4094,
-      'address': 'Oak Avenue, Mission District',
-      'description': 'Significant crack running across the road surface.',
-      'reportedAt': DateTime.now().subtract(Duration(days: 1)),
-      'imageUrl':
-          'https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'distance': 320,
-    },
-    {
-      'id': '3',
-      'type': 'Obstacle',
-      'severity': 'minor',
-      'status': 'reported',
-      'latitude': 37.7649,
-      'longitude': -122.4294,
-      'address': 'Pine Street, Financial District',
-      'description': 'Debris blocking part of the roadway.',
-      'reportedAt': DateTime.now().subtract(Duration(minutes: 45)),
-      'imageUrl':
-          'https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'distance': 85,
-    },
-    {
-      'id': '4',
-      'type': 'Poor Lighting',
-      'severity': 'moderate',
-      'status': 'reported',
-      'latitude': 37.7549,
-      'longitude': -122.4394,
-      'address': 'Sunset Boulevard, Richmond District',
-      'description':
-          'Street lights not working, creating unsafe driving conditions.',
-      'reportedAt': DateTime.now().subtract(Duration(hours: 6)),
-      'imageUrl':
-          'https://images.pexels.com/photos/1004409/pexels-photo-1004409.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'distance': 450,
-    },
-    {
-      'id': '5',
-      'type': 'Pothole',
-      'severity': 'minor',
-      'status': 'resolved',
-      'latitude': 37.7949,
-      'longitude': -122.3994,
-      'address': 'Market Street, SOMA',
-      'description': 'Small pothole has been repaired.',
-      'reportedAt': DateTime.now().subtract(Duration(days: 3)),
-      'imageUrl':
-          'https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'distance': 200,
-    },
-  ];
+
 
   @override
   void initState() {
@@ -124,11 +59,60 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
   Future<void> _initializeMap() async {
     await _getCurrentLocation();
+    await _loadUserPreferences();
+    await _loadNearbyIssues();
     _createMarkers();
     if (mounted) {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _loadUserPreferences() async {
+    try {
+      final user = supabase.auth.currentUser;
+      if (user != null) {
+        final radius = await _mapService.getUserAlertRadius(user.id);
+        if (mounted) {
+          setState(() {
+            _alertRadiusMiles = radius;
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint('Error loading user preferences: $e');
+    }
+  }
+
+  Future<void> _loadNearbyIssues() async {
+    if (_currentPosition == null) return;
+
+    try {
+      // Get all submitted and reviewed issues
+      final issues = await _mapService.getNearbyIssues(
+        latitude: _currentPosition!.latitude,
+        longitude: _currentPosition!.longitude,
+        radiusMiles: _alertRadiusMiles,
+        status: 'submitted', // Primary status, will filter more in UI
+      );
+
+      if (mounted) {
+        setState(() {
+          _roadIssues = issues;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading nearby issues: $e');
+      if (mounted) {
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.map_failedToLoadIssues),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     }
   }
 
@@ -138,12 +122,13 @@ class _MapViewScreenState extends State<MapViewScreen> {
       if (!serviceEnabled) {
         debugPrint('Location services are disabled');
         if (mounted) {
+          final l10n = AppLocalizations.of(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Please enable location services in device settings'),
+              content: Text(l10n.map_locationServicesDisabled),
               duration: Duration(seconds: 3),
               action: SnackBarAction(
-                label: 'Settings',
+                label: l10n.alerts_settings,
                 onPressed: () async {
                   await Geolocator.openLocationSettings();
                 },
@@ -166,12 +151,13 @@ class _MapViewScreenState extends State<MapViewScreen> {
       if (permission == LocationPermission.deniedForever) {
         debugPrint('Location permission denied forever');
         if (mounted) {
+          final l10n = AppLocalizations.of(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Location permission permanently denied. Please enable in app settings.'),
+              content: Text(l10n.map_locationPermissionDenied),
               duration: Duration(seconds: 3),
               action: SnackBarAction(
-                label: 'Settings',
+                label: l10n.alerts_settings,
                 onPressed: () async {
                   await Geolocator.openAppSettings();
                 },
@@ -205,21 +191,27 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
     for (var issue in _roadIssues) {
       if (_shouldShowIssue(issue)) {
-        _markers.add(
-          Marker(
-            markerId: MarkerId(issue['id'] as String),
-            position: LatLng(
-              issue['latitude'] as double,
-              issue['longitude'] as double,
+        final lat = issue['latitude'];
+        final lng = issue['longitude'];
+        
+        if (lat != null && lng != null) {
+          final severity = issue['severity'] as String? ?? 'moderate';
+          final title = issue['title'] as String?;
+          final address = issue['address'] as String?;
+          
+          _markers.add(
+            Marker(
+              markerId: MarkerId(issue['id'] as String),
+              position: LatLng(lat as double, lng as double),
+              icon: _getMarkerIcon(severity),
+              onTap: () => _showIssueDetails(issue),
+              infoWindow: InfoWindow(
+                title: title ?? 'Road Issue',
+                snippet: address ?? 'Location: ${lat.toStringAsFixed(4)}, ${lng.toStringAsFixed(4)}',
+              ),
             ),
-            icon: _getMarkerIcon(issue['severity'] as String),
-            onTap: () => _showIssueDetails(issue),
-            infoWindow: InfoWindow(
-              title: issue['type'] as String,
-              snippet: issue['address'] as String,
-            ),
-          ),
-        );
+          );
+        }
       }
     }
   }
@@ -227,12 +219,14 @@ class _MapViewScreenState extends State<MapViewScreen> {
   BitmapDescriptor _getMarkerIcon(String severity) {
     switch (severity.toLowerCase()) {
       case 'critical':
+      case 'high':
         return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
       case 'moderate':
         return BitmapDescriptor.defaultMarkerWithHue(
           BitmapDescriptor.hueOrange,
         );
       case 'minor':
+      case 'low':
         return BitmapDescriptor.defaultMarkerWithHue(
           BitmapDescriptor.hueYellow,
         );
@@ -242,21 +236,21 @@ class _MapViewScreenState extends State<MapViewScreen> {
   }
 
   bool _shouldShowIssue(Map<String, dynamic> issue) {
-    final type = (issue['type'] as String).toLowerCase();
-    final severity = issue['severity'] as String;
-    final status = issue['status'] as String;
-
-    // Check type filters
-    if (type.contains('pothole') && !_filters['potholes']!) return false;
-    if (type.contains('crack') && !_filters['cracks']!) return false;
-    if (type.contains('obstacle') && !_filters['obstacles']!) return false;
-    if (type.contains('lighting') && !_filters['lighting']!) return false;
+    // Check if issue is deleted
+    if (issue['is_deleted'] == true) return false;
+    
+    final severity = (issue['severity'] as String?)?.toLowerCase();
+    final status = (issue['status'] as String?)?.toLowerCase();
 
     // Check severity filters
-    if (!_filters[severity]!) return false;
+    if (severity != null && _filters.containsKey(severity)) {
+      if (!_filters[severity]!) return false;
+    }
 
     // Check status filters
-    if (!_filters[status.replaceAll(' ', '_')]!) return false;
+    if (status != null && _filters.containsKey(status)) {
+      if (!_filters[status]!) return false;
+    }
 
     return true;
   }
@@ -283,22 +277,23 @@ class _MapViewScreenState extends State<MapViewScreen> {
   }
 
   void _showNewReportDialog(LatLng position) {
+    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Report Issue'),
-        content: Text('Create a new road safety report at this location?'),
+        title: Text(l10n.map_reportIssue),
+        content: Text(l10n.map_reportIssuePrompt),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            child: Text(l10n.common_cancel),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/report-submission-screen');
             },
-            child: Text('Report'),
+            child: Text(l10n.report_title),
           ),
         ],
       ),
@@ -336,6 +331,13 @@ class _MapViewScreenState extends State<MapViewScreen> {
         .where((issue) => _shouldShowIssue(issue))
         .toList();
 
+    // Sort by distance if available
+    nearbyIssues.sort((a, b) {
+      final distA = (a['distance'] ?? a['distance_miles'] ?? double.infinity) as num;
+      final distB = (b['distance'] ?? b['distance_miles'] ?? double.infinity) as num;
+      return distA.compareTo(distB);
+    });
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -350,7 +352,20 @@ class _MapViewScreenState extends State<MapViewScreen> {
     );
   }
 
-  void _centerOnCurrentLocation() {
+  Future<void> _refreshIssues() async {
+    setState(() {
+      _isLoading = true;
+    });
+    
+    await _loadNearbyIssues();
+    _createMarkers();
+    
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _centerOnCurrentLocation() async {
     if (_currentPosition != null && _mapController != null) {
       _mapController!.animateCamera(
         CameraUpdate.newLatLngZoom(
@@ -358,6 +373,11 @@ class _MapViewScreenState extends State<MapViewScreen> {
           16.0,
         ),
       );
+      
+      // Reload nearby issues when centering on location
+      await _loadNearbyIssues();
+      _createMarkers();
+      setState(() {});
     }
   }
 
@@ -438,11 +458,59 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
                 // Search bar
                 SafeArea(
-                  child: MapSearchBar(
-                    onSearch: (query) {
-                      // Handle search
-                    },
-                    onFilterTap: _showFilterBottomSheet,
+                  child: Column(
+                    children: [
+                      MapSearchBar(
+                        onSearch: (query) {
+                          // Handle search
+                        },
+                        onFilterTap: _showFilterBottomSheet,
+                      ),
+                      // Alert radius indicator
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+                        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+                        decoration: BoxDecoration(
+                          color: theme.cardColor.withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CustomIconWidget(
+                              iconName: 'radar',
+                              size: 16,
+                              color: theme.colorScheme.primary,
+                            ),
+                            SizedBox(width: 2.w),
+                            Text(
+                              AppLocalizations.of(context).map_showingIssuesWithin(
+                                _alertRadiusMiles.toStringAsFixed(1),
+                              ),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface,
+                              ),
+                            ),
+                            SizedBox(width: 2.w),
+                            InkWell(
+                              onTap: _refreshIssues,
+                              child: CustomIconWidget(
+                                iconName: 'refresh',
+                                size: 16,
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -513,7 +581,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                       size: 20,
                     ),
                     label: Text(
-                      'Nearby Issues',
+                      AppLocalizations.of(context).map_nearbyIssues,
                       style: theme.textTheme.labelLarge?.copyWith(
                         color: theme.colorScheme.onPrimary,
                       ),
@@ -537,7 +605,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                       size: 20,
                     ),
                     label: Text(
-                      'Alerts',
+                      AppLocalizations.of(context).map_viewAlerts,
                       style: theme.textTheme.labelLarge?.copyWith(
                         color: theme.colorScheme.onSecondary,
                       ),

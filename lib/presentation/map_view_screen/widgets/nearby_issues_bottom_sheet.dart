@@ -147,7 +147,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Issue image
+            // Issue image - from issue_photos table
             Container(
               width: 15.w,
               height: 15.w,
@@ -155,11 +155,11 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                 borderRadius: BorderRadius.circular(2.w),
                 color: theme.colorScheme.surface,
               ),
-              child: issue['imageUrl'] != null
+              child: (issue['issue_photos'] != null && (issue['issue_photos'] as List).isNotEmpty)
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(2.w),
                       child: CustomImageWidget(
-                        imageUrl: issue['imageUrl'] as String,
+                        imageUrl: (issue['issue_photos'] as List).first['photo_url'] as String,
                         width: 15.w,
                         height: 15.w,
                         fit: BoxFit.cover,
@@ -167,8 +167,8 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                     )
                   : Center(
                       child: CustomIconWidget(
-                        iconName: _getIssueIcon(
-                          issue['type'] as String? ?? 'pothole',
+                        iconName: _getSeverityIcon(
+                          issue['severity'] as String? ?? 'moderate',
                         ),
                         color: theme.colorScheme.primary,
                         size: 24,
@@ -187,7 +187,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          issue['type'] as String? ?? 'Road Issue',
+                          issue['title'] as String? ?? 'Road Issue',
                           style: theme.textTheme.titleMedium,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -201,12 +201,12 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: _getSeverityColor(
                             context,
-                            issue['severity'] as String? ?? 'minor',
+                            issue['severity'] as String? ?? 'moderate',
                           ),
                           borderRadius: BorderRadius.circular(1.w),
                         ),
                         child: Text(
-                          (issue['severity'] as String? ?? 'minor')
+                          (issue['severity'] as String? ?? 'moderate')
                               .toUpperCase(),
                           style: theme.textTheme.labelSmall
                               ?.copyWith(color: Colors.white, fontSize: 8.sp),
@@ -227,7 +227,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                       SizedBox(width: 1.w),
                       Expanded(
                         child: Text(
-                          '${issue['distance']}m ${l10n.map_away}',
+                          _formatDistance(issue['distance'] ?? issue['distance_miles']),
                           style: theme.textTheme.bodySmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -237,9 +237,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                   ),
                   SizedBox(height: 0.5.h),
                   Text(
-                    _formatDate(
-                      issue['reportedAt'] as DateTime? ?? DateTime.now(),
-                    ),
+                    _formatDate(_parseDate(issue['created_at'])),
                     style: theme.textTheme.bodySmall,
                   ),
                 ],
@@ -258,16 +256,16 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
     );
   }
 
-  String _getIssueIcon(String type) {
-    switch (type.toLowerCase()) {
-      case 'pothole':
+  String _getSeverityIcon(String severity) {
+    switch (severity.toLowerCase()) {
+      case 'critical':
+      case 'high':
+        return 'error';
+      case 'moderate':
         return 'warning';
-      case 'crack':
-        return 'broken_image';
-      case 'obstacle':
-        return 'block';
-      case 'lighting':
-        return 'lightbulb';
+      case 'low':
+      case 'minor':
+        return 'info';
       default:
         return 'report_problem';
     }
@@ -277,13 +275,42 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
     final theme = Theme.of(context);
     switch (severity.toLowerCase()) {
       case 'critical':
+      case 'high':
         return theme.colorScheme.error;
       case 'moderate':
         return Colors.orange;
+      case 'low':
       case 'minor':
         return Colors.amber;
       default:
         return theme.colorScheme.primary;
+    }
+  }
+
+  DateTime _parseDate(dynamic dateValue) {
+    if (dateValue == null) return DateTime.now();
+    if (dateValue is DateTime) return dateValue;
+    if (dateValue is String) {
+      try {
+        return DateTime.parse(dateValue);
+      } catch (e) {
+        return DateTime.now();
+      }
+    }
+    return DateTime.now();
+  }
+
+  String _formatDistance(dynamic distance) {
+    if (distance == null) return 'Unknown distance';
+    
+    final distNum = distance is num ? distance.toDouble() : double.tryParse(distance.toString()) ?? 0.0;
+    
+    if (distNum < 0.1) {
+      // Convert to feet if less than 0.1 miles
+      final feet = (distNum * 5280).round();
+      return '$feet ft away';
+    } else {
+      return '${distNum.toStringAsFixed(1)} mi away';
     }
   }
 

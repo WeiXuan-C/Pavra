@@ -431,6 +431,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get map_away => 'away';
 
   @override
+  String get map_reportIssue => 'Report Issue';
+
+  @override
+  String get map_locationServicesDisabled =>
+      'Please enable location services in device settings';
+
+  @override
+  String get map_locationPermissionDenied =>
+      'Location permission permanently denied. Please enable in app settings.';
+
+  @override
+  String get map_failedToLoadIssues => 'Failed to load nearby issues';
+
+  @override
+  String map_showingIssuesWithin(String radius) {
+    return 'Showing issues within $radius miles';
+  }
+
+  @override
+  String get map_refresh => 'Refresh';
+
+  @override
+  String get map_currentLocation => 'Current Location';
+
+  @override
+  String get map_mapType => 'Map Type';
+
+  @override
+  String get map_traffic => 'Traffic';
+
+  @override
   String get report_title => 'Report Issue';
 
   @override
@@ -2342,4 +2373,49 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get savedLocation_tapMapToSelect =>
       'Tap anywhere on the map to select a location, or drag the marker to adjust';
+
+  @override
+  String get camera_autoDetectionEnabled =>
+      'Auto-detection enabled (every 10s)';
+
+  @override
+  String get camera_autoDetectionDisabled =>
+      'Auto-detection disabled. Use capture button for manual detection.';
+
+  @override
+  String get camera_analyzing => 'Analyzing... (max 30s)';
+
+  @override
+  String get camera_queuedDetections => 'Queued Detections';
+
+  @override
+  String get camera_retryQueue => 'Retry Queue';
+
+  @override
+  String camera_queueProcessed(int count) {
+    return 'Successfully processed $count queued detection(s)';
+  }
+
+  @override
+  String get camera_detectionTimeout =>
+      'Detection is taking too long. Please try again.';
+
+  @override
+  String get camera_processingError => 'Error processing image';
+
+  @override
+  String get camera_userNotAuthenticated => 'User not authenticated';
+
+  @override
+  String get camera_issueDetected => 'Issue Detected';
+
+  @override
+  String get camera_noIssueDetected => 'No Issue Detected';
+
+  @override
+  String get camera_viewHistory => 'View History';
+
+  @override
+  String get camera_skippingAutoDetection =>
+      'Skipping auto-detection: previous detection still processing';
 }

@@ -170,7 +170,7 @@ class _LoginWidgetState extends State<LoginWidget> {
 
             // App Icon/Logo
             Image.asset(
-              'assets/images/logo-only-with-transparent-bg.png',
+              'assets/images/app_icon.png',
               width: 80,
               height: 80,
             ),

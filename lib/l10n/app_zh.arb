@@ -568,6 +568,51 @@
   "@map_away": {
     "description": "距离后缀"
   },
+  "map_reportIssue": "报告问题",
+  "@map_reportIssue": {
+    "description": "报告问题按钮文本"
+  },
+  "map_locationServicesDisabled": "请在设备设置中启用位置服务",
+  "@map_locationServicesDisabled": {
+    "description": "位置服务已禁用消息"
+  },
+  "map_locationPermissionDenied": "位置权限已永久拒绝。请在应用设置中启用。",
+  "@map_locationPermissionDenied": {
+    "description": "位置权限被拒绝消息"
+  },
+  "map_failedToLoadIssues": "加载附近问题失败",
+  "@map_failedToLoadIssues": {
+    "description": "加载问题失败错误消息"
+  },
+  "map_showingIssuesWithin": "显示{radius}英里内的问题",
+  "@map_showingIssuesWithin": {
+    "description": "警报半径指示器消息",
+    "placeholders": {
+      "radius": {
+        "type": "String"
+      }
+    }
+  },
+  "map_refresh": "刷新",
+  "@map_refresh": {
+    "description": "刷新按钮提示"
+  },
+  "map_currentLocation": "当前位置",
+  "@map_currentLocation": {
+    "description": "当前位置按钮提示"
+  },
+  "map_mapType": "地图类型",
+  "@map_mapType": {
+    "description": "地图类型按钮提示"
+  },
+  "map_traffic": "交通",
+  "@map_traffic": {
+    "description": "交通切换按钮提示"
+  },
+  "map_viewAlerts": "警报",
+  "@map_viewAlerts": {
+    "description": "查看警报按钮文本"
+  },
   "report_title": "报告问题",
   "@report_title": {
     "description": "报告问题屏幕标题"
@@ -1557,10 +1602,6 @@
   "report_statusResolved": "已解决",
   "@report_statusResolved": {
     "description": "已解决状态标签"
-  },
-  "map_viewAlerts": "查看警报",
-  "@map_viewAlerts": {
-    "description": "地图上的查看警报按钮"
   },
   "profile_settings": "设置",
   "@profile_settings": {

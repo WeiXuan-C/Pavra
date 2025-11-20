@@ -428,6 +428,35 @@ class AppLocalizationsZh extends AppLocalizations {
   String get map_away => '外';
 
   @override
+  String get map_reportIssue => '报告问题';
+
+  @override
+  String get map_locationServicesDisabled => '请在设备设置中启用位置服务';
+
+  @override
+  String get map_locationPermissionDenied => '位置权限已永久拒绝。请在应用设置中启用。';
+
+  @override
+  String get map_failedToLoadIssues => '加载附近问题失败';
+
+  @override
+  String map_showingIssuesWithin(String radius) {
+    return '显示$radius英里内的问题';
+  }
+
+  @override
+  String get map_refresh => '刷新';
+
+  @override
+  String get map_currentLocation => '当前位置';
+
+  @override
+  String get map_mapType => '地图类型';
+
+  @override
+  String get map_traffic => '交通';
+
+  @override
   String get report_title => '报告问题';
 
   @override
@@ -1169,7 +1198,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get report_statusResolved => '已解决';
 
   @override
-  String get map_viewAlerts => '查看警报';
+  String get map_viewAlerts => '警报';
 
   @override
   String get profile_settings => '设置';
@@ -2262,4 +2291,45 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get savedLocation_tapMapToSelect => '点击地图上的任意位置选择地点，或拖动标记进行调整';
+
+  @override
+  String get camera_autoDetectionEnabled => '自动检测已启用（每10秒）';
+
+  @override
+  String get camera_autoDetectionDisabled => '自动检测已禁用。使用拍摄按钮进行手动检测。';
+
+  @override
+  String get camera_analyzing => '分析中...（最多30秒）';
+
+  @override
+  String get camera_queuedDetections => '排队的检测';
+
+  @override
+  String get camera_retryQueue => '重试队列';
+
+  @override
+  String camera_queueProcessed(int count) {
+    return '成功处理了 $count 个排队的检测';
+  }
+
+  @override
+  String get camera_detectionTimeout => '检测时间过长。请重试。';
+
+  @override
+  String get camera_processingError => '处理图像时出错';
+
+  @override
+  String get camera_userNotAuthenticated => '用户未认证';
+
+  @override
+  String get camera_issueDetected => '检测到问题';
+
+  @override
+  String get camera_noIssueDetected => '未检测到问题';
+
+  @override
+  String get camera_viewHistory => '查看历史';
+
+  @override
+  String get camera_skippingAutoDetection => '跳过自动检测：上一次检测仍在处理中';
 }

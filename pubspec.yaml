@@ -68,6 +68,7 @@ dependencies:
   logger: ^2.5.0
   image: ^4.3.0
   audioplayers: ^6.1.0
+  rename: ^3.1.0
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +80,12 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png" 
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

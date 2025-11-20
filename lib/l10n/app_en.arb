@@ -568,6 +568,47 @@
   "@map_away": {
     "description": "Distance away suffix"
   },
+  "map_reportIssue": "Report Issue",
+  "@map_reportIssue": {
+    "description": "Report issue button text"
+  },
+  "map_locationServicesDisabled": "Please enable location services in device settings",
+  "@map_locationServicesDisabled": {
+    "description": "Location services disabled message"
+  },
+  "map_locationPermissionDenied": "Location permission permanently denied. Please enable in app settings.",
+  "@map_locationPermissionDenied": {
+    "description": "Location permission denied message"
+  },
+  "map_failedToLoadIssues": "Failed to load nearby issues",
+  "@map_failedToLoadIssues": {
+    "description": "Failed to load issues error message"
+  },
+  "map_showingIssuesWithin": "Showing issues within {radius} miles",
+  "@map_showingIssuesWithin": {
+    "description": "Alert radius indicator message",
+    "placeholders": {
+      "radius": {
+        "type": "String"
+      }
+    }
+  },
+  "map_refresh": "Refresh",
+  "@map_refresh": {
+    "description": "Refresh button tooltip"
+  },
+  "map_currentLocation": "Current Location",
+  "@map_currentLocation": {
+    "description": "Current location button tooltip"
+  },
+  "map_mapType": "Map Type",
+  "@map_mapType": {
+    "description": "Map type button tooltip"
+  },
+  "map_traffic": "Traffic",
+  "@map_traffic": {
+    "description": "Traffic toggle button tooltip"
+  },
   "report_title": "Report Issue",
   "@report_title": {
     "description": "Report issue screen title"

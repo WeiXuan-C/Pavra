@@ -60,17 +60,6 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
           ),
           SizedBox(height: 3.h),
 
-          // Issue Types Section
-          Text(l10n.map_issueTypes, style: theme.textTheme.titleMedium),
-          SizedBox(height: 1.h),
-
-          _buildFilterTile(l10n.camera_potholes, 'potholes'),
-          _buildFilterTile(l10n.camera_cracks, 'cracks'),
-          _buildFilterTile(l10n.camera_obstacles, 'obstacles'),
-          _buildFilterTile('Poor Lighting', 'lighting'),
-
-          SizedBox(height: 2.h),
-
           // Severity Levels Section
           Text(
             l10n.map_severityLevels,
@@ -78,9 +67,11 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
           ),
           SizedBox(height: 1.h),
 
+          _buildFilterTile('Critical', 'critical'),
           _buildFilterTile(l10n.report_high, 'high'),
-          _buildFilterTile(l10n.report_medium, 'medium'),
+          _buildFilterTile('Moderate', 'moderate'),
           _buildFilterTile(l10n.report_low, 'low'),
+          _buildFilterTile('Minor', 'minor'),
 
           SizedBox(height: 2.h),
 
@@ -91,9 +82,11 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
           ),
           SizedBox(height: 1.h),
 
-          _buildFilterTile(l10n.map_reported, 'reported'),
-          _buildFilterTile('In Progress', 'in_progress'),
-          _buildFilterTile('Resolved', 'resolved'),
+          _buildFilterTile('Draft', 'draft'),
+          _buildFilterTile('Submitted', 'submitted'),
+          _buildFilterTile('Reviewed', 'reviewed'),
+          _buildFilterTile('Spam', 'spam'),
+          _buildFilterTile('Discarded', 'discard'),
 
           SizedBox(height: 4.h),
 
@@ -104,10 +97,11 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
                 child: OutlinedButton(
                   onPressed: () {
                     setState(() {
-                      _filters.updateAll((key, value) => false);
+                      // Set all to true (show all)
+                      _filters.updateAll((key, value) => true);
                     });
                   },
-                  child: Text(l10n.map_clearAll),
+                  child: Text('Select All'),
                 ),
               ),
               SizedBox(width: 3.w),
