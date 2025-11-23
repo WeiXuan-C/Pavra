@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../core/api/alert_preferences/alert_preferences_api.dart';
 import '../../core/api/saved_route/saved_route_api.dart';
 import '../../core/providers/auth_provider.dart';
 import '../../data/models/saved_route_model.dart';
+import '../../data/repositories/alert_preferences_repository.dart';
 import '../../data/repositories/saved_route_repository.dart';
 import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
@@ -27,6 +29,7 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   late SavedRouteRepository _routeRepository;
+  late AlertPreferencesRepository _preferencesRepository;
   
   double _alertRadius = 5.0;
   bool _roadDamageEnabled = true;
@@ -35,6 +38,7 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
   bool _trafficEnabled = true;
   bool _isRefreshing = false;
   bool _isLoadingRoutes = true;
+  bool _isLoadingPreferences = true;
   
   List<SavedRouteModel> _savedRoutes = [];
 
@@ -118,6 +122,7 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
     super.didChangeDependencies();
     if (!_isInitialized) {
       _initRepository();
+      _loadPreferences();
       _loadRoutes();
       _isInitialized = true;
     }
@@ -127,9 +132,38 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
 
   void _initRepository() {
     final authProvider = context.read<AuthProvider>();
+    final supabaseClient = authProvider.supabaseClient;
+    
     _routeRepository = SavedRouteRepository(
-      SavedRouteApi(authProvider.supabaseClient),
+      SavedRouteApi(supabaseClient),
     );
+    
+    _preferencesRepository = AlertPreferencesRepository(
+      AlertPreferencesApi(supabaseClient),
+    );
+  }
+
+  Future<void> _loadPreferences() async {
+    setState(() => _isLoadingPreferences = true);
+
+    try {
+      final preferences = await _preferencesRepository.getPreferences();
+      if (mounted) {
+        setState(() {
+          _alertRadius = preferences.alertRadiusMiles;
+          _roadDamageEnabled = preferences.roadDamageEnabled;
+          _constructionEnabled = preferences.constructionZonesEnabled;
+          _weatherEnabled = preferences.weatherHazardsEnabled;
+          _trafficEnabled = preferences.trafficIncidentsEnabled;
+          _isLoadingPreferences = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading preferences: $e');
+      if (mounted) {
+        setState(() => _isLoadingPreferences = false);
+      }
+    }
   }
 
   Future<void> _loadRoutes() async {
@@ -410,11 +444,13 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
           ),
 
           // Settings Tab
-          SingleChildScrollView(
-            padding: EdgeInsets.symmetric(vertical: 2.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          _isLoadingPreferences
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(vertical: 2.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
                   child: Text(
@@ -428,27 +464,61 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
                   title: l10n.alerts_roadDamage,
                   iconName: 'construction',
                   isEnabled: _roadDamageEnabled,
-                  onChanged: (value) =>
-                      setState(() => _roadDamageEnabled = value),
+                  onChanged: (value) async {
+                    setState(() => _roadDamageEnabled = value);
+                    try {
+                      await _preferencesRepository.updateAlertTypes(
+                        roadDamageEnabled: value,
+                      );
+                    } catch (e) {
+                      debugPrint('Error updating alert type: $e');
+                    }
+                  },
                 ),
                 AlertToggleWidget(
                   title: l10n.alerts_constructionZones,
                   iconName: 'engineering',
                   isEnabled: _constructionEnabled,
-                  onChanged: (value) =>
-                      setState(() => _constructionEnabled = value),
+                  onChanged: (value) async {
+                    setState(() => _constructionEnabled = value);
+                    try {
+                      await _preferencesRepository.updateAlertTypes(
+                        constructionZonesEnabled: value,
+                      );
+                    } catch (e) {
+                      debugPrint('Error updating alert type: $e');
+                    }
+                  },
                 ),
                 AlertToggleWidget(
                   title: l10n.alerts_weatherHazards,
                   iconName: 'cloud',
                   isEnabled: _weatherEnabled,
-                  onChanged: (value) => setState(() => _weatherEnabled = value),
+                  onChanged: (value) async {
+                    setState(() => _weatherEnabled = value);
+                    try {
+                      await _preferencesRepository.updateAlertTypes(
+                        weatherHazardsEnabled: value,
+                      );
+                    } catch (e) {
+                      debugPrint('Error updating alert type: $e');
+                    }
+                  },
                 ),
                 AlertToggleWidget(
                   title: l10n.alerts_trafficIncidents,
                   iconName: 'traffic',
                   isEnabled: _trafficEnabled,
-                  onChanged: (value) => setState(() => _trafficEnabled = value),
+                  onChanged: (value) async {
+                    setState(() => _trafficEnabled = value);
+                    try {
+                      await _preferencesRepository.updateAlertTypes(
+                        trafficIncidentsEnabled: value,
+                      );
+                    } catch (e) {
+                      debugPrint('Error updating alert type: $e');
+                    }
+                  },
                 ),
                 SizedBox(height: 2.h),
                 Padding(
@@ -462,7 +532,22 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
                 ),
                 RadiusSliderWidget(
                   currentRadius: _alertRadius,
-                  onChanged: (value) => setState(() => _alertRadius = value),
+                  onChanged: (value) async {
+                    setState(() => _alertRadius = value);
+                    final messenger = ScaffoldMessenger.of(context);
+                    try {
+                      await _preferencesRepository.updateAlertRadius(value);
+                    } catch (e) {
+                      debugPrint('Error updating alert radius: $e');
+                      if (!mounted) return;
+                      messenger.showSnackBar(
+                        SnackBar(
+                          content: Text('Failed to save radius: $e'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
                 ),
                 SizedBox(height: 2.h),
                 Padding(
@@ -475,9 +560,9 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
                   ),
                 ),
                 MiniMapWidget(radius: _alertRadius),
-              ],
-            ),
-          ),
+                  ],
+                ),
+              ),
 
           // Routes Tab
           _isLoadingRoutes

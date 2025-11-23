@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../../../l10n/app_localizations.dart';
 import '../../../core/providers/auth_provider.dart';
+import '../../../core/utils/location_utils.dart';
 import '../../../data/repositories/report_issue_repository.dart';
 import '../../../data/sources/remote/report_issue_remote_source.dart';
 import '../../../data/sources/remote/issue_type_remote_source.dart';
@@ -44,6 +46,9 @@ class _ReportListTabState extends State<ReportListTab> {
   // UI state
   bool _isGridView = false; // false = list view, true = grid view
 
+  // Location state for proximity check
+  Position? _currentPosition;
+
   @override
   void initState() {
     super.initState();
@@ -56,8 +61,56 @@ class _ReportListTabState extends State<ReportListTab> {
     if (!_isInitialized) {
       _initRepository(context);
       _loadReports();
+      _getCurrentLocation();
       _isInitialized = true;
     }
+  }
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        return;
+      }
+
+      _currentPosition = await Geolocator.getCurrentPosition(
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+      );
+
+      if (mounted) {
+        setState(() {}); // Trigger rebuild with new location
+      }
+    } catch (e) {
+      debugPrint('Error getting location: $e');
+    }
+  }
+
+  bool _isReportNearby(ReportIssueModel report) {
+    if (_currentPosition == null ||
+        report.latitude == null ||
+        report.longitude == null) {
+      return false;
+    }
+
+    return LocationUtils.isWithinRadius(
+      userLat: _currentPosition!.latitude,
+      userLon: _currentPosition!.longitude,
+      targetLat: report.latitude!,
+      targetLon: report.longitude!,
+      radiusMiles: 5.0, // 5 miles radius
+    );
   }
 
   @override
@@ -656,8 +709,8 @@ class _ReportListTabState extends State<ReportListTab> {
 
               SizedBox(height: 1.5.h),
 
-              // 投票信息 - 简洁横向显示
-              if (report.status == 'submitted') ...[
+              // 投票信息 - 仅显示附近的报告
+              if (report.status == 'submitted' && _isReportNearby(report)) ...[
                 SizedBox(height: 1.h),
                 Row(
                   children: [
@@ -741,6 +794,62 @@ class _ReportListTabState extends State<ReportListTab> {
                       ),
                     ),
                   ],
+                ),
+                SizedBox(height: 1.h),
+              ] else if (report.status == 'submitted' && !_isReportNearby(report)) ...[
+                // 显示距离提示（不在附近）- Enhanced design
+                SizedBox(height: 1.h),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 1.2.h, horizontal: 3.w),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Colors.orange.withValues(alpha: 0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(1.5.w),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withValues(alpha: 0.15),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.location_off,
+                          size: 18,
+                          color: Colors.orange.shade700,
+                        ),
+                      ),
+                      SizedBox(width: 2.5.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Not in your area',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: Colors.orange.shade800,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                              ),
+                            ),
+                            SizedBox(height: 0.3.h),
+                            Text(
+                              'Must be within 5 miles to vote',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: Colors.orange.shade700,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 1.h),
               ],
@@ -975,8 +1084,8 @@ class _ReportListTabState extends State<ReportListTab> {
 
                       const Spacer(),
 
-                      // 投票信息 (submitted reports)
-                      if (report.status == 'submitted') ...[
+                      // 投票信息 (submitted reports - only if nearby)
+                      if (report.status == 'submitted' && _isReportNearby(report)) ...[
                         Divider(height: 2.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1018,6 +1127,34 @@ class _ReportListTabState extends State<ReportListTab> {
                               ],
                             ),
                           ],
+                        ),
+                      ] else if (report.status == 'submitted' && !_isReportNearby(report)) ...[
+                        // Not nearby indicator - Enhanced for grid view
+                        Divider(height: 2.h),
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 0.8.h, horizontal: 2.w),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.location_off, size: 14, color: Colors.orange.shade700),
+                              SizedBox(width: 1.5.w),
+                              Flexible(
+                                child: Text(
+                                  'Not nearby',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: Colors.orange.shade800,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ] else ...[
                         // 时间 (draft reports)

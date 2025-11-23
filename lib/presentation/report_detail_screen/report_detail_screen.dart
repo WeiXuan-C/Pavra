@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../core/api/report_issue/report_issue_api.dart';
 import '../../core/providers/auth_provider.dart';
+import '../../core/utils/location_utils.dart';
 import '../../data/models/report_issue_model.dart';
 import '../../data/models/issue_type_model.dart';
 import '../../data/models/issue_photo_model.dart';
@@ -37,6 +39,10 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   int _spamVotes = 0;
   bool _isLoadingVotes = true;
 
+  // Location state for proximity check
+  Position? _currentPosition;
+  bool _isLoadingLocation = true;
+
   @override
   void initState() {
     super.initState();
@@ -54,11 +60,55 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       _loadIssueTypes();
       _loadPhotos();
       _loadVotingData();
+      _getCurrentLocation();
       _isInitialized = true;
     }
   }
 
   bool _isInitialized = false;
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        if (mounted) {
+          setState(() => _isLoadingLocation = false);
+        }
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          if (mounted) {
+            setState(() => _isLoadingLocation = false);
+          }
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        if (mounted) {
+          setState(() => _isLoadingLocation = false);
+        }
+        return;
+      }
+
+      _currentPosition = await Geolocator.getCurrentPosition(
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+      );
+
+      if (mounted) {
+        setState(() => _isLoadingLocation = false);
+      }
+    } catch (e) {
+      debugPrint('Error getting location: $e');
+      if (mounted) {
+        setState(() => _isLoadingLocation = false);
+      }
+    }
+  }
 
   Future<void> _loadIssueTypes() async {
     try {
@@ -178,8 +228,37 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     }
   }
 
+  bool _isUserNearReport() {
+    if (_currentPosition == null ||
+        widget.report.latitude == null ||
+        widget.report.longitude == null) {
+      return false;
+    }
+
+    return LocationUtils.isWithinRadius(
+      userLat: _currentPosition!.latitude,
+      userLon: _currentPosition!.longitude,
+      targetLat: widget.report.latitude!,
+      targetLon: widget.report.longitude!,
+      radiusMiles: 5.0, // 5 miles radius for voting
+    );
+  }
+
   Future<void> _handleVerify() async {
     if (_isProcessing) return;
+
+    // Check proximity before allowing vote
+    if (!_isUserNearReport()) {
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: 'You must be within 5 miles of the issue location to vote',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.orange,
+        );
+      }
+      return;
+    }
 
     setState(() {
       _isProcessing = true;
@@ -248,6 +327,19 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
 
   Future<void> _handleSpam() async {
     if (_isProcessing) return;
+
+    // Check proximity before allowing vote
+    if (!_isUserNearReport()) {
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: 'You must be within 5 miles of the issue location to vote',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.orange,
+        );
+      }
+      return;
+    }
 
     setState(() {
       _isProcessing = true;
@@ -1397,9 +1489,53 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     final isOwnReport =
         currentUserId != null && widget.report.createdBy == currentUserId;
 
-    // Don't show action buttons if it's the user's own report
+    // Show message if it's the user's own report
     if (isOwnReport) {
-      return const SizedBox.shrink();
+      return Container(
+        padding: EdgeInsets.all(4.w),
+        decoration: BoxDecoration(
+          color: theme.scaffoldBackgroundColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -5),
+            ),
+          ],
+        ),
+        child: SafeArea(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+            decoration: BoxDecoration(
+              color: Colors.blue.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Colors.blue.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  size: 24,
+                  color: Colors.blue,
+                ),
+                SizedBox(width: 3.w),
+                Expanded(
+                  child: Text(
+                    'You cannot vote on your own report',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.blue[800],
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
     }
 
     // Authority users see different buttons
@@ -1412,6 +1548,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   Widget _buildUserVotingButtons(ThemeData theme, AppLocalizations l10n) {
+    final isNearby = _isUserNearReport();
+    final canVote = !_isLoadingLocation && isNearby;
+
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
@@ -1425,83 +1564,124 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         ],
       ),
       child: SafeArea(
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: _isProcessing ? null : _handleSpam,
-                style: OutlinedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 2.h),
-                  side: BorderSide(
-                    color: _userVote == 'spam' ? Colors.red : Colors.grey,
-                    width: _userVote == 'spam' ? 2.5 : 2,
+            // Proximity indicator
+            if (!canVote)
+              Container(
+                margin: EdgeInsets.only(bottom: 2.h),
+                padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+                decoration: BoxDecoration(
+                  color: Colors.orange.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.orange.withValues(alpha: 0.3),
                   ),
-                  foregroundColor: _userVote == 'spam'
-                      ? Colors.red
-                      : Colors.grey,
-                  backgroundColor: _userVote == 'spam'
-                      ? Colors.red.withValues(alpha: 0.1)
-                      : null,
                 ),
-                icon: Icon(
-                  _userVote == 'spam' ? Icons.report : Icons.report_outlined,
-                  size: 20,
-                ),
-                label: _isProcessing
-                    ? SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                        ),
-                      )
-                    : Text(
-                        _userVote == 'spam' ? l10n.reportDetail_spam : l10n.reportDetail_markSpam,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.location_off,
+                      size: 18,
+                      color: Colors.orange,
+                    ),
+                    SizedBox(width: 2.w),
+                    Expanded(
+                      child: Text(
+                        _isLoadingLocation
+                            ? 'Checking your location...'
+                            : 'You must be within 5 miles to vote',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.orange.shade800,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(width: 3.w),
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: _isProcessing ? null : _handleVerify,
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 2.h),
-                  backgroundColor: _userVote == 'verify'
-                      ? Colors.green
-                      : theme.colorScheme.primary,
-                  foregroundColor: Colors.white,
-                  elevation: _userVote == 'verify' ? 4 : 2,
-                ),
-                icon: Icon(
-                  _userVote == 'verify'
-                      ? Icons.check_circle
-                      : Icons.check_circle_outline,
-                  size: 20,
-                ),
-                label: _isProcessing
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white,
+            
+            // Voting buttons
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: (_isProcessing || !canVote) ? null : _handleSpam,
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 2.h),
+                      side: BorderSide(
+                        color: _userVote == 'spam' ? Colors.red : Colors.grey,
+                        width: _userVote == 'spam' ? 2.5 : 2,
+                      ),
+                      foregroundColor: _userVote == 'spam'
+                          ? Colors.red
+                          : Colors.grey,
+                      backgroundColor: _userVote == 'spam'
+                          ? Colors.red.withValues(alpha: 0.1)
+                          : null,
+                    ),
+                    icon: Icon(
+                      _userVote == 'spam' ? Icons.report : Icons.report_outlined,
+                      size: 20,
+                    ),
+                    label: _isProcessing
+                        ? SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                            ),
+                          )
+                        : Text(
+                            _userVote == 'spam' ? l10n.reportDetail_spam : l10n.reportDetail_markSpam,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                      )
-                    : Text(
-                        _userVote == 'verify' ? l10n.reportDetail_verified : l10n.reportDetail_verify,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-              ),
+                  ),
+                ),
+                SizedBox(width: 3.w),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: (_isProcessing || !canVote) ? null : _handleVerify,
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 2.h),
+                      backgroundColor: _userVote == 'verify'
+                          ? Colors.green
+                          : theme.colorScheme.primary,
+                      foregroundColor: Colors.white,
+                      elevation: _userVote == 'verify' ? 4 : 2,
+                    ),
+                    icon: Icon(
+                      _userVote == 'verify'
+                          ? Icons.check_circle
+                          : Icons.check_circle_outline,
+                      size: 20,
+                    ),
+                    label: _isProcessing
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
+                            ),
+                          )
+                        : Text(
+                            _userVote == 'verify' ? l10n.reportDetail_verified : l10n.reportDetail_verify,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

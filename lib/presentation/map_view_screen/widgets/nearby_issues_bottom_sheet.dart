@@ -7,11 +7,13 @@ import '../../../l10n/app_localizations.dart';
 class NearbyIssuesBottomSheet extends StatelessWidget {
   final List<Map<String, dynamic>> nearbyIssues;
   final Function(Map<String, dynamic>) onIssueSelected;
+  final String? currentUserId;
 
   const NearbyIssuesBottomSheet({
     super.key,
     required this.nearbyIssues,
     required this.onIssueSelected,
+    this.currentUserId,
   });
 
   @override
@@ -136,21 +138,85 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
 
   Widget _buildIssueCard(BuildContext context, Map<String, dynamic> issue, AppLocalizations l10n) {
     final theme = Theme.of(context);
+    final isOwnIssue = currentUserId != null && issue['created_by'] == currentUserId;
+    final severity = issue['severity'] as String? ?? 'moderate';
+    final severityColor = _getSeverityColor(context, severity);
+    
     return GestureDetector(
       onTap: () => onIssueSelected(issue),
-      child: Container(
-        padding: EdgeInsets.all(3.w),
-        decoration: BoxDecoration(
-          color: theme.cardColor,
-          borderRadius: BorderRadius.circular(3.w),
-          border: Border.all(color: theme.dividerColor, width: 1),
-        ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(3.w),
+        child: Container(
+          decoration: BoxDecoration(
+            color: theme.cardColor,
+            border: Border(
+              left: BorderSide(
+                color: severityColor,
+                width: 4,
+              ),
+              top: BorderSide(
+                color: isOwnIssue 
+                    ? theme.colorScheme.primary.withValues(alpha: 0.5)
+                    : theme.dividerColor, 
+                width: isOwnIssue ? 2 : 1,
+              ),
+              right: BorderSide(
+                color: isOwnIssue 
+                    ? theme.colorScheme.primary.withValues(alpha: 0.5)
+                    : theme.dividerColor, 
+                width: isOwnIssue ? 2 : 1,
+              ),
+              bottom: BorderSide(
+                color: isOwnIssue 
+                    ? theme.colorScheme.primary.withValues(alpha: 0.5)
+                    : theme.dividerColor, 
+                width: isOwnIssue ? 2 : 1,
+              ),
+            ),
+          ),
         child: Row(
           children: [
-            // Issue image - from issue_photos table
+            // Severity indicator strip with icon
+            Container(
+              width: 12.w,
+              padding: EdgeInsets.symmetric(vertical: 3.w),
+              decoration: BoxDecoration(
+                color: severityColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(2.5.w),
+                  bottomLeft: Radius.circular(2.5.w),
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    _getSeverityIconData(severity),
+                    color: severityColor,
+                    size: 24,
+                  ),
+                  SizedBox(height: 0.5.h),
+                  RotatedBox(
+                    quarterTurns: 3,
+                    child: Text(
+                      severity.toUpperCase(),
+                      style: TextStyle(
+                        color: severityColor,
+                        fontSize: 9,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Issue image
             Container(
               width: 15.w,
               height: 15.w,
+              margin: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(2.w),
                 color: theme.colorScheme.surface,
@@ -166,108 +232,125 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                       ),
                     )
                   : Center(
-                      child: CustomIconWidget(
-                        iconName: _getSeverityIcon(
-                          issue['severity'] as String? ?? 'moderate',
-                        ),
-                        color: theme.colorScheme.primary,
-                        size: 24,
+                      child: Icon(
+                        Icons.image_not_supported_outlined,
+                        color: theme.dividerColor,
+                        size: 20,
                       ),
                     ),
             ),
 
-            SizedBox(width: 3.w),
-
             // Issue details
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          issue['title'] as String? ?? 'Road Issue',
-                          style: theme.textTheme.titleMedium,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 2.w,
-                          vertical: 0.5.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _getSeverityColor(
-                            context,
-                            issue['severity'] as String? ?? 'moderate',
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 2.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            issue['title'] as String? ?? 'Road Issue',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          borderRadius: BorderRadius.circular(1.w),
                         ),
-                        child: Text(
-                          (issue['severity'] as String? ?? 'moderate')
-                              .toUpperCase(),
-                          style: theme.textTheme.labelSmall
-                              ?.copyWith(color: Colors.white, fontSize: 8.sp),
+                        if (isOwnIssue)
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 2.w,
+                              vertical: 0.5.h,
+                            ),
+                            margin: EdgeInsets.only(right: 2.w),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(1.w),
+                            ),
+                            child: Text(
+                              'YOURS',
+                              style: TextStyle(
+                                color: theme.colorScheme.primary,
+                                fontSize: 9,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    SizedBox(height: 1.h),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on,
+                          color: theme.textTheme.bodySmall?.color ?? Colors.grey,
+                          size: 14,
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 1.h),
-                  Row(
-                    children: [
-                      CustomIconWidget(
-                        iconName: 'location_on',
-                        color:
-                            theme.textTheme.bodySmall?.color ??
-                            Colors.grey,
-                        size: 14,
-                      ),
-                      SizedBox(width: 1.w),
-                      Expanded(
-                        child: Text(
-                          _formatDistance(issue['distance'] ?? issue['distance_miles']),
+                        SizedBox(width: 1.w),
+                        Expanded(
+                          child: Text(
+                            _formatDistance(issue['distance'] ?? issue['distance_miles']),
+                            style: theme.textTheme.bodySmall,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 0.5.h),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.access_time,
+                          color: theme.textTheme.bodySmall?.color ?? Colors.grey,
+                          size: 14,
+                        ),
+                        SizedBox(width: 1.w),
+                        Text(
+                          _formatDate(_parseDate(issue['created_at'])),
                           style: theme.textTheme.bodySmall,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 0.5.h),
-                  Text(
-                    _formatDate(_parseDate(issue['created_at'])),
-                    style: theme.textTheme.bodySmall,
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
 
             // Navigation arrow
-            CustomIconWidget(
-              iconName: 'chevron_right',
-              color: theme.dividerColor,
-              size: 20,
+            Padding(
+              padding: EdgeInsets.only(right: 3.w),
+              child: Icon(
+                Icons.chevron_right,
+                color: theme.dividerColor,
+                size: 24,
+              ),
             ),
           ],
+        ),
         ),
       ),
     );
   }
 
-  String _getSeverityIcon(String severity) {
+  IconData _getSeverityIconData(String severity) {
     switch (severity.toLowerCase()) {
       case 'critical':
+        return Icons.dangerous;
       case 'high':
-        return 'error';
+        return Icons.warning;
       case 'moderate':
-        return 'warning';
+        return Icons.error_outline;
       case 'low':
+        return Icons.info_outline;
       case 'minor':
-        return 'info';
+        return Icons.report_problem_outlined;
       default:
-        return 'report_problem';
+        return Icons.help_outline;
     }
   }
 

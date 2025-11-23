@@ -1,25 +1,24 @@
 import 'dart:math' as math;
 import 'package:logger/logger.dart';
+import '../api/alert_preferences/alert_preferences_api.dart';
+import '../api/report_issue/report_issue_api.dart';
 import '../supabase/supabase_client.dart';
 
 class MapService {
   final _logger = Logger();
+  late final AlertPreferencesApi _alertPreferencesApi;
+  late final ReportIssueApi _reportIssueApi;
+
+  MapService() {
+    _alertPreferencesApi = AlertPreferencesApi(supabase);
+    _reportIssueApi = ReportIssueApi(supabase);
+  }
 
   /// Fetch user's alert radius preference
   Future<double> getUserAlertRadius(String userId) async {
     try {
-      final response = await supabase
-          .from('user_alert_preferences')
-          .select('alert_radius_miles')
-          .eq('user_id', userId)
-          .maybeSingle();
-
-      if (response != null && response['alert_radius_miles'] != null) {
-        return (response['alert_radius_miles'] as num).toDouble();
-      }
-      
-      // Default to 5 miles if no preference found
-      return 5.0;
+      final preferences = await _alertPreferencesApi.getPreferences();
+      return preferences.alertRadiusMiles;
     } catch (e) {
       _logger.e('Error fetching alert radius: $e');
       return 5.0; // Default fallback
@@ -27,7 +26,7 @@ class MapService {
   }
 
   /// Fetch nearby report issues within radius
-  /// Uses Haversine formula via PostGIS for distance calculation
+  /// Uses the ReportIssueApi to fetch issues with photos
   Future<List<Map<String, dynamic>>> getNearbyIssues({
     required double latitude,
     required double longitude,
@@ -35,111 +34,98 @@ class MapService {
     String status = 'submitted',
   }) async {
     try {
-      // Convert miles to meters for PostGIS calculation (1 mile = 1609.34 meters)
-      final radiusMeters = radiusMiles * 1609.34;
+      // Convert miles to kilometers for the API
+      final radiusKm = radiusMiles * 1.60934;
 
-      final response = await supabase.rpc(
-        'get_nearby_issues',
-        params: {
-          'user_lat': latitude,
-          'user_lng': longitude,
-          'radius_meters': radiusMeters,
-          'issue_status': status,
-        },
-      );
+      _logger.i('Fetching nearby issues within $radiusMiles miles ($radiusKm km) from ($latitude, $longitude)');
 
-      return List<Map<String, dynamic>>.from(response ?? []);
-    } catch (e) {
-      _logger.w('Error fetching nearby issues, using fallback: $e');
-      // Fallback to simple query without distance calculation
-      return await _getFallbackNearbyIssues(
+      // Fetch nearby reports using the API
+      final reports = await _reportIssueApi.searchNearby(
         latitude: latitude,
         longitude: longitude,
-        radiusMiles: radiusMiles,
-        status: status,
+        radiusKm: radiusKm,
+        limit: 100,
       );
-    }
-  }
 
-  /// Fallback method using simple bounding box query
-  Future<List<Map<String, dynamic>>> _getFallbackNearbyIssues({
-    required double latitude,
-    required double longitude,
-    required double radiusMiles,
-    required String status,
-  }) async {
-    try {
-      // Approximate degrees per mile (varies by latitude)
-      // At equator: 1 degree ≈ 69 miles
-      final degreesPerMile = 1 / 69.0;
-      final latDelta = radiusMiles * degreesPerMile;
-      final lngDelta = radiusMiles * degreesPerMile;
+      _logger.i('Found ${reports.length} reports within radius');
 
-      final response = await supabase
-          .from('report_issues')
-          .select('''
-            id,
-            title,
-            description,
-            issue_type_ids,
-            severity,
-            address,
-            latitude,
-            longitude,
-            status,
-            created_at,
-            updated_at,
-            issue_photos(photo_url, is_primary, photo_type)
-          ''')
-          .eq('status', status)
-          .eq('is_deleted', false)
-          .gte('latitude', latitude - latDelta)
-          .lte('latitude', latitude + latDelta)
-          .gte('longitude', longitude - lngDelta)
-          .lte('longitude', longitude + lngDelta)
-          .order('created_at', ascending: false);
-
-      // Calculate actual distances and filter
-      final issues = List<Map<String, dynamic>>.from(response);
-      final nearbyIssues = <Map<String, dynamic>>[];
-
-      for (var issue in issues) {
-        if (issue['latitude'] != null && issue['longitude'] != null) {
-          final distance = _calculateDistance(
-            latitude,
-            longitude,
-            issue['latitude'],
-            issue['longitude'],
-          );
-
-          if (distance <= radiusMiles) {
-            issue['distance'] = distance;
-            nearbyIssues.add(issue);
-          }
+      // Convert ReportIssueModel to Map format for compatibility
+      final issuesWithPhotos = <Map<String, dynamic>>[];
+      
+      for (final report in reports) {
+        // Skip if status doesn't match (if status filter is needed)
+        if (status.isNotEmpty && report.status != status && report.status != 'reviewed') {
+          continue;
         }
+
+        // Fetch photos for this issue
+        final photos = await _reportIssueApi.getReportPhotos(report.id);
+        
+        // Convert to map format
+        final issueMap = {
+          'id': report.id,
+          'title': report.title,
+          'description': report.description,
+          'issue_type_ids': report.issueTypeIds,
+          'severity': report.severity,
+          'address': report.address,
+          'latitude': report.latitude,
+          'longitude': report.longitude,
+          'status': report.status,
+          'created_at': report.createdAt.toIso8601String(),
+          'updated_at': report.updatedAt.toIso8601String(),
+          'is_deleted': report.isDeleted,
+          'issue_photos': photos.map((photo) => {
+            'photo_url': photo.photoUrl,
+            'is_primary': photo.isPrimary,
+            'photo_type': photo.photoType,
+          }).toList(),
+          // Calculate distance
+          'distance_miles': _calculateDistance(
+            latitude,
+            longitude,
+            report.latitude ?? 0,
+            report.longitude ?? 0,
+          ) / 1.60934, // Convert km back to miles
+        };
+        
+        issuesWithPhotos.add(issueMap);
       }
 
       // Sort by distance
-      nearbyIssues.sort((a, b) => 
-        (a['distance'] as double).compareTo(b['distance'] as double)
-      );
+      issuesWithPhotos.sort((a, b) {
+        final distA = a['distance_miles'] as double;
+        final distB = b['distance_miles'] as double;
+        return distA.compareTo(distB);
+      });
 
-      return nearbyIssues;
+      _logger.i('Returning ${issuesWithPhotos.length} issues after filtering by status');
+      
+      // Log distances for verification
+      if (issuesWithPhotos.isNotEmpty) {
+        final nearest = issuesWithPhotos.first['distance_miles'];
+        final farthest = issuesWithPhotos.last['distance_miles'];
+        _logger.i('Distance range: ${nearest.toStringAsFixed(2)} - ${farthest.toStringAsFixed(2)} miles');
+      }
+
+      return issuesWithPhotos;
     } catch (e) {
-      _logger.e('Error in fallback nearby issues: $e');
+      _logger.e('Error fetching nearby issues: $e');
       return [];
     }
   }
 
+
+
   /// Calculate distance between two coordinates using Haversine formula
-  /// Returns distance in miles
+  /// Returns distance in kilometers
   double _calculateDistance(
     double lat1,
     double lon1,
     double lat2,
     double lon2,
   ) {
-    const earthRadiusMiles = 3958.8; // Earth's radius in miles
+    const earthRadiusKm = 6371; // Earth's radius in km
     
     final dLat = _toRadians(lat2 - lat1);
     final dLon = _toRadians(lon2 - lon1);
@@ -151,7 +137,7 @@ class MapService {
     
     final c = 2 * math.asin(math.sqrt(a));
     
-    return earthRadiusMiles * c;
+    return earthRadiusKm * c;
   }
 
   double _toRadians(double degrees) {
