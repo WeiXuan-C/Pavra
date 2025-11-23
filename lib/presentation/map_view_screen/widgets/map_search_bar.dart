@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../core/app_export.dart';
 import '../../../l10n/app_localizations.dart';
 
 class MapSearchBar extends StatefulWidget {
-  final Function(String) onSearch;
+  final Function(String, LatLng?, String?) onSearch;
   final VoidCallback onFilterTap;
+  final List<Map<String, dynamic>> issues;
+  final int activeFilterCount;
 
   const MapSearchBar({
     super.key,
     required this.onSearch,
     required this.onFilterTap,
+    this.issues = const [],
+    this.activeFilterCount = 0,
   });
 
   @override
@@ -22,22 +28,38 @@ class _MapSearchBarState extends State<MapSearchBar> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   bool _isSearching = false;
-  final List<String> _recentSearches = [
-    'Downtown Main Street',
-    'Highway 101',
-    'Oak Avenue',
-    'Central Park Area',
-  ];
-  List<String> _searchSuggestions = [];
+  List<String> _recentSearches = [];
+  List<Map<String, dynamic>> _searchSuggestions = [];
 
   @override
   void initState() {
     super.initState();
+    _loadRecentSearches();
     _focusNode.addListener(() {
       setState(() {
         _isSearching = _focusNode.hasFocus;
       });
     });
+  }
+
+  Future<void> _loadRecentSearches() async {
+    // Load from shared preferences if needed
+    // For now, using default values
+    setState(() {
+      _recentSearches = [];
+    });
+  }
+
+  Future<void> _saveRecentSearch(String search) async {
+    if (!_recentSearches.contains(search)) {
+      setState(() {
+        _recentSearches.insert(0, search);
+        if (_recentSearches.length > 5) {
+          _recentSearches.removeLast();
+        }
+      });
+      // Save to shared preferences if needed
+    }
   }
 
   @override
@@ -48,49 +70,123 @@ class _MapSearchBarState extends State<MapSearchBar> {
   }
 
   void _onSearchChanged(String query) {
-    setState(() {
-      if (query.isEmpty) {
+    if (query.isEmpty) {
+      setState(() {
         _searchSuggestions.clear();
-      } else {
-        // Mock search suggestions
-        _searchSuggestions =
-            [
-                  'Main Street, Downtown',
-                  'Main Avenue, Uptown',
-                  'Main Boulevard, Westside',
-                ]
-                .where(
-                  (suggestion) =>
-                      suggestion.toLowerCase().contains(query.toLowerCase()),
-                )
-                .toList();
-      }
+      });
+      return;
+    }
+
+    // Search through issues for matching titles, descriptions, or addresses
+    final matchingIssues = widget.issues.where((issue) {
+      final title = (issue['title'] as String?)?.toLowerCase() ?? '';
+      final description = (issue['description'] as String?)?.toLowerCase() ?? '';
+      final address = (issue['address'] as String?)?.toLowerCase() ?? '';
+      final queryLower = query.toLowerCase();
+      
+      return title.contains(queryLower) || 
+             description.contains(queryLower) || 
+             address.contains(queryLower);
+    }).take(5).toList();
+
+    setState(() {
+      _searchSuggestions = matchingIssues.map<Map<String, dynamic>>((issue) => {
+        'type': 'issue',
+        'title': issue['title'] ?? 'Untitled Issue',
+        'subtitle': issue['address'] ?? 'No address',
+        'latitude': issue['latitude'],
+        'longitude': issue['longitude'],
+        'id': issue['id'],
+      }).toList();
     });
   }
 
-  void _selectSuggestion(String suggestion) {
-    _searchController.text = suggestion;
+  void _selectSuggestion(Map<String, dynamic> suggestion) {
+    final title = suggestion['title'] as String;
+    final subtitle = suggestion['subtitle'] as String?;
+    _searchController.text = title;
     _focusNode.unfocus();
-    widget.onSearch(suggestion);
+    
+    LatLng? location;
+    if (suggestion['latitude'] != null && suggestion['longitude'] != null) {
+      location = LatLng(
+        suggestion['latitude'] as double,
+        suggestion['longitude'] as double,
+      );
+    }
+    
+    widget.onSearch(title, location, subtitle);
+    _saveRecentSearch(title);
+    
     setState(() {
       _isSearching = false;
-      if (!_recentSearches.contains(suggestion)) {
-        _recentSearches.insert(0, suggestion);
-        if (_recentSearches.length > 5) {
-          _recentSearches.removeLast();
-        }
-      }
+      _searchSuggestions.clear();
     });
+  }
+
+  Future<void> _searchLocation(String query) async {
+    try {
+      final locations = await locationFromAddress(query);
+      if (locations.isNotEmpty) {
+        final location = locations.first;
+        final latLng = LatLng(location.latitude, location.longitude);
+        
+        // Try to get the full address from coordinates
+        String? fullAddress;
+        try {
+          final placemarks = await placemarkFromCoordinates(
+            location.latitude,
+            location.longitude,
+          );
+          if (placemarks.isNotEmpty) {
+            final place = placemarks.first;
+            fullAddress = [
+              place.street,
+              place.locality,
+              place.administrativeArea,
+              place.postalCode,
+            ].where((e) => e != null && e.isNotEmpty).join(', ');
+          }
+        } catch (e) {
+          debugPrint('Error getting placemark: $e');
+        }
+        
+        _focusNode.unfocus();
+        widget.onSearch(query, latLng, fullAddress);
+        _saveRecentSearch(query);
+        
+        setState(() {
+          _isSearching = false;
+          _searchSuggestions.clear();
+        });
+      }
+    } catch (e) {
+      debugPrint('Error searching location: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Location not found. Try a different search.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  void _selectRecentSearch(String search) {
+    _searchController.text = search;
+    _searchLocation(search);
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    return Column(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+    return Container(
+      margin: EdgeInsets.only(left: 4.w, top: 2.h, bottom: 2.h),
+      child: Column(
+        children: [
+          Container(
           decoration: BoxDecoration(
             color: theme.cardColor,
             borderRadius: BorderRadius.circular(3.w),
@@ -112,11 +208,11 @@ class _MapSearchBarState extends State<MapSearchBar> {
                   onChanged: _onSearchChanged,
                   onSubmitted: (value) {
                     if (value.isNotEmpty) {
-                      _selectSuggestion(value);
+                      _searchLocation(value);
                     }
                   },
                   decoration: InputDecoration(
-                    hintText: 'Search locations...',
+                    hintText: 'Search places, addresses, or issues...',
                     prefixIcon: Padding(
                       padding: EdgeInsets.all(3.w),
                       child: CustomIconWidget(
@@ -147,16 +243,47 @@ class _MapSearchBarState extends State<MapSearchBar> {
                 ),
               ),
 
-              // Filter button
+              // Filter button with badge
               Container(
                 margin: EdgeInsets.only(right: 2.w),
-                child: IconButton(
-                  onPressed: widget.onFilterTap,
-                  icon: CustomIconWidget(
-                    iconName: 'tune',
-                    color: theme.colorScheme.primary,
-                    size: 24,
-                  ),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    IconButton(
+                      onPressed: widget.onFilterTap,
+                      icon: CustomIconWidget(
+                        iconName: 'tune',
+                        color: theme.colorScheme.primary,
+                        size: 24,
+                      ),
+                    ),
+                    if (widget.activeFilterCount > 0)
+                      Positioned(
+                        right: 6,
+                        top: 6,
+                        child: Container(
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.error,
+                            shape: BoxShape.circle,
+                          ),
+                          constraints: BoxConstraints(
+                            minWidth: 18,
+                            minHeight: 18,
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${widget.activeFilterCount}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ],
@@ -186,44 +313,177 @@ class _MapSearchBarState extends State<MapSearchBar> {
                     padding: EdgeInsets.all(3.w),
                     child: Text(
                       l10n.map_suggestions,
-                      style: theme.textTheme.titleSmall,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   ..._searchSuggestions.map(
-                    (suggestion) =>
-                        _buildSuggestionTile(context, suggestion, 'location_on'),
+                    (suggestion) => _buildIssueSuggestionTile(context, suggestion),
                   ),
-                ],
-                if (_searchSuggestions.isEmpty &&
-                    _recentSearches.isNotEmpty) ...[
+                ] else if (_searchController.text.isNotEmpty) ...[
+                  Padding(
+                    padding: EdgeInsets.all(3.w),
+                    child: ListTile(
+                      leading: CustomIconWidget(
+                        iconName: 'search',
+                        color: theme.colorScheme.primary,
+                        size: 20,
+                      ),
+                      title: Text(
+                        'Search for "${_searchController.text}"',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      onTap: () => _searchLocation(_searchController.text),
+                      dense: true,
+                    ),
+                  ),
+                ] else if (_recentSearches.isNotEmpty) ...[
                   Padding(
                     padding: EdgeInsets.all(3.w),
                     child: Text(
                       l10n.map_recentSearches,
-                      style: theme.textTheme.titleSmall,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   ..._recentSearches.map(
-                    (search) => _buildSuggestionTile(context, search, 'history'),
+                    (search) => _buildRecentSearchTile(context, search),
                   ),
                 ],
               ],
             ),
           ),
-      ],
+
+          // Search suggestions/recent searches
+          if (_isSearching)
+            Container(
+              margin: EdgeInsets.only(right: 4.w),
+              decoration: BoxDecoration(
+                color: theme.cardColor,
+                borderRadius: BorderRadius.circular(3.w),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.shadow,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (_searchSuggestions.isNotEmpty) ...[
+                    Padding(
+                      padding: EdgeInsets.all(3.w),
+                      child: Text(
+                        l10n.map_suggestions,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    ..._searchSuggestions.map(
+                      (suggestion) => _buildIssueSuggestionTile(context, suggestion),
+                    ),
+                  ] else if (_searchController.text.isNotEmpty) ...[
+                    Padding(
+                      padding: EdgeInsets.all(3.w),
+                      child: ListTile(
+                        leading: CustomIconWidget(
+                          iconName: 'search',
+                          color: theme.colorScheme.primary,
+                          size: 20,
+                        ),
+                        title: Text(
+                          'Search for "${_searchController.text}"',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        onTap: () => _searchLocation(_searchController.text),
+                        dense: true,
+                      ),
+                    ),
+                  ] else if (_recentSearches.isNotEmpty) ...[
+                    Padding(
+                      padding: EdgeInsets.all(3.w),
+                      child: Text(
+                        l10n.map_recentSearches,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    ..._recentSearches.map(
+                      (search) => _buildRecentSearchTile(context, search),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 
-  Widget _buildSuggestionTile(BuildContext context, String text, String iconName) {
+  Widget _buildIssueSuggestionTile(BuildContext context, Map<String, dynamic> suggestion) {
     final theme = Theme.of(context);
     return ListTile(
       leading: CustomIconWidget(
-        iconName: iconName,
+        iconName: 'warning',
+        color: theme.colorScheme.error,
+        size: 20,
+      ),
+      title: Text(
+        suggestion['title'] as String,
+        style: theme.textTheme.bodyMedium,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      subtitle: Text(
+        suggestion['subtitle'] as String,
+        style: theme.textTheme.bodySmall,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        size: 16,
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+      ),
+      onTap: () => _selectSuggestion(suggestion),
+      dense: true,
+    );
+  }
+
+  Widget _buildRecentSearchTile(BuildContext context, String search) {
+    final theme = Theme.of(context);
+    return ListTile(
+      leading: CustomIconWidget(
+        iconName: 'history',
         color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
         size: 20,
       ),
-      title: Text(text, style: theme.textTheme.bodyMedium),
-      onTap: () => _selectSuggestion(text),
+      title: Text(search, style: theme.textTheme.bodyMedium),
+      trailing: IconButton(
+        icon: Icon(
+          Icons.close,
+          size: 18,
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+        ),
+        onPressed: () {
+          setState(() {
+            _recentSearches.remove(search);
+          });
+        },
+      ),
+      onTap: () => _selectRecentSearch(search),
       dense: true,
     );
   }

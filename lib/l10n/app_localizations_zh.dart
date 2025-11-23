@@ -2332,4 +2332,232 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get camera_skippingAutoDetection => '跳过自动检测：上一次检测仍在处理中';
+
+  @override
+  String get report_editReport => '编辑报告';
+
+  @override
+  String get report_editTitle => '标题';
+
+  @override
+  String get report_editTitleHint => '输入报告标题';
+
+  @override
+  String get report_editTitleRequired => '标题为必填项';
+
+  @override
+  String get report_editDescriptionRequired => '描述为必填项';
+
+  @override
+  String get report_editAddressHint => '输入位置地址';
+
+  @override
+  String get report_editSeverity => '严重程度';
+
+  @override
+  String get report_editIssueTypes => '问题类型';
+
+  @override
+  String get report_editNoIssueTypes => '没有可用的问题类型';
+
+  @override
+  String get report_editSelectIssueType => '请至少选择一种问题类型';
+
+  @override
+  String get report_editSaveInfo => '更改将立即保存。您无法编辑位置坐标。';
+
+  @override
+  String get report_editUpdated => '报告更新成功';
+
+  @override
+  String report_editFailed(String error) {
+    return '更新报告失败：$error';
+  }
+
+  @override
+  String get report_actions => '报告操作';
+
+  @override
+  String get report_actionEdit => '编辑报告';
+
+  @override
+  String get report_actionEditDesc => '修改报告详情';
+
+  @override
+  String get report_actionShare => '分享报告';
+
+  @override
+  String get report_actionShareDesc => '通过消息应用分享';
+
+  @override
+  String get report_actionExportPDF => '导出为PDF';
+
+  @override
+  String get report_actionExportPDFDesc => '保存为PDF文档';
+
+  @override
+  String get report_actionDelete => '删除报告';
+
+  @override
+  String get report_actionDeleteDesc => '永久删除此报告';
+
+  @override
+  String get report_deleteConfirmTitle => '删除报告？';
+
+  @override
+  String get report_deleteConfirmMessage => '您确定要删除此报告吗？此操作无法撤销。';
+
+  @override
+  String get report_deleted => '报告删除成功';
+
+  @override
+  String report_deleteFailed(String error) {
+    return '删除报告失败：$error';
+  }
+
+  @override
+  String get report_generatingPDF => '正在生成PDF...';
+
+  @override
+  String get report_pdfExported => 'PDF导出成功';
+
+  @override
+  String report_pdfExportFailed(String error) {
+    return '导出PDF失败：$error';
+  }
+
+  @override
+  String report_shareFailed(String error) {
+    return '分享报告失败：$error';
+  }
+
+  @override
+  String get report_bulkOperations => '批量操作';
+
+  @override
+  String report_bulkSelected(int count) {
+    return '已选择$count个报告';
+  }
+
+  @override
+  String get report_bulkExportCSV => '导出为CSV';
+
+  @override
+  String get report_bulkExportCSVDesc => '导出所有选定的报告';
+
+  @override
+  String get report_bulkExportPDF => '导出为PDF';
+
+  @override
+  String get report_bulkExportPDFDesc => '为每个报告生成PDF';
+
+  @override
+  String get report_bulkDeleteAll => '全部删除';
+
+  @override
+  String get report_bulkDeleteAllDesc => '永久删除选定的报告';
+
+  @override
+  String get report_bulkProcessing => '处理中...';
+
+  @override
+  String report_bulkDeleteConfirmTitle(int count) {
+    return '删除$count个报告？';
+  }
+
+  @override
+  String get report_bulkDeleteConfirmMessage => '您确定要删除所有选定的报告吗？此操作无法撤销。';
+
+  @override
+  String get report_bulkCSVExported => 'CSV导出成功';
+
+  @override
+  String report_bulkCSVExportFailed(String error) {
+    return '导出CSV失败：$error';
+  }
+
+  @override
+  String report_bulkPDFsExported(int count) {
+    return '$count个PDF导出成功';
+  }
+
+  @override
+  String report_bulkPDFsExportFailed(String error) {
+    return '导出PDF失败：$error';
+  }
+
+  @override
+  String report_bulkDeleteSuccess(int success) {
+    return '$success个报告删除成功';
+  }
+
+  @override
+  String report_bulkDeletePartial(int success, int failed) {
+    return '$success个已删除，$failed个失败';
+  }
+
+  @override
+  String report_bulkDeleteFailed(String error) {
+    return '删除报告失败：$error';
+  }
+
+  @override
+  String get onboarding_getStarted => '开始使用';
+
+  @override
+  String get admin_title => '管理面板';
+
+  @override
+  String get admin_overview => '概览';
+
+  @override
+  String get admin_reports => '报告';
+
+  @override
+  String get admin_users => '用户';
+
+  @override
+  String get admin_totalReports => '总报告数';
+
+  @override
+  String get admin_totalUsers => '总用户数';
+
+  @override
+  String get admin_pendingReports => '待处理报告';
+
+  @override
+  String get admin_resolvedReports => '已解决报告';
+
+  @override
+  String get admin_approve => '批准';
+
+  @override
+  String get admin_reject => '拒绝';
+
+  @override
+  String get admin_resolve => '解决';
+
+  @override
+  String get admin_statusUpdated => '状态更新成功';
+
+  @override
+  String get admin_updateFailed => '更新状态失败';
+
+  @override
+  String get analytics_title => '分析仪表板';
+
+  @override
+  String get analytics_totalReports => '总报告数';
+
+  @override
+  String get analytics_resolved => '已解决';
+
+  @override
+  String get analytics_bySeverity => '按严重程度分类';
+
+  @override
+  String get analytics_byStatus => '按状态分类';
+
+  @override
+  String get analytics_byIssueType => '按问题类型分类';
 }

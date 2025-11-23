@@ -4681,6 +4681,414 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Skipping auto-detection: previous detection still processing'**
   String get camera_skippingAutoDetection;
+
+  /// Edit report screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Report'**
+  String get report_editReport;
+
+  /// Title field label in edit screen
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get report_editTitle;
+
+  /// Title field hint text
+  ///
+  /// In en, this message translates to:
+  /// **'Enter report title'**
+  String get report_editTitleHint;
+
+  /// Title required validation message
+  ///
+  /// In en, this message translates to:
+  /// **'Title is required'**
+  String get report_editTitleRequired;
+
+  /// Description required validation message
+  ///
+  /// In en, this message translates to:
+  /// **'Description is required'**
+  String get report_editDescriptionRequired;
+
+  /// Address field hint text
+  ///
+  /// In en, this message translates to:
+  /// **'Enter location address'**
+  String get report_editAddressHint;
+
+  /// Severity section label
+  ///
+  /// In en, this message translates to:
+  /// **'Severity'**
+  String get report_editSeverity;
+
+  /// Issue types section label
+  ///
+  /// In en, this message translates to:
+  /// **'Issue Types'**
+  String get report_editIssueTypes;
+
+  /// Message when no issue types are available
+  ///
+  /// In en, this message translates to:
+  /// **'No issue types available'**
+  String get report_editNoIssueTypes;
+
+  /// Validation message for issue type selection
+  ///
+  /// In en, this message translates to:
+  /// **'Please select at least one issue type'**
+  String get report_editSelectIssueType;
+
+  /// Information about editing restrictions
+  ///
+  /// In en, this message translates to:
+  /// **'Changes will be saved immediately. You cannot edit location coordinates.'**
+  String get report_editSaveInfo;
+
+  /// Success message after updating report
+  ///
+  /// In en, this message translates to:
+  /// **'Report updated successfully'**
+  String get report_editUpdated;
+
+  /// Error message when update fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update report: {error}'**
+  String report_editFailed(String error);
+
+  /// Report actions bottom sheet title
+  ///
+  /// In en, this message translates to:
+  /// **'Report Actions'**
+  String get report_actions;
+
+  /// Edit action label
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Report'**
+  String get report_actionEdit;
+
+  /// Edit action description
+  ///
+  /// In en, this message translates to:
+  /// **'Modify report details'**
+  String get report_actionEditDesc;
+
+  /// Share action label
+  ///
+  /// In en, this message translates to:
+  /// **'Share Report'**
+  String get report_actionShare;
+
+  /// Share action description
+  ///
+  /// In en, this message translates to:
+  /// **'Share via messaging apps'**
+  String get report_actionShareDesc;
+
+  /// Export PDF action label
+  ///
+  /// In en, this message translates to:
+  /// **'Export to PDF'**
+  String get report_actionExportPDF;
+
+  /// Export PDF action description
+  ///
+  /// In en, this message translates to:
+  /// **'Save as PDF document'**
+  String get report_actionExportPDFDesc;
+
+  /// Delete action label
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Report'**
+  String get report_actionDelete;
+
+  /// Delete action description
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently remove this report'**
+  String get report_actionDeleteDesc;
+
+  /// Delete confirmation dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Report?'**
+  String get report_deleteConfirmTitle;
+
+  /// Delete confirmation dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this report? This action cannot be undone.'**
+  String get report_deleteConfirmMessage;
+
+  /// Success message after deleting report
+  ///
+  /// In en, this message translates to:
+  /// **'Report deleted successfully'**
+  String get report_deleted;
+
+  /// Error message when delete fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete report: {error}'**
+  String report_deleteFailed(String error);
+
+  /// Status message while generating PDF
+  ///
+  /// In en, this message translates to:
+  /// **'Generating PDF...'**
+  String get report_generatingPDF;
+
+  /// Success message after PDF export
+  ///
+  /// In en, this message translates to:
+  /// **'PDF exported successfully'**
+  String get report_pdfExported;
+
+  /// Error message when PDF export fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to export PDF: {error}'**
+  String report_pdfExportFailed(String error);
+
+  /// Error message when sharing fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to share report: {error}'**
+  String report_shareFailed(String error);
+
+  /// Bulk operations bottom sheet title
+  ///
+  /// In en, this message translates to:
+  /// **'Bulk Operations'**
+  String get report_bulkOperations;
+
+  /// Number of selected reports
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reports selected'**
+  String report_bulkSelected(int count);
+
+  /// Bulk export CSV action label
+  ///
+  /// In en, this message translates to:
+  /// **'Export to CSV'**
+  String get report_bulkExportCSV;
+
+  /// Bulk export CSV action description
+  ///
+  /// In en, this message translates to:
+  /// **'Export all selected reports'**
+  String get report_bulkExportCSVDesc;
+
+  /// Bulk export PDF action label
+  ///
+  /// In en, this message translates to:
+  /// **'Export to PDF'**
+  String get report_bulkExportPDF;
+
+  /// Bulk export PDF action description
+  ///
+  /// In en, this message translates to:
+  /// **'Generate PDF for each report'**
+  String get report_bulkExportPDFDesc;
+
+  /// Bulk delete action label
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All'**
+  String get report_bulkDeleteAll;
+
+  /// Bulk delete action description
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently remove selected reports'**
+  String get report_bulkDeleteAllDesc;
+
+  /// Processing status message
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get report_bulkProcessing;
+
+  /// Bulk delete confirmation dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {count} Reports?'**
+  String report_bulkDeleteConfirmTitle(int count);
+
+  /// Bulk delete confirmation dialog message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete all selected reports? This action cannot be undone.'**
+  String get report_bulkDeleteConfirmMessage;
+
+  /// Success message after CSV export
+  ///
+  /// In en, this message translates to:
+  /// **'CSV exported successfully'**
+  String get report_bulkCSVExported;
+
+  /// Error message when CSV export fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to export CSV: {error}'**
+  String report_bulkCSVExportFailed(String error);
+
+  /// Success message after bulk PDF export
+  ///
+  /// In en, this message translates to:
+  /// **'{count} PDFs exported successfully'**
+  String report_bulkPDFsExported(int count);
+
+  /// Error message when bulk PDF export fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to export PDFs: {error}'**
+  String report_bulkPDFsExportFailed(String error);
+
+  /// Success message after bulk delete
+  ///
+  /// In en, this message translates to:
+  /// **'{success} reports deleted successfully'**
+  String report_bulkDeleteSuccess(int success);
+
+  /// Partial success message after bulk delete
+  ///
+  /// In en, this message translates to:
+  /// **'{success} deleted, {failed} failed'**
+  String report_bulkDeletePartial(int success, int failed);
+
+  /// Error message when bulk delete fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete reports: {error}'**
+  String report_bulkDeleteFailed(String error);
+
+  /// Get started button on onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get onboarding_getStarted;
+
+  /// Admin panel screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Panel'**
+  String get admin_title;
+
+  /// Overview tab
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get admin_overview;
+
+  /// Reports tab
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get admin_reports;
+
+  /// Users tab
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get admin_users;
+
+  /// Total reports stat
+  ///
+  /// In en, this message translates to:
+  /// **'Total Reports'**
+  String get admin_totalReports;
+
+  /// Total users stat
+  ///
+  /// In en, this message translates to:
+  /// **'Total Users'**
+  String get admin_totalUsers;
+
+  /// Pending reports stat
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Reports'**
+  String get admin_pendingReports;
+
+  /// Resolved reports stat
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved Reports'**
+  String get admin_resolvedReports;
+
+  /// Approve action
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get admin_approve;
+
+  /// Reject action
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get admin_reject;
+
+  /// Resolve action
+  ///
+  /// In en, this message translates to:
+  /// **'Resolve'**
+  String get admin_resolve;
+
+  /// Status update success message
+  ///
+  /// In en, this message translates to:
+  /// **'Status updated successfully'**
+  String get admin_statusUpdated;
+
+  /// Status update error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update status'**
+  String get admin_updateFailed;
+
+  /// Analytics dashboard screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics Dashboard'**
+  String get analytics_title;
+
+  /// Total reports metric
+  ///
+  /// In en, this message translates to:
+  /// **'Total Reports'**
+  String get analytics_totalReports;
+
+  /// Resolved reports metric
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get analytics_resolved;
+
+  /// Severity chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Reports by Severity'**
+  String get analytics_bySeverity;
+
+  /// Status chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Reports by Status'**
+  String get analytics_byStatus;
+
+  /// Issue type chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Reports by Issue Type'**
+  String get analytics_byIssueType;
 }
 
 class _AppLocalizationsDelegate

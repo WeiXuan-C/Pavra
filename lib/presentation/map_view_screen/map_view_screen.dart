@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,6 +16,7 @@ import './widgets/map_skeleton.dart';
 import './widgets/nearby_issues_bottom_sheet.dart';
 import './widgets/navigation_bottom_sheet.dart';
 import './widgets/active_navigation_panel.dart';
+import './widgets/route_planning_bottom_sheet.dart';
 
 class MapViewScreen extends StatefulWidget {
   const MapViewScreen({super.key});
@@ -648,6 +650,263 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
     });
   }
 
+  void _handleSearch(String query, LatLng? location, String? address) {
+    if (location != null && _mapController != null) {
+      // Move camera to searched location
+      _mapController!.animateCamera(
+        CameraUpdate.newLatLngZoom(location, 15.0),
+      );
+      
+      // Add a distinctive marker for the searched location
+      setState(() {
+        _markers.removeWhere((marker) => marker.markerId.value == 'search_result');
+        _markers.add(
+          Marker(
+            markerId: MarkerId('search_result'),
+            position: location,
+            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+            infoWindow: InfoWindow(
+              title: query,
+              snippet: address ?? 'Tap for options',
+            ),
+            onTap: () => _showSearchResultActions(location, query, address),
+          ),
+        );
+      });
+      
+      // Check if there are any issues near this location
+      final nearbyIssues = _roadIssues.where((issue) {
+        if (issue['latitude'] == null || issue['longitude'] == null) return false;
+        
+        final distance = _calculateDistance(
+          location.latitude,
+          location.longitude,
+          issue['latitude'] as double,
+          issue['longitude'] as double,
+        );
+        
+        return distance < 0.5; // Within 0.5 miles
+      }).toList();
+      
+      // Show location card with directions option
+      _showSearchResultActions(location, query, address, nearbyIssuesCount: nearbyIssues.length);
+    }
+  }
+
+  void _showSearchResultActions(LatLng location, String title, String? address, {int nearbyIssuesCount = 0}) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: EdgeInsets.all(4.w),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(5.w)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Handle bar
+            Center(
+              child: Container(
+                width: 12.w,
+                height: 0.5.h,
+                margin: EdgeInsets.only(bottom: 2.h),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).dividerColor,
+                  borderRadius: BorderRadius.circular(2.w),
+                ),
+              ),
+            ),
+            
+            // Location icon and title
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(3.w),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(2.w),
+                  ),
+                  child: Icon(
+                    Icons.location_on,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 28,
+                  ),
+                ),
+                SizedBox(width: 3.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      if (address != null) ...[
+                        SizedBox(height: 0.5.h),
+                        Text(
+                          address,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            
+            SizedBox(height: 3.h),
+            
+            // Nearby issues info
+            if (nearbyIssuesCount > 0)
+              Container(
+                padding: EdgeInsets.all(3.w),
+                margin: EdgeInsets.only(bottom: 2.h),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.errorContainer,
+                  borderRadius: BorderRadius.circular(2.w),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.warning_rounded,
+                      color: Theme.of(context).colorScheme.error,
+                      size: 20,
+                    ),
+                    SizedBox(width: 2.w),
+                    Expanded(
+                      child: Text(
+                        '$nearbyIssuesCount ${nearbyIssuesCount == 1 ? "road issue" : "road issues"} nearby',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.error,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            
+            // Action buttons
+            Row(
+              children: [
+                // Clear marker button
+                OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      _markers.removeWhere((marker) => marker.markerId.value == 'search_result');
+                    });
+                  },
+                  icon: Icon(Icons.close, size: 18),
+                  label: Text('Clear'),
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 1.8.h, horizontal: 3.w),
+                  ),
+                ),
+                SizedBox(width: 2.w),
+                // Directions button
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _navigateToIssue(location.latitude, location.longitude, title);
+                    },
+                    icon: Icon(Icons.directions, size: 20),
+                    label: Text('Directions'),
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 1.8.h),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            
+            SizedBox(height: 1.h),
+            
+            // Plan route button (advanced)
+            OutlinedButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                _showRoutePlanningSheet(destination: location, destinationName: title);
+              },
+              icon: Icon(Icons.alt_route, size: 18),
+              label: Text('Plan Route with Stops'),
+              style: OutlinedButton.styleFrom(
+                minimumSize: Size(double.infinity, 48),
+              ),
+            ),
+            
+            SizedBox(height: 2.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showRoutePlanningSheet({LatLng? destination, String? destinationName}) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      isDismissible: true,
+      builder: (context) => RoutePlanningBottomSheet(
+        currentLocation: _currentPosition != null
+            ? LatLng(_currentPosition!.latitude, _currentPosition!.longitude)
+            : null,
+        onStartNavigation: _startMultiStopNavigation,
+      ),
+    );
+  }
+
+  void _startMultiStopNavigation(List<LatLng> waypoints, String travelMode) {
+    if (waypoints.length < 2) return;
+
+    // For now, navigate to first destination
+    // In production, use Google Directions API with waypoints
+    final destination = waypoints.last;
+    _navigateToIssue(
+      destination.latitude,
+      destination.longitude,
+      'Multi-stop route',
+    );
+  }
+
+  double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    const earthRadiusMiles = 3959; // Earth's radius in miles
+    
+    final dLat = _toRadians(lat2 - lat1);
+    final dLon = _toRadians(lon2 - lon1);
+    
+    final a = 
+      math.sin(dLat / 2) * math.sin(dLat / 2) +
+      math.cos(_toRadians(lat1)) * math.cos(_toRadians(lat2)) *
+      math.sin(dLon / 2) * math.sin(dLon / 2);
+    
+    final c = 2 * math.asin(math.sqrt(a));
+    
+    return earthRadiusMiles * c;
+  }
+
+  double _toRadians(double degrees) {
+    return degrees * (math.pi / 180.0);
+  }
+
+  int _getActiveFilterCount() {
+    // Count how many filters are disabled (not showing)
+    return _filters.values.where((isActive) => !isActive).length;
+  }
+
   Set<Circle> _buildLocationCircle(ThemeData theme) {
     final circles = Set<Circle>.from(_circles);
     if (_currentPosition != null) {
@@ -719,11 +978,42 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                   SafeArea(
                     child: Column(
                       children: [
-                        MapSearchBar(
-                          onSearch: (query) {
-                            // Handle search
-                          },
-                          onFilterTap: _showFilterBottomSheet,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: MapSearchBar(
+                                issues: _roadIssues,
+                                onSearch: _handleSearch,
+                                onFilterTap: _showFilterBottomSheet,
+                                activeFilterCount: _getActiveFilterCount(),
+                              ),
+                            ),
+                            // Route planning button
+                            Container(
+                              margin: EdgeInsets.only(right: 4.w, top: 2.h),
+                              child: Material(
+                                elevation: 4,
+                                shadowColor: Theme.of(context).colorScheme.shadow,
+                                borderRadius: BorderRadius.circular(3.w),
+                                child: InkWell(
+                                  onTap: () => _showRoutePlanningSheet(),
+                                  borderRadius: BorderRadius.circular(3.w),
+                                  child: Container(
+                                    padding: EdgeInsets.all(3.w),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).cardColor,
+                                      borderRadius: BorderRadius.circular(3.w),
+                                    ),
+                                    child: Icon(
+                                      Icons.alt_route,
+                                      color: Theme.of(context).colorScheme.primary,
+                                      size: 24,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         // Alert radius indicator
                         Container(

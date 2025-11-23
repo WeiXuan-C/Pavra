@@ -422,4 +422,13 @@ class ReportIssueApi {
       throw Exception('Failed to get issue types: $e');
     }
   }
+
+  /// Get all issue types
+  Future<List<IssueTypeModel>> getIssueTypes() async {
+    try {
+      return await _repository.getIssueTypes();
+    } catch (e) {
+      throw Exception('Failed to get issue types: $e');
+    }
+  }
 }

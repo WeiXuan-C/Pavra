@@ -3,6 +3,7 @@ class AppRoutes {
   // Authentication routes
   static const String authentication = '/authentication';
   static const String home = '/home';
+  static const String onboarding = '/onboarding';
 
   // App routes
   static const String cameraDetection = '/camera-detection-screen';
@@ -13,4 +14,10 @@ class AppRoutes {
   static const String notifications = '/notifications';
   static const String profile = '/profile';
   static const String settings = '/settings';
+  static const String help = '/help';
+  static const String about = '/about';
+  
+  // Admin routes
+  static const String admin = '/admin';
+  static const String analytics = '/analytics';
 }

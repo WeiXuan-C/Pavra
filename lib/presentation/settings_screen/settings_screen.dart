@@ -44,6 +44,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
             AppInfoCard(
               userRepository: _userRepository,
             ),
+            const SizedBox(height: 16),
+
+            // Help & Support Section
+            Card(
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: Icon(
+                      Icons.help_outline,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    title: Text('Help & FAQ'),
+                    subtitle: Text('Get help and find answers'),
+                    trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/help');
+                    },
+                  ),
+                  Divider(height: 1),
+                  ListTile(
+                    leading: Icon(
+                      Icons.info_outline,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    title: Text('About Pavra'),
+                    subtitle: Text('App info and version'),
+                    trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/about');
+                    },
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

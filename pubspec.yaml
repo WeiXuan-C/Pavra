@@ -69,6 +69,10 @@ dependencies:
   image: ^4.3.0
   audioplayers: ^6.1.0
   rename: ^3.1.0
+  pdf: ^3.11.1
+  csv: ^6.0.0
+  share_plus: ^10.1.2
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:

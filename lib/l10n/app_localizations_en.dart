@@ -2418,4 +2418,236 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get camera_skippingAutoDetection =>
       'Skipping auto-detection: previous detection still processing';
+
+  @override
+  String get report_editReport => 'Edit Report';
+
+  @override
+  String get report_editTitle => 'Title';
+
+  @override
+  String get report_editTitleHint => 'Enter report title';
+
+  @override
+  String get report_editTitleRequired => 'Title is required';
+
+  @override
+  String get report_editDescriptionRequired => 'Description is required';
+
+  @override
+  String get report_editAddressHint => 'Enter location address';
+
+  @override
+  String get report_editSeverity => 'Severity';
+
+  @override
+  String get report_editIssueTypes => 'Issue Types';
+
+  @override
+  String get report_editNoIssueTypes => 'No issue types available';
+
+  @override
+  String get report_editSelectIssueType =>
+      'Please select at least one issue type';
+
+  @override
+  String get report_editSaveInfo =>
+      'Changes will be saved immediately. You cannot edit location coordinates.';
+
+  @override
+  String get report_editUpdated => 'Report updated successfully';
+
+  @override
+  String report_editFailed(String error) {
+    return 'Failed to update report: $error';
+  }
+
+  @override
+  String get report_actions => 'Report Actions';
+
+  @override
+  String get report_actionEdit => 'Edit Report';
+
+  @override
+  String get report_actionEditDesc => 'Modify report details';
+
+  @override
+  String get report_actionShare => 'Share Report';
+
+  @override
+  String get report_actionShareDesc => 'Share via messaging apps';
+
+  @override
+  String get report_actionExportPDF => 'Export to PDF';
+
+  @override
+  String get report_actionExportPDFDesc => 'Save as PDF document';
+
+  @override
+  String get report_actionDelete => 'Delete Report';
+
+  @override
+  String get report_actionDeleteDesc => 'Permanently remove this report';
+
+  @override
+  String get report_deleteConfirmTitle => 'Delete Report?';
+
+  @override
+  String get report_deleteConfirmMessage =>
+      'Are you sure you want to delete this report? This action cannot be undone.';
+
+  @override
+  String get report_deleted => 'Report deleted successfully';
+
+  @override
+  String report_deleteFailed(String error) {
+    return 'Failed to delete report: $error';
+  }
+
+  @override
+  String get report_generatingPDF => 'Generating PDF...';
+
+  @override
+  String get report_pdfExported => 'PDF exported successfully';
+
+  @override
+  String report_pdfExportFailed(String error) {
+    return 'Failed to export PDF: $error';
+  }
+
+  @override
+  String report_shareFailed(String error) {
+    return 'Failed to share report: $error';
+  }
+
+  @override
+  String get report_bulkOperations => 'Bulk Operations';
+
+  @override
+  String report_bulkSelected(int count) {
+    return '$count reports selected';
+  }
+
+  @override
+  String get report_bulkExportCSV => 'Export to CSV';
+
+  @override
+  String get report_bulkExportCSVDesc => 'Export all selected reports';
+
+  @override
+  String get report_bulkExportPDF => 'Export to PDF';
+
+  @override
+  String get report_bulkExportPDFDesc => 'Generate PDF for each report';
+
+  @override
+  String get report_bulkDeleteAll => 'Delete All';
+
+  @override
+  String get report_bulkDeleteAllDesc => 'Permanently remove selected reports';
+
+  @override
+  String get report_bulkProcessing => 'Processing...';
+
+  @override
+  String report_bulkDeleteConfirmTitle(int count) {
+    return 'Delete $count Reports?';
+  }
+
+  @override
+  String get report_bulkDeleteConfirmMessage =>
+      'Are you sure you want to delete all selected reports? This action cannot be undone.';
+
+  @override
+  String get report_bulkCSVExported => 'CSV exported successfully';
+
+  @override
+  String report_bulkCSVExportFailed(String error) {
+    return 'Failed to export CSV: $error';
+  }
+
+  @override
+  String report_bulkPDFsExported(int count) {
+    return '$count PDFs exported successfully';
+  }
+
+  @override
+  String report_bulkPDFsExportFailed(String error) {
+    return 'Failed to export PDFs: $error';
+  }
+
+  @override
+  String report_bulkDeleteSuccess(int success) {
+    return '$success reports deleted successfully';
+  }
+
+  @override
+  String report_bulkDeletePartial(int success, int failed) {
+    return '$success deleted, $failed failed';
+  }
+
+  @override
+  String report_bulkDeleteFailed(String error) {
+    return 'Failed to delete reports: $error';
+  }
+
+  @override
+  String get onboarding_getStarted => 'Get Started';
+
+  @override
+  String get admin_title => 'Admin Panel';
+
+  @override
+  String get admin_overview => 'Overview';
+
+  @override
+  String get admin_reports => 'Reports';
+
+  @override
+  String get admin_users => 'Users';
+
+  @override
+  String get admin_totalReports => 'Total Reports';
+
+  @override
+  String get admin_totalUsers => 'Total Users';
+
+  @override
+  String get admin_pendingReports => 'Pending Reports';
+
+  @override
+  String get admin_resolvedReports => 'Resolved Reports';
+
+  @override
+  String get admin_approve => 'Approve';
+
+  @override
+  String get admin_reject => 'Reject';
+
+  @override
+  String get admin_resolve => 'Resolve';
+
+  @override
+  String get admin_statusUpdated => 'Status updated successfully';
+
+  @override
+  String get admin_updateFailed => 'Failed to update status';
+
+  @override
+  String get analytics_title => 'Analytics Dashboard';
+
+  @override
+  String get analytics_totalReports => 'Total Reports';
+
+  @override
+  String get analytics_resolved => 'Resolved';
+
+  @override
+  String get analytics_bySeverity => 'Reports by Severity';
+
+  @override
+  String get analytics_byStatus => 'Reports by Status';
+
+  @override
+  String get analytics_byIssueType => 'Reports by Issue Type';
 }

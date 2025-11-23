@@ -3129,5 +3129,340 @@
   "camera_skippingAutoDetection": "Skipping auto-detection: previous detection still processing",
   "@camera_skippingAutoDetection": {
     "description": "Debug message when auto-detection is skipped"
+  },
+  "report_editReport": "Edit Report",
+  "@report_editReport": {
+    "description": "Edit report screen title"
+  },
+  "report_editTitle": "Title",
+  "@report_editTitle": {
+    "description": "Title field label in edit screen"
+  },
+  "report_editTitleHint": "Enter report title",
+  "@report_editTitleHint": {
+    "description": "Title field hint text"
+  },
+  "report_editTitleRequired": "Title is required",
+  "@report_editTitleRequired": {
+    "description": "Title required validation message"
+  },
+  "report_editDescriptionRequired": "Description is required",
+  "@report_editDescriptionRequired": {
+    "description": "Description required validation message"
+  },
+  "report_editAddressHint": "Enter location address",
+  "@report_editAddressHint": {
+    "description": "Address field hint text"
+  },
+  "report_editSeverity": "Severity",
+  "@report_editSeverity": {
+    "description": "Severity section label"
+  },
+  "report_editIssueTypes": "Issue Types",
+  "@report_editIssueTypes": {
+    "description": "Issue types section label"
+  },
+  "report_editNoIssueTypes": "No issue types available",
+  "@report_editNoIssueTypes": {
+    "description": "Message when no issue types are available"
+  },
+  "report_editSelectIssueType": "Please select at least one issue type",
+  "@report_editSelectIssueType": {
+    "description": "Validation message for issue type selection"
+  },
+  "report_editSaveInfo": "Changes will be saved immediately. You cannot edit location coordinates.",
+  "@report_editSaveInfo": {
+    "description": "Information about editing restrictions"
+  },
+  "report_editUpdated": "Report updated successfully",
+  "@report_editUpdated": {
+    "description": "Success message after updating report"
+  },
+  "report_editFailed": "Failed to update report: {error}",
+  "@report_editFailed": {
+    "description": "Error message when update fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "report_actions": "Report Actions",
+  "@report_actions": {
+    "description": "Report actions bottom sheet title"
+  },
+  "report_actionEdit": "Edit Report",
+  "@report_actionEdit": {
+    "description": "Edit action label"
+  },
+  "report_actionEditDesc": "Modify report details",
+  "@report_actionEditDesc": {
+    "description": "Edit action description"
+  },
+  "report_actionShare": "Share Report",
+  "@report_actionShare": {
+    "description": "Share action label"
+  },
+  "report_actionShareDesc": "Share via messaging apps",
+  "@report_actionShareDesc": {
+    "description": "Share action description"
+  },
+  "report_actionExportPDF": "Export to PDF",
+  "@report_actionExportPDF": {
+    "description": "Export PDF action label"
+  },
+  "report_actionExportPDFDesc": "Save as PDF document",
+  "@report_actionExportPDFDesc": {
+    "description": "Export PDF action description"
+  },
+  "report_actionDelete": "Delete Report",
+  "@report_actionDelete": {
+    "description": "Delete action label"
+  },
+  "report_actionDeleteDesc": "Permanently remove this report",
+  "@report_actionDeleteDesc": {
+    "description": "Delete action description"
+  },
+  "report_deleteConfirmTitle": "Delete Report?",
+  "@report_deleteConfirmTitle": {
+    "description": "Delete confirmation dialog title"
+  },
+  "report_deleteConfirmMessage": "Are you sure you want to delete this report? This action cannot be undone.",
+  "@report_deleteConfirmMessage": {
+    "description": "Delete confirmation dialog message"
+  },
+  "report_deleted": "Report deleted successfully",
+  "@report_deleted": {
+    "description": "Success message after deleting report"
+  },
+  "report_deleteFailed": "Failed to delete report: {error}",
+  "@report_deleteFailed": {
+    "description": "Error message when delete fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "report_generatingPDF": "Generating PDF...",
+  "@report_generatingPDF": {
+    "description": "Status message while generating PDF"
+  },
+  "report_pdfExported": "PDF exported successfully",
+  "@report_pdfExported": {
+    "description": "Success message after PDF export"
+  },
+  "report_pdfExportFailed": "Failed to export PDF: {error}",
+  "@report_pdfExportFailed": {
+    "description": "Error message when PDF export fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "report_shareFailed": "Failed to share report: {error}",
+  "@report_shareFailed": {
+    "description": "Error message when sharing fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "report_bulkOperations": "Bulk Operations",
+  "@report_bulkOperations": {
+    "description": "Bulk operations bottom sheet title"
+  },
+  "report_bulkSelected": "{count} reports selected",
+  "@report_bulkSelected": {
+    "description": "Number of selected reports",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "report_bulkExportCSV": "Export to CSV",
+  "@report_bulkExportCSV": {
+    "description": "Bulk export CSV action label"
+  },
+  "report_bulkExportCSVDesc": "Export all selected reports",
+  "@report_bulkExportCSVDesc": {
+    "description": "Bulk export CSV action description"
+  },
+  "report_bulkExportPDF": "Export to PDF",
+  "@report_bulkExportPDF": {
+    "description": "Bulk export PDF action label"
+  },
+  "report_bulkExportPDFDesc": "Generate PDF for each report",
+  "@report_bulkExportPDFDesc": {
+    "description": "Bulk export PDF action description"
+  },
+  "report_bulkDeleteAll": "Delete All",
+  "@report_bulkDeleteAll": {
+    "description": "Bulk delete action label"
+  },
+  "report_bulkDeleteAllDesc": "Permanently remove selected reports",
+  "@report_bulkDeleteAllDesc": {
+    "description": "Bulk delete action description"
+  },
+  "report_bulkProcessing": "Processing...",
+  "@report_bulkProcessing": {
+    "description": "Processing status message"
+  },
+  "report_bulkDeleteConfirmTitle": "Delete {count} Reports?",
+  "@report_bulkDeleteConfirmTitle": {
+    "description": "Bulk delete confirmation dialog title",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "report_bulkDeleteConfirmMessage": "Are you sure you want to delete all selected reports? This action cannot be undone.",
+  "@report_bulkDeleteConfirmMessage": {
+    "description": "Bulk delete confirmation dialog message"
+  },
+  "report_bulkCSVExported": "CSV exported successfully",
+  "@report_bulkCSVExported": {
+    "description": "Success message after CSV export"
+  },
+  "report_bulkCSVExportFailed": "Failed to export CSV: {error}",
+  "@report_bulkCSVExportFailed": {
+    "description": "Error message when CSV export fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "report_bulkPDFsExported": "{count} PDFs exported successfully",
+  "@report_bulkPDFsExported": {
+    "description": "Success message after bulk PDF export",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "report_bulkPDFsExportFailed": "Failed to export PDFs: {error}",
+  "@report_bulkPDFsExportFailed": {
+    "description": "Error message when bulk PDF export fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "report_bulkDeleteSuccess": "{success} reports deleted successfully",
+  "@report_bulkDeleteSuccess": {
+    "description": "Success message after bulk delete",
+    "placeholders": {
+      "success": {
+        "type": "int"
+      }
+    }
+  },
+  "report_bulkDeletePartial": "{success} deleted, {failed} failed",
+  "@report_bulkDeletePartial": {
+    "description": "Partial success message after bulk delete",
+    "placeholders": {
+      "success": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "report_bulkDeleteFailed": "Failed to delete reports: {error}",
+  "@report_bulkDeleteFailed": {
+    "description": "Error message when bulk delete fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "onboarding_getStarted": "Get Started",
+  "@onboarding_getStarted": {
+    "description": "Get started button on onboarding"
+  },
+  "admin_title": "Admin Panel",
+  "@admin_title": {
+    "description": "Admin panel screen title"
+  },
+  "admin_overview": "Overview",
+  "@admin_overview": {
+    "description": "Overview tab"
+  },
+  "admin_reports": "Reports",
+  "@admin_reports": {
+    "description": "Reports tab"
+  },
+  "admin_users": "Users",
+  "@admin_users": {
+    "description": "Users tab"
+  },
+  "admin_totalReports": "Total Reports",
+  "@admin_totalReports": {
+    "description": "Total reports stat"
+  },
+  "admin_totalUsers": "Total Users",
+  "@admin_totalUsers": {
+    "description": "Total users stat"
+  },
+  "admin_pendingReports": "Pending Reports",
+  "@admin_pendingReports": {
+    "description": "Pending reports stat"
+  },
+  "admin_resolvedReports": "Resolved Reports",
+  "@admin_resolvedReports": {
+    "description": "Resolved reports stat"
+  },
+  "admin_approve": "Approve",
+  "@admin_approve": {
+    "description": "Approve action"
+  },
+  "admin_reject": "Reject",
+  "@admin_reject": {
+    "description": "Reject action"
+  },
+  "admin_resolve": "Resolve",
+  "@admin_resolve": {
+    "description": "Resolve action"
+  },
+  "admin_statusUpdated": "Status updated successfully",
+  "@admin_statusUpdated": {
+    "description": "Status update success message"
+  },
+  "admin_updateFailed": "Failed to update status",
+  "@admin_updateFailed": {
+    "description": "Status update error message"
+  },
+  "analytics_title": "Analytics Dashboard",
+  "@analytics_title": {
+    "description": "Analytics dashboard screen title"
+  },
+  "analytics_totalReports": "Total Reports",
+  "@analytics_totalReports": {
+    "description": "Total reports metric"
+  },
+  "analytics_resolved": "Resolved",
+  "@analytics_resolved": {
+    "description": "Resolved reports metric"
+  },
+  "analytics_bySeverity": "Reports by Severity",
+  "@analytics_bySeverity": {
+    "description": "Severity chart title"
+  },
+  "analytics_byStatus": "Reports by Status",
+  "@analytics_byStatus": {
+    "description": "Status chart title"
+  },
+  "analytics_byIssueType": "Reports by Issue Type",
+  "@analytics_byIssueType": {
+    "description": "Issue type chart title"
   }
 }

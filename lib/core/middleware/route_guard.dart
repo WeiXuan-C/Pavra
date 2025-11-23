@@ -1,30 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/auth_provider.dart';
 import '../../presentation/authentication_screen/authentication_screen.dart';
 import '../../presentation/home_screen/home_screen.dart';
+import '../../presentation/onboarding_screen/onboarding_screen.dart';
 
 /// Route Guard Middleware
 /// Manages authentication-based routing and displays appropriate screens
 /// based on the current authentication state
-class RouteGuard extends StatelessWidget {
+class RouteGuard extends StatefulWidget {
   const RouteGuard({super.key});
+
+  @override
+  State<RouteGuard> createState() => _RouteGuardState();
+}
+
+class _RouteGuardState extends State<RouteGuard> {
+  bool? _hasCompletedOnboarding;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkOnboarding();
+  }
+
+  Future<void> _checkOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _hasCompletedOnboarding = prefs.getBool('onboarding_completed') ?? false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
         // 1️⃣ Initializing State - Show splash screen (app startup only)
-        if (authProvider.isInitializing) {
+        if (authProvider.isInitializing || _hasCompletedOnboarding == null) {
           return const _SplashScreen();
         }
 
-        // 2️⃣ Not Authenticated - Show login screen
+        // 2️⃣ First time user - Show onboarding
+        if (!_hasCompletedOnboarding!) {
+          return const OnboardingScreen();
+        }
+
+        // 3️⃣ Not Authenticated - Show login screen
         if (!authProvider.isAuthenticated) {
           return const AuthenticationScreen();
         }
 
-        // 3️⃣ Authenticated - Show home screen
+        // 4️⃣ Authenticated - Show home screen
         return const HomeScreen();
       },
     );
