@@ -11,6 +11,7 @@ class SavedRouteModel {
   final double toLongitude;
   final String? toAddress;
   final double? distanceKm;
+  final String travelMode;
   final bool isMonitoring;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -30,6 +31,7 @@ class SavedRouteModel {
     required this.toLongitude,
     this.toAddress,
     this.distanceKm,
+    this.travelMode = 'driving',
     required this.isMonitoring,
     required this.createdAt,
     required this.updatedAt,
@@ -53,6 +55,7 @@ class SavedRouteModel {
       distanceKm: json['distance_km'] != null
           ? (json['distance_km'] as num).toDouble()
           : null,
+      travelMode: json['travel_mode'] as String? ?? 'driving',
       isMonitoring: json['is_monitoring'] as bool? ?? false,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
@@ -77,6 +80,7 @@ class SavedRouteModel {
       'to_longitude': toLongitude,
       'to_address': toAddress,
       'distance_km': distanceKm,
+      'travel_mode': travelMode,
       'is_monitoring': isMonitoring,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
@@ -98,6 +102,7 @@ class SavedRouteModel {
     double? toLongitude,
     String? toAddress,
     double? distanceKm,
+    String? travelMode,
     bool? isMonitoring,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -117,6 +122,7 @@ class SavedRouteModel {
       toLongitude: toLongitude ?? this.toLongitude,
       toAddress: toAddress ?? this.toAddress,
       distanceKm: distanceKm ?? this.distanceKm,
+      travelMode: travelMode ?? this.travelMode,
       isMonitoring: isMonitoring ?? this.isMonitoring,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,

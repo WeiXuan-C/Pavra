@@ -1,6 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data/models/saved_route_model.dart';
 import '../../../data/models/saved_location_model.dart';
+import '../../../data/models/route_waypoint_model.dart';
 
 class SavedRouteApi {
   final SupabaseClient _supabase;
@@ -57,6 +58,7 @@ class SavedRouteApi {
     String? toAddress,
     double? distanceKm,
     bool isMonitoring = false,
+    String travelMode = 'driving',
   }) async {
     try {
       final userId = _supabase.auth.currentUser?.id;
@@ -77,11 +79,149 @@ class SavedRouteApi {
         'to_address': toAddress,
         'distance_km': distanceKm,
         'is_monitoring': isMonitoring,
+        'travel_mode': travelMode,
       }).select().single();
 
       return SavedRouteModel.fromJson(response);
     } catch (e) {
       throw Exception('Failed to create route: $e');
+    }
+  }
+
+  /// Create a route with waypoints in a single transaction
+  Future<Map<String, dynamic>> createRouteWithWaypoints({
+    required String name,
+    required String fromLocationName,
+    required double fromLatitude,
+    required double fromLongitude,
+    String? fromAddress,
+    required String toLocationName,
+    required double toLatitude,
+    required double toLongitude,
+    String? toAddress,
+    required List<Map<String, dynamic>> waypoints,
+    double? distanceKm,
+    bool isMonitoring = false,
+    String travelMode = 'driving',
+  }) async {
+    try {
+      final userId = _supabase.auth.currentUser?.id;
+      if (userId == null) {
+        throw Exception('User not authenticated');
+      }
+
+      // Create the route first
+      final routeResponse = await _supabase.from('saved_routes').insert({
+        'user_id': userId,
+        'name': name,
+        'from_location_name': fromLocationName,
+        'from_latitude': fromLatitude,
+        'from_longitude': fromLongitude,
+        'from_address': fromAddress,
+        'to_location_name': toLocationName,
+        'to_latitude': toLatitude,
+        'to_longitude': toLongitude,
+        'to_address': toAddress,
+        'distance_km': distanceKm,
+        'is_monitoring': isMonitoring,
+        'travel_mode': travelMode,
+      }).select().single();
+
+      final route = SavedRouteModel.fromJson(routeResponse);
+
+      // Create waypoints if any
+      List<RouteWaypointModel> createdWaypoints = [];
+      if (waypoints.isNotEmpty) {
+        final waypointsToInsert = waypoints.map((wp) {
+          return {
+            'route_id': route.id,
+            'waypoint_order': wp['waypoint_order'] as int,
+            'location_name': wp['location_name'] as String,
+            'latitude': wp['latitude'] as double,
+            'longitude': wp['longitude'] as double,
+            'address': wp['address'] as String?,
+          };
+        }).toList();
+
+        final waypointsResponse = await _supabase
+            .from('route_waypoints')
+            .insert(waypointsToInsert)
+            .select();
+
+        createdWaypoints = (waypointsResponse as List)
+            .map((json) => RouteWaypointModel.fromJson(json))
+            .toList();
+      }
+
+      return {
+        'route': route,
+        'waypoints': createdWaypoints,
+      };
+    } catch (e) {
+      throw Exception('Failed to create route with waypoints: $e');
+    }
+  }
+
+  /// Get a route with its waypoints
+  Future<Map<String, dynamic>> getRouteWithWaypoints(String routeId) async {
+    try {
+      // Get the route
+      final routeResponse = await _supabase
+          .from('saved_routes')
+          .select()
+          .eq('id', routeId)
+          .eq('is_deleted', false)
+          .single();
+
+      final route = SavedRouteModel.fromJson(routeResponse);
+
+      // Get waypoints
+      final waypoints = await getRouteWaypoints(routeId);
+
+      return {
+        'route': route,
+        'waypoints': waypoints,
+      };
+    } catch (e) {
+      throw Exception('Failed to get route with waypoints: $e');
+    }
+  }
+
+  /// Update waypoints for a route (replaces all existing waypoints)
+  Future<List<RouteWaypointModel>> updateRouteWaypoints({
+    required String routeId,
+    required List<Map<String, dynamic>> waypoints,
+  }) async {
+    try {
+      // Delete existing waypoints
+      await deleteRouteWaypoints(routeId);
+
+      // Insert new waypoints if any
+      if (waypoints.isEmpty) {
+        return [];
+      }
+
+      final waypointsToInsert = waypoints.map((wp) {
+        return {
+          'route_id': routeId,
+          'waypoint_order': wp['waypoint_order'] as int,
+          'location_name': wp['location_name'] as String,
+          'latitude': wp['latitude'] as double,
+          'longitude': wp['longitude'] as double,
+          'address': wp['address'] as String?,
+        };
+      }).toList();
+
+      final response = await _supabase
+          .from('route_waypoints')
+          .insert(waypointsToInsert)
+          .select();
+
+      return (response as List)
+          .map((json) => RouteWaypointModel.fromJson(json))
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to update route waypoints: $e');
     }
   }
 
@@ -204,6 +344,62 @@ class SavedRouteApi {
       }).eq('id', locationId);
     } catch (e) {
       throw Exception('Failed to delete location: $e');
+    }
+  }
+
+  // ========== Route Waypoints ==========
+
+  /// Get waypoints for a route
+  Future<List<RouteWaypointModel>> getRouteWaypoints(String routeId) async {
+    try {
+      final response = await _supabase
+          .from('route_waypoints')
+          .select()
+          .eq('route_id', routeId)
+          .order('waypoint_order', ascending: true);
+
+      return (response as List)
+          .map((json) => RouteWaypointModel.fromJson(json))
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to fetch waypoints: $e');
+    }
+  }
+
+  /// Create a waypoint
+  Future<RouteWaypointModel> createWaypoint({
+    required String routeId,
+    required int waypointOrder,
+    required String locationName,
+    required double latitude,
+    required double longitude,
+    String? address,
+  }) async {
+    try {
+      final response = await _supabase.from('route_waypoints').insert({
+        'route_id': routeId,
+        'waypoint_order': waypointOrder,
+        'location_name': locationName,
+        'latitude': latitude,
+        'longitude': longitude,
+        'address': address,
+      }).select().single();
+
+      return RouteWaypointModel.fromJson(response);
+    } catch (e) {
+      throw Exception('Failed to create waypoint: $e');
+    }
+  }
+
+  /// Delete all waypoints for a route
+  Future<void> deleteRouteWaypoints(String routeId) async {
+    try {
+      await _supabase
+          .from('route_waypoints')
+          .delete()
+          .eq('route_id', routeId);
+    } catch (e) {
+      throw Exception('Failed to delete waypoints: $e');
     }
   }
 }

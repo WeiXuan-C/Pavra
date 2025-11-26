@@ -16,6 +16,9 @@ class AppRoutes {
   static const String settings = '/settings';
   static const String help = '/help';
   static const String about = '/about';
+  static const String savedLocations = '/saved-locations';
+  static const String savedRoutes = '/saved-routes';
+  static const String multiStopRoutePlanner = '/multi-stop-route-planner';
   
   // Admin routes
   static const String admin = '/admin';

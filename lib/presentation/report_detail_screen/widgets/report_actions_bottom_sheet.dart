@@ -188,10 +188,13 @@ class ReportActionsBottomSheet extends StatelessWidget {
 
       final filePath = await managementService.exportReportToPDF(report);
 
-      // Share the PDF file
-      await Share.shareXFiles(
-        [XFile(filePath)],
-        subject: 'Report: ${report.title ?? "Untitled"}',
+      // Share the PDF file using XFile
+      final xFile = XFile(filePath);
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [xFile],
+          subject: 'Report: ${report.title ?? "Untitled"}',
+        ),
       );
 
       Fluttertoast.showToast(

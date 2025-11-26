@@ -367,7 +367,6 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
               action: SnackBarAction(
                 label: l10n.alerts_undo,
                 onPressed: () {
-                  // TODO: Implement undo
                 },
               ),
             ),

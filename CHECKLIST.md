@@ -65,12 +65,12 @@ This checklist tracks the implementation status of all features and components i
 - [x] Traffic layer toggle
 - [x] Alert radius customization
 - [x] Distance-based filtering
+- [x] **Multi-stop route planning with drag-to-reorder**
+- [x] **Voice search capability with command recognition**
+- [x] **Favorite/saved locations (Home, Work, Custom)**
 - [ ] Route planning with hazard avoidance
 - [ ] Heatmap visualization
 - [ ] Offline map caching
-- [ ] Multi-stop route planning
-- [ ] Voice search capability
-- [ ] Favorite/saved locations
 
 ### ✅ Smart Drive Mode
 - [x] Background GPS tracking
@@ -468,6 +468,49 @@ Completed three major features for enhanced user experience and developer tools:
 
 ---
 
-**Last Updated:** November 23, 2025  
-**Version:** 1.3.0
+## 🎉 Recent Updates (November 26, 2025)
+
+### Code Quality & Deprecation Fixes
+Fixed all deprecated API usage and improved code quality across the application:
+
+**Share Plus Package Updates:**
+- Migrated from deprecated `Share` class to `SharePlus` singleton
+- Updated all share functionality to use `SharePlus.instance.share()`
+- Replaced `shareXFiles()` with proper `ShareParams` and `XFile` usage
+- Fixed file sharing in report management (PDF/CSV exports)
+- Updated bulk operations sharing functionality
+
+**Flutter API Deprecations:**
+- Replaced `withOpacity()` with `withValues(alpha:)` for color transparency
+- Updated `DropdownButtonFormField` to use `initialValue` instead of `value`
+- Fixed all color opacity calls throughout the app
+
+**Async Gap Safety:**
+- Added `mounted` checks in map search functions
+- Protected `BuildContext` usage after async operations
+- Improved error handling in location search
+
+**Code Cleanup:**
+- Removed unnecessary `flutter/services.dart` import
+- Cleaned up unused imports across multiple files
+
+**Files Updated:**
+- `lib/core/services/report_management_service.dart`
+- `lib/presentation/map_view_screen/map_view_screen.dart`
+- `lib/presentation/map_view_screen/widgets/voice_search_widget.dart`
+- `lib/presentation/notification_screen/notification_form_screen.dart`
+- `lib/presentation/onboarding_screen/onboarding_screen.dart`
+- `lib/presentation/report_screen/widgets/bulk_operations_bottom_sheet.dart`
+- `lib/presentation/report_detail_screen/widgets/report_actions_bottom_sheet.dart`
+
+**Impact:**
+- Eliminated all deprecation warnings
+- Improved code maintainability
+- Enhanced app stability with proper async handling
+- Future-proofed for upcoming Flutter/package updates
+
+---
+
+**Last Updated:** November 26, 2025  
+**Version:** 1.3.1
 

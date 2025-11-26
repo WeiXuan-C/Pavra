@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/app_export.dart';
+import '../../../core/services/voice_search_service.dart';
+import '../../../core/services/saved_location_service.dart';
+import '../../../data/models/saved_location_model.dart';
 import '../../../l10n/app_localizations.dart';
+import 'voice_search_widget.dart';
 
 class MapSearchBar extends StatefulWidget {
   final Function(String, LatLng?, String?) onSearch;
   final VoidCallback onFilterTap;
   final List<Map<String, dynamic>> issues;
   final int activeFilterCount;
+  final Function(VoiceCommand)? onVoiceCommand;
+  final SavedLocationService? savedLocationService;
 
   const MapSearchBar({
     super.key,
@@ -18,6 +25,8 @@ class MapSearchBar extends StatefulWidget {
     required this.onFilterTap,
     this.issues = const [],
     this.activeFilterCount = 0,
+    this.onVoiceCommand,
+    this.savedLocationService,
   });
 
   @override
@@ -30,16 +39,32 @@ class _MapSearchBarState extends State<MapSearchBar> {
   bool _isSearching = false;
   List<String> _recentSearches = [];
   List<Map<String, dynamic>> _searchSuggestions = [];
+  final VoiceSearchService _voiceSearchService = VoiceSearchService();
+  List<SavedLocationModel> _savedLocations = [];
 
   @override
   void initState() {
     super.initState();
     _loadRecentSearches();
+    _loadSavedLocations();
     _focusNode.addListener(() {
       setState(() {
         _isSearching = _focusNode.hasFocus;
       });
     });
+  }
+
+  Future<void> _loadSavedLocations() async {
+    if (widget.savedLocationService != null) {
+      try {
+        final locations = await widget.savedLocationService!.getSavedLocations();
+        setState(() {
+          _savedLocations = locations;
+        });
+      } catch (e) {
+        debugPrint('Error loading saved locations: $e');
+      }
+    }
   }
 
   Future<void> _loadRecentSearches() async {
@@ -77,27 +102,53 @@ class _MapSearchBarState extends State<MapSearchBar> {
       return;
     }
 
+    final queryLower = query.toLowerCase();
+    final suggestions = <Map<String, dynamic>>[];
+
+    // Search through saved locations first (prioritized)
+    if (widget.savedLocationService != null) {
+      final matchingSavedLocations = widget.savedLocationService!.searchSavedLocations(
+        query,
+        _savedLocations,
+      );
+
+      for (final location in matchingSavedLocations.take(3)) {
+        suggestions.add({
+          'type': 'saved_location',
+          'title': location.label,
+          'subtitle': location.address ?? location.locationName,
+          'latitude': location.latitude,
+          'longitude': location.longitude,
+          'id': location.id,
+          'icon': location.icon,
+        });
+      }
+    }
+
     // Search through issues for matching titles, descriptions, or addresses
     final matchingIssues = widget.issues.where((issue) {
       final title = (issue['title'] as String?)?.toLowerCase() ?? '';
       final description = (issue['description'] as String?)?.toLowerCase() ?? '';
       final address = (issue['address'] as String?)?.toLowerCase() ?? '';
-      final queryLower = query.toLowerCase();
       
       return title.contains(queryLower) || 
              description.contains(queryLower) || 
              address.contains(queryLower);
-    }).take(5).toList();
+    }).take(5 - suggestions.length).toList();
 
-    setState(() {
-      _searchSuggestions = matchingIssues.map<Map<String, dynamic>>((issue) => {
+    for (final issue in matchingIssues) {
+      suggestions.add({
         'type': 'issue',
         'title': issue['title'] ?? 'Untitled Issue',
         'subtitle': issue['address'] ?? 'No address',
         'latitude': issue['latitude'],
         'longitude': issue['longitude'],
         'id': issue['id'],
-      }).toList();
+      });
+    }
+
+    setState(() {
+      _searchSuggestions = suggestions;
     });
   }
 
@@ -178,6 +229,119 @@ class _MapSearchBarState extends State<MapSearchBar> {
     _searchLocation(search);
   }
 
+  /// Request microphone permission
+  Future<bool> _requestMicrophonePermission() async {
+    final status = await Permission.microphone.status;
+    
+    if (status.isGranted) {
+      return true;
+    }
+    
+    if (status.isDenied) {
+      final result = await Permission.microphone.request();
+      return result.isGranted;
+    }
+    
+    if (status.isPermanentlyDenied) {
+      if (mounted) {
+        _showPermissionDeniedDialog();
+      }
+      return false;
+    }
+    
+    return false;
+  }
+
+  /// Show dialog when permission is permanently denied
+  void _showPermissionDeniedDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Microphone Permission Required'),
+        content: Text(
+          'Voice search requires microphone access. Please enable it in your device settings.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              openAppSettings();
+            },
+            child: Text('Open Settings'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Activate voice search
+  Future<void> _activateVoiceSearch() async {
+    // Request microphone permission first
+    final hasPermission = await _requestMicrophonePermission();
+    if (!hasPermission) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Microphone permission is required for voice search'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+      return;
+    }
+
+    // Initialize voice search service
+    final initialized = await _voiceSearchService.initialize();
+    if (!initialized) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Voice search is not available on this device'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+      return;
+    }
+
+    // Show voice search widget as bottom sheet
+    if (mounted) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => VoiceSearchWidget(
+          voiceSearchService: _voiceSearchService,
+          onSearchResult: (recognizedText) {
+            if (recognizedText.isNotEmpty) {
+              _searchController.text = recognizedText;
+              _searchLocation(recognizedText);
+            }
+          },
+          onCommandRecognized: (command) {
+            // Handle voice commands
+            if (widget.onVoiceCommand != null) {
+              widget.onVoiceCommand!(command);
+            } else {
+              // Fallback to search if no command handler
+              if (command.location != null && command.location!.isNotEmpty) {
+                _searchController.text = command.location!;
+                _searchLocation(command.location!);
+              }
+            }
+          },
+          onClose: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -241,6 +405,17 @@ class _MapSearchBarState extends State<MapSearchBar> {
                     contentPadding: EdgeInsets.symmetric(vertical: 2.h),
                   ),
                 ),
+              ),
+
+              // Voice search button
+              IconButton(
+                onPressed: _activateVoiceSearch,
+                icon: Icon(
+                  Icons.mic,
+                  color: theme.colorScheme.primary,
+                  size: 24,
+                ),
+                tooltip: 'Voice search',
               ),
 
               // Filter button with badge
@@ -434,17 +609,41 @@ class _MapSearchBarState extends State<MapSearchBar> {
 
   Widget _buildIssueSuggestionTile(BuildContext context, Map<String, dynamic> suggestion) {
     final theme = Theme.of(context);
+    final type = suggestion['type'] as String;
+    final isSavedLocation = type == 'saved_location';
+
     return ListTile(
-      leading: CustomIconWidget(
-        iconName: 'warning',
-        color: theme.colorScheme.error,
-        size: 20,
-      ),
-      title: Text(
-        suggestion['title'] as String,
-        style: theme.textTheme.bodyMedium,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
+      leading: isSavedLocation
+          ? CustomIconWidget(
+              iconName: suggestion['icon'] as String? ?? 'place',
+              color: theme.colorScheme.primary,
+              size: 20,
+            )
+          : CustomIconWidget(
+              iconName: 'warning',
+              color: theme.colorScheme.error,
+              size: 20,
+            ),
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(
+              suggestion['title'] as String,
+              style: theme.textTheme.bodyMedium,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          if (isSavedLocation)
+            Padding(
+              padding: EdgeInsets.only(left: 2.w),
+              child: Icon(
+                Icons.star,
+                size: 16,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+        ],
       ),
       subtitle: Text(
         suggestion['subtitle'] as String,

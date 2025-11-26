@@ -14,6 +14,9 @@ import '../presentation/about_screen/about_screen.dart';
 import '../presentation/onboarding_screen/onboarding_screen.dart';
 import '../presentation/admin_panel_screen/admin_panel_screen.dart';
 import '../presentation/analytics_dashboard_screen/analytics_dashboard_screen.dart';
+import '../presentation/saved_locations_screen/saved_locations_screen.dart';
+import '../presentation/saved_routes_screen/saved_routes_screen.dart';
+import '../presentation/multi_stop_route_planner_screen/multi_stop_route_planner_screen.dart';
 import 'app_routes.dart';
 
 /// Configures the app's routing by mapping route names to screen widgets
@@ -34,5 +37,8 @@ class AppRouter {
     AppRoutes.about: (context) => const AboutScreen(),
     AppRoutes.admin: (context) => const AdminPanelScreen(),
     AppRoutes.analytics: (context) => const AnalyticsDashboardScreen(),
+    AppRoutes.savedLocations: (context) => const SavedLocationsScreen(),
+    AppRoutes.savedRoutes: (context) => const SavedRoutesScreen(),
+    AppRoutes.multiStopRoutePlanner: (context) => const MultiStopRoutePlannerScreen(),
   };
 }

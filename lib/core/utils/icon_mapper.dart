@@ -38,6 +38,20 @@ class IconMapper {
     'done': Icons.done_all,
     'close': Icons.cancel,
 
+    // Saved Locations
+    'home': Icons.home,
+    'work': Icons.work,
+    'school': Icons.school,
+    'restaurant': Icons.restaurant,
+    'shopping': Icons.shopping_cart,
+    'hospital': Icons.local_hospital,
+    'gym': Icons.fitness_center,
+    'park': Icons.park,
+    'place': Icons.place,
+    'star': Icons.star,
+    'favorite': Icons.favorite,
+    'bookmark': Icons.bookmark,
+
     // Default
     'default': Icons.help_outline,
   };

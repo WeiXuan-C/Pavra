@@ -89,10 +89,10 @@ class ReportManagementService {
   Future<void> shareReport(ReportIssueModel report) async {
     try {
       final text = _formatReportForSharing(report);
-      await Share.share(
-        text,
-        subject: 'Road Safety Report: ${report.title ?? "Untitled"}',
+      await SharePlus.instance.share(
+        ShareParams(text: text),
       );
+      debugPrint('✅ Report shared successfully');
     } catch (e) {
       debugPrint('❌ Error sharing report: $e');
       rethrow;

@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS public.saved_routes (
     to_longitude DOUBLE PRECISION NOT NULL,
     to_address TEXT,
     distance_km DOUBLE PRECISION,
+    travel_mode VARCHAR(20) DEFAULT 'driving',
     is_monitoring BOOLEAN DEFAULT false,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

@@ -326,7 +326,7 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
 
             // Sound dropdown
             DropdownButtonFormField<String>(
-              value: _selectedSound,
+              initialValue: _selectedSound,
               decoration: const InputDecoration(
                 labelText: 'Notification Sound',
                 hintText: 'Select sound (optional)',
@@ -362,7 +362,7 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
 
             // Category dropdown
             DropdownButtonFormField<String>(
-              value: _selectedCategory,
+              initialValue: _selectedCategory,
               decoration: const InputDecoration(
                 labelText: 'Notification Category',
                 hintText: 'Select category (optional)',

@@ -73,6 +73,8 @@ dependencies:
   csv: ^6.0.0
   share_plus: ^12.0.1
   path_provider: ^2.1.5
+  speech_to_text: ^7.0.0
+  flutter_tts: ^4.2.0
 
 dev_dependencies:
   flutter_test:

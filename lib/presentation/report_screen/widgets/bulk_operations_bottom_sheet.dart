@@ -191,10 +191,13 @@ class _BulkOperationsBottomSheetState
         widget.selectedReports,
       );
 
-      // Share the CSV file
-      await Share.shareXFiles(
-        [XFile(filePath)],
-        subject: 'Reports Export (${widget.selectedReports.length} reports)',
+      // Share the CSV file using XFile
+      final xFile = XFile(filePath);
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [xFile],
+          subject: 'Reports Export (${widget.selectedReports.length} reports)',
+        ),
       );
 
       if (mounted) {
@@ -230,10 +233,13 @@ class _BulkOperationsBottomSheetState
         throw Exception('No PDFs were generated');
       }
 
-      // Share all PDF files
-      await Share.shareXFiles(
-        filePaths.map((path) => XFile(path)).toList(),
-        subject: 'Reports Export (${filePaths.length} PDFs)',
+      // Share all PDF files using XFile
+      final xFiles = filePaths.map((path) => XFile(path)).toList();
+      await SharePlus.instance.share(
+        ShareParams(
+          files: xFiles,
+          subject: 'Reports Export (${filePaths.length} PDFs)',
+        ),
       );
 
       if (mounted) {

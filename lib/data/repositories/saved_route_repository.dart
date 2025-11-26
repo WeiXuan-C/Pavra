@@ -1,5 +1,6 @@
 import '../models/saved_route_model.dart';
 import '../models/saved_location_model.dart';
+import '../models/route_waypoint_model.dart';
 import '../../core/api/saved_route/saved_route_api.dart';
 
 class SavedRouteRepository {
@@ -29,6 +30,7 @@ class SavedRouteRepository {
     String? toAddress,
     double? distanceKm,
     bool isMonitoring = false,
+    String travelMode = 'driving',
   }) async {
     return await _api.createRoute(
       name: name,
@@ -42,6 +44,56 @@ class SavedRouteRepository {
       toAddress: toAddress,
       distanceKm: distanceKm,
       isMonitoring: isMonitoring,
+      travelMode: travelMode,
+    );
+  }
+
+  /// Create a route with waypoints in a single operation
+  Future<Map<String, dynamic>> createRouteWithWaypoints({
+    required String name,
+    required String fromLocationName,
+    required double fromLatitude,
+    required double fromLongitude,
+    String? fromAddress,
+    required String toLocationName,
+    required double toLatitude,
+    required double toLongitude,
+    String? toAddress,
+    required List<Map<String, dynamic>> waypoints,
+    double? distanceKm,
+    bool isMonitoring = false,
+    String travelMode = 'driving',
+  }) async {
+    return await _api.createRouteWithWaypoints(
+      name: name,
+      fromLocationName: fromLocationName,
+      fromLatitude: fromLatitude,
+      fromLongitude: fromLongitude,
+      fromAddress: fromAddress,
+      toLocationName: toLocationName,
+      toLatitude: toLatitude,
+      toLongitude: toLongitude,
+      toAddress: toAddress,
+      waypoints: waypoints,
+      distanceKm: distanceKm,
+      isMonitoring: isMonitoring,
+      travelMode: travelMode,
+    );
+  }
+
+  /// Get a route with its waypoints
+  Future<Map<String, dynamic>> getRouteWithWaypoints(String routeId) async {
+    return await _api.getRouteWithWaypoints(routeId);
+  }
+
+  /// Update waypoints for a route (replaces all existing waypoints)
+  Future<List<RouteWaypointModel>> updateRouteWaypoints({
+    required String routeId,
+    required List<Map<String, dynamic>> waypoints,
+  }) async {
+    return await _api.updateRouteWaypoints(
+      routeId: routeId,
+      waypoints: waypoints,
     );
   }
 
@@ -90,5 +142,33 @@ class SavedRouteRepository {
 
   Future<void> deleteLocation(String locationId) async {
     await _api.deleteLocation(locationId);
+  }
+
+  // ========== Route Waypoints ==========
+
+  Future<List<RouteWaypointModel>> getRouteWaypoints(String routeId) async {
+    return await _api.getRouteWaypoints(routeId);
+  }
+
+  Future<RouteWaypointModel> createWaypoint({
+    required String routeId,
+    required int waypointOrder,
+    required String locationName,
+    required double latitude,
+    required double longitude,
+    String? address,
+  }) async {
+    return await _api.createWaypoint(
+      routeId: routeId,
+      waypointOrder: waypointOrder,
+      locationName: locationName,
+      latitude: latitude,
+      longitude: longitude,
+      address: address,
+    );
+  }
+
+  Future<void> deleteRouteWaypoints(String routeId) async {
+    await _api.deleteRouteWaypoints(routeId);
   }
 }
