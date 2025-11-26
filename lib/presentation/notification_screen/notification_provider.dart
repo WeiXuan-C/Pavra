@@ -172,6 +172,9 @@ class NotificationProvider extends ChangeNotifier {
     String targetType = 'single',
     List<String>? targetRoles,
     List<String>? targetUserIds,
+    String? sound,
+    String? category,
+    int? priority,
   }) async {
     try {
       final notification = await _repository.createNotification(
@@ -186,6 +189,9 @@ class NotificationProvider extends ChangeNotifier {
         targetType: targetType,
         targetRoles: targetRoles,
         targetUserIds: targetUserIds,
+        sound: sound,
+        category: category,
+        priority: priority,
       );
 
       // Add to local state
@@ -215,6 +221,9 @@ class NotificationProvider extends ChangeNotifier {
     String? targetType,
     List<String>? targetRoles,
     List<String>? targetUserIds,
+    String? sound,
+    String? category,
+    int? priority,
   }) async {
     try {
       final updatedNotification = await _repository.updateNotification(
@@ -229,6 +238,9 @@ class NotificationProvider extends ChangeNotifier {
         targetType: targetType,
         targetRoles: targetRoles,
         targetUserIds: targetUserIds,
+        sound: sound,
+        category: category,
+        priority: priority,
       );
 
       // Update local state

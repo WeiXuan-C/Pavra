@@ -1,0 +1,28 @@
+# PLACEHOLDER: default.wav
+
+This is a placeholder file. Replace this with an actual WAV audio file named "default.wav".
+
+## iOS Audio Specifications:
+- Format: WAV (Linear PCM) or CAF
+- Purpose: Default/info notifications
+- Recommended Duration: 1 second
+- Tone: Standard notification sound
+- Sample Rate: 44.1 kHz or 48 kHz
+- Bit Depth: 16-bit
+- Max Duration: 30 seconds (iOS limitation)
+
+## How to Create:
+1. Use an audio editing tool (Audacity, GarageBand, Logic Pro, etc.)
+2. Create or import a standard notification sound
+3. Export as WAV format (Linear PCM) with the specifications above
+4. Name the file "default.wav" (remove .placeholder extension)
+5. Place in this directory (ios/Runner/Resources/)
+6. Add to Xcode project (see README.md for instructions)
+
+## Example Sources:
+- Create custom sound with audio editing software
+- Use royalty-free sound libraries (freesound.org, zapsplat.com)
+- Generate with online tone generators
+
+## Important:
+After adding the actual .wav file, you MUST add it to the Xcode project for it to be included in the app bundle.

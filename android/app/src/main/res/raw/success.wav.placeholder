@@ -1,0 +1,23 @@
+# PLACEHOLDER: success.wav
+
+This is a placeholder file. Replace this with an actual WAV audio file named "success.wav".
+
+## Audio Specifications:
+- Format: WAV
+- Purpose: Success notifications
+- Recommended Duration: 0.5-1 second
+- Tone: Pleasant, positive
+- Sample Rate: 44.1 kHz or 48 kHz
+- Bit Depth: 16-bit
+
+## How to Create:
+1. Use an audio editing tool (Audacity, Adobe Audition, etc.)
+2. Create or import a success/positive sound
+3. Export as WAV format with the specifications above
+4. Name the file "success.wav" (remove .placeholder extension)
+5. Place in this directory (android/app/src/main/res/raw/)
+
+## Example Sources:
+- Create custom sound with audio editing software
+- Use royalty-free sound libraries (freesound.org, zapsplat.com)
+- Generate with online tone generators

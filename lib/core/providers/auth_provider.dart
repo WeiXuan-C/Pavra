@@ -102,6 +102,7 @@ class AuthProvider with ChangeNotifier {
             '⚠️ Failed to set OneSignal External User ID: $e',
             name: 'AuthProvider',
           );
+          // Non-critical error, don't block authentication
         }
 
         // 🔥 Log sign-in action to backend

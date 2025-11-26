@@ -321,3 +321,212 @@ final unreadCount = await NotificationRepository()
 
 **Last Updated**: 2024-10-21  
 **Maintainer**: Pavra Team
+
+
+---
+
+## 🔕 Data Notifications (Silent Notifications)
+
+Data notifications are silent notifications that deliver data to the app without displaying a visible notification to the user. They are useful for background data synchronization, cache updates, and other background tasks.
+
+### What are Data Notifications?
+
+Data notifications:
+- Don't display a visible notification banner
+- Process data in the background
+- Execute registered action handlers
+- Log errors without affecting user experience
+
+### Registering Action Handlers
+
+Action handlers are functions that execute when a data notification with a specific action type is received.
+
+```dart
+// Register a custom action handler
+final oneSignalService = OneSignalService();
+
+oneSignalService.registerActionHandler('refresh_reports', (data) async {
+  debugPrint('Refreshing reports...');
+  
+  // Extract parameters from data
+  final userId = data['user_id'] as String?;
+  final category = data['category'] as String?;
+  
+  // Execute your business logic
+  await reportRepository.refreshReports(
+    userId: userId,
+    category: category,
+  );
+  
+  debugPrint('Reports refreshed successfully');
+});
+```
+
+### Default Action Handlers
+
+The following action handlers are registered by default:
+
+| Action Type | Description | Data Parameters |
+|-------------|-------------|-----------------|
+| `refresh_data` | Refresh all app data | None |
+| `sync` | Sync data with server | None |
+| `update_cache` | Update specific cache | `cache_key` (String) |
+| `background_task` | Execute background task | `task_id` (String) |
+
+### Sending Data Notifications
+
+#### From Backend (Serverpod)
+
+```dart
+// Send a data notification to specific users
+await oneSignalService.sendDataNotification(
+  userIds: ['user-id-1', 'user-id-2'],
+  data: {
+    'action_type': 'refresh_reports',
+    'user_id': 'user-id-1',
+    'category': 'safety',
+  },
+);
+```
+
+#### From OneSignal Dashboard
+
+1. Go to OneSignal dashboard
+2. Click **Messages** → **New Push**
+3. Leave **Title** and **Message** empty
+4. Add **Additional Data**:
+   - Key: `action_type`, Value: `refresh_reports`
+   - Key: `user_id`, Value: `user-123`
+5. Send notification
+
+### Example Use Cases
+
+#### 1. Background Data Sync
+
+```dart
+// Register handler
+oneSignalService.registerActionHandler('sync_user_data', (data) async {
+  final userId = data['user_id'] as String?;
+  if (userId != null) {
+    await userRepository.syncUserData(userId);
+  }
+});
+
+// Send from backend
+await oneSignalService.sendDataNotification(
+  userIds: [userId],
+  data: {
+    'action_type': 'sync_user_data',
+    'user_id': userId,
+  },
+);
+```
+
+#### 2. Cache Invalidation
+
+```dart
+// Register handler
+oneSignalService.registerActionHandler('invalidate_cache', (data) async {
+  final cacheKeys = data['cache_keys'] as List<dynamic>?;
+  if (cacheKeys != null) {
+    for (final key in cacheKeys) {
+      await cacheService.invalidate(key.toString());
+    }
+  }
+});
+
+// Send from backend
+await oneSignalService.sendDataNotification(
+  userIds: affectedUserIds,
+  data: {
+    'action_type': 'invalidate_cache',
+    'cache_keys': ['reports', 'user_profile'],
+  },
+);
+```
+
+#### 3. Real-time Updates
+
+```dart
+// Register handler
+oneSignalService.registerActionHandler('report_updated', (data) async {
+  final reportId = data['report_id'] as String?;
+  if (reportId != null) {
+    // Fetch updated report
+    final report = await reportRepository.getReport(reportId);
+    
+    // Update local state
+    reportProvider.updateReport(report);
+  }
+});
+
+// Send from backend when report is updated
+await oneSignalService.sendDataNotification(
+  userIds: subscribedUserIds,
+  data: {
+    'action_type': 'report_updated',
+    'report_id': reportId,
+    'updated_at': DateTime.now().toIso8601String(),
+  },
+);
+```
+
+### Error Handling
+
+Data notification errors are automatically logged without affecting the user experience:
+
+```dart
+// Errors are caught and logged automatically
+oneSignalService.registerActionHandler('risky_operation', (data) async {
+  // If this throws an error, it will be logged but won't crash the app
+  await riskyOperation();
+});
+```
+
+### Unregistering Handlers
+
+```dart
+// Unregister a specific handler
+oneSignalService.unregisterActionHandler('refresh_reports');
+```
+
+### Best Practices for Data Notifications
+
+1. **Keep handlers lightweight** - Avoid long-running operations
+2. **Use specific action types** - Make action types descriptive
+3. **Include necessary data** - Pass all required parameters in the data payload
+4. **Handle missing data gracefully** - Check for null values
+5. **Log important events** - Use debugPrint for debugging
+6. **Don't block the UI** - Handlers run asynchronously
+7. **Test thoroughly** - Data notifications are invisible, so test carefully
+
+### Testing Data Notifications
+
+```dart
+// Test by manually calling the handler
+final testData = {
+  'action_type': 'refresh_reports',
+  'user_id': 'test-user-id',
+  'category': 'safety',
+};
+
+await oneSignalService.handleDataNotification(testData);
+```
+
+### Debugging
+
+Enable verbose logging to see data notification processing:
+
+```dart
+// Data notifications are logged with 🔔 prefix
+// Look for these log messages:
+// 🔔 OneSignal: Processing data notification with data: {...}
+// 🔄 OneSignal: Executing action handler for type: refresh_reports
+// ✅ OneSignal: Action handler completed successfully for type: refresh_reports
+// ❌ OneSignal: Error processing data notification: ...
+```
+
+---
+
+**Last Updated**: 2024-11-25  
+**Maintainer**: Pavra Team

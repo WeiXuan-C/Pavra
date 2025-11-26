@@ -10,6 +10,11 @@
 -- 4. Functions & Triggers
 -- 5. RLS Policies
 -- 6. Permissions
+--
+-- MIGRATIONS:
+-- Database migrations are stored in /supabase/migrations/
+-- Apply migrations using Supabase CLI or manually via psql
+-- See /supabase/migrations/README.md for details
 
 -- =====================================
 -- 1. EXTENSIONS

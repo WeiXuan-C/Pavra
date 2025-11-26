@@ -71,7 +71,7 @@ dependencies:
   rename: ^3.1.0
   pdf: ^3.11.1
   csv: ^6.0.0
-  share_plus: ^10.1.2
+  share_plus: ^12.0.1
   path_provider: ^2.1.5
 
 dev_dependencies:
@@ -84,7 +84,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.4
 
 flutter_icons:
   android: true

@@ -72,8 +72,12 @@ class NotificationApi {
   /// 获取用户的通知列表（JOIN user_notifications）
   Future<List<Map<String, dynamic>>> getUserNotifications({
     required String userId,
+    String? type,
+    bool? isRead,
+    DateTime? startDate,
+    DateTime? endDate,
   }) async {
-    final data = await supabase
+    var query = supabase
         .from('user_notifications')
         .select('''
           id,
@@ -99,11 +103,17 @@ class NotificationApi {
           )
         ''')
         .eq('user_id', userId)
-        .eq('is_deleted', false)
-        .order('created_at', ascending: false);
+        .eq('is_deleted', false);
+
+    // Apply filters
+    if (isRead != null) {
+      query = query.eq('is_read', isRead);
+    }
+
+    final data = await query.order('created_at', ascending: false);
 
     // 扁平化数据结构
-    return data.map((row) {
+    var results = data.map((row) {
       final notification = row['notifications'] as Map<String, dynamic>;
       return {
         ...notification,
@@ -112,6 +122,27 @@ class NotificationApi {
         'read_at': row['read_at'],
       };
     }).toList();
+
+    // Apply client-side filters (for fields in the notifications table)
+    if (type != null) {
+      results = results.where((n) => n['type'] == type).toList();
+    }
+
+    if (startDate != null) {
+      results = results.where((n) {
+        final createdAt = DateTime.parse(n['created_at'] as String);
+        return createdAt.isAfter(startDate) || createdAt.isAtSameMomentAs(startDate);
+      }).toList();
+    }
+
+    if (endDate != null) {
+      results = results.where((n) {
+        final createdAt = DateTime.parse(n['created_at'] as String);
+        return createdAt.isBefore(endDate) || createdAt.isAtSameMomentAs(endDate);
+      }).toList();
+    }
+
+    return results;
   }
 
   /// 获取所有通知（Developer 专用）
@@ -161,10 +192,21 @@ class NotificationApi {
 
   /// 标记所有为已读
   Future<void> markAllAsRead(String userId) async {
+    // Update all unread notifications for the user
     await supabase
         .from('user_notifications')
         .update({'is_read': true, 'read_at': DateTime.now().toIso8601String()})
-        .match({'user_id': userId, 'is_deleted': false});
+        .eq('user_id', userId)
+        .eq('is_deleted', false)
+        .eq('is_read', false);
+
+    // Verify unread count becomes zero
+    final unreadCount = await getUnreadCount(userId);
+    if (unreadCount != 0) {
+      throw Exception(
+        'Failed to mark all notifications as read. Unread count: $unreadCount',
+      );
+    }
   }
 
   /// 用户删除通知（软删除）
@@ -172,6 +214,18 @@ class NotificationApi {
     required String notificationId,
     required String userId,
   }) async {
+    // Verify user is deleting their own notification
+    final currentUserId = supabase.auth.currentUser?.id;
+    if (currentUserId == null) {
+      throw Exception('User not authenticated');
+    }
+
+    if (currentUserId != userId) {
+      throw Exception(
+        'Permission denied. Users can only delete their own notifications.',
+      );
+    }
+
     await supabase
         .from('user_notifications')
         .update({
@@ -183,6 +237,47 @@ class NotificationApi {
 
   /// 管理员删除通知（软删除，用于 draft/scheduled）
   Future<void> deleteNotification({required String notificationId}) async {
+    // 1. Fetch current notification to check status and creator
+    final notification = await supabase
+        .from('notifications')
+        .select('status, onesignal_notification_id, created_by')
+        .eq('id', notificationId)
+        .single();
+
+    final status = notification['status'] as String;
+    final oneSignalId = notification['onesignal_notification_id'] as String?;
+    final createdBy = notification['created_by'] as String?;
+
+    // 2. Verify user has permission to delete (must be creator)
+    final currentUserId = supabase.auth.currentUser?.id;
+    if (currentUserId == null) {
+      throw Exception('User not authenticated');
+    }
+
+    if (createdBy != currentUserId) {
+      throw Exception(
+        'Permission denied. Only the creator can delete this notification.',
+      );
+    }
+
+    // 3. Validation: Prevent deleting sent notifications
+    if (status == 'sent') {
+      throw Exception(
+        'Cannot delete notification with status "sent". Sent notifications cannot be deleted.',
+      );
+    }
+
+    // 4. If scheduled, cancel the OneSignal notification
+    if (status == 'scheduled' && oneSignalId != null) {
+      try {
+        await _cancelScheduledNotificationViaServerpod(oneSignalId);
+      } catch (e) {
+        print('⚠️ Failed to cancel scheduled notification: $e');
+        // Continue with soft delete even if cancellation fails
+      }
+    }
+
+    // 5. Perform soft delete
     await supabase
         .from('notifications')
         .update({
@@ -192,9 +287,106 @@ class NotificationApi {
         .eq('id', notificationId);
   }
 
+  /// 通过 Serverpod 取消已调度的通知
+  Future<void> _cancelScheduledNotificationViaServerpod(
+    String oneSignalNotificationId,
+  ) async {
+    final serverpodUrl = ApiConfig.serverpodUrl;
+
+    try {
+      final response = await http.post(
+        Uri.parse('$serverpodUrl/notification/cancelScheduledNotification'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'oneSignalNotificationId': oneSignalNotificationId,
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Serverpod API error: ${response.body}');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   /// 管理员硬删除通知（永久删除，谨慎使用）
-  Future<void> hardDeleteNotification({required String notificationId}) async {
-    await supabase.from('notifications').delete().eq('id', notificationId);
+  /// 
+  /// This permanently deletes the notification and all associated user_notification records.
+  /// Requires admin permission check on the server side.
+  /// Use with extreme caution - this action cannot be undone.
+  Future<void> hardDeleteNotification({
+    required String notificationId,
+    required String userId,
+  }) async {
+    // Verify user has permission before making the request
+    final hasPermission = await _canHardDeleteNotification(userId);
+    if (!hasPermission) {
+      throw Exception(
+        'Permission denied. Only admin or developer can hard delete notifications.',
+      );
+    }
+
+    // Call Serverpod endpoint to perform hard delete with permission check
+    final serverpodUrl = ApiConfig.serverpodUrl;
+
+    try {
+      final response = await http.post(
+        Uri.parse('$serverpodUrl/notification/hardDeleteNotification'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'notificationId': notificationId,
+          'userId': userId,
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        final errorBody = jsonDecode(response.body) as Map<String, dynamic>;
+        throw Exception(errorBody['error'] ?? 'Failed to delete notification');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Check if user has permission to hard delete notifications
+  Future<bool> _canHardDeleteNotification(String userId) async {
+    try {
+      final users = await _db.selectAdvanced(
+        table: 'profiles',
+        filters: {'id': userId},
+        columns: 'role',
+      );
+
+      if (users.isEmpty) {
+        return false;
+      }
+
+      final role = users.first['role'] as String?;
+      return role == 'admin' || role == 'developer';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Check if user has permission to create notifications
+  Future<bool> _canCreateNotification(String userId) async {
+    try {
+      final users = await _db.selectAdvanced(
+        table: 'profiles',
+        filters: {'id': userId},
+        columns: 'role',
+      );
+
+      if (users.isEmpty) {
+        return false;
+      }
+
+      final role = users.first['role'] as String?;
+      return role == 'developer' || role == 'authority';
+    } catch (e) {
+      return false;
+    }
   }
 
   /// 创建通知并通过 OneSignal 发送推送或通过 QStash 调度
@@ -210,7 +402,19 @@ class NotificationApi {
     String targetType = 'single',
     List<String>? targetRoles,
     List<String>? targetUserIds,
+    String? sound,
+    String? category,
+    int priority = 5,
+    String? oneSignalNotificationId,
   }) async {
+    // Verify user has permission to create notifications
+    final hasPermission = await _canCreateNotification(createdBy);
+    if (!hasPermission) {
+      throw Exception(
+        'Permission denied. Only developers and authorities can create notifications.',
+      );
+    }
+
     final now = DateTime.now();
 
     // 1. 创建通知记录
@@ -229,6 +433,10 @@ class NotificationApi {
           'target_type': targetType,
           'target_roles': targetRoles,
           'target_user_ids': targetUserIds,
+          'sound': sound,
+          'category': category,
+          'priority': priority,
+          'onesignal_notification_id': oneSignalNotificationId,
         })
         .select()
         .single();
@@ -354,7 +562,52 @@ class NotificationApi {
     String? targetType,
     List<String>? targetRoles,
     List<String>? targetUserIds,
+    String? sound,
+    String? category,
+    int? priority,
   }) async {
+    // 1. Fetch current notification to check status, creator, and get QStash message ID
+    final currentNotification = await supabase
+        .from('notifications')
+        .select('status, data, created_by')
+        .eq('id', notificationId)
+        .single();
+
+    final currentStatus = currentNotification['status'] as String;
+    final currentData = currentNotification['data'] as Map<String, dynamic>?;
+    final qstashMessageId = currentData?['qstash_message_id'] as String?;
+    final createdBy = currentNotification['created_by'] as String?;
+
+    // 2. Verify user has permission to update (must be creator and draft status)
+    final currentUserId = supabase.auth.currentUser?.id;
+    if (currentUserId == null) {
+      throw Exception('User not authenticated');
+    }
+
+    if (createdBy != currentUserId) {
+      throw Exception(
+        'Permission denied. Only the creator can update this notification.',
+      );
+    }
+
+    // 3. Validation: Prevent updating sent notifications
+    if (currentStatus == 'sent') {
+      throw Exception(
+        'Cannot update notification with status "sent". Sent notifications are immutable.',
+      );
+    }
+
+    // 4. If updating a scheduled notification, cancel the previous QStash job
+    if (currentStatus == 'scheduled' && qstashMessageId != null) {
+      try {
+        await _cancelQStashJob(qstashMessageId);
+        print('✓ Cancelled previous QStash job: $qstashMessageId');
+      } catch (e) {
+        print('⚠️ Failed to cancel previous QStash job: $e');
+        // Continue with update even if cancellation fails
+      }
+    }
+
     final updateData = <String, dynamic>{
       'title': title,
       'message': message,
@@ -384,6 +637,15 @@ class NotificationApi {
     if (targetUserIds != null) {
       updateData['target_user_ids'] = targetUserIds;
     }
+    if (sound != null) {
+      updateData['sound'] = sound;
+    }
+    if (category != null) {
+      updateData['category'] = category;
+    }
+    if (priority != null) {
+      updateData['priority'] = priority;
+    }
 
     final result = await supabase
         .from('notifications')
@@ -392,16 +654,17 @@ class NotificationApi {
         .select()
         .single();
 
-    // 如果状态从 draft 改为 sent，触发发送
-    if (status == 'sent') {
+    // 4. Handle status transitions
+    // If status changed from draft to sent, trigger immediate send
+    if (status == 'sent' && currentStatus == 'draft') {
       try {
         await _triggerNotificationSend(notificationId);
       } catch (e) {
         print('⚠️ Failed to trigger notification send after update: $e');
       }
     }
-    // 如果状态从 draft 改为 scheduled，调度发送
-    else if (status == 'scheduled' && scheduledAt != null) {
+    // If status changed from draft to scheduled, schedule the notification
+    else if (status == 'scheduled' && currentStatus == 'draft' && scheduledAt != null) {
       try {
         await _scheduleNotificationViaServerpod(
           notificationId: notificationId,
@@ -411,7 +674,39 @@ class NotificationApi {
         print('⚠️ Failed to schedule notification after update: $e');
       }
     }
+    // If updating a scheduled notification with new scheduled time, reschedule
+    else if (currentStatus == 'scheduled' && status == 'scheduled' && scheduledAt != null) {
+      try {
+        await _scheduleNotificationViaServerpod(
+          notificationId: notificationId,
+          scheduledAt: scheduledAt,
+        );
+      } catch (e) {
+        print('⚠️ Failed to reschedule notification after update: $e');
+      }
+    }
 
     return result;
+  }
+
+  /// Cancel a QStash scheduled job
+  Future<void> _cancelQStashJob(String qstashMessageId) async {
+    final serverpodUrl = ApiConfig.serverpodUrl;
+
+    try {
+      final response = await http.post(
+        Uri.parse('$serverpodUrl/notification/cancelQStashJob'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'qstashMessageId': qstashMessageId,
+        }),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Serverpod API error: ${response.body}');
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }

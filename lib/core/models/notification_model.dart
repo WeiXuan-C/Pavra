@@ -36,6 +36,16 @@ class NotificationModel {
   // Admin soft delete (for draft/scheduled notifications)
   final bool isDeletedByAdmin; // notifications 表的 is_deleted
   final DateTime? deletedAt; // notifications 表的 deleted_at
+  
+  // OneSignal integration fields
+  final String? oneSignalNotificationId;
+  final String? sound;
+  final String? category;
+  final int? priority;
+  final String? errorMessage;
+  final int? recipientsCount;
+  final int? successfulDeliveries;
+  final int? failedDeliveries;
 
   // User-specific state (from user_notifications join)
   final bool isRead; // 默认 false，非 nullable
@@ -63,6 +73,14 @@ class NotificationModel {
     required this.updatedAt,
     this.isDeletedByAdmin = false,
     this.deletedAt,
+    this.oneSignalNotificationId,
+    this.sound,
+    this.category,
+    this.priority,
+    this.errorMessage,
+    this.recipientsCount,
+    this.successfulDeliveries,
+    this.failedDeliveries,
     this.isRead = false,
     this.isDeleted = false,
     this.readAt,
@@ -103,6 +121,15 @@ class NotificationModel {
       deletedAt: json['deleted_at'] != null
           ? DateTime.parse(json['deleted_at'] as String)
           : null,
+      // OneSignal integration fields
+      oneSignalNotificationId: json['onesignal_notification_id'] as String?,
+      sound: json['sound'] as String?,
+      category: json['category'] as String?,
+      priority: json['priority'] as int?,
+      errorMessage: json['error_message'] as String?,
+      recipientsCount: json['recipients_count'] as int?,
+      successfulDeliveries: json['successful_deliveries'] as int?,
+      failedDeliveries: json['failed_deliveries'] as int?,
       // User-specific fields (from user_notifications join)
       isRead: json['is_read'] as bool? ?? false,
       isDeleted: json['is_deleted'] as bool? ?? false,
@@ -132,6 +159,14 @@ class NotificationModel {
       'updated_at': updatedAt.toIso8601String(),
       'is_deleted': isDeletedByAdmin,
       'deleted_at': deletedAt?.toIso8601String(),
+      'onesignal_notification_id': oneSignalNotificationId,
+      'sound': sound,
+      'category': category,
+      'priority': priority,
+      'error_message': errorMessage,
+      'recipients_count': recipientsCount,
+      'successful_deliveries': successfulDeliveries,
+      'failed_deliveries': failedDeliveries,
     };
   }
 
@@ -154,6 +189,14 @@ class NotificationModel {
     DateTime? updatedAt,
     bool? isDeletedByAdmin,
     DateTime? deletedAt,
+    String? oneSignalNotificationId,
+    String? sound,
+    String? category,
+    int? priority,
+    String? errorMessage,
+    int? recipientsCount,
+    int? successfulDeliveries,
+    int? failedDeliveries,
     bool? isRead,
     bool? isDeleted,
     DateTime? readAt,
@@ -177,6 +220,14 @@ class NotificationModel {
       updatedAt: updatedAt ?? this.updatedAt,
       isDeletedByAdmin: isDeletedByAdmin ?? this.isDeletedByAdmin,
       deletedAt: deletedAt ?? this.deletedAt,
+      oneSignalNotificationId: oneSignalNotificationId ?? this.oneSignalNotificationId,
+      sound: sound ?? this.sound,
+      category: category ?? this.category,
+      priority: priority ?? this.priority,
+      errorMessage: errorMessage ?? this.errorMessage,
+      recipientsCount: recipientsCount ?? this.recipientsCount,
+      successfulDeliveries: successfulDeliveries ?? this.successfulDeliveries,
+      failedDeliveries: failedDeliveries ?? this.failedDeliveries,
       isRead: isRead ?? this.isRead,
       isDeleted: isDeleted ?? this.isDeleted,
       readAt: readAt ?? this.readAt,

@@ -120,7 +120,11 @@ void main() async {
 
   // 🔔 Initialize OneSignal for push notifications
   try {
-    await OneSignalService().initialize();
+    final oneSignalService = OneSignalService();
+    await oneSignalService.initialize();
+    
+    // Register default action handlers for data notifications
+    oneSignalService.registerDefaultActionHandlers();
   } catch (e) {
     debugPrint('⚠️ OneSignal initialization failed: $e');
     // Don't block app startup if OneSignal fails
@@ -228,6 +232,8 @@ class MyApp extends StatelessWidget {
               routes: AppRouter.routes,
               // Use RouteGuard for authentication-based routing
               home: const RouteGuard(),
+              // Global navigator key for OneSignal navigation
+              navigatorKey: OneSignalService.navigatorKey,
             );
           },
         );

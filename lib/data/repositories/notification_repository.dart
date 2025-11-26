@@ -103,9 +103,15 @@ class NotificationRepository {
 
   /// 管理员硬删除通知（永久删除 - 删除 notifications 记录）
   /// 谨慎使用，会级联删除所有 user_notifications
-  Future<void> hardDeleteNotification({required String notificationId}) async {
+  Future<void> hardDeleteNotification({
+    required String notificationId,
+    required String userId,
+  }) async {
     try {
-      await _api.hardDeleteNotification(notificationId: notificationId);
+      await _api.hardDeleteNotification(
+        notificationId: notificationId,
+        userId: userId,
+      );
     } catch (e) {
       throw Exception('Failed to hard delete notification: $e');
     }
@@ -124,6 +130,9 @@ class NotificationRepository {
     String targetType = 'single',
     List<String>? targetRoles,
     List<String>? targetUserIds,
+    String? sound,
+    String? category,
+    int? priority,
   }) async {
     try {
       final result = await _api.createNotification(
@@ -138,6 +147,9 @@ class NotificationRepository {
         targetType: targetType,
         targetRoles: targetRoles,
         targetUserIds: targetUserIds,
+        sound: sound,
+        category: category,
+        priority: priority ?? 5,
       );
       return NotificationModel.fromJson(result);
     } catch (e) {
@@ -158,6 +170,9 @@ class NotificationRepository {
     String? targetType,
     List<String>? targetRoles,
     List<String>? targetUserIds,
+    String? sound,
+    String? category,
+    int? priority,
   }) async {
     try {
       final result = await _api.updateNotification(
@@ -172,6 +187,9 @@ class NotificationRepository {
         targetType: targetType,
         targetRoles: targetRoles,
         targetUserIds: targetUserIds,
+        sound: sound,
+        category: category,
+        priority: priority,
       );
       return NotificationModel.fromJson(result);
     } catch (e) {

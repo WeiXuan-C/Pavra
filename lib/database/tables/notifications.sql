@@ -29,5 +29,15 @@ CREATE TABLE IF NOT EXISTS public.notifications (
   is_deleted BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now(),
-  deleted_at TIMESTAMPTZ
+  deleted_at TIMESTAMPTZ,
+  
+  -- OneSignal Integration Fields
+  onesignal_notification_id TEXT,
+  sound TEXT,
+  category TEXT,
+  priority INTEGER DEFAULT 5 CHECK (priority BETWEEN 1 AND 10),
+  error_message TEXT,
+  recipients_count INTEGER,
+  successful_deliveries INTEGER,
+  failed_deliveries INTEGER
 );

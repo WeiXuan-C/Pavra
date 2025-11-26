@@ -67,7 +67,6 @@ This checklist tracks the implementation status of all features and components i
 - [x] Distance-based filtering
 - [ ] Route planning with hazard avoidance
 - [ ] Heatmap visualization
-- [ ] Custom map styles
 - [ ] Offline map caching
 - [ ] Multi-stop route planning
 - [ ] Voice search capability

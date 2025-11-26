@@ -34,6 +34,11 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
   bool _isLoadingUsers = false;
   // List<Map<String, dynamic>> _actionLogs = [];
   List<Map<String, dynamic>> _users = [];
+  
+  // OneSignal fields
+  String? _selectedSound;
+  String? _selectedCategory;
+  double _priority = 5.0;
 
   // Search and UI state
   String _userSearchQuery = '';
@@ -58,6 +63,20 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
   final List<String> _targetTypeOptions = ['all', 'custom'];
 
   final List<String> _roleOptions = ['user', 'authority', 'developer'];
+  
+  final List<String> _soundOptions = [
+    'default',
+    'alert',
+    'warning',
+    'success',
+  ];
+  
+  final List<String> _categoryOptions = [
+    'info',
+    'alert',
+    'warning',
+    'success',
+  ];
 
   @override
   void initState() {
@@ -78,6 +97,11 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
     _selectedRoles = widget.notification?.targetRoles ?? [];
     _selectedUserIds = widget.notification?.targetUserIds ?? [];
     _scheduledDateTime = widget.notification?.scheduledAt;
+    
+    // Initialize OneSignal fields
+    _selectedSound = widget.notification?.sound;
+    _selectedCategory = widget.notification?.category;
+    _priority = widget.notification?.priority?.toDouble() ?? 5.0;
 
     // 如果是 single 或 custom，默认展开用户列表
     _isUserListExpanded =
@@ -294,6 +318,154 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
                   });
                 }
               },
+            ),
+            const SizedBox(height: 24),
+
+            // ===== ONESIGNAL SETTINGS =====
+            _buildSectionHeader('Notification Settings', Icons.tune),
+
+            // Sound dropdown
+            DropdownButtonFormField<String>(
+              value: _selectedSound,
+              decoration: const InputDecoration(
+                labelText: 'Notification Sound',
+                hintText: 'Select sound (optional)',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.volume_up),
+                helperText: 'Custom sound to play when notification is received',
+              ),
+              items: [
+                const DropdownMenuItem<String>(
+                  value: null,
+                  child: Text('Default System Sound'),
+                ),
+                ..._soundOptions.map((sound) {
+                  return DropdownMenuItem(
+                    value: sound,
+                    child: Row(
+                      children: [
+                        Icon(_getSoundIcon(sound), size: 20),
+                        const SizedBox(width: 8),
+                        Text(_getSoundLabel(sound)),
+                      ],
+                    ),
+                  );
+                }),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedSound = value;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // Category dropdown
+            DropdownButtonFormField<String>(
+              value: _selectedCategory,
+              decoration: const InputDecoration(
+                labelText: 'Notification Category',
+                hintText: 'Select category (optional)',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.category_outlined),
+                helperText: 'Android notification channel category',
+              ),
+              items: [
+                const DropdownMenuItem<String>(
+                  value: null,
+                  child: Text('Auto (based on type)'),
+                ),
+                ..._categoryOptions.map((category) {
+                  return DropdownMenuItem(
+                    value: category,
+                    child: Row(
+                      children: [
+                        Icon(_getCategoryIcon(category), size: 20),
+                        const SizedBox(width: 8),
+                        Text(_getCategoryLabel(category)),
+                      ],
+                    ),
+                  );
+                }),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedCategory = value;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+
+            // Priority slider
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Priority',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: _getPriorityColor(_priority),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '${_priority.toInt()} - ${_getPriorityLabel(_priority)}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Slider(
+                  value: _priority,
+                  min: 1,
+                  max: 10,
+                  divisions: 9,
+                  label: '${_priority.toInt()}',
+                  onChanged: (value) {
+                    setState(() {
+                      _priority = value;
+                    });
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Low',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      Text(
+                        'High',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 24),
 
@@ -992,6 +1164,82 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
     }
   }
 
+  IconData _getSoundIcon(String sound) {
+    switch (sound) {
+      case 'alert':
+        return Icons.notification_important;
+      case 'warning':
+        return Icons.warning_amber;
+      case 'success':
+        return Icons.check_circle;
+      default:
+        return Icons.notifications;
+    }
+  }
+
+  String _getSoundLabel(String sound) {
+    switch (sound) {
+      case 'alert':
+        return 'Alert Sound';
+      case 'warning':
+        return 'Warning Sound';
+      case 'success':
+        return 'Success Sound';
+      default:
+        return 'Default Sound';
+    }
+  }
+
+  IconData _getCategoryIcon(String category) {
+    switch (category) {
+      case 'alert':
+        return Icons.error;
+      case 'warning':
+        return Icons.warning;
+      case 'success':
+        return Icons.check_circle;
+      default:
+        return Icons.info;
+    }
+  }
+
+  String _getCategoryLabel(String category) {
+    switch (category) {
+      case 'alert':
+        return 'Alert (High Priority)';
+      case 'warning':
+        return 'Warning (Medium Priority)';
+      case 'success':
+        return 'Success (Normal Priority)';
+      default:
+        return 'Info (Low Priority)';
+    }
+  }
+
+  Color _getPriorityColor(double priority) {
+    if (priority >= 8) {
+      return Colors.red;
+    } else if (priority >= 6) {
+      return Colors.orange;
+    } else if (priority >= 4) {
+      return Colors.blue;
+    } else {
+      return Colors.grey;
+    }
+  }
+
+  String _getPriorityLabel(double priority) {
+    if (priority >= 8) {
+      return 'Critical';
+    } else if (priority >= 6) {
+      return 'High';
+    } else if (priority >= 4) {
+      return 'Medium';
+    } else {
+      return 'Low';
+    }
+  }
+
   Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -1033,6 +1281,9 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
           targetType: _selectedTargetType,
           targetRoles: _selectedRoles.isNotEmpty ? _selectedRoles : null,
           targetUserIds: _selectedUserIds.isNotEmpty ? _selectedUserIds : null,
+          sound: _selectedSound,
+          category: _selectedCategory,
+          priority: _priority.toInt(),
         );
       } else {
         // Create new notification
@@ -1050,6 +1301,9 @@ class _NotificationFormScreenState extends State<NotificationFormScreen> {
           targetType: _selectedTargetType,
           targetRoles: _selectedRoles.isNotEmpty ? _selectedRoles : null,
           targetUserIds: _selectedUserIds.isNotEmpty ? _selectedUserIds : null,
+          sound: _selectedSound,
+          category: _selectedCategory,
+          priority: _priority.toInt(),
         );
       }
 

@@ -168,6 +168,20 @@ class SupabaseService {
     }
   }
 
+  /// Call a Postgres function via RPC
+  Future<dynamic> rpc(
+    String functionName,
+    Map<String, dynamic> params,
+  ) async {
+    try {
+      final response = await _client.rpc(functionName, params: params);
+      return response;
+    } catch (e, stack) {
+      PLog.error('Failed to call RPC function $functionName', e, stack);
+      rethrow;
+    }
+  }
+
   /// Health check - verify connection is working
   Future<bool> healthCheck() async {
     try {
