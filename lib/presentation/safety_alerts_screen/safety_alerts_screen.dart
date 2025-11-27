@@ -4,6 +4,8 @@ import 'package:sizer/sizer.dart';
 
 import '../../core/api/alert_preferences/alert_preferences_api.dart';
 import '../../core/api/saved_route/saved_route_api.dart';
+import '../../core/api/notification/notification_api.dart';
+import '../../core/services/notification_helper_service.dart';
 import '../../core/providers/auth_provider.dart';
 import '../../data/models/saved_route_model.dart';
 import '../../data/repositories/alert_preferences_repository.dart';
@@ -133,9 +135,10 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
   void _initRepository() {
     final authProvider = context.read<AuthProvider>();
     final supabaseClient = authProvider.supabaseClient;
+    final notificationHelper = NotificationHelperService(NotificationApi());
     
     _routeRepository = SavedRouteRepository(
-      SavedRouteApi(supabaseClient),
+      SavedRouteApi(supabaseClient, notificationHelper),
     );
     
     _preferencesRepository = AlertPreferencesRepository(

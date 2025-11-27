@@ -49,9 +49,49 @@ CREATE INDEX IF NOT EXISTS idx_saved_routes_user_id ON public.saved_routes(user_
 CREATE INDEX IF NOT EXISTS idx_saved_routes_is_monitoring ON public.saved_routes(is_monitoring);
 CREATE INDEX IF NOT EXISTS idx_saved_routes_deleted ON public.saved_routes(is_deleted);
 
+-- Composite index for route monitoring queries (optimizes get_users_monitoring_route)
+CREATE INDEX IF NOT EXISTS idx_saved_routes_monitoring_deleted 
+ON public.saved_routes(is_monitoring, is_deleted) 
+WHERE is_monitoring = TRUE AND is_deleted = FALSE;
+
 -- SAVED LOCATIONS
 CREATE INDEX IF NOT EXISTS idx_saved_locations_user_id ON public.saved_locations(user_id);
 CREATE INDEX IF NOT EXISTS idx_saved_locations_deleted ON public.saved_locations(is_deleted);
 
 -- USER ALERT PREFERENCES
 CREATE INDEX IF NOT EXISTS idx_user_alert_preferences_user_id ON public.user_alert_preferences(user_id);
+
+-- Composite indexes for efficient filtering in get_nearby_users function
+-- Index for road damage alerts
+CREATE INDEX IF NOT EXISTS idx_user_alert_preferences_road_damage 
+ON public.user_alert_preferences(user_id, road_damage_enabled) 
+WHERE road_damage_enabled = TRUE;
+
+-- Index for construction zone alerts
+CREATE INDEX IF NOT EXISTS idx_user_alert_preferences_construction 
+ON public.user_alert_preferences(user_id, construction_zones_enabled) 
+WHERE construction_zones_enabled = TRUE;
+
+-- Index for weather hazard alerts
+CREATE INDEX IF NOT EXISTS idx_user_alert_preferences_weather 
+ON public.user_alert_preferences(user_id, weather_hazards_enabled) 
+WHERE weather_hazards_enabled = TRUE;
+
+-- Index for traffic incident alerts
+CREATE INDEX IF NOT EXISTS idx_user_alert_preferences_traffic 
+ON public.user_alert_preferences(user_id, traffic_incidents_enabled) 
+WHERE traffic_incidents_enabled = TRUE;
+
+-- Index for alert radius filtering
+CREATE INDEX IF NOT EXISTS idx_user_alert_preferences_radius 
+ON public.user_alert_preferences(user_id, alert_radius_miles);
+
+-- PROFILES
+-- Index for notifications_enabled to optimize get_nearby_users queries
+CREATE INDEX IF NOT EXISTS idx_profiles_notifications_enabled 
+ON public.profiles(notifications_enabled) 
+WHERE notifications_enabled = TRUE;
+
+-- Composite index for notifications_enabled with id for efficient filtering
+CREATE INDEX IF NOT EXISTS idx_profiles_notifications_id 
+ON public.profiles(id, notifications_enabled);

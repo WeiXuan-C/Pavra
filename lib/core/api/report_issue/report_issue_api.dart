@@ -10,6 +10,9 @@ import '../../../data/sources/remote/report_issue_remote_source.dart';
 import '../../../data/sources/remote/issue_type_remote_source.dart';
 import '../../../data/sources/remote/issue_vote_remote_source.dart';
 import '../../supabase/storage_service.dart';
+import '../../services/notification_helper_service.dart';
+import '../user/user_api.dart';
+import '../saved_route/saved_route_api.dart';
 
 /// Report Issue API
 /// High-level API for report issues operations
@@ -18,8 +21,18 @@ class ReportIssueApi {
   late final ReportIssueRepository _repository;
   final SupabaseClient _supabase;
   final StorageService _storageService = StorageService();
+  final NotificationHelperService? _notificationHelper;
+  final UserApi? _userApi;
+  final SavedRouteApi? _savedRouteApi;
 
-  ReportIssueApi(this._supabase) {
+  ReportIssueApi(
+    this._supabase, {
+    NotificationHelperService? notificationHelper,
+    UserApi? userApi,
+    SavedRouteApi? savedRouteApi,
+  })  : _notificationHelper = notificationHelper,
+        _userApi = userApi,
+        _savedRouteApi = savedRouteApi {
     _repository = ReportIssueRepository(
       reportRemoteSource: ReportIssueRemoteSource(_supabase),
       typeRemoteSource: IssueTypeRemoteSource(_supabase),
@@ -116,7 +129,68 @@ class ReportIssueApi {
   /// Submit report (change from draft to submitted)
   Future<ReportIssueModel> submitReport(String id) async {
     try {
-      return await _repository.submitReportIssue(id);
+      final report = await _repository.submitReportIssue(id);
+      
+      // Trigger notifications after successful submission
+      if (_notificationHelper != null) {
+        try {
+          final userId = getCurrentUserId();
+          if (userId != null) {
+            // Notify report creator
+            await _notificationHelper.notifyReportSubmitted(
+              userId: userId,
+              reportId: report.id,
+              title: report.title ?? 'Road Issue',
+            );
+            
+            // Notify nearby users if location is available
+            if (report.latitude != null && report.longitude != null) {
+              if (_userApi != null) {
+                final nearbyUserIds = await _userApi.getNearbyUsers(
+                  latitude: report.latitude!,
+                  longitude: report.longitude!,
+                  radiusKm: 5.0,
+                );
+                
+                if (nearbyUserIds.isNotEmpty) {
+                  await _notificationHelper.notifyNearbyUsers(
+                    reportId: report.id,
+                    title: report.title ?? 'Road Issue',
+                    latitude: report.latitude!,
+                    longitude: report.longitude!,
+                    severity: report.severity,
+                    nearbyUserIds: nearbyUserIds,
+                  );
+                }
+              }
+              
+              // Notify users monitoring routes
+              if (_savedRouteApi != null) {
+                final monitoringUserIds = await _savedRouteApi.getUsersMonitoringRoute(
+                  latitude: report.latitude!,
+                  longitude: report.longitude!,
+                  bufferKm: 0.5,
+                );
+                
+                if (monitoringUserIds.isNotEmpty) {
+                  await _notificationHelper.notifyMonitoredRouteIssue(
+                    reportId: report.id,
+                    title: report.title ?? 'Road Issue',
+                    latitude: report.latitude!,
+                    longitude: report.longitude!,
+                    monitoringUserIds: monitoringUserIds,
+                  );
+                }
+              }
+            }
+          }
+        } catch (e) {
+          // Log error but don't throw - notification failures shouldn't disrupt business logic
+          print('Failed to send notifications for report submission: $e');
+        }
+      }
+      
+      return report;
     } catch (e) {
       throw Exception('Failed to submit report: $e');
     }
@@ -270,6 +344,30 @@ class ReportIssueApi {
   Future<void> voteVerify(String issueId) async {
     try {
       await _repository.castVote(issueId: issueId, voteType: 'verify');
+      
+      // Check vote counts and trigger notification if threshold reached
+      if (_notificationHelper != null) {
+        try {
+          final voteCounts = await getVoteCounts(issueId);
+          final verifiedCount = voteCounts['verified'] ?? 0;
+          
+          // Notify when verification threshold (5 votes) is reached
+          if (verifiedCount == 5) {
+            final report = await getReportById(issueId);
+            if (report != null && report.createdBy != null) {
+              await _notificationHelper.notifyVoteThreshold(
+                userId: report.createdBy!,
+                reportId: issueId,
+                voteType: 'verified',
+                voteCount: verifiedCount,
+              );
+            }
+          }
+        } catch (e) {
+          // Log error but don't throw - notification failures shouldn't disrupt business logic
+          print('Failed to send notification for vote threshold: $e');
+        }
+      }
     } catch (e) {
       throw Exception('Failed to vote: $e');
     }
@@ -279,6 +377,30 @@ class ReportIssueApi {
   Future<void> voteSpam(String issueId) async {
     try {
       await _repository.castVote(issueId: issueId, voteType: 'spam');
+      
+      // Check vote counts and trigger notification if threshold reached
+      if (_notificationHelper != null) {
+        try {
+          final voteCounts = await getVoteCounts(issueId);
+          final spamCount = voteCounts['spam'] ?? 0;
+          
+          // Notify when spam threshold (3 votes) is reached
+          if (spamCount == 3) {
+            final report = await getReportById(issueId);
+            if (report != null && report.createdBy != null) {
+              await _notificationHelper.notifyVoteThreshold(
+                userId: report.createdBy!,
+                reportId: issueId,
+                voteType: 'spam',
+                voteCount: spamCount,
+              );
+            }
+          }
+        } catch (e) {
+          // Log error but don't throw - notification failures shouldn't disrupt business logic
+          print('Failed to send notification for vote threshold: $e');
+        }
+      }
     } catch (e) {
       throw Exception('Failed to vote: $e');
     }
@@ -301,11 +423,30 @@ class ReportIssueApi {
     String? comment,
   }) async {
     try {
-      return await _repository.reviewReportIssue(
+      final report = await _repository.reviewReportIssue(
         id: issueId,
         status: 'reviewed',
         comment: comment,
       );
+      
+      // Trigger notification after successful review
+      if (_notificationHelper != null) {
+        try {
+          final reviewerId = getCurrentUserId();
+          if (reviewerId != null && report.createdBy != null) {
+            await _notificationHelper.notifyReportVerified(
+              userId: report.createdBy!,
+              reportId: report.id,
+              reviewerId: reviewerId,
+            );
+          }
+        } catch (e) {
+          // Log error but don't throw - notification failures shouldn't disrupt business logic
+          print('Failed to send notification for report verification: $e');
+        }
+      }
+      
+      return report;
     } catch (e) {
       throw Exception('Failed to mark as reviewed: $e');
     }
@@ -314,11 +455,31 @@ class ReportIssueApi {
   /// Authority: Mark report as spam
   Future<ReportIssueModel> markAsSpam(String issueId, {String? comment}) async {
     try {
-      return await _repository.reviewReportIssue(
+      final report = await _repository.reviewReportIssue(
         id: issueId,
         status: 'spam',
         comment: comment,
       );
+      
+      // Trigger notification after marking as spam
+      if (_notificationHelper != null) {
+        try {
+          final reviewerId = getCurrentUserId();
+          if (reviewerId != null && report.createdBy != null) {
+            await _notificationHelper.notifyReportSpam(
+              userId: report.createdBy!,
+              reportId: report.id,
+              reviewerId: reviewerId,
+              comment: comment,
+            );
+          }
+        } catch (e) {
+          // Log error but don't throw - notification failures shouldn't disrupt business logic
+          print('Failed to send notification for spam marking: $e');
+        }
+      }
+      
+      return report;
     } catch (e) {
       throw Exception('Failed to mark as spam: $e');
     }

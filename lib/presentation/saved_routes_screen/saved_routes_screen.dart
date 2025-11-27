@@ -7,6 +7,8 @@ import 'package:sizer/sizer.dart';
 import '../../core/services/saved_route_service.dart';
 import '../../data/repositories/saved_route_repository.dart';
 import '../../core/api/saved_route/saved_route_api.dart';
+import '../../core/api/notification/notification_api.dart';
+import '../../core/services/notification_helper_service.dart';
 import '../../core/utils/feedback_utils.dart';
 import '../../widgets/skeleton_loader.dart';
 import '../layouts/header_layout.dart';
@@ -35,7 +37,8 @@ class _SavedRoutesScreenState extends State<SavedRoutesScreen> {
   void initState() {
     super.initState();
     final supabase = Supabase.instance.client;
-    final api = SavedRouteApi(supabase);
+    final notificationHelper = NotificationHelperService(NotificationApi());
+    final api = SavedRouteApi(supabase, notificationHelper);
     final repository = SavedRouteRepository(api);
     _routeService = SavedRouteService(repository);
     _loadRoutes();

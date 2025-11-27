@@ -1,12 +1,14 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../models/reputation_model.dart';
+import '../../services/notification_helper_service.dart';
 
 /// Reputation API
 /// Handles reputation-related operations
 class ReputationApi {
   final SupabaseClient _supabase;
+  final NotificationHelperService _notificationHelper;
 
-  ReputationApi(this._supabase);
+  ReputationApi(this._supabase, this._notificationHelper);
 
   /// Get reputation history for a user
   Future<List<ReputationModel>> getReputationHistory({
@@ -60,6 +62,38 @@ class ReputationApi {
           .single();
 
       print('✅ [ReputationApi] Reputation record created: ${response['id']}');
+      
+      // Trigger notifications (wrapped in try-catch to prevent disrupting business logic)
+      try {
+        // Skip notification if changeAmount is zero
+        if (changeAmount != 0) {
+          // Notify about reputation change
+          await _notificationHelper.notifyReputationChange(
+            userId: userId,
+            changeAmount: changeAmount,
+            actionType: actionType,
+            scoreAfter: scoreAfter,
+          );
+
+          // Check if milestone reached (25, 50, 75, 100)
+          final milestones = [25, 50, 75, 100];
+          for (final milestone in milestones) {
+            // Check if this reputation change crossed a milestone
+            if (scoreBefore < milestone && scoreAfter >= milestone) {
+              await _notificationHelper.notifyReputationMilestone(
+                userId: userId,
+                milestone: milestone,
+              );
+              break; // Only notify for the first milestone crossed
+            }
+          }
+        }
+      } catch (e, stackTrace) {
+        print('⚠️ [ReputationApi] Failed to send reputation notification: $e');
+        print('📋 [ReputationApi] Stack trace: $stackTrace');
+        // Don't throw - notification failures shouldn't disrupt business logic
+      }
+      
       return ReputationModel.fromJson(response);
     } catch (e, stackTrace) {
       print('❌ [ReputationApi] Failed to add reputation record: $e');

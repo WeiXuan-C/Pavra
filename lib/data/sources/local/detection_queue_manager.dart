@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer' as developer;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/queued_detection.dart';
 import '../../models/detection_exception.dart';
+import '../../../core/services/notification_helper_service.dart';
 
 /// Detection Queue Manager
 /// Manages offline detection queue with persistence using shared_preferences
@@ -11,9 +13,13 @@ class DetectionQueueManager {
   static const String _queueKey = 'detection_queue';
 
   final SharedPreferences _prefs;
+  final NotificationHelperService? _notificationHelper;
   final StreamController<int> _queueSizeController = StreamController<int>.broadcast();
 
-  DetectionQueueManager(this._prefs);
+  DetectionQueueManager(
+    this._prefs, {
+    NotificationHelperService? notificationHelper,
+  }) : _notificationHelper = notificationHelper;
 
   /// Stream of queue size updates for reactive UI
   Stream<int> get queueSizeStream => _queueSizeController.stream;
@@ -100,6 +106,7 @@ class DetectionQueueManager {
   /// Returns a list of successfully processed detection IDs
   Future<List<String>> processQueue({
     required Future<void> Function(QueuedDetection) processFunction,
+    required String userId,
     int maxRetries = 3,
   }) async {
     final queue = await getQueue();
@@ -128,6 +135,25 @@ class DetectionQueueManager {
         if (updatedDetection.retryCount >= maxRetries) {
           await dequeue(detection.id);
         }
+      }
+    }
+
+    // Trigger notification if any detections were processed successfully
+    // Requirements: 5.5, 13.2
+    if (successfulIds.isNotEmpty && _notificationHelper != null) {
+      try {
+        await _notificationHelper.notifyOfflineQueueProcessed(
+          userId: userId,
+          processedCount: successfulIds.length,
+        );
+      } catch (e, stackTrace) {
+        // Log error but don't throw - notification failures shouldn't disrupt queue processing
+        developer.log(
+          'Failed to send offline queue processed notification',
+          name: 'DetectionQueueManager',
+          error: e,
+          stackTrace: stackTrace,
+        );
       }
     }
 

@@ -12,6 +12,8 @@ import '../../core/services/directions_service.dart';
 import '../../core/services/saved_location_service.dart';
 import '../../core/services/voice_search_service.dart';
 import '../../core/api/saved_route/saved_route_api.dart';
+import '../../core/api/notification/notification_api.dart';
+import '../../core/services/notification_helper_service.dart';
 import '../../core/utils/icon_mapper.dart';
 import '../../core/utils/accessibility_utils.dart';
 import '../../data/models/saved_location_model.dart';
@@ -80,7 +82,8 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    final api = SavedRouteApi(supabase);
+    final notificationHelper = NotificationHelperService(NotificationApi());
+    final api = SavedRouteApi(supabase, notificationHelper);
     final repository = SavedRouteRepository(api);
     _savedLocationService = SavedLocationService(repository);
     _initializeMap();

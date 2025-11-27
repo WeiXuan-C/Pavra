@@ -248,8 +248,13 @@ class AiDetectionProvider extends ChangeNotifier {
         return 0;
       }
 
+      // Get userId from first queued detection (all should have same userId)
+      final queue = await _queueManager.getQueue();
+      final userId = queue.isNotEmpty ? queue.first.userId : '';
+
       // Process queue with retry logic
       final successfulIds = await _queueManager.processQueue(
+        userId: userId,
         processFunction: (queuedDetection) async {
           // Recreate XFile from path
           final image = XFile(queuedDetection.imagePath);

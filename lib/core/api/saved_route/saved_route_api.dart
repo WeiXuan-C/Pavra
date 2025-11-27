@@ -1,12 +1,92 @@
+import 'dart:developer' as developer;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data/models/saved_route_model.dart';
 import '../../../data/models/saved_location_model.dart';
 import '../../../data/models/route_waypoint_model.dart';
+import '../../services/notification_helper_service.dart';
 
 class SavedRouteApi {
   final SupabaseClient _supabase;
+  final NotificationHelperService _notificationHelper;
 
-  SavedRouteApi(this._supabase);
+  SavedRouteApi(this._supabase, this._notificationHelper);
+
+  // ========== Route Monitoring Resolution ==========
+
+  /// Get users monitoring routes that pass through a location
+  /// 
+  /// Returns a list of user IDs who are monitoring routes that pass within
+  /// the specified buffer distance of the given location.
+  /// 
+  /// Parameters:
+  /// - [latitude]: Latitude of the location
+  /// - [longitude]: Longitude of the location
+  /// - [bufferKm]: Buffer distance in kilometers (default: 0.5km)
+  /// 
+  /// Returns empty list on error to prevent disrupting business logic.
+  Future<List<String>> getUsersMonitoringRoute({
+    required double latitude,
+    required double longitude,
+    double bufferKm = 0.5,
+  }) async {
+    try {
+      developer.log(
+        'Getting users monitoring routes near location ($latitude, $longitude) within ${bufferKm}km buffer',
+        name: 'SavedRouteApi',
+      );
+
+      final response = await _supabase.rpc(
+        'get_users_monitoring_route',
+        params: {
+          'lat': latitude,
+          'lng': longitude,
+          'buffer_km': bufferKm,
+        },
+      );
+
+      if (response == null) {
+        developer.log(
+          'No users monitoring routes found (null response)',
+          name: 'SavedRouteApi',
+        );
+        return [];
+      }
+
+      // Response is a list of objects with user_id field
+      final List<dynamic> results = response as List<dynamic>;
+      final userIds = results
+          .map((row) => row['user_id'] as String)
+          .toList();
+
+      developer.log(
+        'Found ${userIds.length} users monitoring routes',
+        name: 'SavedRouteApi',
+      );
+
+      return userIds;
+    } catch (e, stackTrace) {
+      // Log error with full context
+      developer.log(
+        'Failed to get users monitoring route',
+        name: 'SavedRouteApi',
+        error: e,
+        stackTrace: stackTrace,
+        level: 1000, // ERROR level
+        time: DateTime.now(),
+      );
+      
+      // Log query parameters for debugging
+      developer.log(
+        'Query context: latitude=$latitude, longitude=$longitude, bufferKm=$bufferKm',
+        name: 'SavedRouteApi',
+        level: 1000, // ERROR level
+        time: DateTime.now(),
+      );
+      
+      // Return empty list on error to prevent disrupting business logic
+      return [];
+    }
+  }
 
   // ========== Saved Routes ==========
 
@@ -82,7 +162,26 @@ class SavedRouteApi {
         'travel_mode': travelMode,
       }).select().single();
 
-      return SavedRouteModel.fromJson(response);
+      final route = SavedRouteModel.fromJson(response);
+
+      // Trigger notification for route save
+      try {
+        await _notificationHelper.notifyRouteSaved(
+          userId: userId,
+          routeId: route.id,
+          routeName: name,
+        );
+      } catch (e, stackTrace) {
+        // Log error but don't disrupt business logic
+        developer.log(
+          'Failed to send route saved notification',
+          name: 'SavedRouteApi',
+          error: e,
+          stackTrace: stackTrace,
+        );
+      }
+
+      return route;
     } catch (e) {
       throw Exception('Failed to create route: $e');
     }
@@ -247,10 +346,43 @@ class SavedRouteApi {
   /// Toggle route monitoring status
   Future<void> toggleRouteMonitoring(String routeId, bool isMonitoring) async {
     try {
+      final userId = _supabase.auth.currentUser?.id;
+      if (userId == null) {
+        throw Exception('User not authenticated');
+      }
+
       await _supabase
           .from('saved_routes')
           .update({'is_monitoring': isMonitoring})
           .eq('id', routeId);
+
+      // Only notify when monitoring is enabled (not disabled)
+      if (isMonitoring) {
+        try {
+          // Get route details for notification
+          final routeResponse = await _supabase
+              .from('saved_routes')
+              .select()
+              .eq('id', routeId)
+              .single();
+          
+          final route = SavedRouteModel.fromJson(routeResponse);
+
+          await _notificationHelper.notifyRouteMonitoringEnabled(
+            userId: userId,
+            routeId: routeId,
+            routeName: route.name,
+          );
+        } catch (e, stackTrace) {
+          // Log error but don't disrupt business logic
+          developer.log(
+            'Failed to send route monitoring enabled notification',
+            name: 'SavedRouteApi',
+            error: e,
+            stackTrace: stackTrace,
+          );
+        }
+      }
     } catch (e) {
       throw Exception('Failed to toggle route monitoring: $e');
     }

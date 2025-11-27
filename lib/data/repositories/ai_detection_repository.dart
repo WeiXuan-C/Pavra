@@ -1,7 +1,9 @@
 import 'dart:developer' as developer;
 import 'package:image_picker/image_picker.dart';
 import '../../core/api/detection/ai_detection_api.dart';
+import '../../core/api/notification/notification_api.dart';
 import '../../core/services/image_compression_service.dart';
+import '../../core/services/notification_helper_service.dart';
 import '../models/detection_exception.dart';
 import '../models/detection_model.dart';
 import '../models/detection_type.dart';
@@ -21,7 +23,9 @@ class AiDetectionRepository {
   AiDetectionRepository({
     AiDetectionApi? api,
     ImageCompressionService? compressionService,
-  })  : _api = api ?? AiDetectionApi(),
+  })  : _api = api ?? AiDetectionApi(
+          notificationHelper: NotificationHelperService(NotificationApi()),
+        ),
         _compressionService = compressionService ?? ImageCompressionService();
 
   /// Detect road damage from camera image

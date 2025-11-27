@@ -1,10 +1,22 @@
 import '../../core/api/authority_request/authority_request_api.dart';
+import '../../core/api/notification/notification_api.dart';
+import '../../core/api/user/user_api.dart';
+import '../../core/services/notification_helper_service.dart';
 import '../models/authority_request_model.dart';
 
 /// Authority Request Repository
 /// Bridge between API and UI layer
 class AuthorityRequestRepository {
-  final _api = AuthorityRequestApi();
+  late final AuthorityRequestApi _api;
+
+  AuthorityRequestRepository() {
+    // Initialize dependencies
+    final notificationApi = NotificationApi();
+    final notificationHelper = NotificationHelperService(notificationApi);
+    final userApi = UserApi();
+    
+    _api = AuthorityRequestApi(notificationHelper, userApi);
+  }
 
   // ========== CREATE ==========
 

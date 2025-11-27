@@ -19,6 +19,8 @@ import 'presentation/notification_screen/notification_provider.dart';
 import 'presentation/camera_detection_screen/ai_detection_provider.dart';
 import 'data/repositories/ai_detection_repository.dart';
 import 'data/sources/local/detection_queue_manager.dart';
+import 'core/api/notification/notification_api.dart';
+import 'core/services/notification_helper_service.dart';
 import 'core/middleware/route_guard.dart';
 import 'l10n/app_localizations.dart';
 
@@ -192,10 +194,16 @@ void main() async {
         ),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider(
-          create: (_) => AiDetectionProvider(
-            repository: AiDetectionRepository(),
-            queueManager: DetectionQueueManager(prefs),
-          ),
+          create: (_) {
+            final notificationHelper = NotificationHelperService(NotificationApi());
+            return AiDetectionProvider(
+              repository: AiDetectionRepository(),
+              queueManager: DetectionQueueManager(
+                prefs,
+                notificationHelper: notificationHelper,
+              ),
+            );
+          },
         ),
       ],
       child: MyApp(),

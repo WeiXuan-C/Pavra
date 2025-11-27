@@ -1,12 +1,18 @@
 import 'dart:developer' as developer;
 import '../../supabase/database_service.dart';
 import '../../services/reputation_service.dart';
+import '../../services/notification_helper_service.dart';
+import '../user/user_api.dart';
 
 /// Authority Request API
 /// Handles authority request operations with the database
 class AuthorityRequestApi {
   final _db = DatabaseService();
   final _reputationService = ReputationService();
+  final NotificationHelperService _notificationHelper;
+  final UserApi _userApi;
+
+  AuthorityRequestApi(this._notificationHelper, this._userApi);
 
   static const String _tableName = 'requests';
 
@@ -33,10 +39,40 @@ class AuthorityRequestApi {
         'status': 'pending',
       };
 
-      return await _db.insert<Map<String, dynamic>>(
+      final result = await _db.insert<Map<String, dynamic>>(
         table: _tableName,
         data: data,
       );
+
+      // Send notifications after successful creation
+      try {
+        // Notify the requester that their request was submitted
+        await _notificationHelper.notifyRequestSubmitted(
+          userId: userId,
+          requestId: result['id'] as String,
+        );
+
+        // Get user information for admin notification
+        final userProfile = await _userApi.getProfileById(userId);
+        final username = userProfile?['username'] as String? ?? 'Unknown User';
+
+        // Notify admins about the new request
+        await _notificationHelper.notifyAdminsNewRequest(
+          requestId: result['id'] as String,
+          userId: userId,
+          username: username,
+        );
+      } catch (e, stackTrace) {
+        // Log notification errors but don't fail the request creation
+        developer.log(
+          'Failed to send notifications for authority request creation',
+          name: 'AuthorityRequestApi',
+          error: e,
+          stackTrace: stackTrace,
+        );
+      }
+
+      return result;
     } catch (e) {
       developer.log(
         'Error creating authority request: $e',
@@ -228,6 +264,37 @@ class AuthorityRequestApi {
         'Update result: ${result.length} records updated',
         name: 'AuthorityRequestApi',
       );
+
+      // Send notifications based on status
+      final userId = request['user_id'] as String?;
+      if (userId != null) {
+        try {
+          if (status == 'approved') {
+            // Notify user that their request was approved
+            await _notificationHelper.notifyRequestApproved(
+              userId: userId,
+              requestId: requestId,
+              reviewerId: reviewedBy,
+            );
+          } else if (status == 'rejected') {
+            // Notify user that their request was rejected
+            await _notificationHelper.notifyRequestRejected(
+              userId: userId,
+              requestId: requestId,
+              reviewerId: reviewedBy,
+              comment: reviewedComment,
+            );
+          }
+        } catch (e, stackTrace) {
+          // Log notification errors but don't fail the status update
+          developer.log(
+            'Failed to send notification for request status update',
+            name: 'AuthorityRequestApi',
+            error: e,
+            stackTrace: stackTrace,
+          );
+        }
+      }
 
       // Deduct reputation if request is rejected
       if (status == 'rejected' && request['user_id'] != null) {

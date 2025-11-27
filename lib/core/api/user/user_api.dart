@@ -1,13 +1,18 @@
 import 'dart:developer' as developer;
 import '../../supabase/database_service.dart';
+import '../../services/notification_helper_service.dart';
 
 /// User API
 /// 针对 users/profiles 表的业务逻辑
 /// 使用 DatabaseService 进行数据库操作
 class UserApi {
   final _db = DatabaseService();
+  final NotificationHelperService? _notificationHelper;
 
   static const String _tableName = 'profiles';
+
+  UserApi({NotificationHelperService? notificationHelper})
+      : _notificationHelper = notificationHelper;
 
   // ========== CREATE ==========
 
@@ -32,10 +37,25 @@ class UserApi {
         if (providerUserId != null) 'provider_user_id': providerUserId,
       };
 
-      return await _db.insert<Map<String, dynamic>>(
+      final result = await _db.insert<Map<String, dynamic>>(
         table: _tableName,
         data: data,
       );
+
+      // Send welcome notification to new user
+      try {
+        await _notificationHelper?.notifyWelcomeNewUser(userId: userId);
+      } catch (e, stackTrace) {
+        developer.log(
+          'Failed to send welcome notification',
+          name: 'UserApi',
+          error: e,
+          stackTrace: stackTrace,
+        );
+        // Don't rethrow - notification failures shouldn't disrupt profile creation
+      }
+
+      return result;
     } catch (e) {
       developer.log('Error creating profile: $e', name: 'UserApi', error: e);
       rethrow;
@@ -168,6 +188,10 @@ class UserApi {
     String? role,
     bool? notificationsEnabled,
   }) async {
+    // Get current profile to check for role changes
+    final currentProfile = await getProfileById(userId);
+    final oldRole = currentProfile?['role'] as String?;
+
     final updates = <String, dynamic>{};
     if (username != null) updates['username'] = username;
     if (email != null) updates['email'] = email;
@@ -183,12 +207,32 @@ class UserApi {
       throw ArgumentError('No fields to update');
     }
 
-    return await _db.update<Map<String, dynamic>>(
+    final result = await _db.update<Map<String, dynamic>>(
       table: _tableName,
       data: updates,
       matchColumn: 'id',
       matchValue: userId,
     );
+
+    // Send role change notification if role changed
+    if (role != null && role != oldRole) {
+      try {
+        await _notificationHelper?.notifyRoleChanged(
+          userId: userId,
+          newRole: role,
+        );
+      } catch (e, stackTrace) {
+        developer.log(
+          'Failed to send role change notification',
+          name: 'UserApi',
+          error: e,
+          stackTrace: stackTrace,
+        );
+        // Don't rethrow - notification failures shouldn't disrupt profile update
+      }
+    }
+
+    return result;
   }
 
   /// 增加用户声誉分数
@@ -253,5 +297,74 @@ class UserApi {
       data: data,
       onConflict: ['id'],
     );
+  }
+
+  // ========== NEARBY USERS ==========
+
+  /// Get users within radius of a location who have location alerts enabled
+  /// 
+  /// Returns a list of user IDs for users who:
+  /// - Have notifications enabled globally
+  /// - Have location-based alerts enabled (road damage, construction, weather, traffic)
+  /// - Have an alert radius that covers the specified location
+  /// - Are not the current user
+  /// 
+  /// Note: Currently returns users based on alert preferences. Geographic filtering
+  /// by actual user location requires location tracking to be implemented.
+  /// 
+  /// Returns empty list on error to prevent disrupting business logic.
+  Future<List<String>> getNearbyUsers({
+    required double latitude,
+    required double longitude,
+    double radiusKm = 5.0,
+  }) async {
+    try {
+      developer.log(
+        'Getting nearby users for location ($latitude, $longitude) within ${radiusKm}km',
+        name: 'UserApi',
+      );
+
+      final result = await _db.rpc<List<dynamic>>(
+        functionName: 'get_nearby_users',
+        params: {
+          'lat': latitude,
+          'lng': longitude,
+          'radius_km': radiusKm,
+        },
+      );
+
+      // Extract user IDs from the result
+      final userIds = result
+          .map((row) => (row as Map<String, dynamic>)['id'] as String)
+          .toList();
+
+      developer.log(
+        'Found ${userIds.length} nearby users',
+        name: 'UserApi',
+      );
+
+      return userIds;
+    } catch (e, stackTrace) {
+      // Log error with full context
+      developer.log(
+        'Failed to get nearby users',
+        name: 'UserApi',
+        error: e,
+        stackTrace: stackTrace,
+        level: 1000, // ERROR level
+        time: DateTime.now(),
+      );
+      
+      // Log query parameters for debugging
+      developer.log(
+        'Query context: latitude=$latitude, longitude=$longitude, radiusKm=$radiusKm',
+        name: 'UserApi',
+        level: 1000, // ERROR level
+        time: DateTime.now(),
+      );
+      
+      // Return empty list on error to prevent disrupting business logic
+      return [];
+    }
   }
 }

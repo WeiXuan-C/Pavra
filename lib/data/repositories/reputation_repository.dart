@@ -1,5 +1,7 @@
 import '../../core/api/reputation/reputation_api.dart';
+import '../../core/api/notification/notification_api.dart';
 import '../../core/models/reputation_model.dart';
+import '../../core/services/notification_helper_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Reputation Repository
@@ -8,7 +10,10 @@ class ReputationRepository {
   late final ReputationApi _api;
 
   ReputationRepository() {
-    _api = ReputationApi(Supabase.instance.client);
+    final supabaseClient = Supabase.instance.client;
+    final notificationApi = NotificationApi();
+    final notificationHelper = NotificationHelperService(notificationApi);
+    _api = ReputationApi(supabaseClient, notificationHelper);
   }
 
   /// Get reputation history for a user

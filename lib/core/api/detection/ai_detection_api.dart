@@ -3,14 +3,20 @@ import 'dart:developer' as developer;
 import 'package:http/http.dart' as http;
 import '../../../data/models/detection_exception.dart';
 import '../../../data/models/detection_model.dart';
+import '../../services/notification_helper_service.dart';
 import 'detection_api_constants.dart';
 
 /// AI Detection API
 /// Handles HTTP communication with backend detection endpoint
 class AiDetectionApi {
   final http.Client _client;
+  final NotificationHelperService? _notificationHelper;
 
-  AiDetectionApi({http.Client? client}) : _client = client ?? http.Client();
+  AiDetectionApi({
+    http.Client? client,
+    NotificationHelperService? notificationHelper,
+  })  : _client = client ?? http.Client(),
+        _notificationHelper = notificationHelper;
 
   /// Detect road damage from image using OpenRouter vision model
   ///
@@ -194,7 +200,36 @@ class AiDetectionApi {
         );
 
         // Parse detection model
-        return DetectionModel.fromJson(detectionData);
+        final detection = DetectionModel.fromJson(detectionData);
+
+        // Trigger notification for critical or high severity detections
+        // Requirements: 5.1, 5.2, 5.3, 5.4, 13.2
+        try {
+          if (_notificationHelper != null && detection.severity >= 4) {
+            // Severity 4-5 is high/critical
+            final severityLabel = detection.severity == 5 ? 'critical' : 'high';
+            
+            await _notificationHelper.notifyCriticalDetection(
+              userId: userId,
+              detectionId: detection.id,
+              issueType: detection.type.value,
+              severity: severityLabel,
+              latitude: latitude,
+              longitude: longitude,
+              confidence: detection.confidence,
+            );
+          }
+        } catch (e, stackTrace) {
+          // Log error but don't throw - notification failures shouldn't disrupt detection
+          developer.log(
+            'Failed to send critical detection notification',
+            name: 'AiDetectionApi',
+            error: e,
+            stackTrace: stackTrace,
+          );
+        }
+
+        return detection;
       } else if (response.statusCode == 400) {
         // Bad request - validation error
         final errorData = jsonDecode(response.body) as Map<String, dynamic>;

@@ -1,8 +1,10 @@
 import 'dart:developer' as developer;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../api/reputation/reputation_api.dart';
+import '../api/notification/notification_api.dart';
 import '../models/reputation_model.dart';
 import '../../data/repositories/user_repository.dart';
+import 'notification_helper_service.dart';
 
 /// Reputation Service
 /// Handles reputation score updates and history tracking
@@ -10,13 +12,16 @@ class ReputationService {
   final _supabase = Supabase.instance.client;
   late final ReputationApi _reputationApi;
   final _userRepository = UserRepository();
+  late final NotificationHelperService _notificationHelper;
 
   // Reputation score constraints
   static const int minScore = 0;
   static const int maxScore = 100;
 
   ReputationService() {
-    _reputationApi = ReputationApi(_supabase);
+    final notificationApi = NotificationApi();
+    _notificationHelper = NotificationHelperService(notificationApi);
+    _reputationApi = ReputationApi(_supabase, _notificationHelper);
   }
 
   /// Add reputation points for uploading an issue (+1)

@@ -12,6 +12,8 @@ import '../../core/services/saved_route_service.dart';
 import '../../core/services/saved_location_service.dart';
 import '../../core/services/multi_stop_navigation_service.dart';
 import '../../core/api/saved_route/saved_route_api.dart';
+import '../../core/api/notification/notification_api.dart';
+import '../../core/services/notification_helper_service.dart';
 import '../../data/repositories/saved_route_repository.dart';
 import '../../data/models/saved_location_model.dart';
 import '../../core/supabase/supabase_client.dart';
@@ -72,7 +74,8 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
       _routeOptimizer = RouteOptimizer();
       _navigationService = MultiStopNavigationService();
       
-      final api = SavedRouteApi(supabase);
+      final notificationHelper = NotificationHelperService(NotificationApi());
+      final api = SavedRouteApi(supabase, notificationHelper);
       final repository = SavedRouteRepository(api);
       _savedRouteService = SavedRouteService(repository);
       _savedLocationService = SavedLocationService(repository);
