@@ -3464,5 +3464,46 @@
   "analytics_byIssueType": "按问题类型分类",
   "@analytics_byIssueType": {
     "description": "问题类型图表标题"
+  },
+  "route_quickActions": "快捷操作",
+  "@route_quickActions": {
+    "description": "地图控制中的快捷操作部分标题"
+  },
+  "route_planRoute": "规划路线",
+  "@route_planRoute": {
+    "description": "规划路线按钮文本"
+  },
+  "route_routeStops": "路线站点",
+  "@route_routeStops": {
+    "description": "路线站点部分标题"
+  },
+  "route_savedLocations": "已保存位置",
+  "@route_savedLocations": {
+    "description": "已保存位置部分标题"
+  },
+  "route_enterStartingPoint": "输入起点",
+  "@route_enterStartingPoint": {
+    "description": "起点输入提示文本"
+  },
+  "route_enterStop": "输入第 {number} 站",
+  "@route_enterStop": {
+    "description": "途经点输入提示文本",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "route_enterDestination": "输入目的地",
+  "@route_enterDestination": {
+    "description": "目的地输入提示文本"
+  },
+  "route_car": "汽车",
+  "@route_car": {
+    "description": "汽车出行方式"
+  },
+  "route_walk": "步行",
+  "@route_walk": {
+    "description": "步行出行方式"
   }
 }

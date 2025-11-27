@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:geocoding/geocoding.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../core/services/multi_stop_route_service.dart';
 import '../../core/services/directions_service.dart';
 import '../../core/services/map_service.dart';
@@ -1196,32 +1197,62 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
               color: theme.scaffoldBackgroundColor,
               child: Column(
                 children: [
-                  // Travel mode selector
+                  // Compact header with travel mode
                   Container(
-                    padding: EdgeInsets.all(3.w),
+                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
+                    decoration: BoxDecoration(
+                      color: theme.cardColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
                     child: Row(
                       children: [
-                        _buildTravelModeButton('driving', Icons.directions_car),
-                        SizedBox(width: 2.w),
-                        _buildTravelModeButton('walking', Icons.directions_walk),
-                        SizedBox(width: 2.w),
-                        _buildTravelModeButton('bicycling', Icons.directions_bike),
-                        SizedBox(width: 2.w),
-                        _buildTravelModeButton('transit', Icons.directions_transit),
+                        Text(
+                          AppLocalizations.of(context).route_routeStops,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(),
+                        // Compact travel mode selector
+                        Container(
+                          padding: EdgeInsets.all(1.w),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surface,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: theme.dividerColor,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildCompactTravelModeButton('driving', Icons.directions_car, 'Car'),
+                              SizedBox(width: 1.w),
+                              _buildCompactTravelModeButton('walking', Icons.directions_walk, 'Walk'),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
 
-                  Divider(height: 1),
-
-                  // Route points
+                  // Route points with better visibility
                   Expanded(
-                    child: ListView.builder(
-                      padding: EdgeInsets.all(3.w),
-                      itemCount: _routePoints.length,
-                      itemBuilder: (context, index) {
-                        return _buildRoutePointTile(index, key: ValueKey(index));
-                      },
+                    child: Container(
+                      color: theme.scaffoldBackgroundColor,
+                      child: ListView.builder(
+                        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                        itemCount: _routePoints.length,
+                        itemBuilder: (context, index) {
+                          return _buildRoutePointTile(index, key: ValueKey(index));
+                        },
+                      ),
                     ),
                   ),
 
@@ -1306,21 +1337,25 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
     Color iconColor;
     String hint;
     String semanticLabel;
+    IconData pointIcon;
 
     switch (point.type) {
       case RoutePointType.start:
         iconColor = Colors.green;
-        hint = 'Starting point';
+        pointIcon = Icons.trip_origin;
+        hint = AppLocalizations.of(context).route_enterStartingPoint;
         semanticLabel = AccessibilityUtils.routePointLabel(index, _routePoints.length, 'start');
         break;
       case RoutePointType.waypoint:
         iconColor = Colors.orange;
-        hint = 'Waypoint $index';
+        pointIcon = Icons.location_on;
+        hint = AppLocalizations.of(context).route_enterStop(index);
         semanticLabel = AccessibilityUtils.routePointLabel(index, _routePoints.length, 'waypoint');
         break;
       case RoutePointType.destination:
         iconColor = Colors.red;
-        hint = 'Destination';
+        pointIcon = Icons.place;
+        hint = AppLocalizations.of(context).route_enterDestination;
         semanticLabel = AccessibilityUtils.routePointLabel(index, _routePoints.length, 'destination');
         break;
     }
@@ -1331,35 +1366,58 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
       child: Container(
         key: key,
         margin: EdgeInsets.only(bottom: 2.h),
+        padding: EdgeInsets.all(3.w),
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: point.location != null 
+                ? iconColor.withValues(alpha: 0.3)
+                : theme.dividerColor,
+            width: point.location != null ? 2 : 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Icon and number
+            // Icon indicator
             Column(
               children: [
                 Container(
-                  width: 40,
-                  height: 40,
+                  width: 44,
+                  height: 44,
                   decoration: BoxDecoration(
-                    color: iconColor.withValues(alpha: 0.1),
+                    color: iconColor.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
+                    border: Border.all(
+                      color: iconColor,
+                      width: 2,
+                    ),
                   ),
                   child: Center(
-                    child: Text(
-                      '${index + 1}',
-                      style: TextStyle(
-                        color: iconColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                    child: Icon(
+                      pointIcon,
+                      color: iconColor,
+                      size: 24,
                     ),
                   ),
                 ),
                 if (!isLast)
                   Container(
-                    width: 2,
-                    height: 30,
-                    color: theme.dividerColor,
+                    width: 3,
+                    height: 20,
+                    margin: EdgeInsets.symmetric(vertical: 1.h),
+                    decoration: BoxDecoration(
+                      color: theme.dividerColor,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
               ],
             ),
@@ -1384,11 +1442,13 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
                 label: 'Remove waypoint $index',
                 button: true,
                 child: IconButton(
-                  icon: Icon(Icons.close, size: 20, color: theme.colorScheme.error),
+                  icon: Icon(Icons.close, size: 22, color: theme.colorScheme.error),
                   onPressed: () async {
                     await AccessibilityUtils.buttonPressed();
                     _removeWaypoint(index);
                   },
+                  padding: EdgeInsets.all(2.w),
+                  constraints: BoxConstraints(),
                 ),
               ),
           ],
@@ -1397,45 +1457,55 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
     );
   }
 
-  Widget _buildTravelModeButton(String mode, IconData icon) {
+  Widget _buildCompactTravelModeButton(String mode, IconData icon, String label) {
     final theme = Theme.of(context);
     final isSelected = _selectedTravelMode == mode;
 
-    return Expanded(
-      child: Semantics(
-        label: AccessibilityUtils.travelModeLabel(mode, isSelected),
-        button: true,
-        selected: isSelected,
-        child: InkWell(
-          onTap: () async {
-            await AccessibilityUtils.buttonPressed();
-            setState(() {
-              _selectedTravelMode = mode;
-            });
-            _calculateRoute();
-          },
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 1.5.h),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? theme.colorScheme.primary.withValues(alpha: 0.1)
-                  : Colors.transparent,
-              border: Border.all(
+    return Semantics(
+      label: AccessibilityUtils.travelModeLabel(mode, isSelected),
+      button: true,
+      selected: isSelected,
+      child: InkWell(
+        onTap: () async {
+          await AccessibilityUtils.buttonPressed();
+          setState(() {
+            _selectedTravelMode = mode;
+          });
+          _calculateRoute();
+        },
+        borderRadius: BorderRadius.circular(10),
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 200),
+          padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? theme.colorScheme.primary
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
                 color: isSelected
-                    ? theme.colorScheme.primary
-                    : theme.dividerColor,
-                width: isSelected ? 2 : 1,
+                    ? Colors.white
+                    : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                size: 20,
               ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              icon,
-              color: isSelected
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.onSurface.withValues(alpha: 0.6),
-              size: 24,
-            ),
+              SizedBox(width: 1.5.w),
+              Text(
+                mode == 'driving' 
+                    ? AppLocalizations.of(context).route_car 
+                    : AppLocalizations.of(context).route_walk,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: isSelected
+                      ? Colors.white
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                ),
+              ),
+            ],
           ),
         ),
       ),

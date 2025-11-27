@@ -70,6 +70,9 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
     'spam': false,
     'discard': false,
   };
+  
+  // UI state for collapsible controls
+  bool _isControlsExpanded = false;
 
 
 
@@ -1484,199 +1487,329 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                     ),
                   ),
 
-                // Search bar (hide during navigation)
+                // Clean search bar with expandable controls (hide during navigation)
                 if (!_isNavigating)
                   SafeArea(
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: MapSearchBar(
-                                issues: _roadIssues,
-                                onSearch: _handleSearch,
-                                onFilterTap: _showFilterBottomSheet,
-                                activeFilterCount: _getActiveFilterCount(),
-                                onVoiceCommand: _handleVoiceCommand,
-                                savedLocationService: _savedLocationService,
+                    child: Container(
+                      margin: EdgeInsets.all(4.w),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Main search bar with minimal buttons
+                          Row(
+                            children: [
+                              Expanded(
+                                child: MapSearchBar(
+                                  issues: _roadIssues,
+                                  onSearch: _handleSearch,
+                                  onFilterTap: _showFilterBottomSheet,
+                                  activeFilterCount: _getActiveFilterCount(),
+                                  onVoiceCommand: _handleVoiceCommand,
+                                  savedLocationService: _savedLocationService,
+                                ),
                               ),
-                            ),
-                            // Route planning button
-                            Container(
-                              margin: EdgeInsets.only(right: 4.w, top: 2.h),
-                              child: Material(
+                              SizedBox(width: 2.w),
+                              // Expand/Collapse button (menu)
+                              Material(
                                 elevation: 4,
-                                shadowColor: Theme.of(context).colorScheme.shadow,
-                                borderRadius: BorderRadius.circular(3.w),
+                                shadowColor: theme.colorScheme.shadow,
+                                borderRadius: BorderRadius.circular(12),
                                 child: InkWell(
-                                  onTap: () => _showRoutePlanningSheet(),
-                                  borderRadius: BorderRadius.circular(3.w),
+                                  onTap: () {
+                                    setState(() {
+                                      _isControlsExpanded = !_isControlsExpanded;
+                                    });
+                                  },
+                                  borderRadius: BorderRadius.circular(12),
                                   child: Container(
                                     padding: EdgeInsets.all(3.w),
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context).cardColor,
-                                      borderRadius: BorderRadius.circular(3.w),
+                                      color: _isControlsExpanded 
+                                          ? theme.colorScheme.primary 
+                                          : theme.cardColor,
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Icon(
-                                      Icons.alt_route,
-                                      color: Theme.of(context).colorScheme.primary,
+                                      _isControlsExpanded 
+                                          ? Icons.close 
+                                          : Icons.menu,
+                                      color: _isControlsExpanded 
+                                          ? Colors.white 
+                                          : theme.colorScheme.primary,
                                       size: 24,
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        // Alert radius indicator
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-                          padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
-                          decoration: BoxDecoration(
-                            color: theme.cardColor.withValues(alpha: 0.9),
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.1),
-                                blurRadius: 4,
-                                offset: Offset(0, 2),
-                              ),
                             ],
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CustomIconWidget(
-                                iconName: 'radar',
-                                size: 16,
-                                color: theme.colorScheme.primary,
-                              ),
-                              SizedBox(width: 2.w),
-                              Text(
-                                AppLocalizations.of(context).map_showingIssuesWithin(
-                                  _alertRadiusMiles.toStringAsFixed(1),
-                                ),
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurface,
-                                ),
-                              ),
-                              SizedBox(width: 2.w),
-                              InkWell(
-                                onTap: _refreshIssues,
-                                child: CustomIconWidget(
-                                  iconName: 'refresh',
-                                  size: 16,
-                                  color: theme.colorScheme.primary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        
-                        // Quick access buttons (Home/Work)
-                        if (_homeLocation != null || _workLocation != null)
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 4.w),
-                            child: Row(
-                              children: [
-                                if (_homeLocation != null)
-                                  Expanded(
-                                    child: Semantics(
-                                      label: AccessibilityUtils.quickAccessLabel('Home'),
-                                      button: true,
-                                      child: Material(
-                                        elevation: 2,
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: InkWell(
-                                          onTap: () async {
-                                            await AccessibilityUtils.buttonPressed();
-                                            _navigateToHome();
-                                          },
-                                          borderRadius: BorderRadius.circular(12),
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 3.w,
-                                              vertical: 1.2.h,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: theme.cardColor,
-                                              borderRadius: BorderRadius.circular(12),
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.home,
-                                                  color: theme.colorScheme.primary,
-                                                  size: 20,
-                                                ),
-                                                SizedBox(width: 2.w),
-                                                Text(
-                                                  'Home',
-                                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                                    color: theme.colorScheme.primary,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                          
+                          // Expandable controls panel with all features
+                          AnimatedSize(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            child: _isControlsExpanded
+                                ? Container(
+                                    margin: EdgeInsets.only(top: 2.h),
+                                    padding: EdgeInsets.all(4.w),
+                                    decoration: BoxDecoration(
+                                      color: theme.cardColor,
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(alpha: 0.1),
+                                          blurRadius: 8,
+                                          offset: Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // Quick Actions Section
+                                        Text(
+                                          AppLocalizations.of(context).route_quickActions,
+                                          style: theme.textTheme.labelLarge?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                if (_homeLocation != null && _workLocation != null)
-                                  SizedBox(width: 2.w),
-                                if (_workLocation != null)
-                                  Expanded(
-                                    child: Semantics(
-                                      label: AccessibilityUtils.quickAccessLabel('Work'),
-                                      button: true,
-                                      child: Material(
-                                        elevation: 2,
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: InkWell(
-                                          onTap: () async {
-                                            await AccessibilityUtils.buttonPressed();
-                                            _navigateToWork();
-                                          },
-                                          borderRadius: BorderRadius.circular(12),
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 3.w,
-                                              vertical: 1.2.h,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: theme.cardColor,
-                                              borderRadius: BorderRadius.circular(12),
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.work,
-                                                  color: theme.colorScheme.primary,
-                                                  size: 20,
-                                                ),
-                                                SizedBox(width: 2.w),
-                                                Text(
-                                                  'Work',
-                                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                                    color: theme.colorScheme.primary,
-                                                    fontWeight: FontWeight.w600,
+                                        SizedBox(height: 1.5.h),
+                                        
+                                        // Action buttons grid
+                                        Row(
+                                          children: [
+                                            // Plan Route button
+                                            Expanded(
+                                              child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _isControlsExpanded = false;
+                                                  });
+                                                  _showRoutePlanningSheet();
+                                                },
+                                                borderRadius: BorderRadius.circular(12),
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(vertical: 2.h),
+                                                  decoration: BoxDecoration(
+                                                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                                    borderRadius: BorderRadius.circular(12),
+                                                    border: Border.all(
+                                                      color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                                                    ),
+                                                  ),
+                                                  child: Column(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.alt_route,
+                                                        color: theme.colorScheme.primary,
+                                                        size: 28,
+                                                      ),
+                                                      SizedBox(height: 0.5.h),
+                                                      Text(
+                                                        AppLocalizations.of(context).route_planRoute,
+                                                        style: theme.textTheme.bodySmall?.copyWith(
+                                                          color: theme.colorScheme.primary,
+                                                          fontWeight: FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                              ],
+                                              ),
                                             ),
+                                            SizedBox(width: 2.w),
+                                            // Refresh Issues button
+                                            Expanded(
+                                              child: InkWell(
+                                                onTap: () {
+                                                  _refreshIssues();
+                                                },
+                                                borderRadius: BorderRadius.circular(12),
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(vertical: 2.h),
+                                                  decoration: BoxDecoration(
+                                                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                                    borderRadius: BorderRadius.circular(12),
+                                                    border: Border.all(
+                                                      color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                                                    ),
+                                                  ),
+                                                  child: Column(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.refresh,
+                                                        color: theme.colorScheme.primary,
+                                                        size: 28,
+                                                      ),
+                                                      SizedBox(height: 0.5.h),
+                                                      Text(
+                                                        'Refresh',
+                                                        style: theme.textTheme.bodySmall?.copyWith(
+                                                          color: theme.colorScheme.primary,
+                                                          fontWeight: FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        
+                                        SizedBox(height: 2.h),
+                                        
+                                        // Alert radius info
+                                        Container(
+                                          padding: EdgeInsets.all(3.w),
+                                          decoration: BoxDecoration(
+                                            color: theme.colorScheme.surface,
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              CustomIconWidget(
+                                                iconName: 'radar',
+                                                size: 18,
+                                                color: theme.colorScheme.primary,
+                                              ),
+                                              SizedBox(width: 2.w),
+                                              Expanded(
+                                                child: Text(
+                                                  AppLocalizations.of(context).map_showingIssuesWithin(
+                                                    _alertRadiusMiles.toStringAsFixed(1),
+                                                  ),
+                                                  style: theme.textTheme.bodySmall?.copyWith(
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ),
+                                        
+                                        // Quick access buttons (Home/Work)
+                                        if (_homeLocation != null || _workLocation != null) ...[
+                                          SizedBox(height: 2.h),
+                                          Text(
+                                            AppLocalizations.of(context).route_savedLocations,
+                                            style: theme.textTheme.labelLarge?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                            ),
+                                          ),
+                                          SizedBox(height: 1.5.h),
+                                          Row(
+                                            children: [
+                                              if (_homeLocation != null)
+                                                Expanded(
+                                                  child: Semantics(
+                                                    label: AccessibilityUtils.quickAccessLabel('Home'),
+                                                    button: true,
+                                                    child: InkWell(
+                                                      onTap: () async {
+                                                        await AccessibilityUtils.buttonPressed();
+                                                        setState(() {
+                                                          _isControlsExpanded = false;
+                                                        });
+                                                        _navigateToHome();
+                                                      },
+                                                      borderRadius: BorderRadius.circular(12),
+                                                      child: Container(
+                                                        padding: EdgeInsets.symmetric(
+                                                          horizontal: 3.w,
+                                                          vertical: 1.5.h,
+                                                        ),
+                                                        decoration: BoxDecoration(
+                                                          color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                                          borderRadius: BorderRadius.circular(12),
+                                                          border: Border.all(
+                                                            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                                                          ),
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.home,
+                                                              color: theme.colorScheme.primary,
+                                                              size: 20,
+                                                            ),
+                                                            SizedBox(width: 2.w),
+                                                            Text(
+                                                              'Home',
+                                                              style: theme.textTheme.bodyMedium?.copyWith(
+                                                                color: theme.colorScheme.primary,
+                                                                fontWeight: FontWeight.w600,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              if (_homeLocation != null && _workLocation != null)
+                                                SizedBox(width: 2.w),
+                                              if (_workLocation != null)
+                                                Expanded(
+                                                  child: Semantics(
+                                                    label: AccessibilityUtils.quickAccessLabel('Work'),
+                                                    button: true,
+                                                    child: InkWell(
+                                                      onTap: () async {
+                                                        await AccessibilityUtils.buttonPressed();
+                                                        setState(() {
+                                                          _isControlsExpanded = false;
+                                                        });
+                                                        _navigateToWork();
+                                                      },
+                                                      borderRadius: BorderRadius.circular(12),
+                                                      child: Container(
+                                                        padding: EdgeInsets.symmetric(
+                                                          horizontal: 3.w,
+                                                          vertical: 1.5.h,
+                                                        ),
+                                                        decoration: BoxDecoration(
+                                                          color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                                          borderRadius: BorderRadius.circular(12),
+                                                          border: Border.all(
+                                                            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                                                          ),
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          children: [
+                                                            Icon(
+                                                              Icons.work,
+                                                              color: theme.colorScheme.primary,
+                                                              size: 20,
+                                                            ),
+                                                            SizedBox(width: 2.w),
+                                                            Text(
+                                                              'Work',
+                                                              style: theme.textTheme.bodyMedium?.copyWith(
+                                                                color: theme.colorScheme.primary,
+                                                                fontWeight: FontWeight.w600,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                        ],
+                                      ],
                                     ),
-                                  ),
-                              ],
-                            ),
+                                  )
+                                : SizedBox.shrink(),
                           ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
 

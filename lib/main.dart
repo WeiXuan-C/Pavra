@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -24,9 +25,13 @@ import 'l10n/app_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Configure timeago with short format
+  // Configure timeago with short format (lightweight, can stay on main thread)
   timeago.setLocaleMessages('en', timeago.EnShortMessages());
   timeago.setLocaleMessages('zh', timeago.ZhMessages());
+
+  // 🚨 CRITICAL: Device orientation lock - DO NOT REMOVE
+  // Set this early to prevent orientation changes during initialization
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   // 🚨 CRITICAL: Load environment variables from .env file
   try {
@@ -74,8 +79,15 @@ void main() async {
   }
 
   // 🚨 CRITICAL: Initialize Supabase - DO NOT REMOVE
+  // Show splash screen while initializing to avoid blocking main thread
   try {
-    await SupabaseService.initialize();
+    // Initialize Supabase with timeout to prevent indefinite blocking
+    await SupabaseService.initialize().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        throw TimeoutException('Supabase initialization timed out');
+      },
+    );
   } catch (e) {
     // Show initialization error and prevent app from starting
     runApp(
@@ -118,19 +130,18 @@ void main() async {
     return; // Stop execution
   }
 
-  // 🔔 Initialize OneSignal for push notifications
-  try {
-    final oneSignalService = OneSignalService();
-    await oneSignalService.initialize();
-    
+  // 🔔 Initialize OneSignal for push notifications (non-blocking)
+  // Run in background to avoid blocking main thread
+  OneSignalService().initialize().then((_) {
     // Register default action handlers for data notifications
-    oneSignalService.registerDefaultActionHandlers();
-  } catch (e) {
+    OneSignalService().registerDefaultActionHandlers();
+    debugPrint('✅ OneSignal initialization completed in background');
+  }).catchError((e) {
     debugPrint('⚠️ OneSignal initialization failed: $e');
     // Don't block app startup if OneSignal fails
-  }
+  });
 
-  // Initialize SharedPreferences for detection queue
+  // Initialize SharedPreferences for detection queue (lightweight)
   final prefs = await SharedPreferences.getInstance();
 
   bool hasShownError = false;
@@ -140,18 +151,15 @@ void main() async {
     if (!hasShownError) {
       hasShownError = true;
 
-      // Reset flag after 3 seconds to allow error widget on new screens
-      Future.delayed(Duration(seconds: 5), () {
+      // Reset flag after 5 seconds to allow error widget on new screens
+      Future.delayed(const Duration(seconds: 5), () {
         hasShownError = false;
       });
 
       return CustomErrorWidget(errorDetails: details);
     }
-    return SizedBox.shrink();
+    return const SizedBox.shrink();
   };
-
-  // 🚨 CRITICAL: Device orientation lock - DO NOT REMOVE
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   // 🚨 CRITICAL: Run app AFTER all initialization is complete
   runApp(

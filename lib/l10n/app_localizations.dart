@@ -5089,6 +5089,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reports by Issue Type'**
   String get analytics_byIssueType;
+
+  /// Quick actions section title in map controls
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Actions'**
+  String get route_quickActions;
+
+  /// Plan route button text
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Route'**
+  String get route_planRoute;
+
+  /// Route stops section title
+  ///
+  /// In en, this message translates to:
+  /// **'Route Stops'**
+  String get route_routeStops;
+
+  /// Saved locations section title
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Locations'**
+  String get route_savedLocations;
+
+  /// Hint text for starting point input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter starting point'**
+  String get route_enterStartingPoint;
+
+  /// Hint text for waypoint input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter stop {number}'**
+  String route_enterStop(int number);
+
+  /// Hint text for destination input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter destination'**
+  String get route_enterDestination;
+
+  /// Car travel mode
+  ///
+  /// In en, this message translates to:
+  /// **'Car'**
+  String get route_car;
+
+  /// Walk travel mode
+  ///
+  /// In en, this message translates to:
+  /// **'Walk'**
+  String get route_walk;
 }
 
 class _AppLocalizationsDelegate

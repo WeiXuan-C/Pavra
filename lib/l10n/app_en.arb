@@ -3464,5 +3464,46 @@
   "analytics_byIssueType": "Reports by Issue Type",
   "@analytics_byIssueType": {
     "description": "Issue type chart title"
+  },
+  "route_quickActions": "Quick Actions",
+  "@route_quickActions": {
+    "description": "Quick actions section title in map controls"
+  },
+  "route_planRoute": "Plan Route",
+  "@route_planRoute": {
+    "description": "Plan route button text"
+  },
+  "route_routeStops": "Route Stops",
+  "@route_routeStops": {
+    "description": "Route stops section title"
+  },
+  "route_savedLocations": "Saved Locations",
+  "@route_savedLocations": {
+    "description": "Saved locations section title"
+  },
+  "route_enterStartingPoint": "Enter starting point",
+  "@route_enterStartingPoint": {
+    "description": "Hint text for starting point input"
+  },
+  "route_enterStop": "Enter stop {number}",
+  "@route_enterStop": {
+    "description": "Hint text for waypoint input",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "route_enterDestination": "Enter destination",
+  "@route_enterDestination": {
+    "description": "Hint text for destination input"
+  },
+  "route_car": "Car",
+  "@route_car": {
+    "description": "Car travel mode"
+  },
+  "route_walk": "Walk",
+  "@route_walk": {
+    "description": "Walk travel mode"
   }
 }

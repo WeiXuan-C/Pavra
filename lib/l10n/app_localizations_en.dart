@@ -2650,4 +2650,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get analytics_byIssueType => 'Reports by Issue Type';
+
+  @override
+  String get route_quickActions => 'Quick Actions';
+
+  @override
+  String get route_planRoute => 'Plan Route';
+
+  @override
+  String get route_routeStops => 'Route Stops';
+
+  @override
+  String get route_savedLocations => 'Saved Locations';
+
+  @override
+  String get route_enterStartingPoint => 'Enter starting point';
+
+  @override
+  String route_enterStop(int number) {
+    return 'Enter stop $number';
+  }
+
+  @override
+  String get route_enterDestination => 'Enter destination';
+
+  @override
+  String get route_car => 'Car';
+
+  @override
+  String get route_walk => 'Walk';
 }

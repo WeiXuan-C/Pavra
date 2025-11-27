@@ -90,20 +90,20 @@ class AuthProvider with ChangeNotifier {
         await _authService.createProfileIfNotExists(_user!);
         await _loadUserProfile();
 
-        // 🔔 Set OneSignal External User ID
-        try {
-          await OneSignalService().setExternalUserId(_user!.id);
+        // 🔔 Set OneSignal External User ID (non-blocking)
+        // Run in background to avoid blocking authentication flow
+        OneSignalService().setExternalUserId(_user!.id).then((_) {
           developer.log(
             '✓ OneSignal External User ID set: ${_user!.id}',
             name: 'AuthProvider',
           );
-        } catch (e) {
+        }).catchError((e) {
           developer.log(
             '⚠️ Failed to set OneSignal External User ID: $e',
             name: 'AuthProvider',
           );
           // Non-critical error, don't block authentication
-        }
+        });
 
         // 🔥 Log sign-in action to backend
         _actionLog.logSignIn(
@@ -121,19 +121,18 @@ class AuthProvider with ChangeNotifier {
         _actionLog.logSignOut(userId: _user!.id, email: _user!.email);
       }
 
-      // 🔔 Remove OneSignal External User ID
-      try {
-        await OneSignalService().removeExternalUserId();
+      // 🔔 Remove OneSignal External User ID (non-blocking)
+      OneSignalService().removeExternalUserId().then((_) {
         developer.log(
           '✓ OneSignal External User ID removed',
           name: 'AuthProvider',
         );
-      } catch (e) {
+      }).catchError((e) {
         developer.log(
           '⚠️ Failed to remove OneSignal External User ID: $e',
           name: 'AuthProvider',
         );
-      }
+      });
 
       _user = null;
       _userProfile = null;

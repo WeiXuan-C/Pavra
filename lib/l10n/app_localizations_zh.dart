@@ -2560,4 +2560,33 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get analytics_byIssueType => '按问题类型分类';
+
+  @override
+  String get route_quickActions => '快捷操作';
+
+  @override
+  String get route_planRoute => '规划路线';
+
+  @override
+  String get route_routeStops => '路线站点';
+
+  @override
+  String get route_savedLocations => '已保存位置';
+
+  @override
+  String get route_enterStartingPoint => '输入起点';
+
+  @override
+  String route_enterStop(int number) {
+    return '输入第 $number 站';
+  }
+
+  @override
+  String get route_enterDestination => '输入目的地';
+
+  @override
+  String get route_car => '汽车';
+
+  @override
+  String get route_walk => '步行';
 }

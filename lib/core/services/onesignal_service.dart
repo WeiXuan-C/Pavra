@@ -257,28 +257,46 @@ class OneSignalService {
       
       // First logout to clear any existing external ID association
       // This prevents 409 conflicts when the ID is already claimed
-      await OneSignal.logout();
-      debugPrint('✅ OneSignal: Logged out successfully');
-      
-      // Small delay to ensure logout completes
-      await Future.delayed(const Duration(milliseconds: 100));
+      try {
+        await OneSignal.logout();
+        debugPrint('✅ OneSignal: Logged out successfully');
+        
+        // Longer delay to ensure logout completes on server
+        await Future.delayed(const Duration(milliseconds: 500));
+      } catch (logoutError) {
+        debugPrint('⚠️ OneSignal: Logout error (continuing): $logoutError');
+        // Continue even if logout fails - user might not be logged in
+      }
       
       // Then login with the new user ID
       OneSignal.login(userId);
       debugPrint('✅ OneSignal: External user ID set: $userId');
+      
+      // Wait a bit to ensure login completes
+      await Future.delayed(const Duration(milliseconds: 300));
+      
     } catch (e, stackTrace) {
       debugPrint('❌ OneSignal: Failed to set external user ID: $e');
       debugPrint('Stack trace: $stackTrace');
       
-      // If still fails, try one more time without logout
-      try {
-        debugPrint('🔄 OneSignal: Retrying login without logout...');
-        OneSignal.login(userId);
-        debugPrint('✅ OneSignal: External user ID set (retry): $userId');
-      } catch (retryError, retryStackTrace) {
-        debugPrint('❌ OneSignal: Failed to set external user ID (retry): $retryError');
-        debugPrint('Stack trace: $retryStackTrace');
-        rethrow;
+      // If we get a 409 error, force logout and retry with longer delay
+      if (e.toString().contains('409') || e.toString().contains('claimed')) {
+        try {
+          debugPrint('🔄 OneSignal: Detected 409 conflict, forcing logout and retry...');
+          
+          // Force logout with longer delay
+          await OneSignal.logout();
+          await Future.delayed(const Duration(seconds: 2));
+          
+          // Retry login
+          OneSignal.login(userId);
+          debugPrint('✅ OneSignal: External user ID set after conflict resolution: $userId');
+          
+          await Future.delayed(const Duration(milliseconds: 300));
+        } catch (retryError) {
+          debugPrint('❌ OneSignal: Failed after conflict resolution: $retryError');
+          // Don't rethrow - this is non-critical for app functionality
+        }
       }
     }
   }
