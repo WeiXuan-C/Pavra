@@ -478,10 +478,19 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
   }
 
   void _onDetectionTap(DetectionModel detection) {
-    // Show detection details and allow submitting report
-    setState(() {
-      _currentAlert = detection;
-    });
+    // Navigate directly to manual report screen with detection data
+    // This allows users to submit a report from detection history
+    Navigator.pushNamed(
+      context,
+      '/manual-report-screen',
+      arguments: {
+        'detectionData': detection,
+        'latitude': detection.latitude,
+        'longitude': detection.longitude,
+        'fromAiDetection': true,
+        'imageUrl': detection.imageUrl, // Pass the stored image URL
+      },
+    );
   }
 
   void _dismissAlert() {
@@ -603,7 +612,7 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
                                     ),
                                     SizedBox(width: 2.w),
                                     Text(
-                                      'Analyzing... (max 30s)',
+                                      l10n.camera_analyzing,
                                       style:
                                           theme.textTheme.labelSmall?.copyWith(
                                         color: theme.colorScheme.primary,

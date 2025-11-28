@@ -1949,31 +1949,31 @@ abstract class AppLocalizations {
   /// Minor severity level
   ///
   /// In en, this message translates to:
-  /// **'Minor'**
+  /// **'MINOR'**
   String get severity_minor;
 
   /// Low severity level
   ///
   /// In en, this message translates to:
-  /// **'Low'**
+  /// **'LOW'**
   String get severity_low;
 
   /// Moderate severity level
   ///
   /// In en, this message translates to:
-  /// **'Moderate'**
+  /// **'MODERATE'**
   String get severity_moderate;
 
   /// High severity level
   ///
   /// In en, this message translates to:
-  /// **'High'**
+  /// **'HIGH'**
   String get severity_high;
 
   /// Critical severity level
   ///
   /// In en, this message translates to:
-  /// **'Critical'**
+  /// **'CRITICAL'**
   String get severity_critical;
 
   /// Minor severity description
@@ -5143,6 +5143,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Walk'**
   String get route_walk;
+
+  /// Search bar placeholder text
+  ///
+  /// In en, this message translates to:
+  /// **'Search places, addresses, or issues...'**
+  String get map_searchPlaceholder;
+
+  /// Distance in feet
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} ft away'**
+  String map_feetAway(int distance);
+
+  /// Distance in miles
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} mi away'**
+  String map_milesAway(String distance);
+
+  /// Days ago
+  ///
+  /// In en, this message translates to:
+  /// **'{days}d ago'**
+  String map_daysAgo(int days);
+
+  /// Hours ago
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h ago'**
+  String map_hoursAgo(int hours);
+
+  /// Minutes ago
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m ago'**
+  String map_minutesAgo(int minutes);
+
+  /// Just now time indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get map_justNow;
+
+  /// Voice search tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Voice search'**
+  String get voice_search;
+
+  /// Voice search listening state
+  ///
+  /// In en, this message translates to:
+  /// **'Listening...'**
+  String get voice_listening;
+
+  /// Voice search processing state
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get voice_processing;
+
+  /// Voice search recognized text label
+  ///
+  /// In en, this message translates to:
+  /// **'Recognized:'**
+  String get voice_recognized;
+
+  /// Voice search edit hint
+  ///
+  /// In en, this message translates to:
+  /// **'Edit search text'**
+  String get voice_editSearchText;
+
+  /// Voice search try again button
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get voice_tryAgain;
+
+  /// Voice search cancel button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get voice_cancel;
+
+  /// Voice search retry button
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get voice_retry;
+
+  /// Voice search confirm button
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get voice_search_button;
+
+  /// Filter select all button
+  ///
+  /// In en, this message translates to:
+  /// **'Select All'**
+  String get filter_selectAll;
+
+  /// Filter clear all button
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get filter_clearAll;
+
+  /// Critical filter option
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get filter_critical;
+
+  /// Moderate filter option
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get filter_moderate;
+
+  /// Minor filter option
+  ///
+  /// In en, this message translates to:
+  /// **'Minor'**
+  String get filter_minor;
+
+  /// Draft status filter
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get filter_draft;
+
+  /// Submitted status filter
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted'**
+  String get filter_submitted;
+
+  /// Reviewed status filter
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed'**
+  String get filter_reviewed;
+
+  /// Spam status filter
+  ///
+  /// In en, this message translates to:
+  /// **'Spam'**
+  String get filter_spam;
+
+  /// Discarded status filter
+  ///
+  /// In en, this message translates to:
+  /// **'Discarded'**
+  String get filter_discarded;
 }
 
 class _AppLocalizationsDelegate

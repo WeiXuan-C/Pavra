@@ -3505,5 +3505,154 @@
   "route_walk": "Walk",
   "@route_walk": {
     "description": "Walk travel mode"
+  },
+  "map_searchPlaceholder": "Search places, addresses, or issues...",
+  "@map_searchPlaceholder": {
+    "description": "Search bar placeholder text"
+  },
+  "map_feetAway": "{distance} ft away",
+  "@map_feetAway": {
+    "description": "Distance in feet",
+    "placeholders": {
+      "distance": {
+        "type": "int"
+      }
+    }
+  },
+  "map_milesAway": "{distance} mi away",
+  "@map_milesAway": {
+    "description": "Distance in miles",
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "map_daysAgo": "{days}d ago",
+  "@map_daysAgo": {
+    "description": "Days ago",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "map_hoursAgo": "{hours}h ago",
+  "@map_hoursAgo": {
+    "description": "Hours ago",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "map_minutesAgo": "{minutes}m ago",
+  "@map_minutesAgo": {
+    "description": "Minutes ago",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "map_justNow": "Just now",
+  "@map_justNow": {
+    "description": "Just now time indicator"
+  },
+  "severity_critical": "CRITICAL",
+  "@severity_critical": {
+    "description": "Critical severity level"
+  },
+  "severity_high": "HIGH",
+  "@severity_high": {
+    "description": "High severity level"
+  },
+  "severity_moderate": "MODERATE",
+  "@severity_moderate": {
+    "description": "Moderate severity level"
+  },
+  "severity_low": "LOW",
+  "@severity_low": {
+    "description": "Low severity level"
+  },
+  "severity_minor": "MINOR",
+  "@severity_minor": {
+    "description": "Minor severity level"
+  },
+  "voice_search": "Voice search",
+  "@voice_search": {
+    "description": "Voice search tooltip"
+  },
+  "voice_listening": "Listening...",
+  "@voice_listening": {
+    "description": "Voice search listening state"
+  },
+  "voice_processing": "Processing...",
+  "@voice_processing": {
+    "description": "Voice search processing state"
+  },
+  "voice_recognized": "Recognized:",
+  "@voice_recognized": {
+    "description": "Voice search recognized text label"
+  },
+  "voice_editSearchText": "Edit search text",
+  "@voice_editSearchText": {
+    "description": "Voice search edit hint"
+  },
+  "voice_tryAgain": "Try Again",
+  "@voice_tryAgain": {
+    "description": "Voice search try again button"
+  },
+  "voice_cancel": "Cancel",
+  "@voice_cancel": {
+    "description": "Voice search cancel button"
+  },
+  "voice_retry": "Retry",
+  "@voice_retry": {
+    "description": "Voice search retry button"
+  },
+  "voice_search_button": "Search",
+  "@voice_search_button": {
+    "description": "Voice search confirm button"
+  },
+  "filter_selectAll": "Select All",
+  "@filter_selectAll": {
+    "description": "Filter select all button"
+  },
+  "filter_clearAll": "Clear All",
+  "@filter_clearAll": {
+    "description": "Filter clear all button"
+  },
+  "filter_critical": "Critical",
+  "@filter_critical": {
+    "description": "Critical filter option"
+  },
+  "filter_moderate": "Moderate",
+  "@filter_moderate": {
+    "description": "Moderate filter option"
+  },
+  "filter_minor": "Minor",
+  "@filter_minor": {
+    "description": "Minor filter option"
+  },
+  "filter_draft": "Draft",
+  "@filter_draft": {
+    "description": "Draft status filter"
+  },
+  "filter_submitted": "Submitted",
+  "@filter_submitted": {
+    "description": "Submitted status filter"
+  },
+  "filter_reviewed": "Reviewed",
+  "@filter_reviewed": {
+    "description": "Reviewed status filter"
+  },
+  "filter_spam": "Spam",
+  "@filter_spam": {
+    "description": "Spam status filter"
+  },
+  "filter_discarded": "Discarded",
+  "@filter_discarded": {
+    "description": "Discarded status filter"
   }
 }

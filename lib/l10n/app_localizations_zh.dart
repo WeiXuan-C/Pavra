@@ -949,13 +949,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get severity_minor => '轻微';
 
   @override
-  String get severity_low => '较低';
+  String get severity_low => '低';
 
   @override
   String get severity_moderate => '中等';
 
   @override
-  String get severity_high => '严重';
+  String get severity_high => '高';
 
   @override
   String get severity_critical => '危急';
@@ -2589,4 +2589,92 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get route_walk => '步行';
+
+  @override
+  String get map_searchPlaceholder => '搜索地点、地址或问题...';
+
+  @override
+  String map_feetAway(int distance) {
+    return '$distance 英尺';
+  }
+
+  @override
+  String map_milesAway(String distance) {
+    return '$distance 英里';
+  }
+
+  @override
+  String map_daysAgo(int days) {
+    return '$days天前';
+  }
+
+  @override
+  String map_hoursAgo(int hours) {
+    return '$hours小时前';
+  }
+
+  @override
+  String map_minutesAgo(int minutes) {
+    return '$minutes分钟前';
+  }
+
+  @override
+  String get map_justNow => '刚刚';
+
+  @override
+  String get voice_search => '语音搜索';
+
+  @override
+  String get voice_listening => '正在聆听...';
+
+  @override
+  String get voice_processing => '处理中...';
+
+  @override
+  String get voice_recognized => '识别结果：';
+
+  @override
+  String get voice_editSearchText => '编辑搜索文本';
+
+  @override
+  String get voice_tryAgain => '重试';
+
+  @override
+  String get voice_cancel => '取消';
+
+  @override
+  String get voice_retry => '重试';
+
+  @override
+  String get voice_search_button => '搜索';
+
+  @override
+  String get filter_selectAll => '全选';
+
+  @override
+  String get filter_clearAll => '清除全部';
+
+  @override
+  String get filter_critical => '危急';
+
+  @override
+  String get filter_moderate => '中等';
+
+  @override
+  String get filter_minor => '轻微';
+
+  @override
+  String get filter_draft => '草稿';
+
+  @override
+  String get filter_submitted => '已提交';
+
+  @override
+  String get filter_reviewed => '已审核';
+
+  @override
+  String get filter_spam => '垃圾信息';
+
+  @override
+  String get filter_discarded => '已丢弃';
 }

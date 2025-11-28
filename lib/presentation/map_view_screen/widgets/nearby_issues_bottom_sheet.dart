@@ -199,7 +199,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                   RotatedBox(
                     quarterTurns: 3,
                     child: Text(
-                      severity.toUpperCase(),
+                      _getSeverityLabel(severity, l10n),
                       style: TextStyle(
                         color: severityColor,
                         fontSize: 9,
@@ -293,7 +293,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                         SizedBox(width: 1.w),
                         Expanded(
                           child: Text(
-                            _formatDistance(issue['distance'] ?? issue['distance_miles']),
+                            _formatDistance(issue['distance'] ?? issue['distance_miles'], l10n),
                             style: theme.textTheme.bodySmall,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -311,7 +311,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
                         ),
                         SizedBox(width: 1.w),
                         Text(
-                          _formatDate(_parseDate(issue['created_at'])),
+                          _formatDate(_parseDate(issue['created_at']), l10n),
                           style: theme.textTheme.bodySmall,
                         ),
                       ],
@@ -335,6 +335,23 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getSeverityLabel(String severity, AppLocalizations l10n) {
+    switch (severity.toLowerCase()) {
+      case 'critical':
+        return l10n.severity_critical;
+      case 'high':
+        return l10n.severity_high;
+      case 'moderate':
+        return l10n.severity_moderate;
+      case 'low':
+        return l10n.severity_low;
+      case 'minor':
+        return l10n.severity_minor;
+      default:
+        return severity.toUpperCase();
+    }
   }
 
   IconData _getSeverityIconData(String severity) {
@@ -383,7 +400,7 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
     return DateTime.now();
   }
 
-  String _formatDistance(dynamic distance) {
+  String _formatDistance(dynamic distance, AppLocalizations l10n) {
     if (distance == null) return 'Unknown distance';
     
     final distNum = distance is num ? distance.toDouble() : double.tryParse(distance.toString()) ?? 0.0;
@@ -391,24 +408,24 @@ class NearbyIssuesBottomSheet extends StatelessWidget {
     if (distNum < 0.1) {
       // Convert to feet if less than 0.1 miles
       final feet = (distNum * 5280).round();
-      return '$feet ft away';
+      return l10n.map_feetAway(feet);
     } else {
-      return '${distNum.toStringAsFixed(1)} mi away';
+      return l10n.map_milesAway(distNum.toStringAsFixed(1));
     }
   }
 
-  String _formatDate(DateTime date) {
+  String _formatDate(DateTime date, AppLocalizations l10n) {
     final now = DateTime.now();
     final difference = now.difference(date);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays}d ago';
+      return l10n.map_daysAgo(difference.inDays);
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}h ago';
+      return l10n.map_hoursAgo(difference.inHours);
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}m ago';
+      return l10n.map_minutesAgo(difference.inMinutes);
     } else {
-      return 'Now';
+      return l10n.map_justNow;
     }
   }
 }
