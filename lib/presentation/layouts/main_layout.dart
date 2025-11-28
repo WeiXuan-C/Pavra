@@ -9,6 +9,8 @@ import '../report_screen/report_screen.dart';
 import '../notification_screen/notification_screen.dart';
 import '../notification_screen/notification_provider.dart';
 import '../profile_screen/profile_screen.dart';
+import '../admin_panel_screen/admin_panel_screen.dart';
+import '../analytics_dashboard_screen/analytics_dashboard_screen.dart';
 
 /// Main Layout
 /// Provides centralized navigation bar for all main app screens
@@ -29,6 +31,9 @@ class _MainLayoutState extends State<MainLayout> {
   // Report screen filter type: 0 = Home, 1 = My Reports, 2 = All Reports
   int _reportFilterType = 0;
 
+  // Profile screen type: 0 = Profile, 1 = Admin, 2 = Analytics
+  int _profileScreenType = 0;
+
   // List of main screens
   List<Widget> _getScreens() => [
     const MapViewScreen(),
@@ -38,7 +43,14 @@ class _MainLayoutState extends State<MainLayout> {
   ];
 
   Widget _getProfileScreen() {
-    return const ProfileScreen();
+    switch (_profileScreenType) {
+      case 1:
+        return const AdminPanelScreen();
+      case 2:
+        return const AnalyticsDashboardScreen();
+      default:
+        return const ProfileScreen();
+    }
   }
 
   @override
@@ -86,6 +98,16 @@ class _MainLayoutState extends State<MainLayout> {
       return;
     }
 
+    // If tapping on Profile tab (index 3), show dropdown menu for developers
+    if (index == 3 && _currentIndex == 3) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final userRole = authProvider.userProfile?.role;
+      if (userRole == 'developer') {
+        _showProfileFilterMenu();
+        return;
+      }
+    }
+
     setState(() {
       _currentIndex = index;
     });
@@ -97,6 +119,70 @@ class _MainLayoutState extends State<MainLayout> {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  /// Show profile filter dropdown menu (for developers)
+  void _showProfileFilterMenu() {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: theme.cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: 2.h),
+            Container(
+              width: 10.w,
+              height: 0.5.h,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            SizedBox(height: 2.h),
+            _buildFilterOption(
+              icon: Icons.person_outline,
+              title: l10n.nav_profile,
+              subtitle: 'View your profile and settings',
+              isSelected: _profileScreenType == 0,
+              onTap: () {
+                Navigator.pop(context);
+                setState(() => _profileScreenType = 0);
+              },
+            ),
+            Divider(height: 1),
+            _buildFilterOption(
+              icon: Icons.admin_panel_settings,
+              title: 'Admin Dashboard',
+              subtitle: 'Manage reports and users',
+              isSelected: _profileScreenType == 1,
+              onTap: () {
+                Navigator.pop(context);
+                setState(() => _profileScreenType = 1);
+              },
+            ),
+            Divider(height: 1),
+            _buildFilterOption(
+              icon: Icons.analytics,
+              title: 'Analytics Dashboard',
+              subtitle: 'View statistics and insights',
+              isSelected: _profileScreenType == 2,
+              onTap: () {
+                Navigator.pop(context);
+                setState(() => _profileScreenType = 2);
+              },
+            ),
+            SizedBox(height: 2.h),
+          ],
+        ),
+      ),
+    );
   }
 
   /// Show report filter dropdown menu
@@ -358,19 +444,34 @@ class _MainLayoutState extends State<MainLayout> {
           ),
           // Profile (with dropdown indicator for developers)
           BottomNavigationBarItem(
-            icon: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                CustomIconWidget(
-                  iconName: 'person',
-                  color: _currentIndex == 3
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withValues(alpha: 0.6),
-                  size: 6.w,
-                ),
-              ],
+            icon: Consumer<AuthProvider>(
+              builder: (context, authProvider, child) {
+                final isDeveloper = authProvider.userProfile?.role == 'developer';
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    CustomIconWidget(
+                      iconName: 'person',
+                      color: _currentIndex == 3
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.6),
+                      size: 6.w,
+                    ),
+                    if (_currentIndex == 3 && isDeveloper)
+                      Positioned(
+                        right: -2.w,
+                        top: -1.h,
+                        child: Icon(
+                          Icons.arrow_drop_down,
+                          size: 4.w,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                  ],
+                );
+              },
             ),
             label: l10n.nav_profile,
           ),

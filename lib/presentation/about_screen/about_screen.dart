@@ -125,14 +125,18 @@ class AboutScreen extends StatelessWidget {
 
             // Links
             Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(3.w),
+              ),
               child: Column(
                 children: [
                   _buildLinkTile(
                     context,
                     icon: Icons.language,
                     title: 'Website',
-                    subtitle: 'www.pavra.app',
-                    onTap: () => _launchURL('https://www.pavra.app'),
+                    subtitle: 'pavra.vercel.app',
+                    onTap: () => _launchURL('https://pavra.vercel.app'),
                   ),
                   Divider(height: 1),
                   _buildLinkTile(
@@ -140,7 +144,7 @@ class AboutScreen extends StatelessWidget {
                     icon: Icons.privacy_tip,
                     title: 'Privacy Policy',
                     subtitle: 'How we protect your data',
-                    onTap: () => _launchURL('https://www.pavra.app/privacy'),
+                    onTap: () => Navigator.pushNamed(context, '/privacy-policy-screen'),
                   ),
                   Divider(height: 1),
                   _buildLinkTile(
@@ -148,7 +152,7 @@ class AboutScreen extends StatelessWidget {
                     icon: Icons.description,
                     title: 'Terms of Service',
                     subtitle: 'Terms and conditions',
-                    onTap: () => _launchURL('https://www.pavra.app/terms'),
+                    onTap: () => Navigator.pushNamed(context, '/terms-of-service-screen'),
                   ),
                   Divider(height: 1),
                   _buildLinkTile(
@@ -162,82 +166,134 @@ class AboutScreen extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 3.h),
-
-            // Social Media
-            Text(
-              'Follow Us',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 2.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildSocialButton(
-                  context,
-                  icon: Icons.facebook,
-                  onTap: () => _launchURL('https://facebook.com/pavra'),
-                ),
-                SizedBox(width: 3.w),
-                _buildSocialButton(
-                  context,
-                  icon: Icons.camera_alt, // Twitter/X
-                  onTap: () => _launchURL('https://twitter.com/pavra'),
-                ),
-                SizedBox(width: 3.w),
-                _buildSocialButton(
-                  context,
-                  icon: Icons.photo_camera, // Instagram
-                  onTap: () => _launchURL('https://instagram.com/pavra'),
-                ),
-                SizedBox(width: 3.w),
-                _buildSocialButton(
-                  context,
-                  icon: Icons.work, // LinkedIn
-                  onTap: () => _launchURL('https://linkedin.com/company/pavra'),
-                ),
-              ],
-            ),
-
             SizedBox(height: 4.h),
 
             // Contact
-            Container(
-              padding: EdgeInsets.all(4.w),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer,
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(3.w),
               ),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.email,
-                    size: 40,
-                    color: theme.colorScheme.primary,
+              child: Container(
+                padding: EdgeInsets.all(4.w),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      theme.colorScheme.primaryContainer,
+                      theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  SizedBox(height: 2.h),
-                  Text(
-                    'Contact Us',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 1.h),
-                  Text(
-                    'support@pavra.app',
-                    style: theme.textTheme.bodyMedium?.copyWith(
+                  borderRadius: BorderRadius.circular(3.w),
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.contact_support,
+                      size: 48,
                       color: theme.colorScheme.primary,
                     ),
-                  ),
-                  SizedBox(height: 2.h),
-                  ElevatedButton.icon(
-                    onPressed: () => _launchURL('mailto:support@pavra.app'),
-                    icon: Icon(Icons.send),
-                    label: Text('Send Email'),
-                  ),
-                ],
+                    SizedBox(height: 2.h),
+                    Text(
+                      'Contact Us',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    
+                    // Email
+                    Container(
+                      padding: EdgeInsets.all(3.w),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface,
+                        borderRadius: BorderRadius.circular(2.w),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.email,
+                            color: theme.colorScheme.primary,
+                            size: 24,
+                          ),
+                          SizedBox(width: 3.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Email',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                  ),
+                                ),
+                                SizedBox(height: 0.5.h),
+                                Text(
+                                  'pavra.noreply@gmail.com',
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => _launchURL('mailto:pavra.noreply@gmail.com'),
+                            icon: Icon(Icons.send, color: theme.colorScheme.primary),
+                            tooltip: 'Send Email',
+                          ),
+                        ],
+                      ),
+                    ),
+                    
+                    SizedBox(height: 2.h),
+                    
+                    // Phone
+                    Container(
+                      padding: EdgeInsets.all(3.w),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface,
+                        borderRadius: BorderRadius.circular(2.w),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.phone,
+                            color: theme.colorScheme.primary,
+                            size: 24,
+                          ),
+                          SizedBox(width: 3.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Phone',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                  ),
+                                ),
+                                SizedBox(height: 0.5.h),
+                                Text(
+                                  '+60 11-6520 0275',
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => _launchURL('tel:+601165200275'),
+                            icon: Icon(Icons.call, color: theme.colorScheme.primary),
+                            tooltip: 'Call',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
 
@@ -338,30 +394,6 @@ class AboutScreen extends StatelessWidget {
       subtitle: Text(subtitle),
       trailing: Icon(Icons.arrow_forward_ios, size: 16),
       onTap: onTap,
-    );
-  }
-
-  Widget _buildSocialButton(
-    BuildContext context, {
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    final theme = Theme.of(context);
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(3.w),
-      child: Container(
-        padding: EdgeInsets.all(3.w),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.primary.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(3.w),
-        ),
-        child: Icon(
-          icon,
-          color: theme.colorScheme.primary,
-          size: 28,
-        ),
-      ),
     );
   }
 

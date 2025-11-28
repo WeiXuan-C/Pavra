@@ -540,6 +540,7 @@ class _NotificationEndpoint {
     required String message,
     required String type,
     Map<String, dynamic>? data,
+    String? createdBy,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -557,6 +558,7 @@ class _NotificationEndpoint {
             'message': message,
             'type': type,
             'data': data,
+            'createdBy': createdBy,
           }),
           serializationManager: _serializationManager,
         );
@@ -804,6 +806,7 @@ class _NotificationEndpoint {
   _i3.Future<Map<String, dynamic>> cancelScheduledNotification(
     _i1.TestSessionBuilder sessionBuilder, {
     required String notificationId,
+    required String userId,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -816,7 +819,10 @@ class _NotificationEndpoint {
           createSessionCallback: (_) => _localUniqueSession,
           endpointPath: 'notification',
           methodName: 'cancelScheduledNotification',
-          parameters: _i1.testObjectToJson({'notificationId': notificationId}),
+          parameters: _i1.testObjectToJson({
+            'notificationId': notificationId,
+            'userId': userId,
+          }),
           serializationManager: _serializationManager,
         );
         var _localReturnValue = await (_localCallContext.method.call(
@@ -846,6 +852,113 @@ class _NotificationEndpoint {
           endpointPath: 'notification',
           methodName: 'handleNotificationCreated',
           parameters: _i1.testObjectToJson({'notificationId': notificationId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<Map<String, dynamic>> handleScheduledNotification(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String notificationId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'notification',
+        method: 'handleScheduledNotification',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'notification',
+          methodName: 'handleScheduledNotification',
+          parameters: _i1.testObjectToJson({'notificationId': notificationId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<Map<String, dynamic>> updateNotificationStatus(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String notificationId,
+    String? status,
+    String? oneSignalNotificationId,
+    String? errorMessage,
+    int? recipientsCount,
+    int? successfulDeliveries,
+    int? failedDeliveries,
+    String? userId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'notification',
+        method: 'updateNotificationStatus',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'notification',
+          methodName: 'updateNotificationStatus',
+          parameters: _i1.testObjectToJson({
+            'notificationId': notificationId,
+            'status': status,
+            'oneSignalNotificationId': oneSignalNotificationId,
+            'errorMessage': errorMessage,
+            'recipientsCount': recipientsCount,
+            'successfulDeliveries': successfulDeliveries,
+            'failedDeliveries': failedDeliveries,
+            'userId': userId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<Map<String, dynamic>> getNotificationStatus(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String notificationId,
+    required bool fetchFromOneSignal,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'notification',
+        method: 'getNotificationStatus',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'notification',
+          methodName: 'getNotificationStatus',
+          parameters: _i1.testObjectToJson({
+            'notificationId': notificationId,
+            'fetchFromOneSignal': fetchFromOneSignal,
+          }),
           serializationManager: _serializationManager,
         );
         var _localReturnValue = await (_localCallContext.method.call(
@@ -902,6 +1015,249 @@ class _NotificationEndpoint {
           endpointPath: 'notification',
           methodName: 'processScheduledNotifications',
           parameters: _i1.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<Map<String, dynamic>> cancelQStashJob(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String qstashMessageId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'notification',
+        method: 'cancelQStashJob',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'notification',
+          methodName: 'cancelQStashJob',
+          parameters:
+              _i1.testObjectToJson({'qstashMessageId': qstashMessageId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<Map<String, dynamic>> hardDeleteNotification(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String notificationId,
+    required String userId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'notification',
+        method: 'hardDeleteNotification',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'notification',
+          methodName: 'hardDeleteNotification',
+          parameters: _i1.testObjectToJson({
+            'notificationId': notificationId,
+            'userId': userId,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<Map<String, dynamic>> checkSystemHealth(
+      _i1.TestSessionBuilder sessionBuilder) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'notification',
+        method: 'checkSystemHealth',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'notification',
+          methodName: 'checkSystemHealth',
+          parameters: _i1.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<Map<String, dynamic>> getRecentAlerts(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int limit,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'notification',
+        method: 'getRecentAlerts',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'notification',
+          methodName: 'getRecentAlerts',
+          parameters: _i1.testObjectToJson({'limit': limit}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<Map<String, dynamic>> getApiUsageStats(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String userId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'notification',
+        method: 'getApiUsageStats',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'notification',
+          methodName: 'getApiUsageStats',
+          parameters: _i1.testObjectToJson({'userId': userId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<Map<String, dynamic>> getMetricsSummary(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required int daysBack,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'notification',
+        method: 'getMetricsSummary',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'notification',
+          methodName: 'getMetricsSummary',
+          parameters: _i1.testObjectToJson({'daysBack': daysBack}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<Map<String, dynamic>> getNotificationMetrics(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String notificationId,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'notification',
+        method: 'getNotificationMetrics',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'notification',
+          methodName: 'getNotificationMetrics',
+          parameters: _i1.testObjectToJson({'notificationId': notificationId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue = await (_localCallContext.method.call(
+          _localUniqueSession,
+          _localCallContext.arguments,
+        ) as _i3.Future<Map<String, dynamic>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<Map<String, dynamic>> sendMaintenanceNotification(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String title,
+    required String message,
+    DateTime? scheduledAt,
+    String? createdBy,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+        endpoint: 'notification',
+        method: 'sendMaintenanceNotification',
+      );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'notification',
+          methodName: 'sendMaintenanceNotification',
+          parameters: _i1.testObjectToJson({
+            'title': title,
+            'message': message,
+            'scheduledAt': scheduledAt,
+            'createdBy': createdBy,
+          }),
           serializationManager: _serializationManager,
         );
         var _localReturnValue = await (_localCallContext.method.call(

@@ -413,6 +413,11 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<Map<String, dynamic>?>(),
               nullable: true,
             ),
+            'createdBy': _i1.ParameterDescription(
+              name: 'createdBy',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
           },
           call: (
             _i1.Session session,
@@ -424,6 +429,7 @@ class Endpoints extends _i1.EndpointDispatch {
             message: params['message'],
             type: params['type'],
             data: params['data'],
+            createdBy: params['createdBy'],
           ),
         ),
         'sendAppUpdateNotification': _i1.MethodConnector(
@@ -679,7 +685,12 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'notificationId',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
+            'userId': _i1.ParameterDescription(
+              name: 'userId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
           },
           call: (
             _i1.Session session,
@@ -689,6 +700,7 @@ class Endpoints extends _i1.EndpointDispatch {
                   .cancelScheduledNotification(
             session,
             notificationId: params['notificationId'],
+            userId: params['userId'],
           ),
         ),
         'handleNotificationCreated': _i1.MethodConnector(
@@ -708,6 +720,111 @@ class Endpoints extends _i1.EndpointDispatch {
                   .handleNotificationCreated(
             session,
             notificationId: params['notificationId'],
+          ),
+        ),
+        'handleScheduledNotification': _i1.MethodConnector(
+          name: 'handleScheduledNotification',
+          params: {
+            'notificationId': _i1.ParameterDescription(
+              name: 'notificationId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['notification'] as _i4.NotificationEndpoint)
+                  .handleScheduledNotification(
+            session,
+            notificationId: params['notificationId'],
+          ),
+        ),
+        'updateNotificationStatus': _i1.MethodConnector(
+          name: 'updateNotificationStatus',
+          params: {
+            'notificationId': _i1.ParameterDescription(
+              name: 'notificationId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'status': _i1.ParameterDescription(
+              name: 'status',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'oneSignalNotificationId': _i1.ParameterDescription(
+              name: 'oneSignalNotificationId',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'errorMessage': _i1.ParameterDescription(
+              name: 'errorMessage',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'recipientsCount': _i1.ParameterDescription(
+              name: 'recipientsCount',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+            'successfulDeliveries': _i1.ParameterDescription(
+              name: 'successfulDeliveries',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+            'failedDeliveries': _i1.ParameterDescription(
+              name: 'failedDeliveries',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+            'userId': _i1.ParameterDescription(
+              name: 'userId',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['notification'] as _i4.NotificationEndpoint)
+                  .updateNotificationStatus(
+            session,
+            notificationId: params['notificationId'],
+            status: params['status'],
+            oneSignalNotificationId: params['oneSignalNotificationId'],
+            errorMessage: params['errorMessage'],
+            recipientsCount: params['recipientsCount'],
+            successfulDeliveries: params['successfulDeliveries'],
+            failedDeliveries: params['failedDeliveries'],
+            userId: params['userId'],
+          ),
+        ),
+        'getNotificationStatus': _i1.MethodConnector(
+          name: 'getNotificationStatus',
+          params: {
+            'notificationId': _i1.ParameterDescription(
+              name: 'notificationId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'fetchFromOneSignal': _i1.ParameterDescription(
+              name: 'fetchFromOneSignal',
+              type: _i1.getType<bool>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['notification'] as _i4.NotificationEndpoint)
+                  .getNotificationStatus(
+            session,
+            notificationId: params['notificationId'],
+            fetchFromOneSignal: params['fetchFromOneSignal'],
           ),
         ),
         'testProcessScheduledNotification': _i1.MethodConnector(
@@ -738,6 +855,173 @@ class Endpoints extends _i1.EndpointDispatch {
           ) async =>
               (endpoints['notification'] as _i4.NotificationEndpoint)
                   .processScheduledNotifications(session),
+        ),
+        'cancelQStashJob': _i1.MethodConnector(
+          name: 'cancelQStashJob',
+          params: {
+            'qstashMessageId': _i1.ParameterDescription(
+              name: 'qstashMessageId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['notification'] as _i4.NotificationEndpoint)
+                  .cancelQStashJob(
+            session,
+            qstashMessageId: params['qstashMessageId'],
+          ),
+        ),
+        'hardDeleteNotification': _i1.MethodConnector(
+          name: 'hardDeleteNotification',
+          params: {
+            'notificationId': _i1.ParameterDescription(
+              name: 'notificationId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'userId': _i1.ParameterDescription(
+              name: 'userId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['notification'] as _i4.NotificationEndpoint)
+                  .hardDeleteNotification(
+            session,
+            notificationId: params['notificationId'],
+            userId: params['userId'],
+          ),
+        ),
+        'checkSystemHealth': _i1.MethodConnector(
+          name: 'checkSystemHealth',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['notification'] as _i4.NotificationEndpoint)
+                  .checkSystemHealth(session),
+        ),
+        'getRecentAlerts': _i1.MethodConnector(
+          name: 'getRecentAlerts',
+          params: {
+            'limit': _i1.ParameterDescription(
+              name: 'limit',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['notification'] as _i4.NotificationEndpoint)
+                  .getRecentAlerts(
+            session,
+            limit: params['limit'],
+          ),
+        ),
+        'getApiUsageStats': _i1.MethodConnector(
+          name: 'getApiUsageStats',
+          params: {
+            'userId': _i1.ParameterDescription(
+              name: 'userId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['notification'] as _i4.NotificationEndpoint)
+                  .getApiUsageStats(
+            session,
+            userId: params['userId'],
+          ),
+        ),
+        'getMetricsSummary': _i1.MethodConnector(
+          name: 'getMetricsSummary',
+          params: {
+            'daysBack': _i1.ParameterDescription(
+              name: 'daysBack',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['notification'] as _i4.NotificationEndpoint)
+                  .getMetricsSummary(
+            session,
+            daysBack: params['daysBack'],
+          ),
+        ),
+        'getNotificationMetrics': _i1.MethodConnector(
+          name: 'getNotificationMetrics',
+          params: {
+            'notificationId': _i1.ParameterDescription(
+              name: 'notificationId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['notification'] as _i4.NotificationEndpoint)
+                  .getNotificationMetrics(
+            session,
+            notificationId: params['notificationId'],
+          ),
+        ),
+        'sendMaintenanceNotification': _i1.MethodConnector(
+          name: 'sendMaintenanceNotification',
+          params: {
+            'title': _i1.ParameterDescription(
+              name: 'title',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'message': _i1.ParameterDescription(
+              name: 'message',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'scheduledAt': _i1.ParameterDescription(
+              name: 'scheduledAt',
+              type: _i1.getType<DateTime?>(),
+              nullable: true,
+            ),
+            'createdBy': _i1.ParameterDescription(
+              name: 'createdBy',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['notification'] as _i4.NotificationEndpoint)
+                  .sendMaintenanceNotification(
+            session,
+            title: params['title'],
+            message: params['message'],
+            scheduledAt: params['scheduledAt'],
+            createdBy: params['createdBy'],
+          ),
         ),
       },
     );

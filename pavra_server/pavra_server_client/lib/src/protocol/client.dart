@@ -255,11 +255,13 @@ class EndpointNotification extends _i1.EndpointRef {
   /// Send notification to all users (broadcast)
   ///
   /// Use with caution - sends to ALL users
+  /// Requires admin or developer role
   _i2.Future<Map<String, dynamic>> sendToAll({
     required String title,
     required String message,
     required String type,
     Map<String, dynamic>? data,
+    String? createdBy,
   }) =>
       caller.callServerEndpoint<Map<String, dynamic>>(
         'notification',
@@ -269,6 +271,7 @@ class EndpointNotification extends _i1.EndpointRef {
           'message': message,
           'type': type,
           'data': data,
+          'createdBy': createdBy,
         },
       );
 
@@ -323,7 +326,7 @@ class EndpointNotification extends _i1.EndpointRef {
   /// Schedule an existing notification by ID
   ///
   /// This is called from Flutter client after notification is created
-  /// Schedules the notification via QStash for processing
+  /// Schedules the notification via QStash for processing and stores job ID for cancellation
   _i2.Future<Map<String, dynamic>> scheduleNotificationById({
     required String notificationId,
     required DateTime scheduledAt,
@@ -397,24 +400,88 @@ class EndpointNotification extends _i1.EndpointRef {
       );
 
   /// Cancel a scheduled notification
-  _i2.Future<Map<String, dynamic>> cancelScheduledNotification(
-          {required String notificationId}) =>
+  _i2.Future<Map<String, dynamic>> cancelScheduledNotification({
+    required String notificationId,
+    required String userId,
+  }) =>
       caller.callServerEndpoint<Map<String, dynamic>>(
         'notification',
         'cancelScheduledNotification',
-        {'notificationId': notificationId},
+        {
+          'notificationId': notificationId,
+          'userId': userId,
+        },
       );
 
   /// Handle notification created from Flutter client
   ///
   /// This is called when a notification is created via the Flutter app
-  /// It sends the push notification based on target_type
+  /// It sends the push notification based on target_type with enhanced OneSignal fields
   _i2.Future<Map<String, dynamic>> handleNotificationCreated(
           {required String notificationId}) =>
       caller.callServerEndpoint<Map<String, dynamic>>(
         'notification',
         'handleNotificationCreated',
         {'notificationId': notificationId},
+      );
+
+  /// Handle scheduled notification webhook from QStash
+  ///
+  /// This is called by QStash when a scheduled notification is due
+  /// Processes the notification by updating status and sending via OneSignal
+  _i2.Future<Map<String, dynamic>> handleScheduledNotification(
+          {required String notificationId}) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'notification',
+        'handleScheduledNotification',
+        {'notificationId': notificationId},
+      );
+
+  /// Update notification status with OneSignal ID and delivery statistics
+  ///
+  /// This endpoint allows updating notification status, OneSignal notification ID,
+  /// error messages, and delivery statistics
+  /// This is typically called by system processes, not directly by users
+  _i2.Future<Map<String, dynamic>> updateNotificationStatus({
+    required String notificationId,
+    String? status,
+    String? oneSignalNotificationId,
+    String? errorMessage,
+    int? recipientsCount,
+    int? successfulDeliveries,
+    int? failedDeliveries,
+    String? userId,
+  }) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'notification',
+        'updateNotificationStatus',
+        {
+          'notificationId': notificationId,
+          'status': status,
+          'oneSignalNotificationId': oneSignalNotificationId,
+          'errorMessage': errorMessage,
+          'recipientsCount': recipientsCount,
+          'successfulDeliveries': successfulDeliveries,
+          'failedDeliveries': failedDeliveries,
+          'userId': userId,
+        },
+      );
+
+  /// Get notification status and delivery statistics
+  ///
+  /// Retrieves current notification status from database and optionally
+  /// fetches latest delivery statistics from OneSignal
+  _i2.Future<Map<String, dynamic>> getNotificationStatus({
+    required String notificationId,
+    required bool fetchFromOneSignal,
+  }) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'notification',
+        'getNotificationStatus',
+        {
+          'notificationId': notificationId,
+          'fetchFromOneSignal': fetchFromOneSignal,
+        },
       );
 
   /// 🧪 手动触发 scheduled notification 处理（仅用于开发测试）
@@ -437,6 +504,111 @@ class EndpointNotification extends _i1.EndpointRef {
         'notification',
         'processScheduledNotifications',
         {},
+      );
+
+  /// Cancel a QStash scheduled job
+  ///
+  /// This is called from Flutter client when updating a scheduled notification
+  /// to cancel the previous QStash job before creating a new one
+  _i2.Future<Map<String, dynamic>> cancelQStashJob(
+          {required String qstashMessageId}) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'notification',
+        'cancelQStashJob',
+        {'qstashMessageId': qstashMessageId},
+      );
+
+  /// Hard delete a notification (permanent deletion with cascade)
+  ///
+  /// This permanently deletes the notification and all associated user_notification records.
+  /// Requires admin permission check.
+  /// Use with extreme caution - this action cannot be undone.
+  _i2.Future<Map<String, dynamic>> hardDeleteNotification({
+    required String notificationId,
+    required String userId,
+  }) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'notification',
+        'hardDeleteNotification',
+        {
+          'notificationId': notificationId,
+          'userId': userId,
+        },
+      );
+
+  /// Check notification system health
+  ///
+  /// Performs comprehensive health check and returns status
+  /// Also triggers alerts if issues are detected
+  _i2.Future<Map<String, dynamic>> checkSystemHealth() =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'notification',
+        'checkSystemHealth',
+        {},
+      );
+
+  /// Get recent alerts for dashboard
+  ///
+  /// Returns list of recent alert notifications
+  _i2.Future<Map<String, dynamic>> getRecentAlerts({required int limit}) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'notification',
+        'getRecentAlerts',
+        {'limit': limit},
+      );
+
+  /// Get API usage statistics for a user
+  ///
+  /// Returns rate limit information and usage statistics
+  _i2.Future<Map<String, dynamic>> getApiUsageStats({required String userId}) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'notification',
+        'getApiUsageStats',
+        {'userId': userId},
+      );
+
+  /// Get notification metrics summary for dashboard
+  ///
+  /// Returns aggregated metrics including success rates, delivery times,
+  /// and user engagement metrics for the specified time period
+  _i2.Future<Map<String, dynamic>> getMetricsSummary({required int daysBack}) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'notification',
+        'getMetricsSummary',
+        {'daysBack': daysBack},
+      );
+
+  /// Get metrics for a specific notification
+  ///
+  /// Returns detailed metrics including delivery stats and engagement metrics
+  _i2.Future<Map<String, dynamic>> getNotificationMetrics(
+          {required String notificationId}) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'notification',
+        'getNotificationMetrics',
+        {'notificationId': notificationId},
+      );
+
+  /// Send system maintenance notification to all users
+  ///
+  /// Creates a notification for system maintenance events
+  /// Sends to all users with target_type='all'
+  /// Requires admin permission
+  _i2.Future<Map<String, dynamic>> sendMaintenanceNotification({
+    required String title,
+    required String message,
+    DateTime? scheduledAt,
+    String? createdBy,
+  }) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'notification',
+        'sendMaintenanceNotification',
+        {
+          'title': title,
+          'message': message,
+          'scheduledAt': scheduledAt,
+          'createdBy': createdBy,
+        },
       );
 }
 

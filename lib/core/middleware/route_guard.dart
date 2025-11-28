@@ -41,17 +41,17 @@ class _RouteGuardState extends State<RouteGuard> {
           return const _SplashScreen();
         }
 
-        // 2️⃣ First time user - Show onboarding
-        if (!_hasCompletedOnboarding!) {
-          return const OnboardingScreen();
-        }
-
-        // 3️⃣ Not Authenticated - Show login screen
+        // 2️⃣ Not Authenticated - Show login screen
         if (!authProvider.isAuthenticated) {
           return const AuthenticationScreen();
         }
 
-        // 4️⃣ Authenticated - Show home screen
+        // 3️⃣ Authenticated but first time user - Show onboarding
+        if (!_hasCompletedOnboarding!) {
+          return const OnboardingScreen();
+        }
+
+        // 4️⃣ Authenticated and onboarding completed - Show home screen
         return const HomeScreen();
       },
     );
