@@ -73,11 +73,11 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
                   ),
                   SizedBox(height: 1.h),
 
-                  _buildFilterTile('Critical', 'critical'),
+                  _buildFilterTile(l10n.filter_critical, 'critical'),
                   _buildFilterTile(l10n.report_high, 'high'),
-                  _buildFilterTile('Moderate', 'moderate'),
+                  _buildFilterTile(l10n.filter_moderate, 'moderate'),
                   _buildFilterTile(l10n.report_low, 'low'),
-                  _buildFilterTile('Minor', 'minor'),
+                  _buildFilterTile(l10n.filter_minor, 'minor'),
 
                   SizedBox(height: 2.h),
 
@@ -88,11 +88,11 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
                   ),
                   SizedBox(height: 1.h),
 
-                  _buildFilterTile('Draft', 'draft'),
-                  _buildFilterTile('Submitted', 'submitted'),
-                  _buildFilterTile('Reviewed', 'reviewed'),
-                  _buildFilterTile('Spam', 'spam'),
-                  _buildFilterTile('Discarded', 'discard'),
+                  _buildFilterTile(l10n.filter_draft, 'draft'),
+                  _buildFilterTile(l10n.filter_submitted, 'submitted'),
+                  _buildFilterTile(l10n.filter_reviewed, 'reviewed'),
+                  _buildFilterTile(l10n.filter_spam, 'spam'),
+                  _buildFilterTile(l10n.filter_discarded, 'discard'),
 
                   SizedBox(height: 3.h),
                 ],
@@ -127,7 +127,7 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
                           });
                         },
                         icon: Icon(Icons.check_circle_outline, size: 18),
-                        label: Text('Select All'),
+                        label: Text(l10n.filter_selectAll),
                         style: OutlinedButton.styleFrom(
                           padding: EdgeInsets.symmetric(vertical: 1.5.h),
                         ),
@@ -143,7 +143,7 @@ class _MapFilterBottomSheetState extends State<MapFilterBottomSheet> {
                           });
                         },
                         icon: Icon(Icons.clear, size: 18),
-                        label: Text('Clear All'),
+                        label: Text(l10n.filter_clearAll),
                         style: OutlinedButton.styleFrom(
                           padding: EdgeInsets.symmetric(vertical: 1.5.h),
                         ),

@@ -56,7 +56,18 @@ class CameraPreviewWidget extends StatelessWidget {
           // Camera Preview
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: CameraPreview(cameraController!),
+            child: SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: SizedBox(
+                  width: cameraController!.value.previewSize!.height,
+                  height: cameraController!.value.previewSize!.width,
+                  child: CameraPreview(cameraController!),
+                ),
+              ),
+            ),
           ),
 
           // Detection Overlay

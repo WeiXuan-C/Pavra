@@ -376,7 +376,7 @@ class _MapSearchBarState extends State<MapSearchBar> {
                     }
                   },
                   decoration: InputDecoration(
-                    hintText: 'Search places, addresses, or issues...',
+                    hintText: l10n.map_searchPlaceholder,
                     prefixIcon: Padding(
                       padding: EdgeInsets.all(3.w),
                       child: CustomIconWidget(
@@ -415,7 +415,7 @@ class _MapSearchBarState extends State<MapSearchBar> {
                   color: theme.colorScheme.primary,
                   size: 24,
                 ),
-                tooltip: 'Voice search',
+                tooltip: l10n.voice_search,
               ),
 
               // Filter button with badge

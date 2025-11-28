@@ -189,9 +189,66 @@ Body:
 - Updates severity slider
 - Shows confirmation toast
 
+## Recent Improvements (2024-11-28)
+
+### ✅ Fixed: Detection History to Manual Report Flow
+
+**Problem:** When users tapped on a detection from the history panel, they couldn't directly submit a report with pre-filled information.
+
+**Solution Implemented:**
+
+1. **Direct Navigation:** Modified `_onDetectionTap()` in `camera_detection_screen.dart` to navigate directly to manual report screen with detection data
+2. **Image URL Support:** Updated `_loadAiDetectionData()` to accept both `capturedPhoto` (for live detections) and `imageUrl` (for historical detections)
+3. **Photo Loading:** Added support for loading existing photos from URL using `provider.addPhotoFromUrl()` to avoid re-uploading
+4. **Auto-fill Data:** Detection description, severity, type, and location are automatically pre-filled
+
+**Code Changes:**
+```dart
+// camera_detection_screen.dart
+void _onDetectionTap(DetectionModel detection) {
+  Navigator.pushNamed(
+    context,
+    '/manual-report-screen',
+    arguments: {
+      'detectionData': detection,
+      'latitude': detection.latitude,
+      'longitude': detection.longitude,
+      'fromAiDetection': true,
+      'imageUrl': detection.imageUrl, // Pass stored image URL
+    },
+  );
+}
+
+// manual_report_screen.dart
+Future<void> _loadAiDetectionData(
+  DetectionModel detection,
+  double? latitude,
+  double? longitude, {
+  XFile? capturedPhoto,
+  String? imageUrl,  // New parameter
+}) async {
+  // ... existing code ...
+  
+  // Load from URL if available (detection history)
+  if (imageUrl != null && imageUrl.isNotEmpty) {
+    await provider.addPhotoFromUrl(
+      photoUrl: imageUrl,
+      photoType: 'main',
+      isPrimary: true,
+    );
+  }
+}
+```
+
+**User Flow Now:**
+1. User opens detection history panel
+2. User taps on a detection → **Directly navigates to manual report screen**
+3. Photo, description, severity, and type are **pre-filled**
+4. User reviews and confirms → Submits report
+
 ## Current Issues
 
-### ❌ Problem: Image URL Not Sent Correctly
+### ❌ Problem: Image URL Not Sent Correctly to AI Model
 
 The current implementation sends the image URL as **plain text** in the prompt, but OpenRouter's vision models require a **structured message format** with `image_url` type.
 
@@ -344,10 +401,11 @@ Future<Map<String, dynamic>> analyzeImage({
 ## Future Improvements
 
 1. ✅ Add progress indicator during analysis
-2. ✅ Fix image URL format for vision model
-3. ⚠️ Add retry mechanism for failed requests
-4. ⚠️ Cache analysis results to avoid duplicate calls
-5. ⚠️ Add timeout handling (30s recommended)
-6. ⚠️ Support batch image analysis
-7. ⚠️ Add confidence threshold filtering
-8. ⚠️ Implement rate limiting on client side
+2. ✅ Detection history to manual report flow with pre-filled data
+3. ⚠️ Fix image URL format for vision model (structured content)
+4. ⚠️ Add retry mechanism for failed requests
+5. ⚠️ Cache analysis results to avoid duplicate calls
+6. ⚠️ Add timeout handling (30s recommended)
+7. ⚠️ Support batch image analysis
+8. ⚠️ Add confidence threshold filtering
+9. ⚠️ Implement rate limiting on client side

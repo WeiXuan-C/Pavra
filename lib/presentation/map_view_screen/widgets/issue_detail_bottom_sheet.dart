@@ -332,7 +332,7 @@ class _IssueDetailBottomSheetState extends State<IssueDetailBottomSheet> {
                       Icon(Icons.access_time, size: 16, color: theme.colorScheme.primary),
                       SizedBox(width: 1.w),
                       Text(
-                        _formatDate(_parseDate(issue['created_at'])),
+                        _formatDate(_parseDate(issue['created_at']), l10n),
                         style: theme.textTheme.bodySmall,
                       ),
                       if (issue['distance_miles'] != null) ...[
@@ -403,7 +403,7 @@ class _IssueDetailBottomSheetState extends State<IssueDetailBottomSheet> {
           ),
           SizedBox(width: 1.w),
           Text(
-            severity.toUpperCase(),
+            _getSeverityLabel(severity, AppLocalizations.of(context)),
             style: theme.textTheme.labelSmall?.copyWith(
               color: severityData['color'],
               fontWeight: FontWeight.bold,
@@ -640,18 +640,35 @@ class _IssueDetailBottomSheetState extends State<IssueDetailBottomSheet> {
     return DateTime.now();
   }
 
-  String _formatDate(DateTime date) {
+  String _getSeverityLabel(String severity, AppLocalizations l10n) {
+    switch (severity.toLowerCase()) {
+      case 'critical':
+        return l10n.severity_critical;
+      case 'high':
+        return l10n.severity_high;
+      case 'moderate':
+        return l10n.severity_moderate;
+      case 'low':
+        return l10n.severity_low;
+      case 'minor':
+        return l10n.severity_minor;
+      default:
+        return severity.toUpperCase();
+    }
+  }
+
+  String _formatDate(DateTime date, AppLocalizations l10n) {
     final now = DateTime.now();
     final difference = now.difference(date);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} ago';
+      return l10n.map_daysAgo(difference.inDays);
     } else if (difference.inHours > 0) {
-      return '${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} ago';
+      return l10n.map_hoursAgo(difference.inHours);
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} ago';
+      return l10n.map_minutesAgo(difference.inMinutes);
     } else {
-      return 'Just now';
+      return l10n.map_justNow;
     }
   }
 }

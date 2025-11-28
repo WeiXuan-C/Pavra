@@ -3505,5 +3505,154 @@
   "route_walk": "步行",
   "@route_walk": {
     "description": "步行出行方式"
+  },
+  "map_searchPlaceholder": "搜索地点、地址或问题...",
+  "@map_searchPlaceholder": {
+    "description": "搜索栏占位符文本"
+  },
+  "map_feetAway": "{distance} 英尺",
+  "@map_feetAway": {
+    "description": "以英尺为单位的距离",
+    "placeholders": {
+      "distance": {
+        "type": "int"
+      }
+    }
+  },
+  "map_milesAway": "{distance} 英里",
+  "@map_milesAway": {
+    "description": "以英里为单位的距离",
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "map_daysAgo": "{days}天前",
+  "@map_daysAgo": {
+    "description": "天数前",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "map_hoursAgo": "{hours}小时前",
+  "@map_hoursAgo": {
+    "description": "小时前",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "map_minutesAgo": "{minutes}分钟前",
+  "@map_minutesAgo": {
+    "description": "分钟前",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "map_justNow": "刚刚",
+  "@map_justNow": {
+    "description": "刚刚时间指示器"
+  },
+  "severity_critical": "危急",
+  "@severity_critical": {
+    "description": "危急严重程度"
+  },
+  "severity_high": "高",
+  "@severity_high": {
+    "description": "高严重程度"
+  },
+  "severity_moderate": "中等",
+  "@severity_moderate": {
+    "description": "中等严重程度"
+  },
+  "severity_low": "低",
+  "@severity_low": {
+    "description": "低严重程度"
+  },
+  "severity_minor": "轻微",
+  "@severity_minor": {
+    "description": "轻微严重程度"
+  },
+  "voice_search": "语音搜索",
+  "@voice_search": {
+    "description": "语音搜索工具提示"
+  },
+  "voice_listening": "正在聆听...",
+  "@voice_listening": {
+    "description": "语音搜索聆听状态"
+  },
+  "voice_processing": "处理中...",
+  "@voice_processing": {
+    "description": "语音搜索处理状态"
+  },
+  "voice_recognized": "识别结果：",
+  "@voice_recognized": {
+    "description": "语音搜索识别文本标签"
+  },
+  "voice_editSearchText": "编辑搜索文本",
+  "@voice_editSearchText": {
+    "description": "语音搜索编辑提示"
+  },
+  "voice_tryAgain": "重试",
+  "@voice_tryAgain": {
+    "description": "语音搜索重试按钮"
+  },
+  "voice_cancel": "取消",
+  "@voice_cancel": {
+    "description": "语音搜索取消按钮"
+  },
+  "voice_retry": "重试",
+  "@voice_retry": {
+    "description": "语音搜索重试按钮"
+  },
+  "voice_search_button": "搜索",
+  "@voice_search_button": {
+    "description": "语音搜索确认按钮"
+  },
+  "filter_selectAll": "全选",
+  "@filter_selectAll": {
+    "description": "过滤器全选按钮"
+  },
+  "filter_clearAll": "清除全部",
+  "@filter_clearAll": {
+    "description": "过滤器清除全部按钮"
+  },
+  "filter_critical": "危急",
+  "@filter_critical": {
+    "description": "危急过滤选项"
+  },
+  "filter_moderate": "中等",
+  "@filter_moderate": {
+    "description": "中等过滤选项"
+  },
+  "filter_minor": "轻微",
+  "@filter_minor": {
+    "description": "轻微过滤选项"
+  },
+  "filter_draft": "草稿",
+  "@filter_draft": {
+    "description": "草稿状态过滤"
+  },
+  "filter_submitted": "已提交",
+  "@filter_submitted": {
+    "description": "已提交状态过滤"
+  },
+  "filter_reviewed": "已审核",
+  "@filter_reviewed": {
+    "description": "已审核状态过滤"
+  },
+  "filter_spam": "垃圾信息",
+  "@filter_spam": {
+    "description": "垃圾信息状态过滤"
+  },
+  "filter_discarded": "已丢弃",
+  "@filter_discarded": {
+    "description": "已丢弃状态过滤"
   }
 }

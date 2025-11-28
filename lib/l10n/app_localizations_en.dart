@@ -975,19 +975,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'No saved routes. Add frequent routes to monitor for alerts.';
 
   @override
-  String get severity_minor => 'Minor';
+  String get severity_minor => 'MINOR';
 
   @override
-  String get severity_low => 'Low';
+  String get severity_low => 'LOW';
 
   @override
-  String get severity_moderate => 'Moderate';
+  String get severity_moderate => 'MODERATE';
 
   @override
-  String get severity_high => 'High';
+  String get severity_high => 'HIGH';
 
   @override
-  String get severity_critical => 'Critical';
+  String get severity_critical => 'CRITICAL';
 
   @override
   String get severity_minorDesc => 'Minor inconvenience, no immediate danger';
@@ -2679,4 +2679,92 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get route_walk => 'Walk';
+
+  @override
+  String get map_searchPlaceholder => 'Search places, addresses, or issues...';
+
+  @override
+  String map_feetAway(int distance) {
+    return '$distance ft away';
+  }
+
+  @override
+  String map_milesAway(String distance) {
+    return '$distance mi away';
+  }
+
+  @override
+  String map_daysAgo(int days) {
+    return '${days}d ago';
+  }
+
+  @override
+  String map_hoursAgo(int hours) {
+    return '${hours}h ago';
+  }
+
+  @override
+  String map_minutesAgo(int minutes) {
+    return '${minutes}m ago';
+  }
+
+  @override
+  String get map_justNow => 'Just now';
+
+  @override
+  String get voice_search => 'Voice search';
+
+  @override
+  String get voice_listening => 'Listening...';
+
+  @override
+  String get voice_processing => 'Processing...';
+
+  @override
+  String get voice_recognized => 'Recognized:';
+
+  @override
+  String get voice_editSearchText => 'Edit search text';
+
+  @override
+  String get voice_tryAgain => 'Try Again';
+
+  @override
+  String get voice_cancel => 'Cancel';
+
+  @override
+  String get voice_retry => 'Retry';
+
+  @override
+  String get voice_search_button => 'Search';
+
+  @override
+  String get filter_selectAll => 'Select All';
+
+  @override
+  String get filter_clearAll => 'Clear All';
+
+  @override
+  String get filter_critical => 'Critical';
+
+  @override
+  String get filter_moderate => 'Moderate';
+
+  @override
+  String get filter_minor => 'Minor';
+
+  @override
+  String get filter_draft => 'Draft';
+
+  @override
+  String get filter_submitted => 'Submitted';
+
+  @override
+  String get filter_reviewed => 'Reviewed';
+
+  @override
+  String get filter_spam => 'Spam';
+
+  @override
+  String get filter_discarded => 'Discarded';
 }

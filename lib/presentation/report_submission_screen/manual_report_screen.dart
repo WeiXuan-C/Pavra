@@ -75,9 +75,16 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
       final latitude = args['latitude'] as double?;
       final longitude = args['longitude'] as double?;
       final capturedPhoto = args['capturedPhoto'] as XFile?;
+      final imageUrl = args['imageUrl'] as String?;
       
       if (detectionData != null) {
-        await _loadAiDetectionData(detectionData, latitude, longitude, capturedPhoto);
+        await _loadAiDetectionData(
+          detectionData, 
+          latitude, 
+          longitude, 
+          capturedPhoto: capturedPhoto,
+          imageUrl: imageUrl,
+        );
       }
     } else {
       // Normal flow: get current location
@@ -89,14 +96,16 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   Future<void> _loadAiDetectionData(
     DetectionModel detection,
     double? latitude,
-    double? longitude,
+    double? longitude, {
     XFile? capturedPhoto,
-  ) async {
+    String? imageUrl,
+  }) async {
     debugPrint('=== Loading AI detection data ===');
     debugPrint('Detection type: ${detection.type.value}');
     debugPrint('Severity: ${detection.severity}');
     debugPrint('Description: ${detection.description}');
     debugPrint('Has captured photo: ${capturedPhoto != null}');
+    debugPrint('Has image URL: ${imageUrl != null}');
     
     // Set description
     setState(() {
@@ -104,11 +113,12 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
       _severity = detection.severity.toDouble();
     });
     
-    // Upload captured photo if available
+    final provider = context.read<ManualReportProvider>();
+    
+    // Upload captured photo if available (from live camera detection)
     if (capturedPhoto != null && mounted) {
-      final provider = context.read<ManualReportProvider>();
       try {
-        debugPrint('Uploading AI detection photo...');
+        debugPrint('Uploading AI detection photo from camera...');
         
         // Read file bytes
         final bytes = await capturedPhoto.readAsBytes();
@@ -140,6 +150,32 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Failed to upload photo: $e'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      }
+    } 
+    // Use existing image URL if available (from detection history)
+    else if (imageUrl != null && imageUrl.isNotEmpty && mounted) {
+      try {
+        debugPrint('Loading existing photo from detection history: $imageUrl');
+        
+        // Add the existing photo URL directly to the provider
+        // This avoids re-uploading the same image
+        await provider.addPhotoFromUrl(
+          photoUrl: imageUrl,
+          photoType: 'main',
+          isPrimary: true,
+        );
+        
+        debugPrint('Existing photo loaded successfully');
+      } catch (e) {
+        debugPrint('Error loading existing photo: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to load photo: $e'),
               backgroundColor: Colors.orange,
             ),
           );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../../../core/services/voice_search_service.dart';
 import '../../../core/utils/accessibility_utils.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Voice Search Widget
 /// 
@@ -192,6 +193,7 @@ class _VoiceSearchWidgetState extends State<VoiceSearchWidget>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context);
 
     return Container(
       padding: const EdgeInsets.all(24.0),
@@ -224,7 +226,7 @@ class _VoiceSearchWidgetState extends State<VoiceSearchWidget>
 
           // Title
           Text(
-            'Voice Search',
+            l10n.voice_search,
             style: theme.textTheme.titleLarge,
           ),
           const SizedBox(height: 24),
@@ -259,7 +261,7 @@ class _VoiceSearchWidgetState extends State<VoiceSearchWidget>
             ),
             const SizedBox(height: 16),
             Text(
-              'Listening...',
+              l10n.voice_listening,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: colorScheme.primary,
                 fontWeight: FontWeight.w500,
@@ -283,7 +285,7 @@ class _VoiceSearchWidgetState extends State<VoiceSearchWidget>
             ),
             const SizedBox(height: 16),
             Text(
-              'Processing...',
+              l10n.voice_processing,
               style: theme.textTheme.bodyLarge,
             ),
           ],
@@ -324,7 +326,7 @@ class _VoiceSearchWidgetState extends State<VoiceSearchWidget>
                   label: 'Cancel voice search',
                   child: TextButton(
                     onPressed: () => widget.onClose?.call(),
-                    child: const Text('Cancel'),
+                    child: Text(l10n.voice_cancel),
                   ),
                 ),
                 Semantics(
@@ -333,7 +335,7 @@ class _VoiceSearchWidgetState extends State<VoiceSearchWidget>
                   child: ElevatedButton.icon(
                     onPressed: _retry,
                     icon: const Icon(Icons.refresh),
-                    label: const Text('Retry'),
+                    label: Text(l10n.voice_retry),
                   ),
                 ),
               ],
@@ -352,14 +354,14 @@ class _VoiceSearchWidgetState extends State<VoiceSearchWidget>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Recognized:',
+                    l10n.voice_recognized,
                     style: theme.textTheme.labelMedium,
                   ),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _editController,
                     decoration: InputDecoration(
-                      hintText: 'Edit search text',
+                      hintText: l10n.voice_editSearchText,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -380,12 +382,12 @@ class _VoiceSearchWidgetState extends State<VoiceSearchWidget>
               children: [
                 TextButton(
                   onPressed: _retry,
-                  child: const Text('Try Again'),
+                  child: Text(l10n.voice_tryAgain),
                 ),
                 ElevatedButton.icon(
                   onPressed: _confirmSearch,
                   icon: const Icon(Icons.search),
-                  label: const Text('Search'),
+                  label: Text(l10n.voice_search_button),
                 ),
               ],
             ),
