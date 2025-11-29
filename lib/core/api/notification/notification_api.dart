@@ -408,11 +408,14 @@ class NotificationApi {
     String? oneSignalNotificationId,
   }) async {
     // Verify user has permission to create notifications
-    final hasPermission = await _canCreateNotification(createdBy);
-    if (!hasPermission) {
-      throw Exception(
-        'Permission denied. Only developers and authorities can create notifications.',
-      );
+    // Skip permission check for 'system' user (used for automated notifications)
+    if (createdBy != 'system') {
+      final hasPermission = await _canCreateNotification(createdBy);
+      if (!hasPermission) {
+        throw Exception(
+          'Permission denied. Only developers and authorities can create notifications.',
+        );
+      }
     }
 
     final now = DateTime.now();

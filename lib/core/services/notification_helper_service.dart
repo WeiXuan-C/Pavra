@@ -30,9 +30,23 @@ class NotificationHelperService {
   }) async {
     final startTime = DateTime.now();
     
+    // Use 'system' as createdBy for automated notifications
+    const createdBy = 'system';
+    
+    developer.log(
+      '🔔 Creating notification: $title',
+      name: 'NotificationHelperService',
+      time: DateTime.now(),
+    );
+    developer.log(
+      '   Method: $methodName, Type: $type, Target: $targetType, Users: ${targetUserIds?.length ?? 0}',
+      name: 'NotificationHelperService',
+      time: DateTime.now(),
+    );
+    
     try {
-      await _notificationApi.createNotification(
-        createdBy: 'system',
+      final result = await _notificationApi.createNotification(
+        createdBy: createdBy,
         title: title,
         message: message,
         type: type,
@@ -43,6 +57,12 @@ class NotificationHelperService {
         sound: sound,
         category: category,
         priority: priority ?? 5,
+      );
+      
+      developer.log(
+        '✅ Notification created successfully: ${result['id']}',
+        name: 'NotificationHelperService',
+        time: DateTime.now(),
       );
 
       // Performance logging for slow operations

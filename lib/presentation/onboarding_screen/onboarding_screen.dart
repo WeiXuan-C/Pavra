@@ -47,8 +47,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Future<void> _completeOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('onboarding_completed', true);
-    // No need to navigate - RouteGuard will automatically show HomeScreen
-    // after onboarding is completed since user is already authenticated
+    
+    if (!mounted) return;
+    
+    // Navigate to home screen by replacing the entire navigation stack
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
   }
 
   @override

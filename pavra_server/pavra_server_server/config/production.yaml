@@ -26,13 +26,14 @@ webServer:
   publicScheme: https
 
 
-# Database - Railway PostgreSQL (dummy, not used, all data via Supabase REST API)
-database:
-  host: postgres.railway.internal
-  port: 5432
-  name: postgres
-  user: postgres
-  password: ${PGPASSWORD}
+# Database - DISABLED (all data via Supabase REST API)
+# Commenting out to avoid authentication issues
+# database:
+#   host: postgres.railway.internal
+#   port: 5432
+#   name: postgres
+#   user: postgres
+#   password: ${PGPASSWORD}
 
 # This is the setup for Redis (Railway Redis)
 redis:
@@ -45,11 +46,11 @@ redis:
 maxRequestSize: 524288 # The maximum size of requests allowed in bytes
 
 sessionLogs:
-  consoleEnabled: false
-  persistentEnabled: true
+  consoleEnabled: true
+  persistentEnabled: false  # Disabled - not using Serverpod database
 # consoleLogFormat: json # Defaults to "json", options are "text" or "json"
 
-futureCallExecutionEnabled: true #defaults to true
+futureCallExecutionEnabled: false  # Disabled - not using Serverpod database
 
 #futureCall:
 #  concurrencyLimit: 1 # Defaults to 1, a negative or null value removes the limit
