@@ -5144,43 +5144,43 @@ abstract class AppLocalizations {
   /// **'Walk'**
   String get route_walk;
 
-  /// Search bar placeholder text
+  /// Search bar placeholder text in map screen
   ///
   /// In en, this message translates to:
-  /// **'Search places, addresses, or issues...'**
+  /// **'Search places, addresses...'**
   String get map_searchPlaceholder;
 
   /// Distance in feet
   ///
   /// In en, this message translates to:
-  /// **'{distance} ft away'**
-  String map_feetAway(int distance);
+  /// **'{feet} ft away'**
+  String map_feetAway(int feet);
 
   /// Distance in miles
   ///
   /// In en, this message translates to:
-  /// **'{distance} mi away'**
-  String map_milesAway(String distance);
+  /// **'{miles} mi away'**
+  String map_milesAway(String miles);
 
-  /// Days ago
+  /// Days ago timestamp
   ///
   /// In en, this message translates to:
-  /// **'{days}d ago'**
+  /// **'{days} days ago'**
   String map_daysAgo(int days);
 
-  /// Hours ago
+  /// Hours ago timestamp
   ///
   /// In en, this message translates to:
-  /// **'{hours}h ago'**
+  /// **'{hours} hours ago'**
   String map_hoursAgo(int hours);
 
-  /// Minutes ago
+  /// Minutes ago timestamp
   ///
   /// In en, this message translates to:
-  /// **'{minutes}m ago'**
+  /// **'{minutes} minutes ago'**
   String map_minutesAgo(int minutes);
 
-  /// Just now time indicator
+  /// Just now timestamp
   ///
   /// In en, this message translates to:
   /// **'Just now'**
@@ -5311,6 +5311,600 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not in your area'**
   String get report_notInYourArea;
+
+  /// Help and FAQ menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Help & FAQ'**
+  String get settings_helpAndFaq;
+
+  /// Help and FAQ description
+  ///
+  /// In en, this message translates to:
+  /// **'Get help and find answers'**
+  String get settings_helpAndFaqDesc;
+
+  /// About Pavra menu item
+  ///
+  /// In en, this message translates to:
+  /// **'About Pavra'**
+  String get settings_aboutPavra;
+
+  /// About Pavra description
+  ///
+  /// In en, this message translates to:
+  /// **'App info and version'**
+  String get settings_aboutPavraDesc;
+
+  /// Help screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Help & FAQ'**
+  String get help_title;
+
+  /// Help search placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Search for help...'**
+  String get help_searchPlaceholder;
+
+  /// Quick links section title
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Links'**
+  String get help_quickLinks;
+
+  /// Map guide title
+  ///
+  /// In en, this message translates to:
+  /// **'Map & Navigation Guide'**
+  String get help_mapGuideTitle;
+
+  /// Map guide subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Learn how to use map features'**
+  String get help_mapGuideSubtitle;
+
+  /// AI detection guide title
+  ///
+  /// In en, this message translates to:
+  /// **'AI Detection Guide'**
+  String get help_aiGuideTitle;
+
+  /// AI detection guide subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'How to detect road issues'**
+  String get help_aiGuideSubtitle;
+
+  /// Report submission guide title
+  ///
+  /// In en, this message translates to:
+  /// **'Report Submission Guide'**
+  String get help_reportGuideTitle;
+
+  /// Report submission guide subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'How to submit reports'**
+  String get help_reportGuideSubtitle;
+
+  /// FAQ section title
+  ///
+  /// In en, this message translates to:
+  /// **'Frequently Asked Questions'**
+  String get help_faqTitle;
+
+  /// Getting started category
+  ///
+  /// In en, this message translates to:
+  /// **'Getting Started'**
+  String get help_gettingStarted;
+
+  /// Map and navigation category
+  ///
+  /// In en, this message translates to:
+  /// **'Map & Navigation'**
+  String get help_mapNavigation;
+
+  /// AI detection category
+  ///
+  /// In en, this message translates to:
+  /// **'AI Detection'**
+  String get help_aiDetection;
+
+  /// Reports and issues category
+  ///
+  /// In en, this message translates to:
+  /// **'Reports & Issues'**
+  String get help_reportsIssues;
+
+  /// Safety alerts category
+  ///
+  /// In en, this message translates to:
+  /// **'Safety Alerts'**
+  String get help_safetyAlerts;
+
+  /// Account and privacy category
+  ///
+  /// In en, this message translates to:
+  /// **'Account & Privacy'**
+  String get help_accountPrivacy;
+
+  /// Still need help message
+  ///
+  /// In en, this message translates to:
+  /// **'Still need help?'**
+  String get help_stillNeedHelp;
+
+  /// Contact support message
+  ///
+  /// In en, this message translates to:
+  /// **'Contact our support team'**
+  String get help_contactSupport;
+
+  /// Contact support button
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Support'**
+  String get help_contactSupportButton;
+
+  /// Guide dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Guide'**
+  String get help_guide;
+
+  /// Guide content placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed guide for {type} will be shown here.'**
+  String help_guideContent(String type);
+
+  /// FAQ question 1
+  ///
+  /// In en, this message translates to:
+  /// **'How do I create an account?'**
+  String get help_q1;
+
+  /// FAQ answer 1
+  ///
+  /// In en, this message translates to:
+  /// **'Tap on \"Sign Up\" on the login screen, enter your email and password, then verify your email address.'**
+  String get help_a1;
+
+  /// FAQ question 2
+  ///
+  /// In en, this message translates to:
+  /// **'How do I enable location services?'**
+  String get help_q2;
+
+  /// FAQ answer 2
+  ///
+  /// In en, this message translates to:
+  /// **'Go to your device Settings > Apps > Pavra > Permissions > Location, and select \"Allow all the time\" or \"Allow only while using the app\".'**
+  String get help_a2;
+
+  /// FAQ question 3
+  ///
+  /// In en, this message translates to:
+  /// **'What is the reputation system?'**
+  String get help_q3;
+
+  /// FAQ answer 3
+  ///
+  /// In en, this message translates to:
+  /// **'The reputation system rewards users for submitting accurate reports. Higher reputation unlocks more features and increases your trust level.'**
+  String get help_a3;
+
+  /// FAQ question 4
+  ///
+  /// In en, this message translates to:
+  /// **'How do I search for locations?'**
+  String get help_q4;
+
+  /// FAQ answer 4
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the search bar at the top of the map, type any address, place name, or road issue. You can also search for specific issues by title or description.'**
+  String get help_a4;
+
+  /// FAQ question 5
+  ///
+  /// In en, this message translates to:
+  /// **'How do I get directions?'**
+  String get help_q5;
+
+  /// FAQ answer 5
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a location, tap on the result, then tap \"Directions\". Choose your travel mode (driving, walking, transit, or bicycling) and start navigation.'**
+  String get help_a5;
+
+  /// FAQ question 6
+  ///
+  /// In en, this message translates to:
+  /// **'How do I plan a multi-stop route?'**
+  String get help_q6;
+
+  /// FAQ answer 6
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the route planning icon (🔀) next to the search bar, add your stops, reorder them as needed, select travel mode, and start navigation.'**
+  String get help_a6;
+
+  /// FAQ question 7
+  ///
+  /// In en, this message translates to:
+  /// **'What do the marker colors mean?'**
+  String get help_q7;
+
+  /// FAQ answer 7
+  ///
+  /// In en, this message translates to:
+  /// **'Red markers = Critical/High severity issues, Orange = Moderate severity, Yellow = Low/Minor severity, Cyan = Your search result.'**
+  String get help_a7;
+
+  /// FAQ question 8
+  ///
+  /// In en, this message translates to:
+  /// **'How does AI detection work?'**
+  String get help_q8;
+
+  /// FAQ answer 8
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo of a road issue, and our AI analyzes it to identify the type and severity. The AI uses advanced vision models to detect potholes, cracks, debris, and other hazards.'**
+  String get help_a8;
+
+  /// FAQ question 9
+  ///
+  /// In en, this message translates to:
+  /// **'What can the AI detect?'**
+  String get help_q9;
+
+  /// FAQ answer 9
+  ///
+  /// In en, this message translates to:
+  /// **'The AI can detect potholes, road cracks, debris, flooding, damaged signs, missing lane markings, and other road safety issues.'**
+  String get help_a9;
+
+  /// FAQ question 10
+  ///
+  /// In en, this message translates to:
+  /// **'How accurate is the AI?'**
+  String get help_q10;
+
+  /// FAQ answer 10
+  ///
+  /// In en, this message translates to:
+  /// **'Our AI has high accuracy, but all detections are reviewed by the community. You can adjust the sensitivity level in settings.'**
+  String get help_a10;
+
+  /// FAQ question 11
+  ///
+  /// In en, this message translates to:
+  /// **'Can I use photos from my gallery?'**
+  String get help_q11;
+
+  /// FAQ answer 11
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! Tap the gallery icon when submitting a report to select existing photos.'**
+  String get help_a11;
+
+  /// FAQ question 12
+  ///
+  /// In en, this message translates to:
+  /// **'How do I submit a report?'**
+  String get help_q12;
+
+  /// FAQ answer 12
+  ///
+  /// In en, this message translates to:
+  /// **'Use AI detection or tap \"Report Issue\" on the map. Add photos, description, and location details, then submit.'**
+  String get help_a12;
+
+  /// FAQ question 13
+  ///
+  /// In en, this message translates to:
+  /// **'Can I edit my reports?'**
+  String get help_q13;
+
+  /// FAQ answer 13
+  ///
+  /// In en, this message translates to:
+  /// **'You can edit draft reports. Once submitted, reports can only be updated by moderators.'**
+  String get help_a13;
+
+  /// FAQ question 14
+  ///
+  /// In en, this message translates to:
+  /// **'How long does review take?'**
+  String get help_q14;
+
+  /// FAQ answer 14
+  ///
+  /// In en, this message translates to:
+  /// **'Most reports are reviewed within 24-48 hours. High-severity issues are prioritized.'**
+  String get help_a14;
+
+  /// FAQ question 15
+  ///
+  /// In en, this message translates to:
+  /// **'What happens to spam reports?'**
+  String get help_q15;
+
+  /// FAQ answer 15
+  ///
+  /// In en, this message translates to:
+  /// **'Spam reports are flagged and removed. Repeated spam submissions may result in account restrictions.'**
+  String get help_a15;
+
+  /// FAQ question 16
+  ///
+  /// In en, this message translates to:
+  /// **'How do I set up alerts?'**
+  String get help_q16;
+
+  /// FAQ answer 16
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Safety Alerts screen, enable notifications, and set your alert radius. You\'ll receive notifications for issues within your radius.'**
+  String get help_a16;
+
+  /// FAQ question 17
+  ///
+  /// In en, this message translates to:
+  /// **'Can I customize alert types?'**
+  String get help_q17;
+
+  /// FAQ answer 17
+  ///
+  /// In en, this message translates to:
+  /// **'Yes! In Safety Alerts settings, you can choose which severity levels trigger notifications.'**
+  String get help_a17;
+
+  /// FAQ question 18
+  ///
+  /// In en, this message translates to:
+  /// **'What is Smart Drive Mode?'**
+  String get help_q18;
+
+  /// FAQ answer 18
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Drive Mode provides voice alerts while driving, warning you about nearby road hazards in real-time.'**
+  String get help_a18;
+
+  /// FAQ question 19
+  ///
+  /// In en, this message translates to:
+  /// **'How do I change my password?'**
+  String get help_q19;
+
+  /// FAQ answer 19
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Profile > Settings > Account Settings > Change Password.'**
+  String get help_a19;
+
+  /// FAQ question 20
+  ///
+  /// In en, this message translates to:
+  /// **'Is my location data private?'**
+  String get help_q20;
+
+  /// FAQ answer 20
+  ///
+  /// In en, this message translates to:
+  /// **'Yes. Location data is only used for map features and alerts. We never share your personal location with third parties.'**
+  String get help_a20;
+
+  /// FAQ question 21
+  ///
+  /// In en, this message translates to:
+  /// **'How do I delete my account?'**
+  String get help_q21;
+
+  /// FAQ answer 21
+  ///
+  /// In en, this message translates to:
+  /// **'Contact support at support@pavra.app to request account deletion. All your data will be permanently removed.'**
+  String get help_a21;
+
+  /// About screen title
+  ///
+  /// In en, this message translates to:
+  /// **'About Pavra'**
+  String get about_title;
+
+  /// App version
+  ///
+  /// In en, this message translates to:
+  /// **'Version 1.1.0'**
+  String get about_version;
+
+  /// App tagline
+  ///
+  /// In en, this message translates to:
+  /// **'AI-Powered Road Safety Platform'**
+  String get about_tagline;
+
+  /// Our mission section title
+  ///
+  /// In en, this message translates to:
+  /// **'Our Mission'**
+  String get about_ourMission;
+
+  /// Mission statement text
+  ///
+  /// In en, this message translates to:
+  /// **'Pavra is dedicated to making roads safer for everyone through community-driven reporting and AI-powered detection. We empower users to identify and report road hazards, helping authorities respond faster and prevent accidents.'**
+  String get about_missionText;
+
+  /// Key features section title
+  ///
+  /// In en, this message translates to:
+  /// **'Key Features'**
+  String get about_keyFeatures;
+
+  /// Feature 1
+  ///
+  /// In en, this message translates to:
+  /// **'🤖 AI-powered road hazard detection'**
+  String get about_feature1;
+
+  /// Feature 2
+  ///
+  /// In en, this message translates to:
+  /// **'🗺️ Interactive map with real-time updates'**
+  String get about_feature2;
+
+  /// Feature 3
+  ///
+  /// In en, this message translates to:
+  /// **'🧭 Multi-stop route planning'**
+  String get about_feature3;
+
+  /// Feature 4
+  ///
+  /// In en, this message translates to:
+  /// **'🔔 Smart safety alerts'**
+  String get about_feature4;
+
+  /// Feature 5
+  ///
+  /// In en, this message translates to:
+  /// **'🎯 Gamification & reputation system'**
+  String get about_feature5;
+
+  /// Feature 6
+  ///
+  /// In en, this message translates to:
+  /// **'🚗 Smart Drive Mode with voice alerts'**
+  String get about_feature6;
+
+  /// Feature 7
+  ///
+  /// In en, this message translates to:
+  /// **'🌍 Community-driven reporting'**
+  String get about_feature7;
+
+  /// Technology section title
+  ///
+  /// In en, this message translates to:
+  /// **'Technology'**
+  String get about_technology;
+
+  /// Technology description
+  ///
+  /// In en, this message translates to:
+  /// **'Built with Flutter for cross-platform compatibility. Powered by advanced AI models including NVIDIA Nemotron and Google Gemini for accurate road hazard detection. Backend infrastructure uses Supabase, Serverpod, and Upstash for reliable, scalable performance.'**
+  String get about_technologyText;
+
+  /// Our team section title
+  ///
+  /// In en, this message translates to:
+  /// **'Our Team'**
+  String get about_ourTeam;
+
+  /// Team description
+  ///
+  /// In en, this message translates to:
+  /// **'Pavra is developed by a passionate team of engineers, designers, and road safety advocates committed to leveraging technology for public good.'**
+  String get about_teamText;
+
+  /// Website link title
+  ///
+  /// In en, this message translates to:
+  /// **'Website'**
+  String get about_website;
+
+  /// Website URL
+  ///
+  /// In en, this message translates to:
+  /// **'pavra.vercel.app'**
+  String get about_websiteUrl;
+
+  /// Privacy policy link
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get about_privacyPolicy;
+
+  /// Privacy policy description
+  ///
+  /// In en, this message translates to:
+  /// **'How we protect your data'**
+  String get about_privacyPolicyDesc;
+
+  /// Terms of service link
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get about_termsOfService;
+
+  /// Terms of service description
+  ///
+  /// In en, this message translates to:
+  /// **'Terms and conditions'**
+  String get about_termsOfServiceDesc;
+
+  /// Open source licenses link
+  ///
+  /// In en, this message translates to:
+  /// **'Open Source Licenses'**
+  String get about_openSourceLicenses;
+
+  /// Open source licenses description
+  ///
+  /// In en, this message translates to:
+  /// **'Third-party software'**
+  String get about_openSourceLicensesDesc;
+
+  /// Contact us section title
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Us'**
+  String get about_contactUs;
+
+  /// Email label
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get about_email;
+
+  /// Phone label
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get about_phone;
+
+  /// Send email tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Send Email'**
+  String get about_sendEmail;
+
+  /// Call tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get about_call;
+
+  /// Copyright text
+  ///
+  /// In en, this message translates to:
+  /// **'© 2025 Pavra. All rights reserved.'**
+  String get about_copyright;
+
+  /// Made with love text
+  ///
+  /// In en, this message translates to:
+  /// **'Made with ❤️ for safer roads'**
+  String get about_madeWith;
 }
 
 class _AppLocalizationsDelegate

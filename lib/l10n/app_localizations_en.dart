@@ -2681,31 +2681,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get route_walk => 'Walk';
 
   @override
-  String get map_searchPlaceholder => 'Search places, addresses, or issues...';
+  String get map_searchPlaceholder => 'Search places, addresses...';
 
   @override
-  String map_feetAway(int distance) {
-    return '$distance ft away';
+  String map_feetAway(int feet) {
+    return '$feet ft away';
   }
 
   @override
-  String map_milesAway(String distance) {
-    return '$distance mi away';
+  String map_milesAway(String miles) {
+    return '$miles mi away';
   }
 
   @override
   String map_daysAgo(int days) {
-    return '${days}d ago';
+    return '$days days ago';
   }
 
   @override
   String map_hoursAgo(int hours) {
-    return '${hours}h ago';
+    return '$hours hours ago';
   }
 
   @override
   String map_minutesAgo(int minutes) {
-    return '${minutes}m ago';
+    return '$minutes minutes ago';
   }
 
   @override
@@ -2773,4 +2773,327 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get report_notInYourArea => 'Not in your area';
+
+  @override
+  String get settings_helpAndFaq => 'Help & FAQ';
+
+  @override
+  String get settings_helpAndFaqDesc => 'Get help and find answers';
+
+  @override
+  String get settings_aboutPavra => 'About Pavra';
+
+  @override
+  String get settings_aboutPavraDesc => 'App info and version';
+
+  @override
+  String get help_title => 'Help & FAQ';
+
+  @override
+  String get help_searchPlaceholder => 'Search for help...';
+
+  @override
+  String get help_quickLinks => 'Quick Links';
+
+  @override
+  String get help_mapGuideTitle => 'Map & Navigation Guide';
+
+  @override
+  String get help_mapGuideSubtitle => 'Learn how to use map features';
+
+  @override
+  String get help_aiGuideTitle => 'AI Detection Guide';
+
+  @override
+  String get help_aiGuideSubtitle => 'How to detect road issues';
+
+  @override
+  String get help_reportGuideTitle => 'Report Submission Guide';
+
+  @override
+  String get help_reportGuideSubtitle => 'How to submit reports';
+
+  @override
+  String get help_faqTitle => 'Frequently Asked Questions';
+
+  @override
+  String get help_gettingStarted => 'Getting Started';
+
+  @override
+  String get help_mapNavigation => 'Map & Navigation';
+
+  @override
+  String get help_aiDetection => 'AI Detection';
+
+  @override
+  String get help_reportsIssues => 'Reports & Issues';
+
+  @override
+  String get help_safetyAlerts => 'Safety Alerts';
+
+  @override
+  String get help_accountPrivacy => 'Account & Privacy';
+
+  @override
+  String get help_stillNeedHelp => 'Still need help?';
+
+  @override
+  String get help_contactSupport => 'Contact our support team';
+
+  @override
+  String get help_contactSupportButton => 'Contact Support';
+
+  @override
+  String get help_guide => 'Guide';
+
+  @override
+  String help_guideContent(String type) {
+    return 'Detailed guide for $type will be shown here.';
+  }
+
+  @override
+  String get help_q1 => 'How do I create an account?';
+
+  @override
+  String get help_a1 =>
+      'Tap on \"Sign Up\" on the login screen, enter your email and password, then verify your email address.';
+
+  @override
+  String get help_q2 => 'How do I enable location services?';
+
+  @override
+  String get help_a2 =>
+      'Go to your device Settings > Apps > Pavra > Permissions > Location, and select \"Allow all the time\" or \"Allow only while using the app\".';
+
+  @override
+  String get help_q3 => 'What is the reputation system?';
+
+  @override
+  String get help_a3 =>
+      'The reputation system rewards users for submitting accurate reports. Higher reputation unlocks more features and increases your trust level.';
+
+  @override
+  String get help_q4 => 'How do I search for locations?';
+
+  @override
+  String get help_a4 =>
+      'Tap the search bar at the top of the map, type any address, place name, or road issue. You can also search for specific issues by title or description.';
+
+  @override
+  String get help_q5 => 'How do I get directions?';
+
+  @override
+  String get help_a5 =>
+      'Search for a location, tap on the result, then tap \"Directions\". Choose your travel mode (driving, walking, transit, or bicycling) and start navigation.';
+
+  @override
+  String get help_q6 => 'How do I plan a multi-stop route?';
+
+  @override
+  String get help_a6 =>
+      'Tap the route planning icon (🔀) next to the search bar, add your stops, reorder them as needed, select travel mode, and start navigation.';
+
+  @override
+  String get help_q7 => 'What do the marker colors mean?';
+
+  @override
+  String get help_a7 =>
+      'Red markers = Critical/High severity issues, Orange = Moderate severity, Yellow = Low/Minor severity, Cyan = Your search result.';
+
+  @override
+  String get help_q8 => 'How does AI detection work?';
+
+  @override
+  String get help_a8 =>
+      'Take a photo of a road issue, and our AI analyzes it to identify the type and severity. The AI uses advanced vision models to detect potholes, cracks, debris, and other hazards.';
+
+  @override
+  String get help_q9 => 'What can the AI detect?';
+
+  @override
+  String get help_a9 =>
+      'The AI can detect potholes, road cracks, debris, flooding, damaged signs, missing lane markings, and other road safety issues.';
+
+  @override
+  String get help_q10 => 'How accurate is the AI?';
+
+  @override
+  String get help_a10 =>
+      'Our AI has high accuracy, but all detections are reviewed by the community. You can adjust the sensitivity level in settings.';
+
+  @override
+  String get help_q11 => 'Can I use photos from my gallery?';
+
+  @override
+  String get help_a11 =>
+      'Yes! Tap the gallery icon when submitting a report to select existing photos.';
+
+  @override
+  String get help_q12 => 'How do I submit a report?';
+
+  @override
+  String get help_a12 =>
+      'Use AI detection or tap \"Report Issue\" on the map. Add photos, description, and location details, then submit.';
+
+  @override
+  String get help_q13 => 'Can I edit my reports?';
+
+  @override
+  String get help_a13 =>
+      'You can edit draft reports. Once submitted, reports can only be updated by moderators.';
+
+  @override
+  String get help_q14 => 'How long does review take?';
+
+  @override
+  String get help_a14 =>
+      'Most reports are reviewed within 24-48 hours. High-severity issues are prioritized.';
+
+  @override
+  String get help_q15 => 'What happens to spam reports?';
+
+  @override
+  String get help_a15 =>
+      'Spam reports are flagged and removed. Repeated spam submissions may result in account restrictions.';
+
+  @override
+  String get help_q16 => 'How do I set up alerts?';
+
+  @override
+  String get help_a16 =>
+      'Go to Safety Alerts screen, enable notifications, and set your alert radius. You\'ll receive notifications for issues within your radius.';
+
+  @override
+  String get help_q17 => 'Can I customize alert types?';
+
+  @override
+  String get help_a17 =>
+      'Yes! In Safety Alerts settings, you can choose which severity levels trigger notifications.';
+
+  @override
+  String get help_q18 => 'What is Smart Drive Mode?';
+
+  @override
+  String get help_a18 =>
+      'Smart Drive Mode provides voice alerts while driving, warning you about nearby road hazards in real-time.';
+
+  @override
+  String get help_q19 => 'How do I change my password?';
+
+  @override
+  String get help_a19 =>
+      'Go to Profile > Settings > Account Settings > Change Password.';
+
+  @override
+  String get help_q20 => 'Is my location data private?';
+
+  @override
+  String get help_a20 =>
+      'Yes. Location data is only used for map features and alerts. We never share your personal location with third parties.';
+
+  @override
+  String get help_q21 => 'How do I delete my account?';
+
+  @override
+  String get help_a21 =>
+      'Contact support at support@pavra.app to request account deletion. All your data will be permanently removed.';
+
+  @override
+  String get about_title => 'About Pavra';
+
+  @override
+  String get about_version => 'Version 1.1.0';
+
+  @override
+  String get about_tagline => 'AI-Powered Road Safety Platform';
+
+  @override
+  String get about_ourMission => 'Our Mission';
+
+  @override
+  String get about_missionText =>
+      'Pavra is dedicated to making roads safer for everyone through community-driven reporting and AI-powered detection. We empower users to identify and report road hazards, helping authorities respond faster and prevent accidents.';
+
+  @override
+  String get about_keyFeatures => 'Key Features';
+
+  @override
+  String get about_feature1 => '🤖 AI-powered road hazard detection';
+
+  @override
+  String get about_feature2 => '🗺️ Interactive map with real-time updates';
+
+  @override
+  String get about_feature3 => '🧭 Multi-stop route planning';
+
+  @override
+  String get about_feature4 => '🔔 Smart safety alerts';
+
+  @override
+  String get about_feature5 => '🎯 Gamification & reputation system';
+
+  @override
+  String get about_feature6 => '🚗 Smart Drive Mode with voice alerts';
+
+  @override
+  String get about_feature7 => '🌍 Community-driven reporting';
+
+  @override
+  String get about_technology => 'Technology';
+
+  @override
+  String get about_technologyText =>
+      'Built with Flutter for cross-platform compatibility. Powered by advanced AI models including NVIDIA Nemotron and Google Gemini for accurate road hazard detection. Backend infrastructure uses Supabase, Serverpod, and Upstash for reliable, scalable performance.';
+
+  @override
+  String get about_ourTeam => 'Our Team';
+
+  @override
+  String get about_teamText =>
+      'Pavra is developed by a passionate team of engineers, designers, and road safety advocates committed to leveraging technology for public good.';
+
+  @override
+  String get about_website => 'Website';
+
+  @override
+  String get about_websiteUrl => 'pavra.vercel.app';
+
+  @override
+  String get about_privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get about_privacyPolicyDesc => 'How we protect your data';
+
+  @override
+  String get about_termsOfService => 'Terms of Service';
+
+  @override
+  String get about_termsOfServiceDesc => 'Terms and conditions';
+
+  @override
+  String get about_openSourceLicenses => 'Open Source Licenses';
+
+  @override
+  String get about_openSourceLicensesDesc => 'Third-party software';
+
+  @override
+  String get about_contactUs => 'Contact Us';
+
+  @override
+  String get about_email => 'Email';
+
+  @override
+  String get about_phone => 'Phone';
+
+  @override
+  String get about_sendEmail => 'Send Email';
+
+  @override
+  String get about_call => 'Call';
+
+  @override
+  String get about_copyright => '© 2025 Pavra. All rights reserved.';
+
+  @override
+  String get about_madeWith => 'Made with ❤️ for safer roads';
 }

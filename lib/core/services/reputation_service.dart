@@ -180,6 +180,55 @@ class ReputationService {
         name: 'ReputationService',
       );
 
+      // Send notification about reputation change (only if score changed)
+      if (scoreAfter != scoreBefore) {
+        try {
+          await _notificationHelper.notifyReputationChange(
+            userId: userId,
+            changeAmount: changeAmount,
+            actionType: actionType,
+            scoreAfter: scoreAfter,
+          );
+          developer.log(
+            '✅ Sent reputation change notification',
+            name: 'ReputationService',
+          );
+        } catch (e) {
+          developer.log(
+            '⚠️ Failed to send reputation notification: $e',
+            name: 'ReputationService',
+            error: e,
+          );
+          // Don't fail the reputation update if notification fails
+        }
+      }
+
+      // Check for milestone achievements
+      if (scoreAfter != scoreBefore) {
+        final milestones = [25, 50, 75, 100];
+        for (final milestone in milestones) {
+          // Check if we just crossed this milestone
+          if (scoreBefore < milestone && scoreAfter >= milestone) {
+            try {
+              await _notificationHelper.notifyReputationMilestone(
+                userId: userId,
+                milestone: milestone,
+              );
+              developer.log(
+                '🎉 Sent milestone notification for $milestone points',
+                name: 'ReputationService',
+              );
+            } catch (e) {
+              developer.log(
+                '⚠️ Failed to send milestone notification: $e',
+                name: 'ReputationService',
+                error: e,
+              );
+            }
+          }
+        }
+      }
+
       return scoreAfter;
     } catch (e, stackTrace) {
       developer.log(

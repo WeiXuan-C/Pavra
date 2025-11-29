@@ -55,8 +55,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Icons.help_outline,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    title: Text('Help & FAQ'),
-                    subtitle: Text('Get help and find answers'),
+                    title: Text(l10n.settings_helpAndFaq),
+                    subtitle: Text(l10n.settings_helpAndFaqDesc),
                     trailing: Icon(Icons.arrow_forward_ios, size: 16),
                     onTap: () {
                       Navigator.pushNamed(context, '/help');
@@ -68,8 +68,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Icons.info_outline,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    title: Text('About Pavra'),
-                    subtitle: Text('App info and version'),
+                    title: Text(l10n.settings_aboutPavra),
+                    subtitle: Text(l10n.settings_aboutPavraDesc),
                     trailing: Icon(Icons.arrow_forward_ios, size: 16),
                     onTap: () {
                       Navigator.pushNamed(context, '/about');

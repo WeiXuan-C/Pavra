@@ -252,7 +252,7 @@ class _MapSearchBarState extends State<MapSearchBar> {
               }
             },
             decoration: InputDecoration(
-              hintText: 'Search places, addresses...',
+              hintText: l10n.map_searchPlaceholder,
               hintStyle: TextStyle(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 fontSize: 14,

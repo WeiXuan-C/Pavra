@@ -39,9 +39,8 @@ class AudioAlertService {
 
   /// Play alert sound for high-severity detections
   /// 
-  /// Uses system notification sound as a fallback since we don't have
-  /// a custom sound asset yet. In production, this should play a custom
-  /// alert sound from assets.
+  /// Tries to play custom sound from assets/sounds/alert.mp3
+  /// Falls back to haptic feedback if sound file is not available
   Future<void> playAlertSound() async {
     if (!_isInitialized) {
       await initialize();
@@ -51,21 +50,30 @@ class AudioAlertService {
       // Stop any currently playing sound
       await _audioPlayer.stop();
 
-      // Play system notification sound
-      // Note: In production, replace this with a custom sound asset:
-      // await _audioPlayer.play(AssetSource('sounds/alert.mp3'));
-      
-      // For now, use haptic feedback as an alternative
-      await HapticFeedback.heavyImpact();
-      
-      // Wait a bit and do another haptic for emphasis
-      await Future.delayed(Duration(milliseconds: 100));
-      await HapticFeedback.heavyImpact();
-
-      developer.log(
-        'Alert sound played (haptic feedback)',
-        name: 'AudioAlertService',
-      );
+      // Try to play custom alert sound
+      try {
+        await _audioPlayer.play(AssetSource('sounds/alert.mp3'));
+        
+        developer.log(
+          'Alert sound played from asset',
+          name: 'AudioAlertService',
+        );
+      } catch (assetError) {
+        // Sound file not found, use haptic feedback as fallback
+        developer.log(
+          'Alert sound file not found, using haptic feedback: $assetError',
+          name: 'AudioAlertService',
+        );
+        
+        await HapticFeedback.heavyImpact();
+        await Future.delayed(Duration(milliseconds: 100));
+        await HapticFeedback.heavyImpact();
+        
+        developer.log(
+          'Alert played (haptic feedback fallback)',
+          name: 'AudioAlertService',
+        );
+      }
     } catch (e) {
       developer.log(
         'Error playing alert sound: $e',
@@ -109,8 +117,55 @@ class AudioAlertService {
     }
   }
 
+  /// Play notification sound (lighter than alert sound)
+  /// 
+  /// Used for general notifications, less urgent than alerts
+  /// Tries to play custom notification sound, falls back to light haptic
+  Future<void> playNotificationSound() async {
+    if (!_isInitialized) {
+      await initialize();
+    }
+
+    try {
+      // Stop any currently playing sound
+      await _audioPlayer.stop();
+
+      // Try to play custom notification sound
+      try {
+        await _audioPlayer.play(AssetSource('sounds/notification.mp3'));
+        
+        developer.log(
+          'Notification sound played from asset',
+          name: 'AudioAlertService',
+        );
+      } catch (assetError) {
+        // Sound file not found, use light haptic feedback as fallback
+        developer.log(
+          'Notification sound file not found, using haptic feedback: $assetError',
+          name: 'AudioAlertService',
+        );
+        
+        // Single light haptic for notifications (less intense than alerts)
+        await HapticFeedback.lightImpact();
+        
+        developer.log(
+          'Notification played (haptic feedback fallback)',
+          name: 'AudioAlertService',
+        );
+      }
+    } catch (e) {
+      developer.log(
+        'Error playing notification sound: $e',
+        name: 'AudioAlertService',
+        error: e,
+      );
+    }
+  }
+
   /// Stop any currently playing sound
   Future<void> stopSound() async {
+    if (!_isInitialized) return;
+    
     try {
       await _audioPlayer.stop();
     } catch (e) {
@@ -123,8 +178,34 @@ class AudioAlertService {
   }
 
   /// Dispose of the audio player
-  void dispose() {
-    _audioPlayer.dispose();
-    _isInitialized = false;
+  Future<void> dispose() async {
+    if (!_isInitialized) return;
+    
+    try {
+      // Stop any playing sound first
+      await _audioPlayer.stop();
+      
+      // Small delay to ensure stop completes
+      await Future.delayed(Duration(milliseconds: 100));
+      
+      // Release and dispose the player
+      await _audioPlayer.release();
+      await _audioPlayer.dispose();
+      
+      _isInitialized = false;
+      
+      developer.log(
+        'AudioAlertService disposed successfully',
+        name: 'AudioAlertService',
+      );
+    } catch (e) {
+      developer.log(
+        'Error disposing audio service: $e',
+        name: 'AudioAlertService',
+        error: e,
+      );
+      // Mark as not initialized even if disposal fails
+      _isInitialized = false;
+    }
   }
 }

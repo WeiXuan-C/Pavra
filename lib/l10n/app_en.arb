@@ -3662,5 +3662,459 @@
   "report_notInYourArea": "Not in your area",
   "@report_notInYourArea": {
     "description": "Warning message when report is not in user's area"
+  },
+  "map_searchPlaceholder": "Search places, addresses...",
+  "@map_searchPlaceholder": {
+    "description": "Search bar placeholder text in map screen"
+  },
+  "map_feetAway": "{feet} ft away",
+  "@map_feetAway": {
+    "description": "Distance in feet",
+    "placeholders": {
+      "feet": {
+        "type": "int"
+      }
+    }
+  },
+  "map_milesAway": "{miles} mi away",
+  "@map_milesAway": {
+    "description": "Distance in miles",
+    "placeholders": {
+      "miles": {
+        "type": "String"
+      }
+    }
+  },
+  "map_daysAgo": "{days} days ago",
+  "@map_daysAgo": {
+    "description": "Days ago timestamp",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "map_hoursAgo": "{hours} hours ago",
+  "@map_hoursAgo": {
+    "description": "Hours ago timestamp",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "map_minutesAgo": "{minutes} minutes ago",
+  "@map_minutesAgo": {
+    "description": "Minutes ago timestamp",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "map_justNow": "Just now",
+  "@map_justNow": {
+    "description": "Just now timestamp"
+  },
+  "settings_helpAndFaq": "Help & FAQ",
+  "@settings_helpAndFaq": {
+    "description": "Help and FAQ menu item"
+  },
+  "settings_helpAndFaqDesc": "Get help and find answers",
+  "@settings_helpAndFaqDesc": {
+    "description": "Help and FAQ description"
+  },
+  "settings_aboutPavra": "About Pavra",
+  "@settings_aboutPavra": {
+    "description": "About Pavra menu item"
+  },
+  "settings_aboutPavraDesc": "App info and version",
+  "@settings_aboutPavraDesc": {
+    "description": "About Pavra description"
+  },
+  "help_title": "Help & FAQ",
+  "@help_title": {
+    "description": "Help screen title"
+  },
+  "help_searchPlaceholder": "Search for help...",
+  "@help_searchPlaceholder": {
+    "description": "Help search placeholder"
+  },
+  "help_quickLinks": "Quick Links",
+  "@help_quickLinks": {
+    "description": "Quick links section title"
+  },
+  "help_mapGuideTitle": "Map & Navigation Guide",
+  "@help_mapGuideTitle": {
+    "description": "Map guide title"
+  },
+  "help_mapGuideSubtitle": "Learn how to use map features",
+  "@help_mapGuideSubtitle": {
+    "description": "Map guide subtitle"
+  },
+  "help_aiGuideTitle": "AI Detection Guide",
+  "@help_aiGuideTitle": {
+    "description": "AI detection guide title"
+  },
+  "help_aiGuideSubtitle": "How to detect road issues",
+  "@help_aiGuideSubtitle": {
+    "description": "AI detection guide subtitle"
+  },
+  "help_reportGuideTitle": "Report Submission Guide",
+  "@help_reportGuideTitle": {
+    "description": "Report submission guide title"
+  },
+  "help_reportGuideSubtitle": "How to submit reports",
+  "@help_reportGuideSubtitle": {
+    "description": "Report submission guide subtitle"
+  },
+  "help_faqTitle": "Frequently Asked Questions",
+  "@help_faqTitle": {
+    "description": "FAQ section title"
+  },
+  "help_gettingStarted": "Getting Started",
+  "@help_gettingStarted": {
+    "description": "Getting started category"
+  },
+  "help_mapNavigation": "Map & Navigation",
+  "@help_mapNavigation": {
+    "description": "Map and navigation category"
+  },
+  "help_aiDetection": "AI Detection",
+  "@help_aiDetection": {
+    "description": "AI detection category"
+  },
+  "help_reportsIssues": "Reports & Issues",
+  "@help_reportsIssues": {
+    "description": "Reports and issues category"
+  },
+  "help_safetyAlerts": "Safety Alerts",
+  "@help_safetyAlerts": {
+    "description": "Safety alerts category"
+  },
+  "help_accountPrivacy": "Account & Privacy",
+  "@help_accountPrivacy": {
+    "description": "Account and privacy category"
+  },
+  "help_stillNeedHelp": "Still need help?",
+  "@help_stillNeedHelp": {
+    "description": "Still need help message"
+  },
+  "help_contactSupport": "Contact our support team",
+  "@help_contactSupport": {
+    "description": "Contact support message"
+  },
+  "help_contactSupportButton": "Contact Support",
+  "@help_contactSupportButton": {
+    "description": "Contact support button"
+  },
+  "help_guide": "Guide",
+  "@help_guide": {
+    "description": "Guide dialog title"
+  },
+  "help_guideContent": "Detailed guide for {type} will be shown here.",
+  "@help_guideContent": {
+    "description": "Guide content placeholder",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "help_q1": "How do I create an account?",
+  "@help_q1": {
+    "description": "FAQ question 1"
+  },
+  "help_a1": "Tap on \"Sign Up\" on the login screen, enter your email and password, then verify your email address.",
+  "@help_a1": {
+    "description": "FAQ answer 1"
+  },
+  "help_q2": "How do I enable location services?",
+  "@help_q2": {
+    "description": "FAQ question 2"
+  },
+  "help_a2": "Go to your device Settings > Apps > Pavra > Permissions > Location, and select \"Allow all the time\" or \"Allow only while using the app\".",
+  "@help_a2": {
+    "description": "FAQ answer 2"
+  },
+  "help_q3": "What is the reputation system?",
+  "@help_q3": {
+    "description": "FAQ question 3"
+  },
+  "help_a3": "The reputation system rewards users for submitting accurate reports. Higher reputation unlocks more features and increases your trust level.",
+  "@help_a3": {
+    "description": "FAQ answer 3"
+  },
+  "help_q4": "How do I search for locations?",
+  "@help_q4": {
+    "description": "FAQ question 4"
+  },
+  "help_a4": "Tap the search bar at the top of the map, type any address, place name, or road issue. You can also search for specific issues by title or description.",
+  "@help_a4": {
+    "description": "FAQ answer 4"
+  },
+  "help_q5": "How do I get directions?",
+  "@help_q5": {
+    "description": "FAQ question 5"
+  },
+  "help_a5": "Search for a location, tap on the result, then tap \"Directions\". Choose your travel mode (driving, walking, transit, or bicycling) and start navigation.",
+  "@help_a5": {
+    "description": "FAQ answer 5"
+  },
+  "help_q6": "How do I plan a multi-stop route?",
+  "@help_q6": {
+    "description": "FAQ question 6"
+  },
+  "help_a6": "Tap the route planning icon (🔀) next to the search bar, add your stops, reorder them as needed, select travel mode, and start navigation.",
+  "@help_a6": {
+    "description": "FAQ answer 6"
+  },
+  "help_q7": "What do the marker colors mean?",
+  "@help_q7": {
+    "description": "FAQ question 7"
+  },
+  "help_a7": "Red markers = Critical/High severity issues, Orange = Moderate severity, Yellow = Low/Minor severity, Cyan = Your search result.",
+  "@help_a7": {
+    "description": "FAQ answer 7"
+  },
+  "help_q8": "How does AI detection work?",
+  "@help_q8": {
+    "description": "FAQ question 8"
+  },
+  "help_a8": "Take a photo of a road issue, and our AI analyzes it to identify the type and severity. The AI uses advanced vision models to detect potholes, cracks, debris, and other hazards.",
+  "@help_a8": {
+    "description": "FAQ answer 8"
+  },
+  "help_q9": "What can the AI detect?",
+  "@help_q9": {
+    "description": "FAQ question 9"
+  },
+  "help_a9": "The AI can detect potholes, road cracks, debris, flooding, damaged signs, missing lane markings, and other road safety issues.",
+  "@help_a9": {
+    "description": "FAQ answer 9"
+  },
+  "help_q10": "How accurate is the AI?",
+  "@help_q10": {
+    "description": "FAQ question 10"
+  },
+  "help_a10": "Our AI has high accuracy, but all detections are reviewed by the community. You can adjust the sensitivity level in settings.",
+  "@help_a10": {
+    "description": "FAQ answer 10"
+  },
+  "help_q11": "Can I use photos from my gallery?",
+  "@help_q11": {
+    "description": "FAQ question 11"
+  },
+  "help_a11": "Yes! Tap the gallery icon when submitting a report to select existing photos.",
+  "@help_a11": {
+    "description": "FAQ answer 11"
+  },
+  "help_q12": "How do I submit a report?",
+  "@help_q12": {
+    "description": "FAQ question 12"
+  },
+  "help_a12": "Use AI detection or tap \"Report Issue\" on the map. Add photos, description, and location details, then submit.",
+  "@help_a12": {
+    "description": "FAQ answer 12"
+  },
+  "help_q13": "Can I edit my reports?",
+  "@help_q13": {
+    "description": "FAQ question 13"
+  },
+  "help_a13": "You can edit draft reports. Once submitted, reports can only be updated by moderators.",
+  "@help_a13": {
+    "description": "FAQ answer 13"
+  },
+  "help_q14": "How long does review take?",
+  "@help_q14": {
+    "description": "FAQ question 14"
+  },
+  "help_a14": "Most reports are reviewed within 24-48 hours. High-severity issues are prioritized.",
+  "@help_a14": {
+    "description": "FAQ answer 14"
+  },
+  "help_q15": "What happens to spam reports?",
+  "@help_q15": {
+    "description": "FAQ question 15"
+  },
+  "help_a15": "Spam reports are flagged and removed. Repeated spam submissions may result in account restrictions.",
+  "@help_a15": {
+    "description": "FAQ answer 15"
+  },
+  "help_q16": "How do I set up alerts?",
+  "@help_q16": {
+    "description": "FAQ question 16"
+  },
+  "help_a16": "Go to Safety Alerts screen, enable notifications, and set your alert radius. You'll receive notifications for issues within your radius.",
+  "@help_a16": {
+    "description": "FAQ answer 16"
+  },
+  "help_q17": "Can I customize alert types?",
+  "@help_q17": {
+    "description": "FAQ question 17"
+  },
+  "help_a17": "Yes! In Safety Alerts settings, you can choose which severity levels trigger notifications.",
+  "@help_a17": {
+    "description": "FAQ answer 17"
+  },
+  "help_q18": "What is Smart Drive Mode?",
+  "@help_q18": {
+    "description": "FAQ question 18"
+  },
+  "help_a18": "Smart Drive Mode provides voice alerts while driving, warning you about nearby road hazards in real-time.",
+  "@help_a18": {
+    "description": "FAQ answer 18"
+  },
+  "help_q19": "How do I change my password?",
+  "@help_q19": {
+    "description": "FAQ question 19"
+  },
+  "help_a19": "Go to Profile > Settings > Account Settings > Change Password.",
+  "@help_a19": {
+    "description": "FAQ answer 19"
+  },
+  "help_q20": "Is my location data private?",
+  "@help_q20": {
+    "description": "FAQ question 20"
+  },
+  "help_a20": "Yes. Location data is only used for map features and alerts. We never share your personal location with third parties.",
+  "@help_a20": {
+    "description": "FAQ answer 20"
+  },
+  "help_q21": "How do I delete my account?",
+  "@help_q21": {
+    "description": "FAQ question 21"
+  },
+  "help_a21": "Contact support at support@pavra.app to request account deletion. All your data will be permanently removed.",
+  "@help_a21": {
+    "description": "FAQ answer 21"
+  },
+  "about_title": "About Pavra",
+  "@about_title": {
+    "description": "About screen title"
+  },
+  "about_version": "Version 1.1.0",
+  "@about_version": {
+    "description": "App version"
+  },
+  "about_tagline": "AI-Powered Road Safety Platform",
+  "@about_tagline": {
+    "description": "App tagline"
+  },
+  "about_ourMission": "Our Mission",
+  "@about_ourMission": {
+    "description": "Our mission section title"
+  },
+  "about_missionText": "Pavra is dedicated to making roads safer for everyone through community-driven reporting and AI-powered detection. We empower users to identify and report road hazards, helping authorities respond faster and prevent accidents.",
+  "@about_missionText": {
+    "description": "Mission statement text"
+  },
+  "about_keyFeatures": "Key Features",
+  "@about_keyFeatures": {
+    "description": "Key features section title"
+  },
+  "about_feature1": "🤖 AI-powered road hazard detection",
+  "@about_feature1": {
+    "description": "Feature 1"
+  },
+  "about_feature2": "🗺️ Interactive map with real-time updates",
+  "@about_feature2": {
+    "description": "Feature 2"
+  },
+  "about_feature3": "🧭 Multi-stop route planning",
+  "@about_feature3": {
+    "description": "Feature 3"
+  },
+  "about_feature4": "🔔 Smart safety alerts",
+  "@about_feature4": {
+    "description": "Feature 4"
+  },
+  "about_feature5": "🎯 Gamification & reputation system",
+  "@about_feature5": {
+    "description": "Feature 5"
+  },
+  "about_feature6": "🚗 Smart Drive Mode with voice alerts",
+  "@about_feature6": {
+    "description": "Feature 6"
+  },
+  "about_feature7": "🌍 Community-driven reporting",
+  "@about_feature7": {
+    "description": "Feature 7"
+  },
+  "about_technology": "Technology",
+  "@about_technology": {
+    "description": "Technology section title"
+  },
+  "about_technologyText": "Built with Flutter for cross-platform compatibility. Powered by advanced AI models including NVIDIA Nemotron and Google Gemini for accurate road hazard detection. Backend infrastructure uses Supabase, Serverpod, and Upstash for reliable, scalable performance.",
+  "@about_technologyText": {
+    "description": "Technology description"
+  },
+  "about_ourTeam": "Our Team",
+  "@about_ourTeam": {
+    "description": "Our team section title"
+  },
+  "about_teamText": "Pavra is developed by a passionate team of engineers, designers, and road safety advocates committed to leveraging technology for public good.",
+  "@about_teamText": {
+    "description": "Team description"
+  },
+  "about_website": "Website",
+  "@about_website": {
+    "description": "Website link title"
+  },
+  "about_websiteUrl": "pavra.vercel.app",
+  "@about_websiteUrl": {
+    "description": "Website URL"
+  },
+  "about_privacyPolicy": "Privacy Policy",
+  "@about_privacyPolicy": {
+    "description": "Privacy policy link"
+  },
+  "about_privacyPolicyDesc": "How we protect your data",
+  "@about_privacyPolicyDesc": {
+    "description": "Privacy policy description"
+  },
+  "about_termsOfService": "Terms of Service",
+  "@about_termsOfService": {
+    "description": "Terms of service link"
+  },
+  "about_termsOfServiceDesc": "Terms and conditions",
+  "@about_termsOfServiceDesc": {
+    "description": "Terms of service description"
+  },
+  "about_openSourceLicenses": "Open Source Licenses",
+  "@about_openSourceLicenses": {
+    "description": "Open source licenses link"
+  },
+  "about_openSourceLicensesDesc": "Third-party software",
+  "@about_openSourceLicensesDesc": {
+    "description": "Open source licenses description"
+  },
+  "about_contactUs": "Contact Us",
+  "@about_contactUs": {
+    "description": "Contact us section title"
+  },
+  "about_email": "Email",
+  "@about_email": {
+    "description": "Email label"
+  },
+  "about_phone": "Phone",
+  "@about_phone": {
+    "description": "Phone label"
+  },
+  "about_sendEmail": "Send Email",
+  "@about_sendEmail": {
+    "description": "Send email tooltip"
+  },
+  "about_call": "Call",
+  "@about_call": {
+    "description": "Call tooltip"
+  },
+  "about_copyright": "© 2025 Pavra. All rights reserved.",
+  "@about_copyright": {
+    "description": "Copyright text"
+  },
+  "about_madeWith": "Made with ❤️ for safer roads",
+  "@about_madeWith": {
+    "description": "Made with love text"
   }
 }

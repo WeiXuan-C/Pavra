@@ -526,18 +526,38 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
 
   @override
   void dispose() {
+    // Cancel timers first
+    _detectionTimer?.cancel();
+    
+    // Dispose animation controllers
+    _pulseController?.dispose();
+    
+    // Dispose services asynchronously (fire and forget)
+    _disposeServicesAsync();
+    
     // Dispose camera controller with error handling
     try {
       _cameraController?.dispose();
     } catch (e) {
       debugPrint('Error disposing camera controller: $e');
     }
-
-    _detectionTimer?.cancel();
-    _pulseController?.dispose();
-    _audioAlertService.dispose();
-    _networkStatusService.dispose();
+    
     super.dispose();
+  }
+
+  /// Dispose services asynchronously to avoid blocking
+  Future<void> _disposeServicesAsync() async {
+    try {
+      await _audioAlertService.dispose();
+    } catch (e) {
+      debugPrint('Error disposing audio service: $e');
+    }
+    
+    try {
+      _networkStatusService.dispose();
+    } catch (e) {
+      debugPrint('Error disposing network service: $e');
+    }
   }
 
   @override

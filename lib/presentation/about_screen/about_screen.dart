@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -12,9 +13,10 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: HeaderLayout(title: 'About Pavra'),
+      appBar: HeaderLayout(title: l10n.about_title),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(4.w),
         child: Column(
@@ -48,7 +50,7 @@ class AboutScreen extends StatelessWidget {
             ),
             SizedBox(height: 1.h),
             Text(
-              'Version 1.1.0',
+              l10n.about_version,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
@@ -58,7 +60,7 @@ class AboutScreen extends StatelessWidget {
 
             // Tagline
             Text(
-              'AI-Powered Road Safety Platform',
+              l10n.about_tagline,
               style: theme.textTheme.titleMedium?.copyWith(
                 color: theme.colorScheme.primary,
                 fontWeight: FontWeight.w500,
@@ -72,9 +74,8 @@ class AboutScreen extends StatelessWidget {
             _buildSection(
               context,
               icon: Icons.flag,
-              title: 'Our Mission',
-              content:
-                  'Pavra is dedicated to making roads safer for everyone through community-driven reporting and AI-powered detection. We empower users to identify and report road hazards, helping authorities respond faster and prevent accidents.',
+              title: l10n.about_ourMission,
+              content: l10n.about_missionText,
             ),
 
             SizedBox(height: 3.h),
@@ -83,18 +84,18 @@ class AboutScreen extends StatelessWidget {
             _buildSection(
               context,
               icon: Icons.star,
-              title: 'Key Features',
+              title: l10n.about_keyFeatures,
               content: null,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildFeatureItem(context, '🤖 AI-powered road hazard detection'),
-                  _buildFeatureItem(context, '🗺️ Interactive map with real-time updates'),
-                  _buildFeatureItem(context, '🧭 Multi-stop route planning'),
-                  _buildFeatureItem(context, '🔔 Smart safety alerts'),
-                  _buildFeatureItem(context, '🎯 Gamification & reputation system'),
-                  _buildFeatureItem(context, '🚗 Smart Drive Mode with voice alerts'),
-                  _buildFeatureItem(context, '🌍 Community-driven reporting'),
+                  _buildFeatureItem(context, l10n.about_feature1),
+                  _buildFeatureItem(context, l10n.about_feature2),
+                  _buildFeatureItem(context, l10n.about_feature3),
+                  _buildFeatureItem(context, l10n.about_feature4),
+                  _buildFeatureItem(context, l10n.about_feature5),
+                  _buildFeatureItem(context, l10n.about_feature6),
+                  _buildFeatureItem(context, l10n.about_feature7),
                 ],
               ),
             ),
@@ -105,9 +106,8 @@ class AboutScreen extends StatelessWidget {
             _buildSection(
               context,
               icon: Icons.computer,
-              title: 'Technology',
-              content:
-                  'Built with Flutter for cross-platform compatibility. Powered by advanced AI models including NVIDIA Nemotron and Google Gemini for accurate road hazard detection. Backend infrastructure uses Supabase, Serverpod, and Upstash for reliable, scalable performance.',
+              title: l10n.about_technology,
+              content: l10n.about_technologyText,
             ),
 
             SizedBox(height: 3.h),
@@ -116,9 +116,8 @@ class AboutScreen extends StatelessWidget {
             _buildSection(
               context,
               icon: Icons.people,
-              title: 'Our Team',
-              content:
-                  'Pavra is developed by a passionate team of engineers, designers, and road safety advocates committed to leveraging technology for public good.',
+              title: l10n.about_ourTeam,
+              content: l10n.about_teamText,
             ),
 
             SizedBox(height: 3.h),
@@ -134,32 +133,32 @@ class AboutScreen extends StatelessWidget {
                   _buildLinkTile(
                     context,
                     icon: Icons.language,
-                    title: 'Website',
-                    subtitle: 'pavra.vercel.app',
+                    title: l10n.about_website,
+                    subtitle: l10n.about_websiteUrl,
                     onTap: () => _launchURL('https://pavra.vercel.app'),
                   ),
                   Divider(height: 1),
                   _buildLinkTile(
                     context,
                     icon: Icons.privacy_tip,
-                    title: 'Privacy Policy',
-                    subtitle: 'How we protect your data',
+                    title: l10n.about_privacyPolicy,
+                    subtitle: l10n.about_privacyPolicyDesc,
                     onTap: () => Navigator.pushNamed(context, '/privacy-policy-screen'),
                   ),
                   Divider(height: 1),
                   _buildLinkTile(
                     context,
                     icon: Icons.description,
-                    title: 'Terms of Service',
-                    subtitle: 'Terms and conditions',
+                    title: l10n.about_termsOfService,
+                    subtitle: l10n.about_termsOfServiceDesc,
                     onTap: () => Navigator.pushNamed(context, '/terms-of-service-screen'),
                   ),
                   Divider(height: 1),
                   _buildLinkTile(
                     context,
                     icon: Icons.code,
-                    title: 'Open Source Licenses',
-                    subtitle: 'Third-party software',
+                    title: l10n.about_openSourceLicenses,
+                    subtitle: l10n.about_openSourceLicensesDesc,
                     onTap: () => _showLicenses(context),
                   ),
                 ],
@@ -196,7 +195,7 @@ class AboutScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 2.h),
                     Text(
-                      'Contact Us',
+                      l10n.about_contactUs,
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -223,7 +222,7 @@ class AboutScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Email',
+                                  l10n.about_email,
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                   ),
@@ -241,7 +240,7 @@ class AboutScreen extends StatelessWidget {
                           IconButton(
                             onPressed: () => _launchURL('mailto:pavra.noreply@gmail.com'),
                             icon: Icon(Icons.send, color: theme.colorScheme.primary),
-                            tooltip: 'Send Email',
+                            tooltip: l10n.about_sendEmail,
                           ),
                         ],
                       ),
@@ -269,7 +268,7 @@ class AboutScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Phone',
+                                  l10n.about_phone,
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                   ),
@@ -287,7 +286,7 @@ class AboutScreen extends StatelessWidget {
                           IconButton(
                             onPressed: () => _launchURL('tel:+601165200275'),
                             icon: Icon(Icons.call, color: theme.colorScheme.primary),
-                            tooltip: 'Call',
+                            tooltip: l10n.about_call,
                           ),
                         ],
                       ),
@@ -301,7 +300,7 @@ class AboutScreen extends StatelessWidget {
 
             // Copyright
             Text(
-              '© 2025 Pavra. All rights reserved.',
+              l10n.about_copyright,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
@@ -311,7 +310,7 @@ class AboutScreen extends StatelessWidget {
             SizedBox(height: 1.h),
 
             Text(
-              'Made with ❤️ for safer roads',
+              l10n.about_madeWith,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),

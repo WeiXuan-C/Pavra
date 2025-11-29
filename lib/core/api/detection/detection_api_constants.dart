@@ -11,22 +11,49 @@ class DetectionApiConstants {
   /// OpenRouter chat completions endpoint
   static String get detectUrl => '$openRouterBaseUrl/chat/completions';
 
-  /// Get OpenRouter API key with rotation support
-  /// Cycles through available keys (OPEN_ROUTER_KEY_1 to OPEN_ROUTER_KEY_20)
-  static String getApiKey() {
-    // Try to get keys in order
+  // Key rotation state
+  static int _currentKeyIndex = 0;
+  static List<String>? _cachedKeys;
+
+  /// Load all available API keys from environment
+  static List<String> _loadApiKeys() {
+    if (_cachedKeys != null) return _cachedKeys!;
+    
+    final keys = <String>[];
     for (int i = 1; i <= 20; i++) {
       final key = dotenv.env['OPEN_ROUTER_KEY_$i'];
       if (key != null && key.isNotEmpty) {
-        return key;
+        keys.add(key);
       }
     }
     
-    throw Exception(
-      'No OpenRouter API keys found in environment variables. '
-      'Please add OPEN_ROUTER_KEY_1 (or more) to your .env file.',
-    );
+    if (keys.isEmpty) {
+      throw Exception(
+        'No OpenRouter API keys found in environment variables. '
+        'Please add OPEN_ROUTER_KEY_1 (or more) to your .env file.',
+      );
+    }
+    
+    _cachedKeys = keys;
+    return keys;
   }
+
+  /// Get OpenRouter API key with rotation support
+  /// Cycles through available keys (OPEN_ROUTER_KEY_1 to OPEN_ROUTER_KEY_20)
+  static String getApiKey() {
+    final keys = _loadApiKeys();
+    final key = keys[_currentKeyIndex % keys.length];
+    return key;
+  }
+
+  /// Rotate to next API key (call this when rate limit is hit)
+  static void rotateApiKey() {
+    final keys = _loadApiKeys();
+    _currentKeyIndex = (_currentKeyIndex + 1) % keys.length;
+  }
+
+  /// Get total number of available API keys
+  static int get availableKeyCount => _loadApiKeys().length;
 
   /// Get OpenRouter image model
   static String get imageModel {

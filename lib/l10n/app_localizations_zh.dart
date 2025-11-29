@@ -2591,31 +2591,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get route_walk => '步行';
 
   @override
-  String get map_searchPlaceholder => '搜索地点、地址或问题...';
+  String get map_searchPlaceholder => '搜索地点、地址...';
 
   @override
-  String map_feetAway(int distance) {
-    return '$distance 英尺';
+  String map_feetAway(int feet) {
+    return '$feet 英尺外';
   }
 
   @override
-  String map_milesAway(String distance) {
-    return '$distance 英里';
+  String map_milesAway(String miles) {
+    return '$miles 英里外';
   }
 
   @override
   String map_daysAgo(int days) {
-    return '$days天前';
+    return '$days 天前';
   }
 
   @override
   String map_hoursAgo(int hours) {
-    return '$hours小时前';
+    return '$hours 小时前';
   }
 
   @override
   String map_minutesAgo(int minutes) {
-    return '$minutes分钟前';
+    return '$minutes 分钟前';
   }
 
   @override
@@ -2683,4 +2683,308 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get report_notInYourArea => '不在您的区域内';
+
+  @override
+  String get settings_helpAndFaq => '帮助与常见问题';
+
+  @override
+  String get settings_helpAndFaqDesc => '获取帮助并查找答案';
+
+  @override
+  String get settings_aboutPavra => '关于 Pavra';
+
+  @override
+  String get settings_aboutPavraDesc => '应用信息和版本';
+
+  @override
+  String get help_title => '帮助与常见问题';
+
+  @override
+  String get help_searchPlaceholder => '搜索帮助...';
+
+  @override
+  String get help_quickLinks => '快速链接';
+
+  @override
+  String get help_mapGuideTitle => '地图与导航指南';
+
+  @override
+  String get help_mapGuideSubtitle => '了解如何使用地图功能';
+
+  @override
+  String get help_aiGuideTitle => 'AI检测指南';
+
+  @override
+  String get help_aiGuideSubtitle => '如何检测道路问题';
+
+  @override
+  String get help_reportGuideTitle => '报告提交指南';
+
+  @override
+  String get help_reportGuideSubtitle => '如何提交报告';
+
+  @override
+  String get help_faqTitle => '常见问题';
+
+  @override
+  String get help_gettingStarted => '入门指南';
+
+  @override
+  String get help_mapNavigation => '地图与导航';
+
+  @override
+  String get help_aiDetection => 'AI检测';
+
+  @override
+  String get help_reportsIssues => '报告与问题';
+
+  @override
+  String get help_safetyAlerts => '安全警报';
+
+  @override
+  String get help_accountPrivacy => '账户与隐私';
+
+  @override
+  String get help_stillNeedHelp => '仍需要帮助？';
+
+  @override
+  String get help_contactSupport => '联系我们的支持团队';
+
+  @override
+  String get help_contactSupportButton => '联系支持';
+
+  @override
+  String get help_guide => '指南';
+
+  @override
+  String help_guideContent(String type) {
+    return '$type的详细指南将在此处显示。';
+  }
+
+  @override
+  String get help_q1 => '如何创建账户？';
+
+  @override
+  String get help_a1 => '在登录屏幕上点击\"注册\"，输入您的电子邮箱和密码，然后验证您的电子邮箱地址。';
+
+  @override
+  String get help_q2 => '如何启用位置服务？';
+
+  @override
+  String get help_a2 =>
+      '前往设备设置 > 应用 > Pavra > 权限 > 位置，然后选择\"始终允许\"或\"仅在使用应用时允许\"。';
+
+  @override
+  String get help_q3 => '什么是声誉系统？';
+
+  @override
+  String get help_a3 => '声誉系统奖励提交准确报告的用户。更高的声誉可以解锁更多功能并提高您的信任级别。';
+
+  @override
+  String get help_q4 => '如何搜索位置？';
+
+  @override
+  String get help_a4 => '点击地图顶部的搜索栏，输入任何地址、地点名称或道路问题。您还可以按标题或描述搜索特定问题。';
+
+  @override
+  String get help_q5 => '如何获取导航？';
+
+  @override
+  String get help_a5 => '搜索位置，点击结果，然后点击\"导航\"。选择您的出行方式（驾车、步行、公交或骑行）并开始导航。';
+
+  @override
+  String get help_q6 => '如何规划多站点路线？';
+
+  @override
+  String get help_a6 => '点击搜索栏旁边的路线规划图标（🔀），添加您的站点，根据需要重新排序，选择出行方式，然后开始导航。';
+
+  @override
+  String get help_q7 => '标记颜色代表什么？';
+
+  @override
+  String get help_a7 =>
+      '红色标记 = 危急/高严重程度问题，橙色 = 中等严重程度，黄色 = 低/轻微严重程度，青色 = 您的搜索结果。';
+
+  @override
+  String get help_q8 => 'AI检测如何工作？';
+
+  @override
+  String get help_a8 =>
+      '拍摄道路问题的照片，我们的AI会分析它以识别类型和严重程度。AI使用先进的视觉模型来检测坑洞、裂缝、碎片和其他危险。';
+
+  @override
+  String get help_q9 => 'AI可以检测什么？';
+
+  @override
+  String get help_a9 => 'AI可以检测坑洞、道路裂缝、碎片、积水、损坏的标志、缺失的车道标记和其他道路安全问题。';
+
+  @override
+  String get help_q10 => 'AI的准确度如何？';
+
+  @override
+  String get help_a10 => '我们的AI具有很高的准确度，但所有检测都会由社区审核。您可以在设置中调整灵敏度级别。';
+
+  @override
+  String get help_q11 => '我可以使用相册中的照片吗？';
+
+  @override
+  String get help_a11 => '可以！在提交报告时点击相册图标以选择现有照片。';
+
+  @override
+  String get help_q12 => '如何提交报告？';
+
+  @override
+  String get help_a12 => '使用AI检测或在地图上点击\"报告问题\"。添加照片、描述和位置详情，然后提交。';
+
+  @override
+  String get help_q13 => '我可以编辑我的报告吗？';
+
+  @override
+  String get help_a13 => '您可以编辑草稿报告。一旦提交，报告只能由管理员更新。';
+
+  @override
+  String get help_q14 => '审核需要多长时间？';
+
+  @override
+  String get help_a14 => '大多数报告在24-48小时内审核。高严重程度问题会优先处理。';
+
+  @override
+  String get help_q15 => '垃圾报告会怎样？';
+
+  @override
+  String get help_a15 => '垃圾报告会被标记并删除。重复提交垃圾信息可能导致账户限制。';
+
+  @override
+  String get help_q16 => '如何设置警报？';
+
+  @override
+  String get help_a16 => '前往安全警报屏幕，启用通知，并设置您的警报半径。您将收到半径内问题的通知。';
+
+  @override
+  String get help_q17 => '我可以自定义警报类型吗？';
+
+  @override
+  String get help_a17 => '可以！在安全警报设置中，您可以选择哪些严重程度级别触发通知。';
+
+  @override
+  String get help_q18 => '什么是智能驾驶模式？';
+
+  @override
+  String get help_a18 => '智能驾驶模式在驾驶时提供语音警报，实时警告您附近的道路危险。';
+
+  @override
+  String get help_q19 => '如何更改密码？';
+
+  @override
+  String get help_a19 => '前往个人资料 > 设置 > 账户设置 > 更改密码。';
+
+  @override
+  String get help_q20 => '我的位置数据是私密的吗？';
+
+  @override
+  String get help_a20 => '是的。位置数据仅用于地图功能和警报。我们绝不会与第三方共享您的个人位置。';
+
+  @override
+  String get help_q21 => '如何删除我的账户？';
+
+  @override
+  String get help_a21 => '联系support@pavra.app请求删除账户。您的所有数据将被永久删除。';
+
+  @override
+  String get about_title => '关于 Pavra';
+
+  @override
+  String get about_version => '版本 1.1.0';
+
+  @override
+  String get about_tagline => 'AI驱动的道路安全平台';
+
+  @override
+  String get about_ourMission => '我们的使命';
+
+  @override
+  String get about_missionText =>
+      'Pavra致力于通过社区驱动的报告和AI驱动的检测，让每个人的道路更安全。我们赋予用户识别和报告道路危险的能力，帮助当局更快响应并预防事故。';
+
+  @override
+  String get about_keyFeatures => '主要功能';
+
+  @override
+  String get about_feature1 => '🤖 AI驱动的道路危险检测';
+
+  @override
+  String get about_feature2 => '🗺️ 实时更新的交互式地图';
+
+  @override
+  String get about_feature3 => '🧭 多站点路线规划';
+
+  @override
+  String get about_feature4 => '🔔 智能安全警报';
+
+  @override
+  String get about_feature5 => '🎯 游戏化与声誉系统';
+
+  @override
+  String get about_feature6 => '🚗 带语音警报的智能驾驶模式';
+
+  @override
+  String get about_feature7 => '🌍 社区驱动的报告';
+
+  @override
+  String get about_technology => '技术';
+
+  @override
+  String get about_technologyText =>
+      '使用Flutter构建，实现跨平台兼容性。由包括NVIDIA Nemotron和Google Gemini在内的先进AI模型驱动，实现准确的道路危险检测。后端基础设施使用Supabase、Serverpod和Upstash，提供可靠、可扩展的性能。';
+
+  @override
+  String get about_ourTeam => '我们的团队';
+
+  @override
+  String get about_teamText => 'Pavra由一支充满激情的工程师、设计师和道路安全倡导者团队开发，致力于利用技术造福公众。';
+
+  @override
+  String get about_website => '网站';
+
+  @override
+  String get about_websiteUrl => 'pavra.vercel.app';
+
+  @override
+  String get about_privacyPolicy => '隐私政策';
+
+  @override
+  String get about_privacyPolicyDesc => '我们如何保护您的数据';
+
+  @override
+  String get about_termsOfService => '服务条款';
+
+  @override
+  String get about_termsOfServiceDesc => '条款和条件';
+
+  @override
+  String get about_openSourceLicenses => '开源许可证';
+
+  @override
+  String get about_openSourceLicensesDesc => '第三方软件';
+
+  @override
+  String get about_contactUs => '联系我们';
+
+  @override
+  String get about_email => '电子邮箱';
+
+  @override
+  String get about_phone => '电话';
+
+  @override
+  String get about_sendEmail => '发送邮件';
+
+  @override
+  String get about_call => '拨打电话';
+
+  @override
+  String get about_copyright => '© 2025 Pavra. 保留所有权利。';
+
+  @override
+  String get about_madeWith => '用 ❤️ 为更安全的道路而制作';
 }

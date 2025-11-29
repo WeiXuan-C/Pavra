@@ -41,83 +41,88 @@ class AiDetectionApi {
     required DateTime timestamp,
     int sensitivity = DetectionApiConstants.defaultSensitivity,
   }) async {
-    try {
-      developer.log(
-        'Sending detection request to OpenRouter: userId=$userId, lat=$latitude, lng=$longitude, sensitivity=$sensitivity',
-        name: 'AiDetectionApi',
+    // Validate sensitivity
+    if (sensitivity < 1 || sensitivity > 5) {
+      throw DetectionException.api(
+        'Invalid sensitivity level: $sensitivity. Must be between 1 and 5.',
       );
+    }
 
-      // Validate sensitivity
-      if (sensitivity < 1 || sensitivity > 5) {
-        throw DetectionException.api(
-          'Invalid sensitivity level: $sensitivity. Must be between 1 and 5.',
+    // Retry with key rotation on rate limit
+    final maxAttempts = DetectionApiConstants.availableKeyCount;
+    int attempts = 0;
+
+    while (attempts < maxAttempts) {
+      try {
+        developer.log(
+          'Detection attempt ${attempts + 1}/$maxAttempts: userId=$userId, lat=$latitude, lng=$longitude, sensitivity=$sensitivity',
+          name: 'AiDetectionApi',
         );
-      }
 
-      // Get API key
-      final apiKey = DetectionApiConstants.getApiKey();
+        // Get current API key
+        final apiKey = DetectionApiConstants.getApiKey();
 
-      // Prepare OpenRouter request payload
-      final payload = {
-        'model': DetectionApiConstants.imageModel,
-        'messages': [
-          {
-            'role': 'system',
-            'content': DetectionApiConstants.getSystemPrompt(sensitivity),
-          },
-          {
-            'role': 'user',
-            'content': [
-              {
-                'type': 'text',
-                'text': 'Analyze this road image for damage or issues. Location: $latitude, $longitude',
-              },
-              {
-                'type': 'image_url',
-                'image_url': {
-                  'url': 'data:image/jpeg;base64,$imageBase64',
+        // Prepare OpenRouter request payload
+        final payload = {
+          'model': DetectionApiConstants.imageModel,
+          'messages': [
+            {
+              'role': 'system',
+              'content': DetectionApiConstants.getSystemPrompt(sensitivity),
+            },
+            {
+              'role': 'user',
+              'content': [
+                {
+                  'type': 'text',
+                  'text': 'Analyze this road image for damage or issues. Location: $latitude, $longitude',
                 },
+                {
+                  'type': 'image_url',
+                  'image_url': {
+                    'url': 'data:image/jpeg;base64,$imageBase64',
+                  },
+                },
+              ],
+            },
+          ],
+          'temperature': 0.3, // Lower temperature for more consistent results
+          'max_tokens': 500,
+        };
+
+        developer.log(
+          'Calling OpenRouter with model: ${DetectionApiConstants.imageModel}',
+          name: 'AiDetectionApi',
+        );
+
+        // Send POST request to OpenRouter
+        final response = await _client
+            .post(
+              Uri.parse(DetectionApiConstants.detectUrl),
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer $apiKey',
+                'HTTP-Referer': 'https://roadguard.app',
+                'X-Title': 'RoadGuard AI Detection',
               },
-            ],
-          },
-        ],
-        'temperature': 0.3, // Lower temperature for more consistent results
-        'max_tokens': 500,
-      };
+              body: jsonEncode(payload),
+            )
+            .timeout(
+              DetectionApiConstants.requestTimeout,
+              onTimeout: () {
+                throw DetectionException.timeout(
+                  'Detection request timed out after ${DetectionApiConstants.requestTimeout.inSeconds}s',
+                );
+              },
+            );
 
-      developer.log(
-        'Calling OpenRouter with model: ${DetectionApiConstants.imageModel}',
-        name: 'AiDetectionApi',
-      );
+        developer.log(
+          'OpenRouter response status: ${response.statusCode}',
+          name: 'AiDetectionApi',
+        );
 
-      // Send POST request to OpenRouter
-      final response = await _client
-          .post(
-            Uri.parse(DetectionApiConstants.detectUrl),
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer $apiKey',
-              'HTTP-Referer': 'https://roadguard.app',
-              'X-Title': 'RoadGuard AI Detection',
-            },
-            body: jsonEncode(payload),
-          )
-          .timeout(
-            DetectionApiConstants.requestTimeout,
-            onTimeout: () {
-              throw DetectionException.timeout(
-                'Detection request timed out after ${DetectionApiConstants.requestTimeout.inSeconds}s',
-              );
-            },
-          );
-
-      developer.log(
-        'OpenRouter response status: ${response.statusCode}',
-        name: 'AiDetectionApi',
-      );
-
-      // Handle response
-      if (response.statusCode == 200) {
+        // Handle response
+        if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body) as Map<String, dynamic>;
 
         // Extract AI response from OpenRouter format
@@ -229,62 +234,94 @@ class AiDetectionApi {
           );
         }
 
-        return detection;
-      } else if (response.statusCode == 400) {
-        // Bad request - validation error
-        final errorData = jsonDecode(response.body) as Map<String, dynamic>;
-        final errorMessage = errorData['error']?['message'] ?? 'Invalid request';
+          return detection;
+        } else if (response.statusCode == 429) {
+          // Rate limit exceeded - rotate key and retry
+          attempts++;
+          
+          developer.log(
+            'Rate limit hit (429), rotating to next API key (attempt $attempts/$maxAttempts)',
+            name: 'AiDetectionApi',
+          );
+          
+          if (attempts >= maxAttempts) {
+            throw DetectionException.api(
+              'Rate limit exceeded on all ${DetectionApiConstants.availableKeyCount} API keys. Please try again later.',
+            );
+          }
+          
+          // Rotate to next key and retry
+          DetectionApiConstants.rotateApiKey();
+          continue;
+        } else if (response.statusCode == 401) {
+          // Unauthorized - invalid API key, try next one
+          attempts++;
+          
+          developer.log(
+            'Invalid API key (401), rotating to next key (attempt $attempts/$maxAttempts)',
+            name: 'AiDetectionApi',
+          );
+          
+          if (attempts >= maxAttempts) {
+            throw DetectionException.api(
+              'All API keys are invalid. Please check your OpenRouter configuration.',
+            );
+          }
+          
+          // Rotate to next key and retry
+          DetectionApiConstants.rotateApiKey();
+          continue;
+        } else if (response.statusCode == 400) {
+          // Bad request - validation error (don't retry)
+          final errorData = jsonDecode(response.body) as Map<String, dynamic>;
+          final errorMessage = errorData['error']?['message'] ?? 'Invalid request';
 
+          developer.log(
+            'Validation error: $errorMessage',
+            name: 'AiDetectionApi',
+            error: errorMessage,
+          );
+
+          throw DetectionException.api(errorMessage);
+        } else if (response.statusCode >= 500) {
+          // Server error (don't retry with different keys)
+          throw DetectionException.api(
+            'OpenRouter server error (${response.statusCode}). Please try again.',
+          );
+        } else {
+          // Other errors (don't retry)
+          throw DetectionException.api(
+            'Detection failed with status ${response.statusCode}',
+          );
+        }
+      } on DetectionException {
+        rethrow;
+      } catch (e) {
         developer.log(
-          'Validation error: $errorMessage',
+          'Error in detectRoadDamage attempt $attempts: $e',
           name: 'AiDetectionApi',
-          error: errorMessage,
+          error: e,
         );
 
-        throw DetectionException.api(errorMessage);
-      } else if (response.statusCode == 401) {
-        // Unauthorized - invalid API key
-        throw DetectionException.api(
-          'Invalid API key. Please check your OpenRouter configuration.',
-        );
-      } else if (response.statusCode == 429) {
-        // Rate limit exceeded
-        throw DetectionException.api(
-          'Rate limit exceeded. Please try again later.',
-        );
-      } else if (response.statusCode >= 500) {
-        // Server error
-        throw DetectionException.api(
-          'OpenRouter server error (${response.statusCode}). Please try again.',
-        );
-      } else {
-        // Other errors
-        throw DetectionException.api(
-          'Detection failed with status ${response.statusCode}',
-        );
-      }
-    } on DetectionException {
-      rethrow;
-    } catch (e) {
-      developer.log(
-        'Error in detectRoadDamage: $e',
-        name: 'AiDetectionApi',
-        error: e,
-      );
+        if (e.toString().contains('SocketException') ||
+            e.toString().contains('NetworkException')) {
+          throw DetectionException.network(
+            'Network error. Please check your connection.',
+            e,
+          );
+        }
 
-      if (e.toString().contains('SocketException') ||
-          e.toString().contains('NetworkException')) {
-        throw DetectionException.network(
-          'Network error. Please check your connection.',
+        throw DetectionException.unknown(
+          'Unexpected error during detection: ${e.toString()}',
           e,
         );
       }
-
-      throw DetectionException.unknown(
-        'Unexpected error during detection: ${e.toString()}',
-        e,
-      );
     }
+
+    // Should never reach here
+    throw DetectionException.api(
+      'All ${DetectionApiConstants.availableKeyCount} API keys exhausted',
+    );
   }
 
   /// Get detection history for user

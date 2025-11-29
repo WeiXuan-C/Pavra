@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
 
 class HelpScreen extends StatefulWidget {
@@ -18,9 +19,10 @@ class _HelpScreenState extends State<HelpScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: HeaderLayout(title: 'Help & FAQ'),
+      appBar: HeaderLayout(title: l10n.help_title),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(4.w),
         child: Column(
@@ -29,7 +31,7 @@ class _HelpScreenState extends State<HelpScreen> {
             // Search bar
             TextField(
               decoration: InputDecoration(
-                hintText: 'Search for help...',
+                hintText: l10n.help_searchPlaceholder,
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(3.w),
@@ -43,7 +45,7 @@ class _HelpScreenState extends State<HelpScreen> {
 
             // Quick Links
             Text(
-              'Quick Links',
+              l10n.help_quickLinks,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -52,22 +54,22 @@ class _HelpScreenState extends State<HelpScreen> {
 
             _buildQuickLinkCard(
               icon: Icons.map,
-              title: 'Map & Navigation Guide',
-              subtitle: 'Learn how to use map features',
+              title: l10n.help_mapGuideTitle,
+              subtitle: l10n.help_mapGuideSubtitle,
               onTap: () => _showGuide(context, 'map'),
             ),
             SizedBox(height: 1.h),
             _buildQuickLinkCard(
               icon: Icons.camera_alt,
-              title: 'AI Detection Guide',
-              subtitle: 'How to detect road issues',
+              title: l10n.help_aiGuideTitle,
+              subtitle: l10n.help_aiGuideSubtitle,
               onTap: () => _showGuide(context, 'detection'),
             ),
             SizedBox(height: 1.h),
             _buildQuickLinkCard(
               icon: Icons.report,
-              title: 'Report Submission Guide',
-              subtitle: 'How to submit reports',
+              title: l10n.help_reportGuideTitle,
+              subtitle: l10n.help_reportGuideSubtitle,
               onTap: () => _showGuide(context, 'report'),
             ),
 
@@ -75,7 +77,7 @@ class _HelpScreenState extends State<HelpScreen> {
 
             // FAQ Categories
             Text(
-              'Frequently Asked Questions',
+              l10n.help_faqTitle,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -83,121 +85,121 @@ class _HelpScreenState extends State<HelpScreen> {
             SizedBox(height: 2.h),
 
             _buildFAQCategory(
-              'Getting Started',
+              l10n.help_gettingStarted,
               [
                 FAQItem(
-                  question: 'How do I create an account?',
-                  answer: 'Tap on "Sign Up" on the login screen, enter your email and password, then verify your email address.',
+                  question: l10n.help_q1,
+                  answer: l10n.help_a1,
                 ),
                 FAQItem(
-                  question: 'How do I enable location services?',
-                  answer: 'Go to your device Settings > Apps > Pavra > Permissions > Location, and select "Allow all the time" or "Allow only while using the app".',
+                  question: l10n.help_q2,
+                  answer: l10n.help_a2,
                 ),
                 FAQItem(
-                  question: 'What is the reputation system?',
-                  answer: 'The reputation system rewards users for submitting accurate reports. Higher reputation unlocks more features and increases your trust level.',
+                  question: l10n.help_q3,
+                  answer: l10n.help_a3,
                 ),
               ],
             ),
 
             _buildFAQCategory(
-              'Map & Navigation',
+              l10n.help_mapNavigation,
               [
                 FAQItem(
-                  question: 'How do I search for locations?',
-                  answer: 'Tap the search bar at the top of the map, type any address, place name, or road issue. You can also search for specific issues by title or description.',
+                  question: l10n.help_q4,
+                  answer: l10n.help_a4,
                 ),
                 FAQItem(
-                  question: 'How do I get directions?',
-                  answer: 'Search for a location, tap on the result, then tap "Directions". Choose your travel mode (driving, walking, transit, or bicycling) and start navigation.',
+                  question: l10n.help_q5,
+                  answer: l10n.help_a5,
                 ),
                 FAQItem(
-                  question: 'How do I plan a multi-stop route?',
-                  answer: 'Tap the route planning icon (🔀) next to the search bar, add your stops, reorder them as needed, select travel mode, and start navigation.',
+                  question: l10n.help_q6,
+                  answer: l10n.help_a6,
                 ),
                 FAQItem(
-                  question: 'What do the marker colors mean?',
-                  answer: 'Red markers = Critical/High severity issues, Orange = Moderate severity, Yellow = Low/Minor severity, Cyan = Your search result.',
+                  question: l10n.help_q7,
+                  answer: l10n.help_a7,
                 ),
               ],
             ),
 
             _buildFAQCategory(
-              'AI Detection',
+              l10n.help_aiDetection,
               [
                 FAQItem(
-                  question: 'How does AI detection work?',
-                  answer: 'Take a photo of a road issue, and our AI analyzes it to identify the type and severity. The AI uses advanced vision models to detect potholes, cracks, debris, and other hazards.',
+                  question: l10n.help_q8,
+                  answer: l10n.help_a8,
                 ),
                 FAQItem(
-                  question: 'What can the AI detect?',
-                  answer: 'The AI can detect potholes, road cracks, debris, flooding, damaged signs, missing lane markings, and other road safety issues.',
+                  question: l10n.help_q9,
+                  answer: l10n.help_a9,
                 ),
                 FAQItem(
-                  question: 'How accurate is the AI?',
-                  answer: 'Our AI has high accuracy, but all detections are reviewed by the community. You can adjust the sensitivity level in settings.',
+                  question: l10n.help_q10,
+                  answer: l10n.help_a10,
                 ),
                 FAQItem(
-                  question: 'Can I use photos from my gallery?',
-                  answer: 'Yes! Tap the gallery icon when submitting a report to select existing photos.',
+                  question: l10n.help_q11,
+                  answer: l10n.help_a11,
                 ),
               ],
             ),
 
             _buildFAQCategory(
-              'Reports & Issues',
+              l10n.help_reportsIssues,
               [
                 FAQItem(
-                  question: 'How do I submit a report?',
-                  answer: 'Use AI detection or tap "Report Issue" on the map. Add photos, description, and location details, then submit.',
+                  question: l10n.help_q12,
+                  answer: l10n.help_a12,
                 ),
                 FAQItem(
-                  question: 'Can I edit my reports?',
-                  answer: 'You can edit draft reports. Once submitted, reports can only be updated by moderators.',
+                  question: l10n.help_q13,
+                  answer: l10n.help_a13,
                 ),
                 FAQItem(
-                  question: 'How long does review take?',
-                  answer: 'Most reports are reviewed within 24-48 hours. High-severity issues are prioritized.',
+                  question: l10n.help_q14,
+                  answer: l10n.help_a14,
                 ),
                 FAQItem(
-                  question: 'What happens to spam reports?',
-                  answer: 'Spam reports are flagged and removed. Repeated spam submissions may result in account restrictions.',
+                  question: l10n.help_q15,
+                  answer: l10n.help_a15,
                 ),
               ],
             ),
 
             _buildFAQCategory(
-              'Safety Alerts',
+              l10n.help_safetyAlerts,
               [
                 FAQItem(
-                  question: 'How do I set up alerts?',
-                  answer: 'Go to Safety Alerts screen, enable notifications, and set your alert radius. You\'ll receive notifications for issues within your radius.',
+                  question: l10n.help_q16,
+                  answer: l10n.help_a16,
                 ),
                 FAQItem(
-                  question: 'Can I customize alert types?',
-                  answer: 'Yes! In Safety Alerts settings, you can choose which severity levels trigger notifications.',
+                  question: l10n.help_q17,
+                  answer: l10n.help_a17,
                 ),
                 FAQItem(
-                  question: 'What is Smart Drive Mode?',
-                  answer: 'Smart Drive Mode provides voice alerts while driving, warning you about nearby road hazards in real-time.',
+                  question: l10n.help_q18,
+                  answer: l10n.help_a18,
                 ),
               ],
             ),
 
             _buildFAQCategory(
-              'Account & Privacy',
+              l10n.help_accountPrivacy,
               [
                 FAQItem(
-                  question: 'How do I change my password?',
-                  answer: 'Go to Profile > Settings > Account Settings > Change Password.',
+                  question: l10n.help_q19,
+                  answer: l10n.help_a19,
                 ),
                 FAQItem(
-                  question: 'Is my location data private?',
-                  answer: 'Yes. Location data is only used for map features and alerts. We never share your personal location with third parties.',
+                  question: l10n.help_q20,
+                  answer: l10n.help_a20,
                 ),
                 FAQItem(
-                  question: 'How do I delete my account?',
-                  answer: 'Contact support at support@pavra.app to request account deletion. All your data will be permanently removed.',
+                  question: l10n.help_q21,
+                  answer: l10n.help_a21,
                 ),
               ],
             ),
@@ -220,14 +222,14 @@ class _HelpScreenState extends State<HelpScreen> {
                   ),
                   SizedBox(height: 2.h),
                   Text(
-                    'Still need help?',
+                    l10n.help_stillNeedHelp,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 1.h),
                   Text(
-                    'Contact our support team',
+                    l10n.help_contactSupport,
                     style: theme.textTheme.bodyMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -237,7 +239,7 @@ class _HelpScreenState extends State<HelpScreen> {
                       // Open email or support form
                     },
                     icon: Icon(Icons.email),
-                    label: Text('Contact Support'),
+                    label: Text(l10n.help_contactSupportButton),
                   ),
                 ],
               ),
@@ -333,16 +335,17 @@ class _HelpScreenState extends State<HelpScreen> {
   }
 
   void _showGuide(BuildContext context, String guideType) {
+    final l10n = AppLocalizations.of(context);
     // Show detailed guide in a dialog or new screen
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Guide'),
-        content: Text('Detailed guide for $guideType will be shown here.'),
+        title: Text(l10n.help_guide),
+        content: Text(l10n.help_guideContent(guideType)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Close'),
+            child: Text(l10n.common_close),
           ),
         ],
       ),

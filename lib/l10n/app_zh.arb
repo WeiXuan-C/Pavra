@@ -3662,5 +3662,459 @@
   "report_notInYourArea": "不在您的区域内",
   "@report_notInYourArea": {
     "description": "报告不在用户区域内的警告消息"
+  },
+  "map_searchPlaceholder": "搜索地点、地址...",
+  "@map_searchPlaceholder": {
+    "description": "地图屏幕搜索栏占位符文本"
+  },
+  "map_feetAway": "{feet} 英尺外",
+  "@map_feetAway": {
+    "description": "以英尺为单位的距离",
+    "placeholders": {
+      "feet": {
+        "type": "int"
+      }
+    }
+  },
+  "map_milesAway": "{miles} 英里外",
+  "@map_milesAway": {
+    "description": "以英里为单位的距离",
+    "placeholders": {
+      "miles": {
+        "type": "String"
+      }
+    }
+  },
+  "map_daysAgo": "{days} 天前",
+  "@map_daysAgo": {
+    "description": "天前时间戳",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "map_hoursAgo": "{hours} 小时前",
+  "@map_hoursAgo": {
+    "description": "小时前时间戳",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "map_minutesAgo": "{minutes} 分钟前",
+  "@map_minutesAgo": {
+    "description": "分钟前时间戳",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "map_justNow": "刚刚",
+  "@map_justNow": {
+    "description": "刚刚时间戳"
+  },
+  "settings_helpAndFaq": "帮助与常见问题",
+  "@settings_helpAndFaq": {
+    "description": "帮助与常见问题菜单项"
+  },
+  "settings_helpAndFaqDesc": "获取帮助并查找答案",
+  "@settings_helpAndFaqDesc": {
+    "description": "帮助与常见问题描述"
+  },
+  "settings_aboutPavra": "关于 Pavra",
+  "@settings_aboutPavra": {
+    "description": "关于 Pavra 菜单项"
+  },
+  "settings_aboutPavraDesc": "应用信息和版本",
+  "@settings_aboutPavraDesc": {
+    "description": "关于 Pavra 描述"
+  },
+  "help_title": "帮助与常见问题",
+  "@help_title": {
+    "description": "帮助屏幕标题"
+  },
+  "help_searchPlaceholder": "搜索帮助...",
+  "@help_searchPlaceholder": {
+    "description": "帮助搜索占位符"
+  },
+  "help_quickLinks": "快速链接",
+  "@help_quickLinks": {
+    "description": "快速链接部分标题"
+  },
+  "help_mapGuideTitle": "地图与导航指南",
+  "@help_mapGuideTitle": {
+    "description": "地图指南标题"
+  },
+  "help_mapGuideSubtitle": "了解如何使用地图功能",
+  "@help_mapGuideSubtitle": {
+    "description": "地图指南副标题"
+  },
+  "help_aiGuideTitle": "AI检测指南",
+  "@help_aiGuideTitle": {
+    "description": "AI检测指南标题"
+  },
+  "help_aiGuideSubtitle": "如何检测道路问题",
+  "@help_aiGuideSubtitle": {
+    "description": "AI检测指南副标题"
+  },
+  "help_reportGuideTitle": "报告提交指南",
+  "@help_reportGuideTitle": {
+    "description": "报告提交指南标题"
+  },
+  "help_reportGuideSubtitle": "如何提交报告",
+  "@help_reportGuideSubtitle": {
+    "description": "报告提交指南副标题"
+  },
+  "help_faqTitle": "常见问题",
+  "@help_faqTitle": {
+    "description": "常见问题部分标题"
+  },
+  "help_gettingStarted": "入门指南",
+  "@help_gettingStarted": {
+    "description": "入门指南类别"
+  },
+  "help_mapNavigation": "地图与导航",
+  "@help_mapNavigation": {
+    "description": "地图与导航类别"
+  },
+  "help_aiDetection": "AI检测",
+  "@help_aiDetection": {
+    "description": "AI检测类别"
+  },
+  "help_reportsIssues": "报告与问题",
+  "@help_reportsIssues": {
+    "description": "报告与问题类别"
+  },
+  "help_safetyAlerts": "安全警报",
+  "@help_safetyAlerts": {
+    "description": "安全警报类别"
+  },
+  "help_accountPrivacy": "账户与隐私",
+  "@help_accountPrivacy": {
+    "description": "账户与隐私类别"
+  },
+  "help_stillNeedHelp": "仍需要帮助？",
+  "@help_stillNeedHelp": {
+    "description": "仍需要帮助消息"
+  },
+  "help_contactSupport": "联系我们的支持团队",
+  "@help_contactSupport": {
+    "description": "联系支持消息"
+  },
+  "help_contactSupportButton": "联系支持",
+  "@help_contactSupportButton": {
+    "description": "联系支持按钮"
+  },
+  "help_guide": "指南",
+  "@help_guide": {
+    "description": "指南对话框标题"
+  },
+  "help_guideContent": "{type}的详细指南将在此处显示。",
+  "@help_guideContent": {
+    "description": "指南内容占位符",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "help_q1": "如何创建账户？",
+  "@help_q1": {
+    "description": "常见问题1"
+  },
+  "help_a1": "在登录屏幕上点击\"注册\"，输入您的电子邮箱和密码，然后验证您的电子邮箱地址。",
+  "@help_a1": {
+    "description": "常见问题答案1"
+  },
+  "help_q2": "如何启用位置服务？",
+  "@help_q2": {
+    "description": "常见问题2"
+  },
+  "help_a2": "前往设备设置 > 应用 > Pavra > 权限 > 位置，然后选择\"始终允许\"或\"仅在使用应用时允许\"。",
+  "@help_a2": {
+    "description": "常见问题答案2"
+  },
+  "help_q3": "什么是声誉系统？",
+  "@help_q3": {
+    "description": "常见问题3"
+  },
+  "help_a3": "声誉系统奖励提交准确报告的用户。更高的声誉可以解锁更多功能并提高您的信任级别。",
+  "@help_a3": {
+    "description": "常见问题答案3"
+  },
+  "help_q4": "如何搜索位置？",
+  "@help_q4": {
+    "description": "常见问题4"
+  },
+  "help_a4": "点击地图顶部的搜索栏，输入任何地址、地点名称或道路问题。您还可以按标题或描述搜索特定问题。",
+  "@help_a4": {
+    "description": "常见问题答案4"
+  },
+  "help_q5": "如何获取导航？",
+  "@help_q5": {
+    "description": "常见问题5"
+  },
+  "help_a5": "搜索位置，点击结果，然后点击\"导航\"。选择您的出行方式（驾车、步行、公交或骑行）并开始导航。",
+  "@help_a5": {
+    "description": "常见问题答案5"
+  },
+  "help_q6": "如何规划多站点路线？",
+  "@help_q6": {
+    "description": "常见问题6"
+  },
+  "help_a6": "点击搜索栏旁边的路线规划图标（🔀），添加您的站点，根据需要重新排序，选择出行方式，然后开始导航。",
+  "@help_a6": {
+    "description": "常见问题答案6"
+  },
+  "help_q7": "标记颜色代表什么？",
+  "@help_q7": {
+    "description": "常见问题7"
+  },
+  "help_a7": "红色标记 = 危急/高严重程度问题，橙色 = 中等严重程度，黄色 = 低/轻微严重程度，青色 = 您的搜索结果。",
+  "@help_a7": {
+    "description": "常见问题答案7"
+  },
+  "help_q8": "AI检测如何工作？",
+  "@help_q8": {
+    "description": "常见问题8"
+  },
+  "help_a8": "拍摄道路问题的照片，我们的AI会分析它以识别类型和严重程度。AI使用先进的视觉模型来检测坑洞、裂缝、碎片和其他危险。",
+  "@help_a8": {
+    "description": "常见问题答案8"
+  },
+  "help_q9": "AI可以检测什么？",
+  "@help_q9": {
+    "description": "常见问题9"
+  },
+  "help_a9": "AI可以检测坑洞、道路裂缝、碎片、积水、损坏的标志、缺失的车道标记和其他道路安全问题。",
+  "@help_a9": {
+    "description": "常见问题答案9"
+  },
+  "help_q10": "AI的准确度如何？",
+  "@help_q10": {
+    "description": "常见问题10"
+  },
+  "help_a10": "我们的AI具有很高的准确度，但所有检测都会由社区审核。您可以在设置中调整灵敏度级别。",
+  "@help_a10": {
+    "description": "常见问题答案10"
+  },
+  "help_q11": "我可以使用相册中的照片吗？",
+  "@help_q11": {
+    "description": "常见问题11"
+  },
+  "help_a11": "可以！在提交报告时点击相册图标以选择现有照片。",
+  "@help_a11": {
+    "description": "常见问题答案11"
+  },
+  "help_q12": "如何提交报告？",
+  "@help_q12": {
+    "description": "常见问题12"
+  },
+  "help_a12": "使用AI检测或在地图上点击\"报告问题\"。添加照片、描述和位置详情，然后提交。",
+  "@help_a12": {
+    "description": "常见问题答案12"
+  },
+  "help_q13": "我可以编辑我的报告吗？",
+  "@help_q13": {
+    "description": "常见问题13"
+  },
+  "help_a13": "您可以编辑草稿报告。一旦提交，报告只能由管理员更新。",
+  "@help_a13": {
+    "description": "常见问题答案13"
+  },
+  "help_q14": "审核需要多长时间？",
+  "@help_q14": {
+    "description": "常见问题14"
+  },
+  "help_a14": "大多数报告在24-48小时内审核。高严重程度问题会优先处理。",
+  "@help_a14": {
+    "description": "常见问题答案14"
+  },
+  "help_q15": "垃圾报告会怎样？",
+  "@help_q15": {
+    "description": "常见问题15"
+  },
+  "help_a15": "垃圾报告会被标记并删除。重复提交垃圾信息可能导致账户限制。",
+  "@help_a15": {
+    "description": "常见问题答案15"
+  },
+  "help_q16": "如何设置警报？",
+  "@help_q16": {
+    "description": "常见问题16"
+  },
+  "help_a16": "前往安全警报屏幕，启用通知，并设置您的警报半径。您将收到半径内问题的通知。",
+  "@help_a16": {
+    "description": "常见问题答案16"
+  },
+  "help_q17": "我可以自定义警报类型吗？",
+  "@help_q17": {
+    "description": "常见问题17"
+  },
+  "help_a17": "可以！在安全警报设置中，您可以选择哪些严重程度级别触发通知。",
+  "@help_a17": {
+    "description": "常见问题答案17"
+  },
+  "help_q18": "什么是智能驾驶模式？",
+  "@help_q18": {
+    "description": "常见问题18"
+  },
+  "help_a18": "智能驾驶模式在驾驶时提供语音警报，实时警告您附近的道路危险。",
+  "@help_a18": {
+    "description": "常见问题答案18"
+  },
+  "help_q19": "如何更改密码？",
+  "@help_q19": {
+    "description": "常见问题19"
+  },
+  "help_a19": "前往个人资料 > 设置 > 账户设置 > 更改密码。",
+  "@help_a19": {
+    "description": "常见问题答案19"
+  },
+  "help_q20": "我的位置数据是私密的吗？",
+  "@help_q20": {
+    "description": "常见问题20"
+  },
+  "help_a20": "是的。位置数据仅用于地图功能和警报。我们绝不会与第三方共享您的个人位置。",
+  "@help_a20": {
+    "description": "常见问题答案20"
+  },
+  "help_q21": "如何删除我的账户？",
+  "@help_q21": {
+    "description": "常见问题21"
+  },
+  "help_a21": "联系support@pavra.app请求删除账户。您的所有数据将被永久删除。",
+  "@help_a21": {
+    "description": "常见问题答案21"
+  },
+  "about_title": "关于 Pavra",
+  "@about_title": {
+    "description": "关于屏幕标题"
+  },
+  "about_version": "版本 1.1.0",
+  "@about_version": {
+    "description": "应用版本"
+  },
+  "about_tagline": "AI驱动的道路安全平台",
+  "@about_tagline": {
+    "description": "应用标语"
+  },
+  "about_ourMission": "我们的使命",
+  "@about_ourMission": {
+    "description": "我们的使命部分标题"
+  },
+  "about_missionText": "Pavra致力于通过社区驱动的报告和AI驱动的检测，让每个人的道路更安全。我们赋予用户识别和报告道路危险的能力，帮助当局更快响应并预防事故。",
+  "@about_missionText": {
+    "description": "使命声明文本"
+  },
+  "about_keyFeatures": "主要功能",
+  "@about_keyFeatures": {
+    "description": "主要功能部分标题"
+  },
+  "about_feature1": "🤖 AI驱动的道路危险检测",
+  "@about_feature1": {
+    "description": "功能1"
+  },
+  "about_feature2": "🗺️ 实时更新的交互式地图",
+  "@about_feature2": {
+    "description": "功能2"
+  },
+  "about_feature3": "🧭 多站点路线规划",
+  "@about_feature3": {
+    "description": "功能3"
+  },
+  "about_feature4": "🔔 智能安全警报",
+  "@about_feature4": {
+    "description": "功能4"
+  },
+  "about_feature5": "🎯 游戏化与声誉系统",
+  "@about_feature5": {
+    "description": "功能5"
+  },
+  "about_feature6": "🚗 带语音警报的智能驾驶模式",
+  "@about_feature6": {
+    "description": "功能6"
+  },
+  "about_feature7": "🌍 社区驱动的报告",
+  "@about_feature7": {
+    "description": "功能7"
+  },
+  "about_technology": "技术",
+  "@about_technology": {
+    "description": "技术部分标题"
+  },
+  "about_technologyText": "使用Flutter构建，实现跨平台兼容性。由包括NVIDIA Nemotron和Google Gemini在内的先进AI模型驱动，实现准确的道路危险检测。后端基础设施使用Supabase、Serverpod和Upstash，提供可靠、可扩展的性能。",
+  "@about_technologyText": {
+    "description": "技术描述"
+  },
+  "about_ourTeam": "我们的团队",
+  "@about_ourTeam": {
+    "description": "我们的团队部分标题"
+  },
+  "about_teamText": "Pavra由一支充满激情的工程师、设计师和道路安全倡导者团队开发，致力于利用技术造福公众。",
+  "@about_teamText": {
+    "description": "团队描述"
+  },
+  "about_website": "网站",
+  "@about_website": {
+    "description": "网站链接标题"
+  },
+  "about_websiteUrl": "pavra.vercel.app",
+  "@about_websiteUrl": {
+    "description": "网站URL"
+  },
+  "about_privacyPolicy": "隐私政策",
+  "@about_privacyPolicy": {
+    "description": "隐私政策链接"
+  },
+  "about_privacyPolicyDesc": "我们如何保护您的数据",
+  "@about_privacyPolicyDesc": {
+    "description": "隐私政策描述"
+  },
+  "about_termsOfService": "服务条款",
+  "@about_termsOfService": {
+    "description": "服务条款链接"
+  },
+  "about_termsOfServiceDesc": "条款和条件",
+  "@about_termsOfServiceDesc": {
+    "description": "服务条款描述"
+  },
+  "about_openSourceLicenses": "开源许可证",
+  "@about_openSourceLicenses": {
+    "description": "开源许可证链接"
+  },
+  "about_openSourceLicensesDesc": "第三方软件",
+  "@about_openSourceLicensesDesc": {
+    "description": "开源许可证描述"
+  },
+  "about_contactUs": "联系我们",
+  "@about_contactUs": {
+    "description": "联系我们部分标题"
+  },
+  "about_email": "电子邮箱",
+  "@about_email": {
+    "description": "电子邮箱标签"
+  },
+  "about_phone": "电话",
+  "@about_phone": {
+    "description": "电话标签"
+  },
+  "about_sendEmail": "发送邮件",
+  "@about_sendEmail": {
+    "description": "发送邮件提示"
+  },
+  "about_call": "拨打电话",
+  "@about_call": {
+    "description": "拨打电话提示"
+  },
+  "about_copyright": "© 2025 Pavra. 保留所有权利。",
+  "@about_copyright": {
+    "description": "版权文本"
+  },
+  "about_madeWith": "用 ❤️ 为更安全的道路而制作",
+  "@about_madeWith": {
+    "description": "用爱制作文本"
   }
 }

@@ -2,6 +2,8 @@ import 'package:supabase_flutter/supabase_flutter.dart' show SupabaseClient;
 import '../../models/report_issue_model.dart';
 import '../../models/issue_photo_model.dart';
 import '../../../core/services/reputation_service.dart';
+import '../../../core/services/notification_helper_service.dart';
+import '../../../core/api/notification/notification_api.dart';
 import 'dart:developer' as developer;
 
 /// Remote data source for report issues
@@ -183,7 +185,96 @@ class ReportIssueRemoteSource {
       }
     }
 
+    // Send notification to user about successful submission
+    if (result.createdBy != null) {
+      try {
+        final notificationHelper = NotificationHelperService(NotificationApi());
+        await notificationHelper.notifyReportSubmitted(
+          userId: result.createdBy!,
+          reportId: result.id,
+          title: result.title ?? 'Road Issue Report',
+        );
+        developer.log(
+          '✅ Sent report submission notification: ${result.id}',
+          name: 'ReportIssueRemoteSource',
+        );
+      } catch (e) {
+        developer.log(
+          '⚠️ Failed to send submission notification: $e',
+          name: 'ReportIssueRemoteSource',
+          error: e,
+        );
+        // Don't fail the submission if notification fails
+      }
+    }
+
+    // Notify nearby users about the new report
+    if (result.latitude != null && result.longitude != null) {
+      try {
+        // Get nearby users (within 5km radius)
+        final nearbyUsers = await _getNearbyUsers(
+          result.latitude!,
+          result.longitude!,
+          radiusKm: 5.0,
+        );
+        
+        if (nearbyUsers.isNotEmpty) {
+          final notificationHelper = NotificationHelperService(NotificationApi());
+          await notificationHelper.notifyNearbyUsers(
+            reportId: result.id,
+            title: result.title ?? 'Road Issue',
+            latitude: result.latitude!,
+            longitude: result.longitude!,
+            severity: result.severity,
+            nearbyUserIds: nearbyUsers,
+          );
+          developer.log(
+            '✅ Notified ${nearbyUsers.length} nearby users about report: ${result.id}',
+            name: 'ReportIssueRemoteSource',
+          );
+        }
+      } catch (e) {
+        developer.log(
+          '⚠️ Failed to notify nearby users: $e',
+          name: 'ReportIssueRemoteSource',
+          error: e,
+        );
+        // Don't fail the submission if nearby notification fails
+      }
+    }
+
     return result;
+  }
+
+  /// Get nearby users within a radius
+  Future<List<String>> _getNearbyUsers(
+    double latitude,
+    double longitude, {
+    double radiusKm = 5.0,
+  }) async {
+    try {
+      // Use PostGIS to find users within radius
+      // This requires the profiles table to have a location column
+      // For now, return empty list - implement when location tracking is added
+      
+      // TODO: Implement location-based user query
+      // Example query:
+      // SELECT user_id FROM user_locations
+      // WHERE ST_DWithin(
+      //   location::geography,
+      //   ST_MakePoint($longitude, $latitude)::geography,
+      //   $radiusKm * 1000
+      // )
+      
+      return [];
+    } catch (e) {
+      developer.log(
+        'Error getting nearby users: $e',
+        name: 'ReportIssueRemoteSource',
+        error: e,
+      );
+      return [];
+    }
   }
 
   /// Delete report issue (only draft status) - Soft delete
@@ -255,8 +346,8 @@ class ReportIssueRemoteSource {
     required String status,
     String? comment,
   }) async {
-    final userId = _supabase.auth.currentUser?.id;
-    if (userId == null) throw Exception('User not authenticated');
+    final reviewedBy = _supabase.auth.currentUser?.id;
+    if (reviewedBy == null) throw Exception('User not authenticated');
 
     // Get the issue first to know who created it
     final issue = await fetchReportIssueById(id);
@@ -264,7 +355,7 @@ class ReportIssueRemoteSource {
 
     final updates = {
       'status': status,
-      'reviewed_by': userId,
+      'reviewed_by': reviewedBy,
       'reviewed_comment': comment,
       'reviewed_at': DateTime.now().toIso8601String(),
     };
@@ -284,6 +375,27 @@ class ReportIssueRemoteSource {
             '✅ Deducted reputation for spam issue: ${result.id}',
             name: 'ReportIssueRemoteSource',
           );
+          
+          // Send spam notification
+          try {
+            final notificationHelper = NotificationHelperService(NotificationApi());
+            await notificationHelper.notifyReportSpam(
+              userId: issue.createdBy!,
+              reportId: result.id,
+              reviewerId: reviewedBy,
+              comment: comment,
+            );
+            developer.log(
+              '✅ Sent spam notification: ${result.id}',
+              name: 'ReportIssueRemoteSource',
+            );
+          } catch (e) {
+            developer.log(
+              '⚠️ Failed to send spam notification: $e',
+              name: 'ReportIssueRemoteSource',
+              error: e,
+            );
+          }
         } else if (status == 'reviewed') {
           // Add reputation for verified issue (+5)
           await _reputationService.addReputationForVerified(
@@ -294,6 +406,26 @@ class ReportIssueRemoteSource {
             '✅ Added reputation for verified issue: ${result.id}',
             name: 'ReportIssueRemoteSource',
           );
+          
+          // Send verification notification
+          try {
+            final notificationHelper = NotificationHelperService(NotificationApi());
+            await notificationHelper.notifyReportVerified(
+              userId: issue.createdBy!,
+              reportId: result.id,
+              reviewerId: reviewedBy,
+            );
+            developer.log(
+              '✅ Sent verification notification: ${result.id}',
+              name: 'ReportIssueRemoteSource',
+            );
+          } catch (e) {
+            developer.log(
+              '⚠️ Failed to send verification notification: $e',
+              name: 'ReportIssueRemoteSource',
+              error: e,
+            );
+          }
         }
       } catch (e) {
         developer.log(

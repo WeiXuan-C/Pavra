@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'audio_alert_service.dart';
 
 /// Type definition for data notification action handlers
 typedef DataNotificationActionHandler = Future<void> Function(Map<String, dynamic> data);
@@ -176,9 +177,13 @@ class OneSignalService {
   /// Handle foreground notification display
   /// 
   /// Shows in-app notification banner when notification is received while app is active
+  /// Also plays notification sound for important alerts
   void handleForegroundNotification(OSNotificationWillDisplayEvent event) {
     try {
       debugPrint('🔔 OneSignal: Displaying foreground notification');
+      
+      // Play notification sound
+      _playNotificationSound(event.notification);
       
       // Allow the notification to display
       // To prevent display, call: event.preventDefault();
@@ -223,6 +228,46 @@ class OneSignalService {
     } catch (e, stackTrace) {
       debugPrint('❌ OneSignal: Error handling foreground notification: $e');
       debugPrint('Stack trace: $stackTrace');
+    }
+  }
+
+  /// Play notification sound based on notification type and priority
+  void _playNotificationSound(OSNotification notification) {
+    try {
+      final data = notification.additionalData;
+      final soundType = data?['sound'] as String?;
+      final priority = data?['priority'] as int?;
+      
+      // Determine if we should play sound
+      bool shouldPlaySound = true;
+      
+      // Check notification type for sound decision
+      if (soundType == 'none' || soundType == 'silent') {
+        shouldPlaySound = false;
+      }
+      
+      if (shouldPlaySound) {
+        // Import and use AudioAlertService
+        final audioService = AudioAlertService();
+        
+        // Play sound based on priority or type
+        if (priority != null && priority >= 8) {
+          // High priority - play alert sound
+          audioService.playAlertSound();
+          debugPrint('🔊 OneSignal: Playing alert sound for high priority notification');
+        } else if (soundType == 'alert' || soundType == 'warning') {
+          // Alert/Warning type - play alert sound
+          audioService.playAlertSound();
+          debugPrint('🔊 OneSignal: Playing alert sound for $soundType notification');
+        } else {
+          // Normal notification - play default sound (or use lighter haptic)
+          audioService.playNotificationSound();
+          debugPrint('🔊 OneSignal: Playing notification sound');
+        }
+      }
+    } catch (e) {
+      debugPrint('⚠️ OneSignal: Error playing notification sound: $e');
+      // Don't throw - sound playback failure shouldn't break notifications
     }
   }
 
