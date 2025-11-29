@@ -12,6 +12,8 @@ import '../presentation/settings_screen/settings_screen.dart';
 import '../presentation/help_screen/help_screen.dart';
 import '../presentation/about_screen/about_screen.dart';
 import '../presentation/onboarding_screen/onboarding_screen.dart';
+import '../presentation/privacy_policy_screen/privacy_policy_screen.dart';
+import '../presentation/terms_of_service_screen/terms_of_service_screen.dart';
 import '../presentation/admin_panel_screen/admin_panel_screen.dart';
 import '../presentation/analytics_dashboard_screen/analytics_dashboard_screen.dart';
 import '../presentation/saved_locations_screen/saved_locations_screen.dart';
@@ -35,6 +37,8 @@ class AppRouter {
     AppRoutes.settings: (context) => const SettingsScreen(),
     AppRoutes.help: (context) => const HelpScreen(),
     AppRoutes.about: (context) => const AboutScreen(),
+    AppRoutes.privacyPolicy: (context) => const PrivacyPolicyScreen(),
+    AppRoutes.termsOfService: (context) => const TermsOfServiceScreen(),
     AppRoutes.admin: (context) => const AdminPanelScreen(),
     AppRoutes.analytics: (context) => const AnalyticsDashboardScreen(),
     AppRoutes.savedLocations: (context) => const SavedLocationsScreen(),

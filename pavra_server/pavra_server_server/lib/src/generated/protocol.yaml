@@ -20,8 +20,19 @@ notification:
   - scheduleNotificationForUsers:
   - cancelScheduledNotification:
   - handleNotificationCreated:
+  - handleScheduledNotification:
+  - updateNotificationStatus:
+  - getNotificationStatus:
   - testProcessScheduledNotification:
   - processScheduledNotifications:
+  - cancelQStashJob:
+  - hardDeleteNotification:
+  - checkSystemHealth:
+  - getRecentAlerts:
+  - getApiUsageStats:
+  - getMetricsSummary:
+  - getNotificationMetrics:
+  - sendMaintenanceNotification:
 openRouter:
   - chat:
   - chatWithHistory:

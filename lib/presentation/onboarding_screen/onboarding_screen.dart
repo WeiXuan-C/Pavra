@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../l10n/app_localizations.dart';
-import '../../routes/app_routes.dart';
 
 class OnboardingScreen extends StatefulWidget {
   static const String routeName = '/onboarding';
@@ -48,9 +47,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Future<void> _completeOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('onboarding_completed', true);
-    if (mounted) {
-      Navigator.of(context).pushReplacementNamed(AppRoutes.authentication);
-    }
+    // No need to navigate - RouteGuard will automatically show HomeScreen
+    // after onboarding is completed since user is already authenticated
   }
 
   @override

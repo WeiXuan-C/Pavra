@@ -2,21 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/app_export.dart';
-import '../../../core/services/voice_search_service.dart';
 import '../../../core/services/saved_location_service.dart';
 import '../../../data/models/saved_location_model.dart';
 import '../../../l10n/app_localizations.dart';
-import 'voice_search_widget.dart';
 
 class MapSearchBar extends StatefulWidget {
   final Function(String, LatLng?, String?) onSearch;
   final VoidCallback onFilterTap;
   final List<Map<String, dynamic>> issues;
   final int activeFilterCount;
-  final Function(VoiceCommand)? onVoiceCommand;
   final SavedLocationService? savedLocationService;
 
   const MapSearchBar({
@@ -25,7 +21,6 @@ class MapSearchBar extends StatefulWidget {
     required this.onFilterTap,
     this.issues = const [],
     this.activeFilterCount = 0,
-    this.onVoiceCommand,
     this.savedLocationService,
   });
 
@@ -39,7 +34,6 @@ class _MapSearchBarState extends State<MapSearchBar> {
   bool _isSearching = false;
   List<String> _recentSearches = [];
   List<Map<String, dynamic>> _searchSuggestions = [];
-  final VoiceSearchService _voiceSearchService = VoiceSearchService();
   List<SavedLocationModel> _savedLocations = [];
 
   @override
@@ -229,246 +223,77 @@ class _MapSearchBarState extends State<MapSearchBar> {
     _searchLocation(search);
   }
 
-  /// Request microphone permission
-  Future<bool> _requestMicrophonePermission() async {
-    final status = await Permission.microphone.status;
-    
-    if (status.isGranted) {
-      return true;
-    }
-    
-    if (status.isDenied) {
-      final result = await Permission.microphone.request();
-      return result.isGranted;
-    }
-    
-    if (status.isPermanentlyDenied) {
-      if (mounted) {
-        _showPermissionDeniedDialog();
-      }
-      return false;
-    }
-    
-    return false;
-  }
-
-  /// Show dialog when permission is permanently denied
-  void _showPermissionDeniedDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Microphone Permission Required'),
-        content: Text(
-          'Voice search requires microphone access. Please enable it in your device settings.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              openAppSettings();
-            },
-            child: Text('Open Settings'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Activate voice search
-  Future<void> _activateVoiceSearch() async {
-    // Request microphone permission first
-    final hasPermission = await _requestMicrophonePermission();
-    if (!hasPermission) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Microphone permission is required for voice search'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-      return;
-    }
-
-    // Initialize voice search service
-    final initialized = await _voiceSearchService.initialize();
-    if (!initialized) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Voice search is not available on this device'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-      return;
-    }
-
-    // Show voice search widget as bottom sheet
-    if (mounted) {
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (context) => VoiceSearchWidget(
-          voiceSearchService: _voiceSearchService,
-          onSearchResult: (recognizedText) {
-            if (recognizedText.isNotEmpty) {
-              _searchController.text = recognizedText;
-              _searchLocation(recognizedText);
-            }
-          },
-          onCommandRecognized: (command) {
-            // Handle voice commands
-            if (widget.onVoiceCommand != null) {
-              widget.onVoiceCommand!(command);
-            } else {
-              // Fallback to search if no command handler
-              if (command.location != null && command.location!.isNotEmpty) {
-                _searchController.text = command.location!;
-                _searchLocation(command.location!);
-              }
-            }
-          },
-          onClose: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    return Container(
-      margin: EdgeInsets.only(left: 4.w, top: 2.h, bottom: 2.h),
-      child: Column(
-        children: [
-          Container(
+    return Column(
+      children: [
+        // Clean search bar - just search input
+        Container(
           decoration: BoxDecoration(
             color: theme.cardColor,
-            borderRadius: BorderRadius.circular(3.w),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.shadow,
+                color: theme.colorScheme.shadow.withValues(alpha: 0.15),
                 blurRadius: 8,
                 offset: Offset(0, 2),
               ),
             ],
           ),
-          child: Row(
-            children: [
-              // Search input
-              Expanded(
-                child: TextField(
-                  controller: _searchController,
-                  focusNode: _focusNode,
-                  onChanged: _onSearchChanged,
-                  onSubmitted: (value) {
-                    if (value.isNotEmpty) {
-                      _searchLocation(value);
-                    }
-                  },
-                  decoration: InputDecoration(
-                    hintText: l10n.map_searchPlaceholder,
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.all(3.w),
-                      child: CustomIconWidget(
-                        iconName: 'search',
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                        size: 20,
-                      ),
-                    ),
-                    suffixIcon: _searchController.text.isNotEmpty
-                        ? GestureDetector(
-                            onTap: () {
-                              _searchController.clear();
-                              _onSearchChanged('');
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.all(3.w),
-                              child: CustomIconWidget(
-                                iconName: 'clear',
-                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                                size: 20,
-                              ),
-                            ),
-                          )
-                        : null,
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(vertical: 2.h),
-                  ),
+          child: TextField(
+            controller: _searchController,
+            focusNode: _focusNode,
+            onChanged: _onSearchChanged,
+            onSubmitted: (value) {
+              if (value.isNotEmpty) {
+                _searchLocation(value);
+              }
+            },
+            decoration: InputDecoration(
+              hintText: 'Search places, addresses...',
+              hintStyle: TextStyle(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                fontSize: 14,
+              ),
+              prefixIcon: Padding(
+                padding: EdgeInsets.all(3.w),
+                child: CustomIconWidget(
+                  iconName: 'search',
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  size: 20,
                 ),
               ),
-
-              // Voice search button
-              IconButton(
-                onPressed: _activateVoiceSearch,
-                icon: Icon(
-                  Icons.mic,
-                  color: theme.colorScheme.primary,
-                  size: 24,
-                ),
-                tooltip: l10n.voice_search,
-              ),
-
-              // Filter button with badge
-              Container(
-                margin: EdgeInsets.only(right: 2.w),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    IconButton(
-                      onPressed: widget.onFilterTap,
-                      icon: CustomIconWidget(
-                        iconName: 'tune',
-                        color: theme.colorScheme.primary,
-                        size: 24,
-                      ),
-                    ),
-                    if (widget.activeFilterCount > 0)
-                      Positioned(
-                        right: 6,
-                        top: 6,
-                        child: Container(
-                          padding: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.error,
-                            shape: BoxShape.circle,
-                          ),
-                          constraints: BoxConstraints(
-                            minWidth: 18,
-                            minHeight: 18,
-                          ),
-                          child: Center(
-                            child: Text(
-                              '${widget.activeFilterCount}',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+              suffixIcon: _searchController.text.isNotEmpty
+                  ? GestureDetector(
+                      onTap: () {
+                        _searchController.clear();
+                        _onSearchChanged('');
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.all(3.w),
+                        child: CustomIconWidget(
+                          iconName: 'clear',
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          size: 20,
                         ),
                       ),
-                  ],
-                ),
+                    )
+                  : null,
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 4.w,
+                vertical: 1.8.h,
               ),
-            ],
+            ),
           ),
         ),
 
         // Search suggestions/recent searches
         if (_isSearching)
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 4.w),
+            margin: EdgeInsets.only(top: 1.h),
             decoration: BoxDecoration(
               color: theme.cardColor,
               borderRadius: BorderRadius.circular(3.w),
@@ -533,77 +358,7 @@ class _MapSearchBarState extends State<MapSearchBar> {
               ],
             ),
           ),
-
-          // Search suggestions/recent searches
-          if (_isSearching)
-            Container(
-              margin: EdgeInsets.only(right: 4.w),
-              decoration: BoxDecoration(
-                color: theme.cardColor,
-                borderRadius: BorderRadius.circular(3.w),
-                boxShadow: [
-                  BoxShadow(
-                    color: theme.colorScheme.shadow,
-                    blurRadius: 8,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (_searchSuggestions.isNotEmpty) ...[
-                    Padding(
-                      padding: EdgeInsets.all(3.w),
-                      child: Text(
-                        l10n.map_suggestions,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    ..._searchSuggestions.map(
-                      (suggestion) => _buildIssueSuggestionTile(context, suggestion),
-                    ),
-                  ] else if (_searchController.text.isNotEmpty) ...[
-                    Padding(
-                      padding: EdgeInsets.all(3.w),
-                      child: ListTile(
-                        leading: CustomIconWidget(
-                          iconName: 'search',
-                          color: theme.colorScheme.primary,
-                          size: 20,
-                        ),
-                        title: Text(
-                          'Search for "${_searchController.text}"',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.primary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        onTap: () => _searchLocation(_searchController.text),
-                        dense: true,
-                      ),
-                    ),
-                  ] else if (_recentSearches.isNotEmpty) ...[
-                    Padding(
-                      padding: EdgeInsets.all(3.w),
-                      child: Text(
-                        l10n.map_recentSearches,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    ..._recentSearches.map(
-                      (search) => _buildRecentSearchTile(context, search),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-        ],
-      ),
+      ],
     );
   }
 

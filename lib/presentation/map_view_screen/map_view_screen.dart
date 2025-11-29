@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:sizer/sizer.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../core/app_export.dart';
 import '../../core/supabase/supabase_client.dart';
@@ -26,6 +27,7 @@ import './widgets/map_skeleton.dart';
 import './widgets/nearby_issues_bottom_sheet.dart';
 import './widgets/navigation_bottom_sheet.dart';
 import './widgets/active_navigation_panel.dart';
+import './widgets/voice_search_widget.dart';
 
 class MapViewScreen extends StatefulWidget {
   const MapViewScreen({super.key});
@@ -1105,6 +1107,72 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
     );
   }
 
+  /// Activate voice search
+  Future<void> _activateVoiceSearch() async {
+    final voiceSearchService = VoiceSearchService();
+    
+    // Request microphone permission first
+    final hasPermission = await Permission.microphone.request().isGranted;
+    if (!hasPermission) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Microphone permission is required for voice search'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+      return;
+    }
+
+    // Initialize voice search service
+    final initialized = await voiceSearchService.initialize();
+    if (!initialized) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Voice search is not available on this device'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+      return;
+    }
+
+    // Show voice search widget as bottom sheet
+    if (mounted) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => VoiceSearchWidget(
+          voiceSearchService: voiceSearchService,
+          onSearchResult: (recognizedText) async {
+            if (recognizedText.isNotEmpty) {
+              // Search for the location
+              try {
+                final locations = await locationFromAddress(recognizedText);
+                if (locations.isNotEmpty) {
+                  final location = locations.first;
+                  final latLng = LatLng(location.latitude, location.longitude);
+                  _handleSearch(recognizedText, latLng, null);
+                }
+              } catch (e) {
+                debugPrint('Error searching location: $e');
+              }
+            }
+          },
+          onCommandRecognized: (command) {
+            _handleVoiceCommand(command);
+          },
+          onClose: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      );
+    }
+  }
+
   void _showNearbyIssues() {
     final nearbyIssues = _roadIssues
         .where((issue) => _shouldShowIssue(issue))
@@ -1490,7 +1558,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                     ),
                   ),
 
-                // Clean search bar with expandable controls (hide during navigation)
+                // Clean search bar with action buttons (hide during navigation)
                 if (!_isNavigating)
                   SafeArea(
                     child: Container(
@@ -1498,24 +1566,116 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Main search bar with minimal buttons
+                          // Main search bar with action buttons
                           Row(
                             children: [
+                              // Search bar
                               Expanded(
                                 child: MapSearchBar(
                                   issues: _roadIssues,
                                   onSearch: _handleSearch,
                                   onFilterTap: _showFilterBottomSheet,
                                   activeFilterCount: _getActiveFilterCount(),
-                                  onVoiceCommand: _handleVoiceCommand,
                                   savedLocationService: _savedLocationService,
                                 ),
                               ),
                               SizedBox(width: 2.w),
-                              // Expand/Collapse button (menu)
+                              
+                              // Voice search button
                               Material(
                                 elevation: 4,
-                                shadowColor: theme.colorScheme.shadow,
+                                shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(12),
+                                child: InkWell(
+                                  onTap: _activateVoiceSearch,
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    padding: EdgeInsets.all(3.w),
+                                    decoration: BoxDecoration(
+                                      color: theme.cardColor,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Icon(
+                                      Icons.mic,
+                                      color: theme.colorScheme.primary,
+                                      size: 24,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 2.w),
+                              
+                              // Filter button with badge
+                              Material(
+                                elevation: 4,
+                                shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(12),
+                                child: InkWell(
+                                  onTap: _showFilterBottomSheet,
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    padding: EdgeInsets.all(3.w),
+                                    decoration: BoxDecoration(
+                                      color: _getActiveFilterCount() > 0
+                                          ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                                          : theme.cardColor,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: _getActiveFilterCount() > 0
+                                          ? Border.all(
+                                              color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                                              width: 1.5,
+                                            )
+                                          : null,
+                                    ),
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      children: [
+                                        CustomIconWidget(
+                                          iconName: 'tune',
+                                          color: theme.colorScheme.primary,
+                                          size: 24,
+                                        ),
+                                        if (_getActiveFilterCount() > 0)
+                                          Positioned(
+                                            right: -6,
+                                            top: -6,
+                                            child: Container(
+                                              padding: EdgeInsets.all(4),
+                                              decoration: BoxDecoration(
+                                                color: theme.colorScheme.error,
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  color: theme.cardColor,
+                                                  width: 1.5,
+                                                ),
+                                              ),
+                                              constraints: BoxConstraints(
+                                                minWidth: 18,
+                                                minHeight: 18,
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  '${_getActiveFilterCount()}',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 2.w),
+                              
+                              // More menu button
+                              Material(
+                                elevation: 4,
+                                shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(12),
                                 child: InkWell(
                                   onTap: () {
@@ -1535,7 +1695,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                                     child: Icon(
                                       _isControlsExpanded 
                                           ? Icons.close 
-                                          : Icons.menu,
+                                          : Icons.more_vert,
                                       color: _isControlsExpanded 
                                           ? Colors.white 
                                           : theme.colorScheme.primary,
