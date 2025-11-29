@@ -3654,5 +3654,13 @@
   "filter_discarded": "已丢弃",
   "@filter_discarded": {
     "description": "已丢弃状态过滤"
+  },
+  "report_cannotVoteOwnReport": "您不能对自己的报告投票",
+  "@report_cannotVoteOwnReport": {
+    "description": "用户尝试对自己的报告投票时的警告消息"
+  },
+  "report_notInYourArea": "不在您的区域内",
+  "@report_notInYourArea": {
+    "description": "报告不在用户区域内的警告消息"
   }
 }

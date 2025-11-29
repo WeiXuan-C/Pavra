@@ -107,7 +107,7 @@ class _IssueDetailBottomSheetState extends State<IssueDetailBottomSheet> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('You cannot vote on your own report'),
+            content: Text(AppLocalizations.of(context).report_cannotVoteOwnReport),
             backgroundColor: Colors.orange,
             duration: Duration(seconds: 3),
           ),
@@ -453,7 +453,7 @@ class _IssueDetailBottomSheetState extends State<IssueDetailBottomSheet> {
                   SizedBox(width: 3.w),
                   Expanded(
                     child: Text(
-                      'You cannot vote on your own report',
+                      AppLocalizations.of(context).report_cannotVoteOwnReport,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: Colors.blue[800],
                         fontSize: 13.sp,

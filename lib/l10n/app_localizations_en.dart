@@ -2767,4 +2767,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filter_discarded => 'Discarded';
+
+  @override
+  String get report_cannotVoteOwnReport => 'You cannot vote on your own report';
+
+  @override
+  String get report_notInYourArea => 'Not in your area';
 }

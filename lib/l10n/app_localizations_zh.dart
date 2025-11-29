@@ -2677,4 +2677,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get filter_discarded => '已丢弃';
+
+  @override
+  String get report_cannotVoteOwnReport => '您不能对自己的报告投票';
+
+  @override
+  String get report_notInYourArea => '不在您的区域内';
 }

@@ -3654,5 +3654,13 @@
   "filter_discarded": "Discarded",
   "@filter_discarded": {
     "description": "Discarded status filter"
+  },
+  "report_cannotVoteOwnReport": "You cannot vote on your own report",
+  "@report_cannotVoteOwnReport": {
+    "description": "Warning message when user tries to vote on their own report"
+  },
+  "report_notInYourArea": "Not in your area",
+  "@report_notInYourArea": {
+    "description": "Warning message when report is not in user's area"
   }
 }

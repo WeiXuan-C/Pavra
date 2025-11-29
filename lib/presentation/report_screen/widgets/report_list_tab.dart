@@ -830,7 +830,7 @@ class _ReportListTabState extends State<ReportListTab> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Not in your area',
+                              AppLocalizations.of(context).report_notInYourArea,
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: Colors.orange.shade800,
                                 fontWeight: FontWeight.w600,

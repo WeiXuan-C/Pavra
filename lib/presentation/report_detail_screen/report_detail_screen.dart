@@ -1523,7 +1523,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 SizedBox(width: 3.w),
                 Expanded(
                   child: Text(
-                    'You cannot vote on your own report',
+                    AppLocalizations.of(context).report_cannotVoteOwnReport,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: Colors.blue[800],
                       fontSize: 14,

@@ -5299,6 +5299,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Discarded'**
   String get filter_discarded;
+
+  /// Warning message when user tries to vote on their own report
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot vote on your own report'**
+  String get report_cannotVoteOwnReport;
+
+  /// Warning message when report is not in user's area
+  ///
+  /// In en, this message translates to:
+  /// **'Not in your area'**
+  String get report_notInYourArea;
 }
 
 class _AppLocalizationsDelegate
