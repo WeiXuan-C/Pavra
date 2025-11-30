@@ -14,6 +14,7 @@ class DetectionModel {
   final DateTime createdAt;
   final double? latitude;
   final double? longitude;
+  final String? localImagePath; // Local path to the captured photo
 
   DetectionModel({
     required this.id,
@@ -27,6 +28,7 @@ class DetectionModel {
     required this.createdAt,
     this.latitude,
     this.longitude,
+    this.localImagePath,
   });
 
   /// Create DetectionModel from JSON response
@@ -43,6 +45,7 @@ class DetectionModel {
       createdAt: DateTime.parse(json['created_at'] as String),
       latitude: json['latitude'] as double?,
       longitude: json['longitude'] as double?,
+      localImagePath: json['local_image_path'] as String?,
     );
   }
 
@@ -60,6 +63,7 @@ class DetectionModel {
       'created_at': createdAt.toIso8601String(),
       'latitude': latitude,
       'longitude': longitude,
+      'local_image_path': localImagePath,
     };
   }
 
@@ -76,6 +80,7 @@ class DetectionModel {
     DateTime? createdAt,
     double? latitude,
     double? longitude,
+    String? localImagePath,
   }) {
     return DetectionModel(
       id: id ?? this.id,
@@ -89,6 +94,7 @@ class DetectionModel {
       createdAt: createdAt ?? this.createdAt,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      localImagePath: localImagePath ?? this.localImagePath,
     );
   }
 
@@ -121,7 +127,8 @@ class DetectionModel {
         other.imageUrl == imageUrl &&
         other.createdAt == createdAt &&
         other.latitude == latitude &&
-        other.longitude == longitude;
+        other.longitude == longitude &&
+        other.localImagePath == localImagePath;
   }
 
   @override
@@ -138,6 +145,7 @@ class DetectionModel {
       createdAt,
       latitude,
       longitude,
+      localImagePath,
     );
   }
 }

@@ -58,45 +58,15 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
   @override
   void initState() {
     super.initState();
-    // Get location when screen loads (unless provided from AI detection)
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadArgumentsAndInitialize();
-    });
-  }
-
-  /// Load arguments from navigation and initialize
-  Future<void> _loadArgumentsAndInitialize() async {
-    // Get arguments passed from camera detection screen
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    
-    if (args != null && args['fromAiDetection'] == true) {
-      // Load AI detection data
-      final detectionData = args['detectionData'] as DetectionModel?;
-      final latitude = args['latitude'] as double?;
-      final longitude = args['longitude'] as double?;
-      final capturedPhoto = args['capturedPhoto'] as XFile?;
-      final imageUrl = args['imageUrl'] as String?;
-      
-      if (detectionData != null) {
-        await _loadAiDetectionData(
-          detectionData, 
-          latitude, 
-          longitude, 
-          capturedPhoto: capturedPhoto,
-          imageUrl: imageUrl,
-        );
-      }
-    } else {
-      // Normal flow: get current location
-      await _getCurrentLocation();
-    }
+    // Note: AI detection data loading is handled in build method after provider is created
   }
 
   /// Load AI detection data into form
   Future<void> _loadAiDetectionData(
     DetectionModel detection,
     double? latitude,
-    double? longitude, {
+    double? longitude,
+    ManualReportProvider provider, {
     XFile? capturedPhoto,
     String? imageUrl,
   }) async {
@@ -112,8 +82,6 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
       _descriptionController.text = detection.description;
       _severity = detection.severity.toDouble();
     });
-    
-    final provider = context.read<ManualReportProvider>();
     
     // Upload captured photo if available (from live camera detection)
     if (capturedPhoto != null && mounted) {
@@ -1275,6 +1243,43 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
                   );
                 }
 
+                // Load AI detection data first (only once, before draft)
+                if (!_isDraftLoaded) {
+                  final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+                  if (args != null && args['fromAiDetection'] == true) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) async {
+                      final detectionData = args['detectionData'] as DetectionModel?;
+                      final latitude = args['latitude'] as double?;
+                      final longitude = args['longitude'] as double?;
+                      final capturedPhoto = args['capturedPhoto'] as XFile?;
+                      final imageUrl = args['imageUrl'] as String?;
+                      
+                      if (detectionData != null) {
+                        await _loadAiDetectionData(
+                          detectionData, 
+                          latitude, 
+                          longitude,
+                          provider,
+                          capturedPhoto: capturedPhoto,
+                          imageUrl: imageUrl,
+                        );
+                      }
+                      
+                      setState(() {
+                        _isDraftLoaded = true;
+                      });
+                    });
+                  } else {
+                    // Normal flow: get current location
+                    WidgetsBinding.instance.addPostFrameCallback((_) async {
+                      await _getCurrentLocation();
+                      setState(() {
+                        _isDraftLoaded = true;
+                      });
+                    });
+                  }
+                }
+                
                 // Load draft data into form fields (only once)
                 if (!_isDraftLoaded && provider.draftReport != null) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {

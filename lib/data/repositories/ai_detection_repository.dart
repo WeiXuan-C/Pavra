@@ -34,7 +34,7 @@ class AiDetectionRepository {
   /// 1. Compresses the image to <150KB
   /// 2. Converts to Base64
   /// 3. Calls the detection API
-  /// 4. Returns the DetectionModel result
+  /// 4. Returns the DetectionModel result with local image path
   ///
   /// Parameters:
   /// - [image]: Camera image file (XFile from camera plugin)
@@ -56,6 +56,13 @@ class AiDetectionRepository {
     try {
       developer.log(
         'Starting detection from camera: userId=$userId, lat=$latitude, lng=$longitude',
+        name: 'AiDetectionRepository',
+      );
+
+      // Save the local image path for later use
+      final localImagePath = image.path;
+      developer.log(
+        'Local image path: $localImagePath',
         name: 'AiDetectionRepository',
       );
 
@@ -109,7 +116,12 @@ class AiDetectionRepository {
         name: 'AiDetectionRepository',
       );
 
-      return detection;
+      // Add local image path to detection model
+      final detectionWithPath = detection.copyWith(
+        localImagePath: localImagePath,
+      );
+
+      return detectionWithPath;
     } on DetectionException {
       // Re-throw DetectionException as-is
       rethrow;

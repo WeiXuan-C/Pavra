@@ -244,9 +244,7 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
     try {
       // Capture photo
       final XFile photo = await _cameraController!.takePicture();
-      
-      // Store the photo for potential report submission
-      _lastCapturedPhoto = photo;
+      debugPrint('Photo captured: ${photo.path}');
 
       if (!mounted) return;
 
@@ -480,6 +478,14 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
   void _onDetectionTap(DetectionModel detection) {
     // Navigate directly to manual report screen with detection data
     // This allows users to submit a report from detection history
+    
+    // Create XFile from local image path if available
+    XFile? photoFile;
+    if (detection.localImagePath != null && detection.localImagePath!.isNotEmpty) {
+      photoFile = XFile(detection.localImagePath!);
+      debugPrint('Using local image path from detection: ${detection.localImagePath}');
+    }
+    
     Navigator.pushNamed(
       context,
       '/manual-report-screen',
@@ -489,6 +495,7 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
         'longitude': detection.longitude,
         'fromAiDetection': true,
         'imageUrl': detection.imageUrl, // Pass the stored image URL
+        'capturedPhoto': photoFile, // Pass the photo file if available
       },
     );
   }
@@ -499,11 +506,22 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
     });
   }
 
-  // Store the last captured photo for report submission
-  XFile? _lastCapturedPhoto;
-
   void _submitReportFromAlert() {
     if (_currentAlert == null) return;
+
+    debugPrint('=== Submitting report from alert ===');
+    debugPrint('Current alert ID: ${_currentAlert!.id}');
+    debugPrint('Has local image path: ${_currentAlert!.localImagePath != null}');
+    if (_currentAlert!.localImagePath != null) {
+      debugPrint('Local image path: ${_currentAlert!.localImagePath}');
+    }
+
+    // Create XFile from local image path if available
+    XFile? photoFile;
+    if (_currentAlert!.localImagePath != null && _currentAlert!.localImagePath!.isNotEmpty) {
+      photoFile = XFile(_currentAlert!.localImagePath!);
+      debugPrint('Created XFile from local path');
+    }
 
     // Navigate to manual report screen with detection data
     Navigator.pushNamed(
@@ -514,7 +532,7 @@ class _CameraDetectionScreenState extends State<CameraDetectionScreen>
         'latitude': _latitude,
         'longitude': _longitude,
         'fromAiDetection': true,
-        'capturedPhoto': _lastCapturedPhoto, // Pass the photo file
+        'capturedPhoto': photoFile, // Pass the photo file
       },
     ).then((_) {
       // Dismiss the alert after returning from manual report screen
