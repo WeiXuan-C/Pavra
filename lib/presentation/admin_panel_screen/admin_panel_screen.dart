@@ -3,6 +3,7 @@ import 'package:sizer/sizer.dart';
 import '../../data/models/report_issue_model.dart';
 import '../../core/supabase/supabase_client.dart';
 import '../layouts/header_layout.dart';
+import '../../l10n/app_localizations.dart';
 
 class AdminPanelScreen extends StatefulWidget {
   static const String routeName = '/admin';
@@ -78,13 +79,14 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
           _errorMessage = e.toString();
         });
         
+        final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error loading data: $e'),
+            content: Text('${l10n.common_error}: $e'),
             backgroundColor: Colors.red,
             duration: Duration(seconds: 5),
             action: SnackBarAction(
-              label: 'Retry',
+              label: l10n.common_retry,
               textColor: Colors.white,
               onPressed: _loadData,
             ),
@@ -97,15 +99,16 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     
     return Scaffold(
       appBar: HeaderLayout(
-        title: 'Admin Dashboard',
+        title: 'Admin Dashboard', // TODO: Add translation
         actions: [
           IconButton(
             icon: Icon(Icons.refresh),
             onPressed: _loadData,
-            tooltip: 'Refresh',
+            tooltip: l10n.map_refresh,
           ),
         ],
       ),
@@ -121,15 +124,15 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
               tabs: [
                 Tab(
                   icon: Icon(Icons.dashboard),
-                  text: 'Overview',
+                  text: 'Overview', // TODO: Add translation
                 ),
                 Tab(
                   icon: Icon(Icons.report),
-                  text: 'Reports (${_reports.length})',
+                  text: '${l10n.admin_reports} (${_reports.length})',
                 ),
                 Tab(
                   icon: Icon(Icons.people),
-                  text: 'Users (${_users.length})',
+                  text: '${l10n.admin_users} (${_users.length})',
                 ),
               ],
             ),
@@ -142,7 +145,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                       children: [
                         CircularProgressIndicator(),
                         SizedBox(height: 2.h),
-                        Text('Loading admin data...'),
+                        Text(l10n.common_loading),
                       ],
                     ),
                   )
@@ -175,7 +178,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                               ElevatedButton.icon(
                                 onPressed: _loadData,
                                 icon: Icon(Icons.refresh),
-                                label: Text('Retry'),
+                                label: Text(l10n.common_retry),
                               ),
                             ],
                           ),
@@ -205,7 +208,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
     final criticalReports = _reports.where((r) => r.severity == 'critical').length;
     final highReports = _reports.where((r) => r.severity == 'high').length;
     
-    final adminUsers = _users.where((u) => u['role'] == 'admin').length;
+    final adminUsers = _users.where((u) => u['role'] == 'developer' || u['role'] == 'authority').length;
     final regularUsers = _users.where((u) => u['role'] == 'user').length;
 
     return RefreshIndicator(
@@ -643,7 +646,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
               itemCount: _users.length,
               itemBuilder: (context, index) {
                 final user = _users[index];
-                final isAdmin = user['role'] == 'admin';
+                final isAdmin = user['role'] == 'developer' || user['role'] == 'authority';
                 
                 return Card(
                   margin: EdgeInsets.only(bottom: 2.h),
@@ -961,29 +964,6 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                 ),
               ),
             ),
-            
-            // Actions
-            Container(
-              padding: EdgeInsets.all(4.w),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 8,
-                    offset: Offset(0, -2),
-                  ),
-                ],
-              ),
-              child: ElevatedButton.icon(
-                onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.close, size: 18),
-                label: Text('Close'),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 1.8.h),
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -1015,6 +995,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
   }
 
   void _showUserDetails(Map<String, dynamic> user) {
+    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -1026,13 +1007,15 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
             _buildDetailRow('Username', user['username'] ?? 'Unknown'),
             _buildDetailRow('Email', user['email'] ?? 'No email'),
             _buildDetailRow('Role', user['role'] ?? 'user'),
-            _buildDetailRow('Created', _formatDate(DateTime.parse(user['created_at']))),
+            _buildDetailRow('Reports Count', (user['reports_count'] ?? 0).toString()),
+            _buildDetailRow('Reputation Score', (user['reputation_score'] ?? 0).toString()),
+            _buildDetailRow('Last Updated', _formatDate(DateTime.parse(user['updated_at']))),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Close'),
+            child: Text(l10n.common_close),
           ),
         ],
       ),
@@ -1040,6 +1023,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
   }
 
   Future<void> _deleteReport(String reportId) async {
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -1048,14 +1032,14 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancel'),
+            child: Text(l10n.common_cancel),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
             ),
-            child: Text('Delete'),
+            child: Text(l10n.common_delete),
           ),
         ],
       ),

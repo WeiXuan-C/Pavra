@@ -10,7 +10,6 @@ import '../notification_screen/notification_screen.dart';
 import '../notification_screen/notification_provider.dart';
 import '../profile_screen/profile_screen.dart';
 import '../admin_panel_screen/admin_panel_screen.dart';
-import '../analytics_dashboard_screen/analytics_dashboard_screen.dart';
 
 /// Main Layout
 /// Provides centralized navigation bar for all main app screens
@@ -31,7 +30,7 @@ class _MainLayoutState extends State<MainLayout> {
   // Report screen filter type: 0 = Home, 1 = My Reports, 2 = All Reports
   int _reportFilterType = 0;
 
-  // Profile screen type: 0 = Profile, 1 = Admin, 2 = Analytics
+  // Profile screen type: 0 = Profile, 1 = Admin
   int _profileScreenType = 0;
 
   // List of main screens
@@ -46,8 +45,6 @@ class _MainLayoutState extends State<MainLayout> {
     switch (_profileScreenType) {
       case 1:
         return const AdminPanelScreen();
-      case 2:
-        return const AnalyticsDashboardScreen();
       default:
         return const ProfileScreen();
     }
@@ -165,17 +162,6 @@ class _MainLayoutState extends State<MainLayout> {
               onTap: () {
                 Navigator.pop(context);
                 setState(() => _profileScreenType = 1);
-              },
-            ),
-            Divider(height: 1),
-            _buildFilterOption(
-              icon: Icons.analytics,
-              title: 'Analytics Dashboard',
-              subtitle: 'View statistics and insights',
-              isSelected: _profileScreenType == 2,
-              onTap: () {
-                Navigator.pop(context);
-                setState(() => _profileScreenType = 2);
               },
             ),
             SizedBox(height: 2.h),
