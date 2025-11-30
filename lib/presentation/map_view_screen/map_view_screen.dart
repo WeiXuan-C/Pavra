@@ -1566,8 +1566,9 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Main search bar with action buttons
+                          // Main search bar with action buttons - fixed height row
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // Search bar
                               Expanded(
@@ -1581,128 +1582,66 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                               ),
                               SizedBox(width: 2.w),
                               
-                              // Voice search button
-                              Material(
-                                elevation: 4,
-                                shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(12),
-                                child: InkWell(
-                                  onTap: _activateVoiceSearch,
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Container(
-                                    padding: EdgeInsets.all(3.w),
-                                    decoration: BoxDecoration(
-                                      color: theme.cardColor,
+                              // Fixed height container for buttons
+                              Column(
+                                children: [
+                                  // Voice search button
+                                  Material(
+                                    elevation: 4,
+                                    shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.15),
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: InkWell(
+                                      onTap: _activateVoiceSearch,
                                       borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Icon(
-                                      Icons.mic,
-                                      color: theme.colorScheme.primary,
-                                      size: 24,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 2.w),
-                              
-                              // Filter button with badge
-                              Material(
-                                elevation: 4,
-                                shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(12),
-                                child: InkWell(
-                                  onTap: _showFilterBottomSheet,
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Container(
-                                    padding: EdgeInsets.all(3.w),
-                                    decoration: BoxDecoration(
-                                      color: _getActiveFilterCount() > 0
-                                          ? theme.colorScheme.primary.withValues(alpha: 0.1)
-                                          : theme.cardColor,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: _getActiveFilterCount() > 0
-                                          ? Border.all(
-                                              color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                                              width: 1.5,
-                                            )
-                                          : null,
-                                    ),
-                                    child: Stack(
-                                      clipBehavior: Clip.none,
-                                      children: [
-                                        CustomIconWidget(
-                                          iconName: 'tune',
+                                      child: Container(
+                                        padding: EdgeInsets.all(3.w),
+                                        decoration: BoxDecoration(
+                                          color: theme.cardColor,
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: Icon(
+                                          Icons.mic,
                                           color: theme.colorScheme.primary,
                                           size: 24,
                                         ),
-                                        if (_getActiveFilterCount() > 0)
-                                          Positioned(
-                                            right: -6,
-                                            top: -6,
-                                            child: Container(
-                                              padding: EdgeInsets.all(4),
-                                              decoration: BoxDecoration(
-                                                color: theme.colorScheme.error,
-                                                shape: BoxShape.circle,
-                                                border: Border.all(
-                                                  color: theme.cardColor,
-                                                  width: 1.5,
-                                                ),
-                                              ),
-                                              constraints: BoxConstraints(
-                                                minWidth: 18,
-                                                minHeight: 18,
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  '${_getActiveFilterCount()}',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 10,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              SizedBox(width: 2.w),
-                              
-                              // More menu button
-                              Material(
-                                elevation: 4,
-                                shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(12),
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _isControlsExpanded = !_isControlsExpanded;
-                                    });
-                                  },
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Container(
-                                    padding: EdgeInsets.all(3.w),
-                                    decoration: BoxDecoration(
-                                      color: _isControlsExpanded 
-                                          ? theme.colorScheme.primary 
-                                          : theme.cardColor,
+                                  SizedBox(height: 2.w),
+                                  
+                                  // More menu button
+                                  Material(
+                                    elevation: 4,
+                                    shadowColor: theme.colorScheme.shadow.withValues(alpha: 0.15),
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          _isControlsExpanded = !_isControlsExpanded;
+                                        });
+                                      },
                                       borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Icon(
-                                      _isControlsExpanded 
-                                          ? Icons.close 
-                                          : Icons.more_vert,
-                                      color: _isControlsExpanded 
-                                          ? Colors.white 
-                                          : theme.colorScheme.primary,
-                                      size: 24,
+                                      child: Container(
+                                        padding: EdgeInsets.all(3.w),
+                                        decoration: BoxDecoration(
+                                          color: _isControlsExpanded 
+                                              ? theme.colorScheme.primary 
+                                              : theme.cardColor,
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: Icon(
+                                          _isControlsExpanded 
+                                              ? Icons.close 
+                                              : Icons.more_vert,
+                                          color: _isControlsExpanded 
+                                              ? Colors.white 
+                                              : theme.colorScheme.primary,
+                                          size: 24,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
@@ -1742,6 +1681,83 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                                         // Action buttons grid
                                         Row(
                                           children: [
+                                            // Filter button
+                                            Expanded(
+                                              child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _isControlsExpanded = false;
+                                                  });
+                                                  _showFilterBottomSheet();
+                                                },
+                                                borderRadius: BorderRadius.circular(12),
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(vertical: 2.h),
+                                                  decoration: BoxDecoration(
+                                                    color: _getActiveFilterCount() > 0
+                                                        ? theme.colorScheme.primary.withValues(alpha: 0.15)
+                                                        : theme.colorScheme.primary.withValues(alpha: 0.1),
+                                                    borderRadius: BorderRadius.circular(12),
+                                                    border: Border.all(
+                                                      color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                                                    ),
+                                                  ),
+                                                  child: Column(
+                                                    children: [
+                                                      Stack(
+                                                        clipBehavior: Clip.none,
+                                                        children: [
+                                                          CustomIconWidget(
+                                                            iconName: 'tune',
+                                                            color: theme.colorScheme.primary,
+                                                            size: 28,
+                                                          ),
+                                                          if (_getActiveFilterCount() > 0)
+                                                            Positioned(
+                                                              right: -8,
+                                                              top: -8,
+                                                              child: Container(
+                                                                padding: EdgeInsets.all(4),
+                                                                decoration: BoxDecoration(
+                                                                  color: theme.colorScheme.error,
+                                                                  shape: BoxShape.circle,
+                                                                  border: Border.all(
+                                                                    color: theme.cardColor,
+                                                                    width: 1.5,
+                                                                  ),
+                                                                ),
+                                                                constraints: BoxConstraints(
+                                                                  minWidth: 18,
+                                                                  minHeight: 18,
+                                                                ),
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    '${_getActiveFilterCount()}',
+                                                                    style: TextStyle(
+                                                                      color: Colors.white,
+                                                                      fontSize: 10,
+                                                                      fontWeight: FontWeight.bold,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 0.5.h),
+                                                      Text(
+                                                        'Filter',
+                                                        style: theme.textTheme.bodySmall?.copyWith(
+                                                          color: theme.colorScheme.primary,
+                                                          fontWeight: FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 2.w),
                                             // Plan Route button
                                             Expanded(
                                               child: InkWell(
