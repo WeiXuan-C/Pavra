@@ -146,7 +146,7 @@ class _MainLayoutState extends State<MainLayout> {
             _buildFilterOption(
               icon: Icons.person_outline,
               title: l10n.nav_profile,
-              subtitle: 'View your profile and settings',
+              subtitle: l10n.profile_viewProfileSettings,
               isSelected: _profileScreenType == 0,
               onTap: () {
                 Navigator.pop(context);
@@ -156,8 +156,8 @@ class _MainLayoutState extends State<MainLayout> {
             Divider(height: 1),
             _buildFilterOption(
               icon: Icons.admin_panel_settings,
-              title: 'Admin Dashboard',
-              subtitle: 'Manage reports and users',
+              title: l10n.profile_adminDashboard,
+              subtitle: l10n.profile_manageReportsUsers,
               isSelected: _profileScreenType == 1,
               onTap: () {
                 Navigator.pop(context);

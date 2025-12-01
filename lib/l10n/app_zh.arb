@@ -4116,5 +4116,740 @@
   "about_madeWith": "用 ❤️ 为更安全的道路而制作",
   "@about_madeWith": {
     "description": "用爱制作文本"
+  },
+  "map_filter": "筛选",
+  "@map_filter": {
+    "description": "筛选按钮文本"
+  },
+  "map_voiceSearch": "语音搜索",
+  "@map_voiceSearch": {
+    "description": "语音搜索按钮提示"
+  },
+  "map_listening": "正在聆听...",
+  "@map_listening": {
+    "description": "语音搜索聆听状态"
+  },
+  "map_edit": "编辑",
+  "@map_edit": {
+    "description": "编辑按钮文本"
+  },
+  "map_navigate": "导航",
+  "@map_navigate": {
+    "description": "导航按钮文本"
+  },
+  "map_planRouteWithStops": "规划多站点路线",
+  "@map_planRouteWithStops": {
+    "description": "规划多站点路线按钮"
+  },
+  "map_currentLocationNotAvailable": "当前位置不可用",
+  "@map_currentLocationNotAvailable": {
+    "description": "当前位置不可用消息"
+  },
+  "map_homeLocationNotSet": "未设置家庭位置",
+  "@map_homeLocationNotSet": {
+    "description": "未设置家庭位置消息"
+  },
+  "map_workLocationNotSet": "未设置工作位置",
+  "@map_workLocationNotSet": {
+    "description": "未设置工作位置消息"
+  },
+  "map_navigatingToHome": "正在导航到家",
+  "@map_navigatingToHome": {
+    "description": "正在导航到家消息"
+  },
+  "map_homeLocationNotSetLong": "未设置家庭位置。请先保存一个家庭位置。",
+  "@map_homeLocationNotSetLong": {
+    "description": "未设置家庭位置长消息"
+  },
+  "map_setHome": "设置家",
+  "@map_setHome": {
+    "description": "设置家按钮文本"
+  },
+  "map_navigatingToWork": "正在导航到工作地点",
+  "@map_navigatingToWork": {
+    "description": "正在导航到工作地点消息"
+  },
+  "map_workLocationNotSetLong": "未设置工作位置。请先保存一个工作位置。",
+  "@map_workLocationNotSetLong": {
+    "description": "未设置工作位置长消息"
+  },
+  "map_setWork": "设置工作地点",
+  "@map_setWork": {
+    "description": "设置工作地点按钮文本"
+  },
+  "map_pleaseSpecifyLocation": "请指定要导航到的位置",
+  "@map_pleaseSpecifyLocation": {
+    "description": "请指定位置消息"
+  },
+  "map_navigationStopped": "导航已停止",
+  "@map_navigationStopped": {
+    "description": "导航已停止消息"
+  },
+  "map_noActiveNavigation": "没有活动的导航可停止",
+  "@map_noActiveNavigation": {
+    "description": "没有活动导航消息"
+  },
+  "map_locationNotFound": "未找到位置\"{query}\"",
+  "@map_locationNotFound": {
+    "description": "未找到位置消息",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "map_couldNotFindLocation": "无法找到位置\"{query}\"",
+  "@map_couldNotFindLocation": {
+    "description": "无法找到位置消息",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "map_whatWouldYouLikeToDo": "您想做什么？",
+  "@map_whatWouldYouLikeToDo": {
+    "description": "语音搜索操作对话框标题"
+  },
+  "map_iHeard": "我听到：\"{text}\"",
+  "@map_iHeard": {
+    "description": "语音识别结果",
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "map_pleaseChooseAction": "请选择一个操作：",
+  "@map_pleaseChooseAction": {
+    "description": "选择操作提示"
+  },
+  "map_searchForLocation": "搜索此位置",
+  "@map_searchForLocation": {
+    "description": "搜索位置按钮"
+  },
+  "map_navigateToLocation": "导航到此位置",
+  "@map_navigateToLocation": {
+    "description": "导航到位置按钮"
+  },
+  "map_cancel": "取消",
+  "@map_cancel": {
+    "description": "取消按钮"
+  },
+  "map_microphonePermissionRequired": "语音搜索需要麦克风权限",
+  "@map_microphonePermissionRequired": {
+    "description": "需要麦克风权限消息"
+  },
+  "map_voiceSearchNotAvailable": "此设备不支持语音搜索",
+  "@map_voiceSearchNotAvailable": {
+    "description": "语音搜索不可用消息"
+  },
+  "map_clear": "清除",
+  "@map_clear": {
+    "description": "清除按钮文本"
+  },
+  "accessibility_voiceSearchError": "语音搜索错误",
+  "@accessibility_voiceSearchError": {
+    "description": "语音搜索错误消息"
+  },
+  "accessibility_listening": "正在聆听...",
+  "@accessibility_listening": {
+    "description": "语音搜索聆听指示器"
+  },
+  "map_roadIssue": "道路问题",
+  "@map_roadIssue": {
+    "description": "默认道路问题标题"
+  },
+  "map_locationCoordinates": "位置：{coordinates}",
+  "@map_locationCoordinates": {
+    "description": "位置坐标标签",
+    "placeholders": {
+      "coordinates": {
+        "type": "String"
+      }
+    }
+  },
+  "map_filter": "筛选",
+  "@map_filter": {
+    "description": "筛选按钮标签"
+  },
+  "map_refresh": "刷新",
+  "@map_refresh": {
+    "description": "刷新按钮标签"
+  },
+  "map_home": "家",
+  "@map_home": {
+    "description": "家庭位置标签"
+  },
+  "map_work": "工作",
+  "@map_work": {
+    "description": "工作位置标签"
+  },
+  "map_roadIssueNearby": "附近有 {count} 个道路问题",
+  "@map_roadIssueNearby": {
+    "description": "附近道路问题数量",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "navigation_destination": "目的地",
+  "@navigation_destination": {
+    "description": "目的地标签"
+  },
+  "navigation_chooseTravelMode": "选择您的出行方式",
+  "@navigation_chooseTravelMode": {
+    "description": "选择出行方式提示"
+  },
+  "navigation_drive": "驾车",
+  "@navigation_drive": {
+    "description": "驾车出行方式"
+  },
+  "navigation_walk": "步行",
+  "@navigation_walk": {
+    "description": "步行出行方式"
+  },
+  "navigation_findingBestRoute": "正在寻找最佳路线...",
+  "@navigation_findingBestRoute": {
+    "description": "寻找路线加载消息"
+  },
+  "navigation_noRouteAvailable": "{mode}没有可用路线。请尝试其他方式。",
+  "@navigation_noRouteAvailable": {
+    "description": "没有可用路线错误",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "navigation_retry": "重试",
+  "@navigation_retry": {
+    "description": "重试按钮"
+  },
+  "navigation_startNavigation": "开始导航",
+  "@navigation_startNavigation": {
+    "description": "开始导航按钮"
+  },
+  "navigation_viewSteps": "查看 {count} 个步骤",
+  "@navigation_viewSteps": {
+    "description": "查看步骤按钮",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "navigation_firstSteps": "前几步：",
+  "@navigation_firstSteps": {
+    "description": "前几步标签"
+  },
+  "navigation_travelTime": "行程时间",
+  "@navigation_travelTime": {
+    "description": "行程时间标签"
+  },
+  "navigation_distance": "距离",
+  "@navigation_distance": {
+    "description": "距离标签"
+  },
+  "navigation_arriveBy": "预计 {time} 到达",
+  "@navigation_arriveBy": {
+    "description": "预计到达时间",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "navigation_turnByTurnDirections": "逐向导航",
+  "@navigation_turnByTurnDirections": {
+    "description": "逐向导航标题"
+  },
+  "map_nearbyIssuesRadius": "附近问题（{radius}英里半径）",
+  "@map_nearbyIssuesRadius": {
+    "description": "带半径指示器的附近问题",
+    "placeholders": {
+      "radius": {
+        "type": "String"
+      }
+    }
+  },
+  "map_miRadius": "{radius} 英里半径",
+  "@map_miRadius": {
+    "description": "英里半径标签",
+    "placeholders": {
+      "radius": {
+        "type": "String"
+      }
+    }
+  },
+  "profile_viewProfileSettings": "查看您的个人资料和设置",
+  "@profile_viewProfileSettings": {
+    "description": "主布局下拉菜单描述"
+  },
+  "profile_adminDashboard": "管理员仪表板",
+  "@profile_adminDashboard": {
+    "description": "管理员仪表板菜单项"
+  },
+  "profile_manageReportsUsers": "管理报告和用户",
+  "@profile_manageReportsUsers": {
+    "description": "管理员仪表板描述"
+  },
+  "profile_adminDashboardFull": "完整管理员仪表板",
+  "@profile_adminDashboardFull": {
+    "description": "完整管理员仪表板引用"
+  },
+  "admin_dashboard": "管理员仪表板",
+  "@admin_dashboard": {
+    "description": "管理员仪表板屏幕标题"
+  },
+  "admin_overview": "概览",
+  "@admin_overview": {
+    "description": "概览标签"
+  },
+  "admin_reports": "报告",
+  "@admin_reports": {
+    "description": "报告标签"
+  },
+  "admin_users": "用户",
+  "@admin_users": {
+    "description": "用户标签"
+  },
+  "admin_quickStatistics": "快速统计",
+  "@admin_quickStatistics": {
+    "description": "快速统计部分标题"
+  },
+  "admin_totalReports": "总报告数",
+  "@admin_totalReports": {
+    "description": "总报告数指标标签"
+  },
+  "admin_totalUsers": "总用户数",
+  "@admin_totalUsers": {
+    "description": "总用户数指标标签"
+  },
+  "admin_reportStatus": "报告状态",
+  "@admin_reportStatus": {
+    "description": "报告状态部分标题"
+  },
+  "admin_draft": "草稿",
+  "@admin_draft": {
+    "description": "草稿状态标签"
+  },
+  "admin_submitted": "已提交",
+  "@admin_submitted": {
+    "description": "已提交状态标签"
+  },
+  "admin_reportSeverity": "报告严重程度",
+  "@admin_reportSeverity": {
+    "description": "报告严重程度部分标题"
+  },
+  "admin_critical": "严重",
+  "@admin_critical": {
+    "description": "严重程度标签"
+  },
+  "admin_high": "高",
+  "@admin_high": {
+    "description": "高严重程度标签"
+  },
+  "admin_userRoles": "用户角色",
+  "@admin_userRoles": {
+    "description": "用户角色部分标题"
+  },
+  "admin_admins": "管理员",
+  "@admin_admins": {
+    "description": "管理员标签"
+  },
+  "admin_regularUsers": "普通用户",
+  "@admin_regularUsers": {
+    "description": "普通用户标签"
+  },
+  "admin_searchReports": "搜索报告...",
+  "@admin_searchReports": {
+    "description": "搜索报告占位符"
+  },
+  "admin_all": "全部",
+  "@admin_all": {
+    "description": "全部筛选标签"
+  },
+  "admin_noReportsFound": "未找到报告",
+  "@admin_noReportsFound": {
+    "description": "未找到报告消息"
+  },
+  "admin_noReportsYet": "暂无报告",
+  "@admin_noReportsYet": {
+    "description": "暂无报告消息"
+  },
+  "admin_tryDifferentSearch": "尝试不同的搜索词",
+  "@admin_tryDifferentSearch": {
+    "description": "尝试不同搜索提示"
+  },
+  "admin_untitledReport": "无标题报告",
+  "@admin_untitledReport": {
+    "description": "无标题报告标签"
+  },
+  "admin_delete": "删除",
+  "@admin_delete": {
+    "description": "删除操作标签"
+  },
+  "admin_noUsersFound": "未找到用户",
+  "@admin_noUsersFound": {
+    "description": "未找到用户消息"
+  },
+  "admin_unknownUser": "未知用户",
+  "@admin_unknownUser": {
+    "description": "未知用户标签"
+  },
+  "admin_noEmail": "无邮箱",
+  "@admin_noEmail": {
+    "description": "无邮箱标签"
+  },
+  "admin_lastUpdated": "最后更新：{date}",
+  "@admin_lastUpdated": {
+    "description": "最后更新标签及日期",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "admin_reportDetails": "报告详情",
+  "@admin_reportDetails": {
+    "description": "报告详情对话框标题"
+  },
+  "admin_untitled": "无标题",
+  "@admin_untitled": {
+    "description": "无标题标签"
+  },
+  "admin_description": "描述",
+  "@admin_description": {
+    "description": "描述标签"
+  },
+  "admin_details": "详情",
+  "@admin_details": {
+    "description": "详情标签"
+  },
+  "admin_status": "状态",
+  "@admin_status": {
+    "description": "状态标签"
+  },
+  "admin_severity": "严重程度",
+  "@admin_severity": {
+    "description": "严重程度标签"
+  },
+  "admin_createdBy": "创建者",
+  "@admin_createdBy": {
+    "description": "创建者标签"
+  },
+  "admin_unknown": "未知",
+  "@admin_unknown": {
+    "description": "未知标签"
+  },
+  "admin_created": "创建时间",
+  "@admin_created": {
+    "description": "创建时间标签"
+  },
+  "admin_location": "位置",
+  "@admin_location": {
+    "description": "位置标签"
+  },
+  "admin_latitude": "纬度",
+  "@admin_latitude": {
+    "description": "纬度标签"
+  },
+  "admin_longitude": "经度",
+  "@admin_longitude": {
+    "description": "经度标签"
+  },
+  "admin_userDetails": "用户详情",
+  "@admin_userDetails": {
+    "description": "用户详情对话框标题"
+  },
+  "admin_username": "用户名",
+  "@admin_username": {
+    "description": "用户名标签"
+  },
+  "admin_email": "邮箱",
+  "@admin_email": {
+    "description": "邮箱标签"
+  },
+  "admin_role": "角色",
+  "@admin_role": {
+    "description": "角色标签"
+  },
+  "admin_reportsCount": "报告数量",
+  "@admin_reportsCount": {
+    "description": "报告数量标签"
+  },
+  "admin_reputationScore": "声誉分数",
+  "@admin_reputationScore": {
+    "description": "声誉分数标签"
+  },
+  "admin_deleteReport": "删除报告",
+  "@admin_deleteReport": {
+    "description": "删除报告对话框标题"
+  },
+  "admin_deleteReportConfirm": "您确定要删除此报告吗？此操作无法撤销。",
+  "@admin_deleteReportConfirm": {
+    "description": "删除报告确认消息"
+  },
+  "admin_reportDeletedSuccess": "报告删除成功",
+  "@admin_reportDeletedSuccess": {
+    "description": "报告删除成功消息"
+  },
+  "admin_reportDeleteFailed": "删除报告失败：{error}",
+  "@admin_reportDeleteFailed": {
+    "description": "报告删除失败消息",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "admin_errorLoadingData": "加载数据错误",
+  "@admin_errorLoadingData": {
+    "description": "加载数据错误标题"
+  },
+  "analytics_adminAnalytics": "管理员分析",
+  "@analytics_adminAnalytics": {
+    "description": "管理员分析屏幕标题"
+  },
+  "analytics_overview": "概览",
+  "@analytics_overview": {
+    "description": "概览标签"
+  },
+  "analytics_reports": "报告",
+  "@analytics_reports": {
+    "description": "报告标签"
+  },
+  "analytics_users": "用户",
+  "@analytics_users": {
+    "description": "用户标签"
+  },
+  "analytics_keyMetrics": "关键指标",
+  "@analytics_keyMetrics": {
+    "description": "关键指标部分标题"
+  },
+  "analytics_totalReports": "总报告数",
+  "@analytics_totalReports": {
+    "description": "总报告数指标"
+  },
+  "analytics_totalUsers": "总用户数",
+  "@analytics_totalUsers": {
+    "description": "总用户数指标"
+  },
+  "analytics_criticalIssues": "严重问题",
+  "@analytics_criticalIssues": {
+    "description": "严重问题指标"
+  },
+  "analytics_todaysReports": "今日报告",
+  "@analytics_todaysReports": {
+    "description": "今日报告指标"
+  },
+  "analytics_reportsBySeverity": "按严重程度分类的报告",
+  "@analytics_reportsBySeverity": {
+    "description": "按严重程度分类的报告图表标题"
+  },
+  "analytics_distributionSeverity": "问题严重程度级别分布",
+  "@analytics_distributionSeverity": {
+    "description": "严重程度级别分布描述"
+  },
+  "analytics_severityBreakdown": "严重程度细分",
+  "@analytics_severityBreakdown": {
+    "description": "严重程度细分图表标题"
+  },
+  "analytics_detailedCountSeverity": "按严重程度级别的详细计数",
+  "@analytics_detailedCountSeverity": {
+    "description": "按严重程度详细计数描述"
+  },
+  "analytics_reportsByIssueType": "按问题类型分类的报告",
+  "@analytics_reportsByIssueType": {
+    "description": "按问题类型分类的报告图表标题"
+  },
+  "analytics_mostCommonTypes": "最常见的问题类型及报告者",
+  "@analytics_mostCommonTypes": {
+    "description": "最常见类型描述"
+  },
+  "analytics_reportedBy": "报告者：{users}",
+  "@analytics_reportedBy": {
+    "description": "报告者标签及用户",
+    "placeholders": {
+      "users": {
+        "type": "String"
+      }
+    }
+  },
+  "analytics_reportsTrend": "报告趋势",
+  "@analytics_reportsTrend": {
+    "description": "报告趋势图表标题"
+  },
+  "analytics_activityOverTime": "随时间变化的活动",
+  "@analytics_activityOverTime": {
+    "description": "随时间变化的活动描述"
+  },
+  "analytics_7days": "7天",
+  "@analytics_7days": {
+    "description": "7天筛选标签"
+  },
+  "analytics_14days": "14天",
+  "@analytics_14days": {
+    "description": "14天筛选标签"
+  },
+  "analytics_30days": "30天",
+  "@analytics_30days": {
+    "description": "30天筛选标签"
+  },
+  "analytics_90days": "90天",
+  "@analytics_90days": {
+    "description": "90天筛选标签"
+  },
+  "analytics_statusBreakdown": "状态细分",
+  "@analytics_statusBreakdown": {
+    "description": "状态细分部分标题"
+  },
+  "analytics_searchReports": "搜索报告...",
+  "@analytics_searchReports": {
+    "description": "搜索报告占位符"
+  },
+  "analytics_all": "全部",
+  "@analytics_all": {
+    "description": "全部筛选标签"
+  },
+  "analytics_draft": "草稿",
+  "@analytics_draft": {
+    "description": "草稿筛选标签"
+  },
+  "analytics_submitted": "已提交",
+  "@analytics_submitted": {
+    "description": "已提交筛选标签"
+  },
+  "analytics_noReportsFound": "未找到报告",
+  "@analytics_noReportsFound": {
+    "description": "未找到报告消息"
+  },
+  "analytics_noReportsYet": "暂无报告",
+  "@analytics_noReportsYet": {
+    "description": "暂无报告消息"
+  },
+  "analytics_tryDifferentSearch": "尝试不同的搜索词",
+  "@analytics_tryDifferentSearch": {
+    "description": "尝试不同搜索提示"
+  },
+  "analytics_untitledReport": "无标题报告",
+  "@analytics_untitledReport": {
+    "description": "无标题报告标签"
+  },
+  "analytics_delete": "删除",
+  "@analytics_delete": {
+    "description": "删除操作标签"
+  },
+  "analytics_noUsersFound": "未找到用户",
+  "@analytics_noUsersFound": {
+    "description": "未找到用户消息"
+  },
+  "analytics_unknownUser": "未知用户",
+  "@analytics_unknownUser": {
+    "description": "未知用户标签"
+  },
+  "analytics_noEmail": "无邮箱",
+  "@analytics_noEmail": {
+    "description": "无邮箱标签"
+  },
+  "analytics_lastUpdated": "最后更新：{date}",
+  "@analytics_lastUpdated": {
+    "description": "最后更新标签",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "analytics_reportDetails": "报告详情",
+  "@analytics_reportDetails": {
+    "description": "报告详情对话框标题"
+  },
+  "analytics_untitled": "无标题",
+  "@analytics_untitled": {
+    "description": "无标题标签"
+  },
+  "analytics_description": "描述",
+  "@analytics_description": {
+    "description": "描述标签"
+  },
+  "analytics_details": "详情",
+  "@analytics_details": {
+    "description": "详情标签"
+  },
+  "analytics_status": "状态",
+  "@analytics_status": {
+    "description": "状态标签"
+  },
+  "analytics_severity": "严重程度",
+  "@analytics_severity": {
+    "description": "严重程度标签"
+  },
+  "analytics_createdBy": "创建者",
+  "@analytics_createdBy": {
+    "description": "创建者标签"
+  },
+  "analytics_unknown": "未知",
+  "@analytics_unknown": {
+    "description": "未知标签"
+  },
+  "analytics_created": "创建时间",
+  "@analytics_created": {
+    "description": "创建时间标签"
+  },
+  "analytics_location": "位置",
+  "@analytics_location": {
+    "description": "位置标签"
+  },
+  "analytics_latitude": "纬度",
+  "@analytics_latitude": {
+    "description": "纬度标签"
+  },
+  "analytics_longitude": "经度",
+  "@analytics_longitude": {
+    "description": "经度标签"
+  },
+  "analytics_close": "关闭",
+  "@analytics_close": {
+    "description": "关闭按钮标签"
+  },
+  "analytics_userDetails": "用户详情",
+  "@analytics_userDetails": {
+    "description": "用户详情对话框标题"
+  },
+  "analytics_username": "用户名",
+  "@analytics_username": {
+    "description": "用户名标签"
+  },
+  "analytics_email": "邮箱",
+  "@analytics_email": {
+    "description": "邮箱标签"
+  },
+  "analytics_role": "角色",
+  "@analytics_role": {
+    "description": "角色标签"
+  },
+  "analytics_deleteReport": "删除报告",
+  "@analytics_deleteReport": {
+    "description": "删除报告对话框标题"
+  },
+  "analytics_deleteReportConfirm": "您确定要删除此报告吗？此操作无法撤销。",
+  "@analytics_deleteReportConfirm": {
+    "description": "删除报告确认消息"
+  },
+  "analytics_reportDeletedSuccess": "报告删除成功",
+  "@analytics_reportDeletedSuccess": {
+    "description": "报告删除成功消息"
+  },
+  "analytics_reportDeleteFailed": "删除报告失败：{error}",
+  "@analytics_reportDeleteFailed": {
+    "description": "报告删除失败消息",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   }
 }

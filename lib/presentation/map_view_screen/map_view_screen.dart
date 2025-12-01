@@ -299,8 +299,8 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
               icon: _getMarkerIcon(severity),
               onTap: () => _showIssueDetails(issue),
               infoWindow: InfoWindow(
-                title: title ?? 'Road Issue',
-                snippet: address ?? 'Location: ${lat.toStringAsFixed(4)}, ${lng.toStringAsFixed(4)}',
+                title: title ?? AppLocalizations.of(context).map_roadIssue,
+                snippet: address ?? AppLocalizations.of(context).map_locationCoordinates('${lat.toStringAsFixed(4)}, ${lng.toStringAsFixed(4)}'),
               ),
             ),
           );
@@ -581,7 +581,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                       });
                     },
                     icon: Icon(Icons.edit, size: 18),
-                    label: Text('Edit'),
+                    label: Text(AppLocalizations.of(context).map_edit),
                     style: OutlinedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 1.8.h),
                     ),
@@ -601,7 +601,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                       );
                     },
                     icon: Icon(Icons.directions, size: 20),
-                    label: Text('Navigate'),
+                    label: Text(AppLocalizations.of(context).map_navigate),
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 1.8.h),
                     ),
@@ -639,7 +639,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
     if (_mapController == null || _currentPosition == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Current location not available')),
+          SnackBar(content: Text(AppLocalizations.of(context).map_currentLocationNotAvailable)),
         );
       }
       return;
@@ -825,7 +825,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
   void _navigateToHome() {
     if (_homeLocation == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Home location not set')),
+        SnackBar(content: Text(AppLocalizations.of(context).map_homeLocationNotSet)),
       );
       return;
     }
@@ -840,7 +840,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
   void _navigateToWork() {
     if (_workLocation == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Work location not set')),
+        SnackBar(content: Text(AppLocalizations.of(context).map_workLocationNotSet)),
       );
       return;
     }
@@ -862,17 +862,17 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
           _navigateToHome();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Navigating to Home'),
+              content: Text(AppLocalizations.of(context).map_navigatingToHome),
               duration: Duration(seconds: 2),
             ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Home location not set. Please save a Home location first.'),
+              content: Text(AppLocalizations.of(context).map_homeLocationNotSetLong),
               duration: Duration(seconds: 3),
               action: SnackBarAction(
-                label: 'Set Home',
+                label: AppLocalizations.of(context).map_setHome,
                 onPressed: () {
                   Navigator.pushNamed(context, '/saved-locations-screen');
                 },
@@ -888,17 +888,17 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
           _navigateToWork();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Navigating to Work'),
+              content: Text(AppLocalizations.of(context).map_navigatingToWork),
               duration: Duration(seconds: 2),
             ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Work location not set. Please save a Work location first.'),
+              content: Text(AppLocalizations.of(context).map_workLocationNotSetLong),
               duration: Duration(seconds: 3),
               action: SnackBarAction(
-                label: 'Set Work',
+                label: AppLocalizations.of(context).map_setWork,
                 onPressed: () {
                   Navigator.pushNamed(context, '/saved-locations-screen');
                 },
@@ -915,7 +915,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Please specify a location to navigate to'),
+              content: Text(AppLocalizations.of(context).map_pleaseSpecifyLocation),
               duration: Duration(seconds: 2),
             ),
           );
@@ -928,14 +928,14 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
           _endNavigation();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Navigation stopped'),
+              content: Text(AppLocalizations.of(context).map_navigationStopped),
               duration: Duration(seconds: 2),
             ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('No active navigation to stop'),
+              content: Text(AppLocalizations.of(context).map_noActiveNavigation),
               duration: Duration(seconds: 2),
             ),
           );
@@ -977,7 +977,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Location "$query" not found'),
+            content: Text(AppLocalizations.of(context).map_locationNotFound(query)),
             duration: Duration(seconds: 2),
           ),
         );
@@ -988,7 +988,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Could not find location "$query"'),
+          content: Text(AppLocalizations.of(context).map_couldNotFindLocation(query)),
           duration: Duration(seconds: 2),
         ),
       );
@@ -1054,14 +1054,14 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('What would you like to do?'),
+        title: Text(AppLocalizations.of(context).map_whatWouldYouLikeToDo),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('I heard: "$rawText"'),
+            Text(AppLocalizations.of(context).map_iHeard(rawText)),
             SizedBox(height: 16),
-            Text('Please choose an action:'),
+            Text(AppLocalizations.of(context).map_pleaseChooseAction),
           ],
         ),
         actions: [
@@ -1070,18 +1070,18 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
               Navigator.pop(context);
               _searchLocation(rawText);
             },
-            child: Text('Search for this location'),
+            child: Text(AppLocalizations.of(context).map_searchForLocation),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               _searchAndNavigate(rawText);
             },
-            child: Text('Navigate to this location'),
+            child: Text(AppLocalizations.of(context).map_navigateToLocation),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            child: Text(AppLocalizations.of(context).map_cancel),
           ),
         ],
       ),
@@ -1117,7 +1117,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Microphone permission is required for voice search'),
+            content: Text(AppLocalizations.of(context).map_microphonePermissionRequired),
             duration: Duration(seconds: 2),
           ),
         );
@@ -1131,7 +1131,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Voice search is not available on this device'),
+            content: Text(AppLocalizations.of(context).map_voiceSearchNotAvailable),
             duration: Duration(seconds: 2),
           ),
         );
@@ -1254,23 +1254,6 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
         CameraUpdate.newLatLngZoom(location, 15.0),
       );
       
-      // Add a distinctive marker for the searched location
-      setState(() {
-        _markers.removeWhere((marker) => marker.markerId.value == 'search_result');
-        _markers.add(
-          Marker(
-            markerId: MarkerId('search_result'),
-            position: location,
-            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-            infoWindow: InfoWindow(
-              title: query,
-              snippet: address ?? 'Tap for options',
-            ),
-            onTap: () => _showSearchResultActions(location, query, address),
-          ),
-        );
-      });
-      
       // Check if there are any issues near this location
       final nearbyIssues = _roadIssues.where((issue) {
         if (issue['latitude'] == null || issue['longitude'] == null) return false;
@@ -1285,7 +1268,24 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
         return distance < 0.5; // Within 0.5 miles
       }).toList();
       
-      // Show location card with directions option
+      // Add a distinctive marker for the searched location
+      setState(() {
+        _markers.removeWhere((marker) => marker.markerId.value == 'search_result');
+        _markers.add(
+          Marker(
+            markerId: MarkerId('search_result'),
+            position: location,
+            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+            infoWindow: InfoWindow(
+              title: query,
+              snippet: address ?? 'Tap for options',
+            ),
+            onTap: () => _showSearchResultActions(location, query, address, nearbyIssuesCount: nearbyIssues.length),
+          ),
+        );
+      });
+      
+      // Show location card with directions option immediately after search
       _showSearchResultActions(location, query, address, nearbyIssuesCount: nearbyIssues.length);
     }
   }
@@ -1406,7 +1406,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                     });
                   },
                   icon: Icon(Icons.close, size: 18),
-                  label: Text('Clear'),
+                  label: Text(AppLocalizations.of(context).map_clear),
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 1.8.h, horizontal: 3.w),
                   ),
@@ -1420,7 +1420,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                       _navigateToIssue(location.latitude, location.longitude, title);
                     },
                     icon: Icon(Icons.directions, size: 20),
-                    label: Text('Directions'),
+                    label: Text(AppLocalizations.of(context).map_directions),
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 1.8.h),
                     ),
@@ -1746,7 +1746,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                                                       ),
                                                       SizedBox(height: 0.5.h),
                                                       Text(
-                                                        'Filter',
+                                                        AppLocalizations.of(context).map_filter,
                                                         style: theme.textTheme.bodySmall?.copyWith(
                                                           color: theme.colorScheme.primary,
                                                           fontWeight: FontWeight.w600,
@@ -1823,7 +1823,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                                                       ),
                                                       SizedBox(height: 0.5.h),
                                                       Text(
-                                                        'Refresh',
+                                                        AppLocalizations.of(context).map_refresh,
                                                         style: theme.textTheme.bodySmall?.copyWith(
                                                           color: theme.colorScheme.primary,
                                                           fontWeight: FontWeight.w600,
@@ -1917,7 +1917,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                                                             ),
                                                             SizedBox(width: 2.w),
                                                             Text(
-                                                              'Home',
+                                                              AppLocalizations.of(context).map_home,
                                                               style: theme.textTheme.bodyMedium?.copyWith(
                                                                 color: theme.colorScheme.primary,
                                                                 fontWeight: FontWeight.w600,
@@ -1967,7 +1967,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                                                             ),
                                                             SizedBox(width: 2.w),
                                                             Text(
-                                                              'Work',
+                                                              AppLocalizations.of(context).map_work,
                                                               style: theme.textTheme.bodyMedium?.copyWith(
                                                                 color: theme.colorScheme.primary,
                                                                 fontWeight: FontWeight.w600,
@@ -2130,7 +2130,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                                             ),
                                             SizedBox(height: 0.2.h),
                                             Text(
-                                              '${_alertRadiusMiles.toStringAsFixed(1)} mi radius',
+                                              AppLocalizations.of(context).map_miRadius(_alertRadiusMiles.toStringAsFixed(1)),
                                               style: TextStyle(
                                                 color: Colors.white.withValues(alpha: 0.85),
                                                 fontSize: 11.5,

@@ -297,73 +297,78 @@ class _MapSearchBarState extends State<MapSearchBar> {
             top: 7.h, // Position below the search bar
             left: 0,
             right: 0,
-            child: Container(
-              constraints: BoxConstraints(
-                maxHeight: 40.h, // Limit height to prevent overflow
-              ),
-              decoration: BoxDecoration(
-                color: theme.cardColor,
-                borderRadius: BorderRadius.circular(3.w),
-                boxShadow: [
-                  BoxShadow(
-                    color: theme.colorScheme.shadow.withValues(alpha: 0.2),
-                    blurRadius: 12,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (_searchSuggestions.isNotEmpty) ...[
-                      Padding(
-                        padding: EdgeInsets.all(3.w),
-                        child: Text(
-                          l10n.map_suggestions,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      ..._searchSuggestions.map(
-                        (suggestion) => _buildIssueSuggestionTile(context, suggestion),
-                      ),
-                    ] else if (_searchController.text.isNotEmpty) ...[
-                      Padding(
-                        padding: EdgeInsets.all(3.w),
-                        child: ListTile(
-                          leading: CustomIconWidget(
-                            iconName: 'search',
-                            color: theme.colorScheme.primary,
-                            size: 20,
-                          ),
-                          title: Text(
-                            'Search for "${_searchController.text}"',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.w500,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {}, // Absorb taps to prevent map interaction
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: 40.h, // Limit height to prevent overflow
+                ),
+                decoration: BoxDecoration(
+                  color: theme.cardColor,
+                  borderRadius: BorderRadius.circular(3.w),
+                  boxShadow: [
+                    BoxShadow(
+                      color: theme.colorScheme.shadow.withValues(alpha: 0.2),
+                      blurRadius: 12,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: SingleChildScrollView(
+                  physics: ClampingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (_searchSuggestions.isNotEmpty) ...[
+                        Padding(
+                          padding: EdgeInsets.all(3.w),
+                          child: Text(
+                            l10n.map_suggestions,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          onTap: () => _searchLocation(_searchController.text),
-                          dense: true,
                         ),
-                      ),
-                    ] else if (_recentSearches.isNotEmpty) ...[
-                      Padding(
-                        padding: EdgeInsets.all(3.w),
-                        child: Text(
-                          l10n.map_recentSearches,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
+                        ..._searchSuggestions.map(
+                          (suggestion) => _buildIssueSuggestionTile(context, suggestion),
+                        ),
+                      ] else if (_searchController.text.isNotEmpty) ...[
+                        Padding(
+                          padding: EdgeInsets.all(3.w),
+                          child: ListTile(
+                            leading: CustomIconWidget(
+                              iconName: 'search',
+                              color: theme.colorScheme.primary,
+                              size: 20,
+                            ),
+                            title: Text(
+                              'Search for "${_searchController.text}"',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.primary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            onTap: () => _searchLocation(_searchController.text),
+                            dense: true,
                           ),
                         ),
-                      ),
-                      ..._recentSearches.map(
-                        (search) => _buildRecentSearchTile(context, search),
-                      ),
+                      ] else if (_recentSearches.isNotEmpty) ...[
+                        Padding(
+                          padding: EdgeInsets.all(3.w),
+                          child: Text(
+                            l10n.map_recentSearches,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        ..._recentSearches.map(
+                          (search) => _buildRecentSearchTile(context, search),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),

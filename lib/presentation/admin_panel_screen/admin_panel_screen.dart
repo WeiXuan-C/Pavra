@@ -103,7 +103,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
     
     return Scaffold(
       appBar: HeaderLayout(
-        title: 'Admin Dashboard', // TODO: Add translation
+        title: l10n.admin_dashboard,
         actions: [
           IconButton(
             icon: Icon(Icons.refresh),
@@ -124,7 +124,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
               tabs: [
                 Tab(
                   icon: Icon(Icons.dashboard),
-                  text: 'Overview', // TODO: Add translation
+                  text: l10n.admin_overview,
                 ),
                 Tab(
                   icon: Icon(Icons.report),
@@ -163,7 +163,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                               ),
                               SizedBox(height: 2.h),
                               Text(
-                                'Error Loading Data',
+                                l10n.admin_errorLoadingData,
                                 style: theme.textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -200,6 +200,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
 
   Widget _buildOverviewTab() {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final totalReports = _reports.length;
     final totalUsers = _users.length;
     final draftReports = _reports.where((r) => r.status == 'draft').length;
@@ -218,7 +219,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
         children: [
           // Quick Stats Section
           Text(
-            'Quick Statistics',
+            l10n.admin_quickStatistics,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -229,7 +230,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
             children: [
               Expanded(
                 child: _buildStatCard(
-                  'Total Reports',
+                  l10n.admin_totalReports,
                   totalReports.toString(),
                   Icons.assessment,
                   theme.colorScheme.primary,
@@ -238,7 +239,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
               SizedBox(width: 3.w),
               Expanded(
                 child: _buildStatCard(
-                  'Total Users',
+                  l10n.admin_totalUsers,
                   totalUsers.toString(),
                   Icons.people,
                   Colors.blue,
@@ -251,7 +252,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
           
           // Report Status Section
           Text(
-            'Report Status',
+            l10n.admin_reportStatus,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -262,7 +263,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
             children: [
               Expanded(
                 child: _buildStatCard(
-                  'Draft',
+                  l10n.admin_draft,
                   draftReports.toString(),
                   Icons.drafts,
                   Colors.grey,
@@ -271,7 +272,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
               SizedBox(width: 3.w),
               Expanded(
                 child: _buildStatCard(
-                  'Submitted',
+                  l10n.admin_submitted,
                   submittedReports.toString(),
                   Icons.send,
                   Colors.blue,
@@ -284,7 +285,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
           
           // Severity Section
           Text(
-            'Report Severity',
+            l10n.admin_reportSeverity,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -295,7 +296,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
             children: [
               Expanded(
                 child: _buildStatCard(
-                  'Critical',
+                  l10n.admin_critical,
                   criticalReports.toString(),
                   Icons.warning_amber_rounded,
                   Colors.red[700]!,
@@ -304,7 +305,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
               SizedBox(width: 3.w),
               Expanded(
                 child: _buildStatCard(
-                  'High',
+                  l10n.admin_high,
                   highReports.toString(),
                   Icons.priority_high,
                   Colors.orange[700]!,
@@ -317,7 +318,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
           
           // User Roles Section
           Text(
-            'User Roles',
+            l10n.admin_userRoles,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -328,7 +329,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
             children: [
               Expanded(
                 child: _buildStatCard(
-                  'Admins',
+                  l10n.admin_admins,
                   adminUsers.toString(),
                   Icons.admin_panel_settings,
                   Colors.indigo,
@@ -337,7 +338,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
               SizedBox(width: 3.w),
               Expanded(
                 child: _buildStatCard(
-                  'Regular Users',
+                  l10n.admin_regularUsers,
                   regularUsers.toString(),
                   Icons.person,
                   Colors.teal,
@@ -354,6 +355,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
 
   Widget _buildReportsTab() {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     
     // Filter reports based on selected status
     final filteredReports = _selectedStatusFilter == 'all'
@@ -381,7 +383,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
               // Search bar
               TextField(
                 decoration: InputDecoration(
-                  hintText: 'Search reports...',
+                  hintText: l10n.admin_searchReports,
                   prefixIcon: Icon(Icons.search),
                   suffixIcon: _searchQuery.isNotEmpty
                       ? IconButton(
@@ -410,12 +412,12 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _buildFilterChip('All', 'all', _reports.length),
+                    _buildFilterChip(l10n.admin_all, 'all', _reports.length),
                     SizedBox(width: 2.w),
-                    _buildFilterChip('Draft', 'draft', 
+                    _buildFilterChip(l10n.admin_draft, 'draft', 
                       _reports.where((r) => r.status == 'draft').length),
                     SizedBox(width: 2.w),
-                    _buildFilterChip('Submitted', 'submitted',
+                    _buildFilterChip(l10n.admin_submitted, 'submitted',
                       _reports.where((r) => r.status == 'submitted').length),
                   ],
                 ),
@@ -439,8 +441,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                       SizedBox(height: 2.h),
                       Text(
                         _searchQuery.isNotEmpty
-                            ? 'No reports found'
-                            : 'No reports yet',
+                            ? l10n.admin_noReportsFound
+                            : l10n.admin_noReportsYet,
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: Colors.grey[600],
                         ),
@@ -448,7 +450,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                       if (_searchQuery.isNotEmpty) ...[
                         SizedBox(height: 1.h),
                         Text(
-                          'Try a different search term',
+                          l10n.admin_tryDifferentSearch,
                           style: TextStyle(color: Colors.grey[500]),
                         ),
                       ],
@@ -493,6 +495,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
   }
 
   Widget _buildReportCard(ReportIssueModel report, ThemeData theme) {
+    final l10n = AppLocalizations.of(context);
     final statusColor = _getStatusColor(report.status);
     final severityColor = _getSeverityColor(report.severity);
     
@@ -515,7 +518,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                 children: [
                   Expanded(
                     child: Text(
-                      report.title ?? 'Untitled Report',
+                      report.title ?? l10n.admin_untitledReport,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -532,7 +535,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                           children: [
                             Icon(Icons.delete, color: Colors.red, size: 20),
                             SizedBox(width: 2.w),
-                            Text('Delete'),
+                            Text(l10n.admin_delete),
                           ],
                         ),
                       ),
@@ -588,7 +591,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                   SizedBox(width: 1.w),
                   Expanded(
                     child: Text(
-                      report.createdBy ?? 'Unknown',
+                      report.createdBy ?? l10n.admin_unknown,
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.grey[600],
@@ -618,6 +621,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
 
   Widget _buildUsersTab() {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     
     return _users.isEmpty
         ? Center(
@@ -631,7 +635,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                 ),
                 SizedBox(height: 2.h),
                 Text(
-                  'No users found',
+                  l10n.admin_noUsersFound,
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: Colors.grey[600],
                   ),
@@ -676,7 +680,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                       children: [
                         Expanded(
                           child: Text(
-                            user['username'] ?? 'Unknown User',
+                            user['username'] ?? l10n.admin_unknownUser,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -702,7 +706,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                                 ),
                                 SizedBox(width: 1.w),
                                 Text(
-                                  'ADMIN',
+                                  l10n.admin_admins.toUpperCase(),
                                   style: TextStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.bold,
@@ -719,12 +723,12 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                       children: [
                         SizedBox(height: 0.5.h),
                         Text(
-                          user['email'] ?? 'No email',
+                          user['email'] ?? l10n.admin_noEmail,
                           style: TextStyle(fontSize: 12),
                         ),
                         SizedBox(height: 0.5.h),
                         Text(
-                          'Last updated: ${_formatDate(DateTime.parse(user['updated_at']))}',
+                          '${l10n.home_lastUpdated}: ${_formatDate(DateTime.parse(user['updated_at']))}',
                           style: TextStyle(
                             fontSize: 11,
                             color: Colors.grey[600],
@@ -861,6 +865,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
 
   void _showReportDetails(ReportIssueModel report) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     
     showModalBottomSheet(
       context: context,
@@ -892,7 +897,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                 children: [
                   Expanded(
                     child: Text(
-                      'Report Details',
+                      l10n.admin_reportDetails,
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -916,7 +921,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      report.title ?? 'Untitled',
+                      report.title ?? l10n.admin_untitled,
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -925,7 +930,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                     
                     if (report.description != null) ...[
                       Text(
-                        'Description',
+                        l10n.admin_description,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -936,29 +941,29 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                     ],
                     
                     Text(
-                      'Details',
+                      l10n.admin_details,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 1.h),
                     
-                    _buildDetailRow('Status', report.status.toUpperCase()),
-                    _buildDetailRow('Severity', report.severity.toUpperCase()),
-                    _buildDetailRow('Created By', report.createdBy ?? 'Unknown'),
-                    _buildDetailRow('Created', _formatDate(report.createdAt)),
+                    _buildDetailRow(l10n.admin_status, report.status.toUpperCase()),
+                    _buildDetailRow(l10n.admin_severity, report.severity.toUpperCase()),
+                    _buildDetailRow(l10n.admin_createdBy, report.createdBy ?? l10n.admin_unknown),
+                    _buildDetailRow(l10n.admin_created, _formatDate(report.createdAt)),
                     
                     if (report.latitude != null && report.longitude != null) ...[
                       SizedBox(height: 2.h),
                       Text(
-                        'Location',
+                        l10n.admin_location,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       SizedBox(height: 1.h),
-                      _buildDetailRow('Latitude', report.latitude.toString()),
-                      _buildDetailRow('Longitude', report.longitude.toString()),
+                      _buildDetailRow(l10n.admin_latitude, report.latitude.toString()),
+                      _buildDetailRow(l10n.admin_longitude, report.longitude.toString()),
                     ],
                   ],
                 ),
@@ -999,17 +1004,17 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('User Details'),
+        title: Text(l10n.admin_userDetails),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildDetailRow('Username', user['username'] ?? 'Unknown'),
-            _buildDetailRow('Email', user['email'] ?? 'No email'),
-            _buildDetailRow('Role', user['role'] ?? 'user'),
-            _buildDetailRow('Reports Count', (user['reports_count'] ?? 0).toString()),
-            _buildDetailRow('Reputation Score', (user['reputation_score'] ?? 0).toString()),
-            _buildDetailRow('Last Updated', _formatDate(DateTime.parse(user['updated_at']))),
+            _buildDetailRow(l10n.admin_username, user['username'] ?? l10n.admin_unknown),
+            _buildDetailRow(l10n.admin_email, user['email'] ?? l10n.admin_noEmail),
+            _buildDetailRow(l10n.admin_role, user['role'] ?? 'user'),
+            _buildDetailRow(l10n.admin_reportsCount, (user['reports_count'] ?? 0).toString()),
+            _buildDetailRow(l10n.admin_reputationScore, (user['reputation_score'] ?? 0).toString()),
+            _buildDetailRow(l10n.home_lastUpdated, _formatDate(DateTime.parse(user['updated_at']))),
           ],
         ),
         actions: [
@@ -1027,8 +1032,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Delete Report'),
-        content: Text('Are you sure you want to delete this report? This action cannot be undone.'),
+        title: Text(l10n.admin_deleteReport),
+        content: Text(l10n.admin_deleteReportConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -1057,7 +1062,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Report deleted successfully'),
+              content: Text(l10n.admin_reportDeletedSuccess),
               backgroundColor: Colors.green,
             ),
           );
@@ -1066,7 +1071,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to delete report: $e'),
+              content: Text(l10n.admin_reportDeleteFailed(e.toString())),
               backgroundColor: Colors.red,
             ),
           );

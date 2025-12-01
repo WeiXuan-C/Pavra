@@ -5,6 +5,7 @@ import '../../data/models/report_issue_model.dart';
 import '../../core/supabase/supabase_client.dart';
 import 'widgets/analytics_skeleton.dart';
 import '../layouts/header_layout.dart';
+import '../../l10n/app_localizations.dart';
 
 class AnalyticsDashboardScreen extends StatefulWidget {
   static const String routeName = '/analytics';
@@ -105,15 +106,16 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final l10n = AppLocalizations.of(context);
+    
     return Scaffold(
       appBar: HeaderLayout(
-        title: 'Admin Analytics',
+        title: l10n.analytics_adminAnalytics,
         actions: [
           IconButton(
             icon: Icon(Icons.refresh),
             onPressed: _loadAnalytics,
-            tooltip: 'Refresh',
+            tooltip: l10n.map_refresh,
           ),
         ],
       ),
@@ -129,9 +131,9 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                     unselectedLabelColor: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     indicatorColor: theme.colorScheme.primary,
                     tabs: [
-                      Tab(icon: Icon(Icons.dashboard), text: 'Overview'),
-                      Tab(icon: Icon(Icons.report), text: 'Reports (${_reports.length})'),
-                      Tab(icon: Icon(Icons.people), text: 'Users (${_users.length})'),
+                      Tab(icon: Icon(Icons.dashboard), text: l10n.analytics_overview),
+                      Tab(icon: Icon(Icons.report), text: '${l10n.analytics_reports} (${_reports.length})'),
+                      Tab(icon: Icon(Icons.people), text: '${l10n.analytics_users} (${_users.length})'),
                     ],
                   ),
                 ),
@@ -182,6 +184,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
   }
 
   Widget _buildKeyMetricsGrid(ThemeData theme, bool isDark) {
+    final l10n = AppLocalizations.of(context);
     final totalReports = _reports.length;
     final totalUsers = _users.length;
     final criticalReports = _reports.where((r) => r.severity == 'critical').length;
@@ -200,7 +203,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
             Icon(Icons.analytics, color: theme.colorScheme.primary, size: 28),
             SizedBox(width: 2.w),
             Text(
-              'Key Metrics',
+              l10n.analytics_keyMetrics,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -216,10 +219,10 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
           crossAxisSpacing: 3.w,
           childAspectRatio: 1.5,
           children: [
-            _buildMetricCard('Total Reports', totalReports.toString(), Icons.assessment, theme.colorScheme.primary, isDark),
-            _buildMetricCard('Total Users', totalUsers.toString(), Icons.people, Colors.blue, isDark),
-            _buildMetricCard('Critical Issues', criticalReports.toString(), Icons.warning_amber_rounded, Colors.red[700]!, isDark),
-            _buildMetricCard('Today\'s Reports', todayReports.toString(), Icons.today, Colors.green, isDark),
+            _buildMetricCard(l10n.analytics_totalReports, totalReports.toString(), Icons.assessment, theme.colorScheme.primary, isDark),
+            _buildMetricCard(l10n.analytics_totalUsers, totalUsers.toString(), Icons.people, Colors.blue, isDark),
+            _buildMetricCard(l10n.analytics_criticalIssues, criticalReports.toString(), Icons.warning_amber_rounded, Colors.red[700]!, isDark),
+            _buildMetricCard(l10n.analytics_todaysReports, todayReports.toString(), Icons.today, Colors.green, isDark),
           ],
         ),
       ],
@@ -278,7 +281,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
 
   Widget _buildSeverityDoughnutChart(ThemeData theme, bool isDark) {
     if (_severityStats.isEmpty) return const SizedBox();
-
+    
+    final l10n = AppLocalizations.of(context);
     final total = _severityStats.values.fold(0, (sum, val) => sum + val);
     final sortedEntries = _severityStats.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
@@ -320,11 +324,11 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Reports by Severity',
+                      l10n.analytics_reportsBySeverity,
                       style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'Distribution of issue severity levels',
+                      l10n.analytics_distributionSeverity,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
@@ -435,7 +439,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
 
   Widget _buildSeverityBarChart(ThemeData theme, bool isDark) {
     if (_severityStats.isEmpty) return const SizedBox();
-
+    
+    final l10n = AppLocalizations.of(context);
     final severityOrder = ['critical', 'high', 'moderate', 'low'];
     final orderedEntries = severityOrder
         .where((key) => _severityStats.containsKey(key))
@@ -483,11 +488,11 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Severity Breakdown',
+                      l10n.analytics_severityBreakdown,
                       style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'Detailed count by severity level',
+                      l10n.analytics_detailedCountSeverity,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
@@ -602,7 +607,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
 
   Widget _buildIssueTypesChart(ThemeData theme, bool isDark) {
     if (_issueTypeStats.isEmpty) return const SizedBox();
-
+    
+    final l10n = AppLocalizations.of(context);
     final sortedEntries = _issueTypeStats.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     final maxValue = sortedEntries.first.value.toDouble();
@@ -644,11 +650,11 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Reports by Issue Type',
+                      l10n.analytics_reportsByIssueType,
                       style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'Most common types of issues with reporters',
+                      l10n.analytics_mostCommonTypes,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
@@ -693,7 +699,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                   if (userList.isNotEmpty) ...[
                     SizedBox(height: 0.3.h),
                     Text(
-                      'Reported by: ${userList.join(", ")}${moreUsers > 0 ? " +$moreUsers more" : ""}',
+                      l10n.analytics_reportedBy('${userList.join(", ")}${moreUsers > 0 ? " +$moreUsers more" : ""}'),
                       style: TextStyle(
                         fontSize: 11,
                         color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -724,6 +730,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
   Widget _buildTrendChart(ThemeData theme, bool isDark) {
     if (_reports.isEmpty) return const SizedBox();
     
+    final l10n = AppLocalizations.of(context);
     final now = DateTime.now();
     final days = List.generate(_selectedDays, (i) => now.subtract(Duration(days: _selectedDays - 1 - i)));
     final dailyCounts = <DateTime, int>{};
@@ -785,11 +792,11 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Reports Trend',
+                      l10n.analytics_reportsTrend,
                       style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'Activity over time',
+                      l10n.analytics_activityOverTime,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
@@ -804,13 +811,13 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _buildTimeRangeChip('7 Days', 7),
+                _buildTimeRangeChip(l10n.analytics_7days, 7),
                 SizedBox(width: 2.w),
-                _buildTimeRangeChip('14 Days', 14),
+                _buildTimeRangeChip(l10n.analytics_14days, 14),
                 SizedBox(width: 2.w),
-                _buildTimeRangeChip('30 Days', 30),
+                _buildTimeRangeChip(l10n.analytics_30days, 30),
                 SizedBox(width: 2.w),
-                _buildTimeRangeChip('90 Days', 90),
+                _buildTimeRangeChip(l10n.analytics_90days, 90),
               ],
             ),
           ),
@@ -924,7 +931,8 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
 
   Widget _buildStatusBreakdown(ThemeData theme, bool isDark) {
     if (_statusStats.isEmpty) return const SizedBox();
-
+    
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
@@ -958,7 +966,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
               ),
               SizedBox(width: 3.w),
               Text(
-                'Status Breakdown',
+                l10n.analytics_statusBreakdown,
                 style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
             ],
@@ -1003,6 +1011,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
 
   Widget _buildReportsTab() {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     
     final filteredReports = _selectedStatusFilter == 'all'
         ? _reports
@@ -1026,7 +1035,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
             children: [
               TextField(
                 decoration: InputDecoration(
-                  hintText: 'Search reports...',
+                  hintText: l10n.analytics_searchReports,
                   prefixIcon: Icon(Icons.search),
                   suffixIcon: _searchQuery.isNotEmpty
                       ? IconButton(
@@ -1052,12 +1061,12 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _buildFilterChip('All', 'all', _reports.length),
+                    _buildFilterChip(l10n.analytics_all, 'all', _reports.length),
                     SizedBox(width: 2.w),
-                    _buildFilterChip('Draft', 'draft', 
+                    _buildFilterChip(l10n.analytics_draft, 'draft', 
                       _reports.where((r) => r.status == 'draft').length),
                     SizedBox(width: 2.w),
-                    _buildFilterChip('Submitted', 'submitted',
+                    _buildFilterChip(l10n.analytics_submitted, 'submitted',
                       _reports.where((r) => r.status == 'submitted').length),
                   ],
                 ),
@@ -1074,12 +1083,12 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                       Icon(Icons.inbox, size: 64, color: Colors.grey[400]),
                       SizedBox(height: 2.h),
                       Text(
-                        _searchQuery.isNotEmpty ? 'No reports found' : 'No reports yet',
+                        _searchQuery.isNotEmpty ? l10n.analytics_noReportsFound : l10n.analytics_noReportsYet,
                         style: theme.textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
                       ),
                       if (_searchQuery.isNotEmpty) ...[
                         SizedBox(height: 1.h),
-                        Text('Try a different search term', style: TextStyle(color: Colors.grey[500])),
+                        Text(l10n.analytics_tryDifferentSearch, style: TextStyle(color: Colors.grey[500])),
                       ],
                     ],
                   ),
@@ -1122,6 +1131,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
   }
 
   Widget _buildReportCard(ReportIssueModel report, ThemeData theme) {
+    final l10n = AppLocalizations.of(context);
     final statusColor = _getStatusColor(report.status);
     final severityColor = _getSeverityColor(report.severity);
     
@@ -1141,7 +1151,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                 children: [
                   Expanded(
                     child: Text(
-                      report.title ?? 'Untitled Report',
+                      report.title ?? l10n.analytics_untitledReport,
                       style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -1156,7 +1166,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                           children: [
                             Icon(Icons.delete, color: Colors.red, size: 20),
                             SizedBox(width: 2.w),
-                            Text('Delete'),
+                            Text(l10n.analytics_delete),
                           ],
                         ),
                       ),
@@ -1193,7 +1203,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                   SizedBox(width: 1.w),
                   Expanded(
                     child: Text(
-                      report.createdBy ?? 'Unknown',
+                      report.createdBy ?? l10n.analytics_unknown,
                       style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -1239,6 +1249,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
 
   Widget _buildUsersTab() {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     
     return _users.isEmpty
         ? Center(
@@ -1248,7 +1259,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                 Icon(Icons.people_outline, size: 64, color: Colors.grey[400]),
                 SizedBox(height: 2.h),
                 Text(
-                  'No users found',
+                  l10n.analytics_noUsersFound,
                   style: theme.textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
                 ),
               ],
@@ -1287,7 +1298,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                       children: [
                         Expanded(
                           child: Text(
-                            user['username'] ?? 'Unknown User',
+                            user['username'] ?? l10n.analytics_unknownUser,
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -1320,10 +1331,10 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 0.5.h),
-                        Text(user['email'] ?? 'No email', style: TextStyle(fontSize: 12)),
+                        Text(user['email'] ?? l10n.analytics_noEmail, style: TextStyle(fontSize: 12)),
                         SizedBox(height: 0.5.h),
                         Text(
-                          'Last updated: ${_formatDate(DateTime.parse(user['updated_at']))}',
+                          l10n.analytics_lastUpdated(_formatDate(DateTime.parse(user['updated_at']))),
                           style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                         ),
                       ],
@@ -1339,6 +1350,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
 
   void _showReportDetails(ReportIssueModel report) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     
     showModalBottomSheet(
       context: context,
@@ -1367,7 +1379,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                 children: [
                   Expanded(
                     child: Text(
-                      'Report Details',
+                      l10n.analytics_reportDetails,
                       style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -1386,13 +1398,13 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      report.title ?? 'Untitled',
+                      report.title ?? l10n.analytics_untitled,
                       style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 2.h),
                     if (report.description != null) ...[
                       Text(
-                        'Description',
+                        l10n.analytics_description,
                         style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 1.h),
@@ -1400,23 +1412,23 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
                       SizedBox(height: 2.h),
                     ],
                     Text(
-                      'Details',
+                      l10n.analytics_details,
                       style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 1.h),
-                    _buildDetailRow('Status', report.status.toUpperCase()),
-                    _buildDetailRow('Severity', report.severity.toUpperCase()),
-                    _buildDetailRow('Created By', report.createdBy ?? 'Unknown'),
-                    _buildDetailRow('Created', _formatDate(report.createdAt)),
+                    _buildDetailRow(l10n.analytics_status, report.status.toUpperCase()),
+                    _buildDetailRow(l10n.analytics_severity, report.severity.toUpperCase()),
+                    _buildDetailRow(l10n.analytics_createdBy, report.createdBy ?? l10n.analytics_unknown),
+                    _buildDetailRow(l10n.analytics_created, _formatDate(report.createdAt)),
                     if (report.latitude != null && report.longitude != null) ...[
                       SizedBox(height: 2.h),
                       Text(
-                        'Location',
+                        l10n.analytics_location,
                         style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 1.h),
-                      _buildDetailRow('Latitude', report.latitude.toString()),
-                      _buildDetailRow('Longitude', report.longitude.toString()),
+                      _buildDetailRow(l10n.analytics_latitude, report.latitude.toString()),
+                      _buildDetailRow(l10n.analytics_longitude, report.longitude.toString()),
                     ],
                   ],
                 ),
@@ -1437,7 +1449,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
               child: ElevatedButton.icon(
                 onPressed: () => Navigator.pop(context),
                 icon: Icon(Icons.close, size: 18),
-                label: Text('Close'),
+                label: Text(l10n.analytics_close),
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 48),
                 ),
@@ -1469,24 +1481,25 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
   }
 
   void _showUserDetails(Map<String, dynamic> user) {
+    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('User Details'),
+        title: Text(l10n.analytics_userDetails),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildDetailRow('Username', user['username'] ?? 'Unknown'),
-            _buildDetailRow('Email', user['email'] ?? 'No email'),
-            _buildDetailRow('Role', user['role'] ?? 'user'),
-            _buildDetailRow('Created', _formatDate(DateTime.parse(user['created_at']))),
+            _buildDetailRow(l10n.analytics_username, user['username'] ?? l10n.analytics_unknown),
+            _buildDetailRow(l10n.analytics_email, user['email'] ?? l10n.analytics_noEmail),
+            _buildDetailRow(l10n.analytics_role, user['role'] ?? 'user'),
+            _buildDetailRow(l10n.analytics_created, _formatDate(DateTime.parse(user['created_at']))),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Close'),
+            child: Text(l10n.analytics_close),
           ),
         ],
       ),
@@ -1494,20 +1507,21 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
   }
 
   Future<void> _deleteReport(String reportId) async {
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Delete Report'),
-        content: Text('Are you sure you want to delete this report? This action cannot be undone.'),
+        title: Text(l10n.analytics_deleteReport),
+        content: Text(l10n.analytics_deleteReportConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancel'),
+            child: Text(l10n.common_cancel),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: Text('Delete'),
+            child: Text(l10n.common_delete),
           ),
         ],
       ),
@@ -1521,7 +1535,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Report deleted successfully'),
+              content: Text(l10n.analytics_reportDeletedSuccess),
               backgroundColor: Colors.green,
             ),
           );
@@ -1530,7 +1544,7 @@ class _AnalyticsDashboardScreenState extends State<AnalyticsDashboardScreen> wit
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to delete report: $e'),
+              content: Text(l10n.analytics_reportDeleteFailed(e.toString())),
               backgroundColor: Colors.red,
             ),
           );

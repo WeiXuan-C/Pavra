@@ -950,7 +950,7 @@ abstract class AppLocalizations {
   /// **'Showing issues within {radius} miles'**
   String map_showingIssuesWithin(String radius);
 
-  /// Refresh button tooltip
+  /// Refresh button label
   ///
   /// In en, this message translates to:
   /// **'Refresh'**
@@ -4982,31 +4982,31 @@ abstract class AppLocalizations {
   /// **'Admin Panel'**
   String get admin_title;
 
-  /// Overview tab
+  /// Overview tab label
   ///
   /// In en, this message translates to:
   /// **'Overview'**
   String get admin_overview;
 
-  /// Reports tab
+  /// Reports tab label
   ///
   /// In en, this message translates to:
   /// **'Reports'**
   String get admin_reports;
 
-  /// Users tab
+  /// Users tab label
   ///
   /// In en, this message translates to:
   /// **'Users'**
   String get admin_users;
 
-  /// Total reports stat
+  /// Total reports metric label
   ///
   /// In en, this message translates to:
   /// **'Total Reports'**
   String get admin_totalReports;
 
-  /// Total users stat
+  /// Total users metric label
   ///
   /// In en, this message translates to:
   /// **'Total Users'**
@@ -5905,6 +5905,948 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Made with ❤️ for safer roads'**
   String get about_madeWith;
+
+  /// Filter button label
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get map_filter;
+
+  /// Voice search button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Search'**
+  String get map_voiceSearch;
+
+  /// Voice search listening state
+  ///
+  /// In en, this message translates to:
+  /// **'Listening...'**
+  String get map_listening;
+
+  /// Edit button text
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get map_edit;
+
+  /// Navigate button text
+  ///
+  /// In en, this message translates to:
+  /// **'Navigate'**
+  String get map_navigate;
+
+  /// Plan route with stops button
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Route with Stops'**
+  String get map_planRouteWithStops;
+
+  /// Current location not available message
+  ///
+  /// In en, this message translates to:
+  /// **'Current location not available'**
+  String get map_currentLocationNotAvailable;
+
+  /// Home location not set message
+  ///
+  /// In en, this message translates to:
+  /// **'Home location not set'**
+  String get map_homeLocationNotSet;
+
+  /// Work location not set message
+  ///
+  /// In en, this message translates to:
+  /// **'Work location not set'**
+  String get map_workLocationNotSet;
+
+  /// Navigating to home message
+  ///
+  /// In en, this message translates to:
+  /// **'Navigating to Home'**
+  String get map_navigatingToHome;
+
+  /// Home location not set long message
+  ///
+  /// In en, this message translates to:
+  /// **'Home location not set. Please save a Home location first.'**
+  String get map_homeLocationNotSetLong;
+
+  /// Set home button text
+  ///
+  /// In en, this message translates to:
+  /// **'Set Home'**
+  String get map_setHome;
+
+  /// Navigating to work message
+  ///
+  /// In en, this message translates to:
+  /// **'Navigating to Work'**
+  String get map_navigatingToWork;
+
+  /// Work location not set long message
+  ///
+  /// In en, this message translates to:
+  /// **'Work location not set. Please save a Work location first.'**
+  String get map_workLocationNotSetLong;
+
+  /// Set work button text
+  ///
+  /// In en, this message translates to:
+  /// **'Set Work'**
+  String get map_setWork;
+
+  /// Please specify location message
+  ///
+  /// In en, this message translates to:
+  /// **'Please specify a location to navigate to'**
+  String get map_pleaseSpecifyLocation;
+
+  /// Navigation stopped message
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation stopped'**
+  String get map_navigationStopped;
+
+  /// No active navigation message
+  ///
+  /// In en, this message translates to:
+  /// **'No active navigation to stop'**
+  String get map_noActiveNavigation;
+
+  /// Location not found message
+  ///
+  /// In en, this message translates to:
+  /// **'Location \"{query}\" not found'**
+  String map_locationNotFound(String query);
+
+  /// Could not find location message
+  ///
+  /// In en, this message translates to:
+  /// **'Could not find location \"{query}\"'**
+  String map_couldNotFindLocation(String query);
+
+  /// Voice search action dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to do?'**
+  String get map_whatWouldYouLikeToDo;
+
+  /// Voice recognition result
+  ///
+  /// In en, this message translates to:
+  /// **'I heard: \"{text}\"'**
+  String map_iHeard(String text);
+
+  /// Choose action prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Please choose an action:'**
+  String get map_pleaseChooseAction;
+
+  /// Search for location button
+  ///
+  /// In en, this message translates to:
+  /// **'Search for this location'**
+  String get map_searchForLocation;
+
+  /// Navigate to location button
+  ///
+  /// In en, this message translates to:
+  /// **'Navigate to this location'**
+  String get map_navigateToLocation;
+
+  /// Cancel button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get map_cancel;
+
+  /// Microphone permission required message
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission is required for voice search'**
+  String get map_microphonePermissionRequired;
+
+  /// Voice search not available message
+  ///
+  /// In en, this message translates to:
+  /// **'Voice search is not available on this device'**
+  String get map_voiceSearchNotAvailable;
+
+  /// Clear button text
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get map_clear;
+
+  /// Voice search error message
+  ///
+  /// In en, this message translates to:
+  /// **'Voice search error'**
+  String get accessibility_voiceSearchError;
+
+  /// Voice search listening indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Listening...'**
+  String get accessibility_listening;
+
+  /// Default road issue title
+  ///
+  /// In en, this message translates to:
+  /// **'Road Issue'**
+  String get map_roadIssue;
+
+  /// Location coordinates label
+  ///
+  /// In en, this message translates to:
+  /// **'Location: {coordinates}'**
+  String map_locationCoordinates(String coordinates);
+
+  /// Home location label
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get map_home;
+
+  /// Work location label
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get map_work;
+
+  /// Road issues nearby count
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count, plural, =1{road issue} other{road issues}} nearby'**
+  String map_roadIssueNearby(int count);
+
+  /// Destination label
+  ///
+  /// In en, this message translates to:
+  /// **'Destination'**
+  String get navigation_destination;
+
+  /// Choose travel mode prompt
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your travel mode'**
+  String get navigation_chooseTravelMode;
+
+  /// Drive travel mode
+  ///
+  /// In en, this message translates to:
+  /// **'Drive'**
+  String get navigation_drive;
+
+  /// Walk travel mode
+  ///
+  /// In en, this message translates to:
+  /// **'Walk'**
+  String get navigation_walk;
+
+  /// Finding route loading message
+  ///
+  /// In en, this message translates to:
+  /// **'Finding best route...'**
+  String get navigation_findingBestRoute;
+
+  /// No route available error
+  ///
+  /// In en, this message translates to:
+  /// **'No route available for {mode}. Try another mode.'**
+  String navigation_noRouteAvailable(String mode);
+
+  /// Retry button
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get navigation_retry;
+
+  /// Start navigation button
+  ///
+  /// In en, this message translates to:
+  /// **'Start Navigation'**
+  String get navigation_startNavigation;
+
+  /// View steps button
+  ///
+  /// In en, this message translates to:
+  /// **'View {count} Steps'**
+  String navigation_viewSteps(int count);
+
+  /// First steps label
+  ///
+  /// In en, this message translates to:
+  /// **'First Steps:'**
+  String get navigation_firstSteps;
+
+  /// Travel time label
+  ///
+  /// In en, this message translates to:
+  /// **'Travel Time'**
+  String get navigation_travelTime;
+
+  /// Distance label
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get navigation_distance;
+
+  /// Arrive by time
+  ///
+  /// In en, this message translates to:
+  /// **'Arrive by {time}'**
+  String navigation_arriveBy(String time);
+
+  /// Turn-by-turn directions title
+  ///
+  /// In en, this message translates to:
+  /// **'Turn-by-Turn Directions'**
+  String get navigation_turnByTurnDirections;
+
+  /// Nearby issues with radius indicator
+  ///
+  /// In en, this message translates to:
+  /// **'Nearby Issues ({radius} mi radius)'**
+  String map_nearbyIssuesRadius(String radius);
+
+  /// Miles radius label
+  ///
+  /// In en, this message translates to:
+  /// **'{radius} mi radius'**
+  String map_miRadius(String radius);
+
+  /// Main layout dropdown description
+  ///
+  /// In en, this message translates to:
+  /// **'View your profile and settings'**
+  String get profile_viewProfileSettings;
+
+  /// Admin dashboard menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Dashboard'**
+  String get profile_adminDashboard;
+
+  /// Admin dashboard description
+  ///
+  /// In en, this message translates to:
+  /// **'Manage reports and users'**
+  String get profile_manageReportsUsers;
+
+  /// Full admin dashboard reference
+  ///
+  /// In en, this message translates to:
+  /// **'Whole Admin Dashboard'**
+  String get profile_adminDashboardFull;
+
+  /// Admin dashboard screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Dashboard'**
+  String get admin_dashboard;
+
+  /// Quick statistics section title
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Statistics'**
+  String get admin_quickStatistics;
+
+  /// Report status section title
+  ///
+  /// In en, this message translates to:
+  /// **'Report Status'**
+  String get admin_reportStatus;
+
+  /// Draft status label
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get admin_draft;
+
+  /// Submitted status label
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted'**
+  String get admin_submitted;
+
+  /// Report severity section title
+  ///
+  /// In en, this message translates to:
+  /// **'Report Severity'**
+  String get admin_reportSeverity;
+
+  /// Critical severity label
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get admin_critical;
+
+  /// High severity label
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get admin_high;
+
+  /// User roles section title
+  ///
+  /// In en, this message translates to:
+  /// **'User Roles'**
+  String get admin_userRoles;
+
+  /// Admins label
+  ///
+  /// In en, this message translates to:
+  /// **'Admins'**
+  String get admin_admins;
+
+  /// Regular users label
+  ///
+  /// In en, this message translates to:
+  /// **'Regular Users'**
+  String get admin_regularUsers;
+
+  /// Search reports placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Search reports...'**
+  String get admin_searchReports;
+
+  /// All filter label
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get admin_all;
+
+  /// No reports found message
+  ///
+  /// In en, this message translates to:
+  /// **'No reports found'**
+  String get admin_noReportsFound;
+
+  /// No reports yet message
+  ///
+  /// In en, this message translates to:
+  /// **'No reports yet'**
+  String get admin_noReportsYet;
+
+  /// Try different search hint
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different search term'**
+  String get admin_tryDifferentSearch;
+
+  /// Untitled report label
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled Report'**
+  String get admin_untitledReport;
+
+  /// Delete action label
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get admin_delete;
+
+  /// No users found message
+  ///
+  /// In en, this message translates to:
+  /// **'No users found'**
+  String get admin_noUsersFound;
+
+  /// Unknown user label
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown User'**
+  String get admin_unknownUser;
+
+  /// No email label
+  ///
+  /// In en, this message translates to:
+  /// **'No email'**
+  String get admin_noEmail;
+
+  /// Last updated label with date
+  ///
+  /// In en, this message translates to:
+  /// **'Last updated: {date}'**
+  String admin_lastUpdated(String date);
+
+  /// Report details dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Report Details'**
+  String get admin_reportDetails;
+
+  /// Untitled label
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled'**
+  String get admin_untitled;
+
+  /// Description label
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get admin_description;
+
+  /// Details label
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get admin_details;
+
+  /// Status label
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get admin_status;
+
+  /// Severity label
+  ///
+  /// In en, this message translates to:
+  /// **'Severity'**
+  String get admin_severity;
+
+  /// Created by label
+  ///
+  /// In en, this message translates to:
+  /// **'Created By'**
+  String get admin_createdBy;
+
+  /// Unknown label
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get admin_unknown;
+
+  /// Created label
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get admin_created;
+
+  /// Location label
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get admin_location;
+
+  /// Latitude label
+  ///
+  /// In en, this message translates to:
+  /// **'Latitude'**
+  String get admin_latitude;
+
+  /// Longitude label
+  ///
+  /// In en, this message translates to:
+  /// **'Longitude'**
+  String get admin_longitude;
+
+  /// User details dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'User Details'**
+  String get admin_userDetails;
+
+  /// Username label
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get admin_username;
+
+  /// Email label
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get admin_email;
+
+  /// Role label
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get admin_role;
+
+  /// Reports count label
+  ///
+  /// In en, this message translates to:
+  /// **'Reports Count'**
+  String get admin_reportsCount;
+
+  /// Reputation score label
+  ///
+  /// In en, this message translates to:
+  /// **'Reputation Score'**
+  String get admin_reputationScore;
+
+  /// Delete report dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Report'**
+  String get admin_deleteReport;
+
+  /// Delete report confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this report? This action cannot be undone.'**
+  String get admin_deleteReportConfirm;
+
+  /// Report deleted success message
+  ///
+  /// In en, this message translates to:
+  /// **'Report deleted successfully'**
+  String get admin_reportDeletedSuccess;
+
+  /// Report delete failed message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete report: {error}'**
+  String admin_reportDeleteFailed(String error);
+
+  /// Error loading data title
+  ///
+  /// In en, this message translates to:
+  /// **'Error Loading Data'**
+  String get admin_errorLoadingData;
+
+  /// Admin analytics screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Analytics'**
+  String get analytics_adminAnalytics;
+
+  /// Overview tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get analytics_overview;
+
+  /// Reports tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get analytics_reports;
+
+  /// Users tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get analytics_users;
+
+  /// Key metrics section title
+  ///
+  /// In en, this message translates to:
+  /// **'Key Metrics'**
+  String get analytics_keyMetrics;
+
+  /// Total users metric
+  ///
+  /// In en, this message translates to:
+  /// **'Total Users'**
+  String get analytics_totalUsers;
+
+  /// Critical issues metric
+  ///
+  /// In en, this message translates to:
+  /// **'Critical Issues'**
+  String get analytics_criticalIssues;
+
+  /// Today's reports metric
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Reports'**
+  String get analytics_todaysReports;
+
+  /// Reports by severity chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Reports by Severity'**
+  String get analytics_reportsBySeverity;
+
+  /// Distribution of severity levels description
+  ///
+  /// In en, this message translates to:
+  /// **'Distribution of issue severity levels'**
+  String get analytics_distributionSeverity;
+
+  /// Severity breakdown chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Severity Breakdown'**
+  String get analytics_severityBreakdown;
+
+  /// Detailed count by severity description
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed count by severity level'**
+  String get analytics_detailedCountSeverity;
+
+  /// Reports by issue type chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Reports by Issue Type'**
+  String get analytics_reportsByIssueType;
+
+  /// Most common types description
+  ///
+  /// In en, this message translates to:
+  /// **'Most common types of issues with reporters'**
+  String get analytics_mostCommonTypes;
+
+  /// Reported by label with users
+  ///
+  /// In en, this message translates to:
+  /// **'Reported by: {users}'**
+  String analytics_reportedBy(String users);
+
+  /// Reports trend chart title
+  ///
+  /// In en, this message translates to:
+  /// **'Reports Trend'**
+  String get analytics_reportsTrend;
+
+  /// Activity over time description
+  ///
+  /// In en, this message translates to:
+  /// **'Activity over time'**
+  String get analytics_activityOverTime;
+
+  /// 7 days filter label
+  ///
+  /// In en, this message translates to:
+  /// **'7 Days'**
+  String get analytics_7days;
+
+  /// 14 days filter label
+  ///
+  /// In en, this message translates to:
+  /// **'14 Days'**
+  String get analytics_14days;
+
+  /// 30 days filter label
+  ///
+  /// In en, this message translates to:
+  /// **'30 Days'**
+  String get analytics_30days;
+
+  /// 90 days filter label
+  ///
+  /// In en, this message translates to:
+  /// **'90 Days'**
+  String get analytics_90days;
+
+  /// Status breakdown section title
+  ///
+  /// In en, this message translates to:
+  /// **'Status Breakdown'**
+  String get analytics_statusBreakdown;
+
+  /// Search reports placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Search reports...'**
+  String get analytics_searchReports;
+
+  /// All filter label
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get analytics_all;
+
+  /// Draft filter label
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get analytics_draft;
+
+  /// Submitted filter label
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted'**
+  String get analytics_submitted;
+
+  /// No reports found message
+  ///
+  /// In en, this message translates to:
+  /// **'No reports found'**
+  String get analytics_noReportsFound;
+
+  /// No reports yet message
+  ///
+  /// In en, this message translates to:
+  /// **'No reports yet'**
+  String get analytics_noReportsYet;
+
+  /// Try different search hint
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different search term'**
+  String get analytics_tryDifferentSearch;
+
+  /// Untitled report label
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled Report'**
+  String get analytics_untitledReport;
+
+  /// Delete action label
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get analytics_delete;
+
+  /// No users found message
+  ///
+  /// In en, this message translates to:
+  /// **'No users found'**
+  String get analytics_noUsersFound;
+
+  /// Unknown user label
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown User'**
+  String get analytics_unknownUser;
+
+  /// No email label
+  ///
+  /// In en, this message translates to:
+  /// **'No email'**
+  String get analytics_noEmail;
+
+  /// Last updated label
+  ///
+  /// In en, this message translates to:
+  /// **'Last updated: {date}'**
+  String analytics_lastUpdated(String date);
+
+  /// Report details dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Report Details'**
+  String get analytics_reportDetails;
+
+  /// Untitled label
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled'**
+  String get analytics_untitled;
+
+  /// Description label
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get analytics_description;
+
+  /// Details label
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get analytics_details;
+
+  /// Status label
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get analytics_status;
+
+  /// Severity label
+  ///
+  /// In en, this message translates to:
+  /// **'Severity'**
+  String get analytics_severity;
+
+  /// Created by label
+  ///
+  /// In en, this message translates to:
+  /// **'Created By'**
+  String get analytics_createdBy;
+
+  /// Unknown label
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get analytics_unknown;
+
+  /// Created label
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get analytics_created;
+
+  /// Location label
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get analytics_location;
+
+  /// Latitude label
+  ///
+  /// In en, this message translates to:
+  /// **'Latitude'**
+  String get analytics_latitude;
+
+  /// Longitude label
+  ///
+  /// In en, this message translates to:
+  /// **'Longitude'**
+  String get analytics_longitude;
+
+  /// Close button label
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get analytics_close;
+
+  /// User details dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'User Details'**
+  String get analytics_userDetails;
+
+  /// Username label
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get analytics_username;
+
+  /// Email label
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get analytics_email;
+
+  /// Role label
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get analytics_role;
+
+  /// Delete report dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Report'**
+  String get analytics_deleteReport;
+
+  /// Delete report confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this report? This action cannot be undone.'**
+  String get analytics_deleteReportConfirm;
+
+  /// Report deleted success message
+  ///
+  /// In en, this message translates to:
+  /// **'Report deleted successfully'**
+  String get analytics_reportDeletedSuccess;
+
+  /// Report delete failed message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete report: {error}'**
+  String analytics_reportDeleteFailed(String error);
 }
 
 class _AppLocalizationsDelegate

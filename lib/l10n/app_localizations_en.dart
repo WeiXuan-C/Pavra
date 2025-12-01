@@ -3096,4 +3096,522 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get about_madeWith => 'Made with ❤️ for safer roads';
+
+  @override
+  String get map_filter => 'Filter';
+
+  @override
+  String get map_voiceSearch => 'Voice Search';
+
+  @override
+  String get map_listening => 'Listening...';
+
+  @override
+  String get map_edit => 'Edit';
+
+  @override
+  String get map_navigate => 'Navigate';
+
+  @override
+  String get map_planRouteWithStops => 'Plan Route with Stops';
+
+  @override
+  String get map_currentLocationNotAvailable =>
+      'Current location not available';
+
+  @override
+  String get map_homeLocationNotSet => 'Home location not set';
+
+  @override
+  String get map_workLocationNotSet => 'Work location not set';
+
+  @override
+  String get map_navigatingToHome => 'Navigating to Home';
+
+  @override
+  String get map_homeLocationNotSetLong =>
+      'Home location not set. Please save a Home location first.';
+
+  @override
+  String get map_setHome => 'Set Home';
+
+  @override
+  String get map_navigatingToWork => 'Navigating to Work';
+
+  @override
+  String get map_workLocationNotSetLong =>
+      'Work location not set. Please save a Work location first.';
+
+  @override
+  String get map_setWork => 'Set Work';
+
+  @override
+  String get map_pleaseSpecifyLocation =>
+      'Please specify a location to navigate to';
+
+  @override
+  String get map_navigationStopped => 'Navigation stopped';
+
+  @override
+  String get map_noActiveNavigation => 'No active navigation to stop';
+
+  @override
+  String map_locationNotFound(String query) {
+    return 'Location \"$query\" not found';
+  }
+
+  @override
+  String map_couldNotFindLocation(String query) {
+    return 'Could not find location \"$query\"';
+  }
+
+  @override
+  String get map_whatWouldYouLikeToDo => 'What would you like to do?';
+
+  @override
+  String map_iHeard(String text) {
+    return 'I heard: \"$text\"';
+  }
+
+  @override
+  String get map_pleaseChooseAction => 'Please choose an action:';
+
+  @override
+  String get map_searchForLocation => 'Search for this location';
+
+  @override
+  String get map_navigateToLocation => 'Navigate to this location';
+
+  @override
+  String get map_cancel => 'Cancel';
+
+  @override
+  String get map_microphonePermissionRequired =>
+      'Microphone permission is required for voice search';
+
+  @override
+  String get map_voiceSearchNotAvailable =>
+      'Voice search is not available on this device';
+
+  @override
+  String get map_clear => 'Clear';
+
+  @override
+  String get accessibility_voiceSearchError => 'Voice search error';
+
+  @override
+  String get accessibility_listening => 'Listening...';
+
+  @override
+  String get map_roadIssue => 'Road Issue';
+
+  @override
+  String map_locationCoordinates(String coordinates) {
+    return 'Location: $coordinates';
+  }
+
+  @override
+  String get map_home => 'Home';
+
+  @override
+  String get map_work => 'Work';
+
+  @override
+  String map_roadIssueNearby(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'road issues',
+      one: 'road issue',
+    );
+    return '$count $_temp0 nearby';
+  }
+
+  @override
+  String get navigation_destination => 'Destination';
+
+  @override
+  String get navigation_chooseTravelMode => 'Choose your travel mode';
+
+  @override
+  String get navigation_drive => 'Drive';
+
+  @override
+  String get navigation_walk => 'Walk';
+
+  @override
+  String get navigation_findingBestRoute => 'Finding best route...';
+
+  @override
+  String navigation_noRouteAvailable(String mode) {
+    return 'No route available for $mode. Try another mode.';
+  }
+
+  @override
+  String get navigation_retry => 'Retry';
+
+  @override
+  String get navigation_startNavigation => 'Start Navigation';
+
+  @override
+  String navigation_viewSteps(int count) {
+    return 'View $count Steps';
+  }
+
+  @override
+  String get navigation_firstSteps => 'First Steps:';
+
+  @override
+  String get navigation_travelTime => 'Travel Time';
+
+  @override
+  String get navigation_distance => 'Distance';
+
+  @override
+  String navigation_arriveBy(String time) {
+    return 'Arrive by $time';
+  }
+
+  @override
+  String get navigation_turnByTurnDirections => 'Turn-by-Turn Directions';
+
+  @override
+  String map_nearbyIssuesRadius(String radius) {
+    return 'Nearby Issues ($radius mi radius)';
+  }
+
+  @override
+  String map_miRadius(String radius) {
+    return '$radius mi radius';
+  }
+
+  @override
+  String get profile_viewProfileSettings => 'View your profile and settings';
+
+  @override
+  String get profile_adminDashboard => 'Admin Dashboard';
+
+  @override
+  String get profile_manageReportsUsers => 'Manage reports and users';
+
+  @override
+  String get profile_adminDashboardFull => 'Whole Admin Dashboard';
+
+  @override
+  String get admin_dashboard => 'Admin Dashboard';
+
+  @override
+  String get admin_quickStatistics => 'Quick Statistics';
+
+  @override
+  String get admin_reportStatus => 'Report Status';
+
+  @override
+  String get admin_draft => 'Draft';
+
+  @override
+  String get admin_submitted => 'Submitted';
+
+  @override
+  String get admin_reportSeverity => 'Report Severity';
+
+  @override
+  String get admin_critical => 'Critical';
+
+  @override
+  String get admin_high => 'High';
+
+  @override
+  String get admin_userRoles => 'User Roles';
+
+  @override
+  String get admin_admins => 'Admins';
+
+  @override
+  String get admin_regularUsers => 'Regular Users';
+
+  @override
+  String get admin_searchReports => 'Search reports...';
+
+  @override
+  String get admin_all => 'All';
+
+  @override
+  String get admin_noReportsFound => 'No reports found';
+
+  @override
+  String get admin_noReportsYet => 'No reports yet';
+
+  @override
+  String get admin_tryDifferentSearch => 'Try a different search term';
+
+  @override
+  String get admin_untitledReport => 'Untitled Report';
+
+  @override
+  String get admin_delete => 'Delete';
+
+  @override
+  String get admin_noUsersFound => 'No users found';
+
+  @override
+  String get admin_unknownUser => 'Unknown User';
+
+  @override
+  String get admin_noEmail => 'No email';
+
+  @override
+  String admin_lastUpdated(String date) {
+    return 'Last updated: $date';
+  }
+
+  @override
+  String get admin_reportDetails => 'Report Details';
+
+  @override
+  String get admin_untitled => 'Untitled';
+
+  @override
+  String get admin_description => 'Description';
+
+  @override
+  String get admin_details => 'Details';
+
+  @override
+  String get admin_status => 'Status';
+
+  @override
+  String get admin_severity => 'Severity';
+
+  @override
+  String get admin_createdBy => 'Created By';
+
+  @override
+  String get admin_unknown => 'Unknown';
+
+  @override
+  String get admin_created => 'Created';
+
+  @override
+  String get admin_location => 'Location';
+
+  @override
+  String get admin_latitude => 'Latitude';
+
+  @override
+  String get admin_longitude => 'Longitude';
+
+  @override
+  String get admin_userDetails => 'User Details';
+
+  @override
+  String get admin_username => 'Username';
+
+  @override
+  String get admin_email => 'Email';
+
+  @override
+  String get admin_role => 'Role';
+
+  @override
+  String get admin_reportsCount => 'Reports Count';
+
+  @override
+  String get admin_reputationScore => 'Reputation Score';
+
+  @override
+  String get admin_deleteReport => 'Delete Report';
+
+  @override
+  String get admin_deleteReportConfirm =>
+      'Are you sure you want to delete this report? This action cannot be undone.';
+
+  @override
+  String get admin_reportDeletedSuccess => 'Report deleted successfully';
+
+  @override
+  String admin_reportDeleteFailed(String error) {
+    return 'Failed to delete report: $error';
+  }
+
+  @override
+  String get admin_errorLoadingData => 'Error Loading Data';
+
+  @override
+  String get analytics_adminAnalytics => 'Admin Analytics';
+
+  @override
+  String get analytics_overview => 'Overview';
+
+  @override
+  String get analytics_reports => 'Reports';
+
+  @override
+  String get analytics_users => 'Users';
+
+  @override
+  String get analytics_keyMetrics => 'Key Metrics';
+
+  @override
+  String get analytics_totalUsers => 'Total Users';
+
+  @override
+  String get analytics_criticalIssues => 'Critical Issues';
+
+  @override
+  String get analytics_todaysReports => 'Today\'s Reports';
+
+  @override
+  String get analytics_reportsBySeverity => 'Reports by Severity';
+
+  @override
+  String get analytics_distributionSeverity =>
+      'Distribution of issue severity levels';
+
+  @override
+  String get analytics_severityBreakdown => 'Severity Breakdown';
+
+  @override
+  String get analytics_detailedCountSeverity =>
+      'Detailed count by severity level';
+
+  @override
+  String get analytics_reportsByIssueType => 'Reports by Issue Type';
+
+  @override
+  String get analytics_mostCommonTypes =>
+      'Most common types of issues with reporters';
+
+  @override
+  String analytics_reportedBy(String users) {
+    return 'Reported by: $users';
+  }
+
+  @override
+  String get analytics_reportsTrend => 'Reports Trend';
+
+  @override
+  String get analytics_activityOverTime => 'Activity over time';
+
+  @override
+  String get analytics_7days => '7 Days';
+
+  @override
+  String get analytics_14days => '14 Days';
+
+  @override
+  String get analytics_30days => '30 Days';
+
+  @override
+  String get analytics_90days => '90 Days';
+
+  @override
+  String get analytics_statusBreakdown => 'Status Breakdown';
+
+  @override
+  String get analytics_searchReports => 'Search reports...';
+
+  @override
+  String get analytics_all => 'All';
+
+  @override
+  String get analytics_draft => 'Draft';
+
+  @override
+  String get analytics_submitted => 'Submitted';
+
+  @override
+  String get analytics_noReportsFound => 'No reports found';
+
+  @override
+  String get analytics_noReportsYet => 'No reports yet';
+
+  @override
+  String get analytics_tryDifferentSearch => 'Try a different search term';
+
+  @override
+  String get analytics_untitledReport => 'Untitled Report';
+
+  @override
+  String get analytics_delete => 'Delete';
+
+  @override
+  String get analytics_noUsersFound => 'No users found';
+
+  @override
+  String get analytics_unknownUser => 'Unknown User';
+
+  @override
+  String get analytics_noEmail => 'No email';
+
+  @override
+  String analytics_lastUpdated(String date) {
+    return 'Last updated: $date';
+  }
+
+  @override
+  String get analytics_reportDetails => 'Report Details';
+
+  @override
+  String get analytics_untitled => 'Untitled';
+
+  @override
+  String get analytics_description => 'Description';
+
+  @override
+  String get analytics_details => 'Details';
+
+  @override
+  String get analytics_status => 'Status';
+
+  @override
+  String get analytics_severity => 'Severity';
+
+  @override
+  String get analytics_createdBy => 'Created By';
+
+  @override
+  String get analytics_unknown => 'Unknown';
+
+  @override
+  String get analytics_created => 'Created';
+
+  @override
+  String get analytics_location => 'Location';
+
+  @override
+  String get analytics_latitude => 'Latitude';
+
+  @override
+  String get analytics_longitude => 'Longitude';
+
+  @override
+  String get analytics_close => 'Close';
+
+  @override
+  String get analytics_userDetails => 'User Details';
+
+  @override
+  String get analytics_username => 'Username';
+
+  @override
+  String get analytics_email => 'Email';
+
+  @override
+  String get analytics_role => 'Role';
+
+  @override
+  String get analytics_deleteReport => 'Delete Report';
+
+  @override
+  String get analytics_deleteReportConfirm =>
+      'Are you sure you want to delete this report? This action cannot be undone.';
+
+  @override
+  String get analytics_reportDeletedSuccess => 'Report deleted successfully';
+
+  @override
+  String analytics_reportDeleteFailed(String error) {
+    return 'Failed to delete report: $error';
+  }
 }

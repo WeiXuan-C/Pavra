@@ -2987,4 +2987,505 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get about_madeWith => '用 ❤️ 为更安全的道路而制作';
+
+  @override
+  String get map_filter => '筛选';
+
+  @override
+  String get map_voiceSearch => '语音搜索';
+
+  @override
+  String get map_listening => '正在聆听...';
+
+  @override
+  String get map_edit => '编辑';
+
+  @override
+  String get map_navigate => '导航';
+
+  @override
+  String get map_planRouteWithStops => '规划多站点路线';
+
+  @override
+  String get map_currentLocationNotAvailable => '当前位置不可用';
+
+  @override
+  String get map_homeLocationNotSet => '未设置家庭位置';
+
+  @override
+  String get map_workLocationNotSet => '未设置工作位置';
+
+  @override
+  String get map_navigatingToHome => '正在导航到家';
+
+  @override
+  String get map_homeLocationNotSetLong => '未设置家庭位置。请先保存一个家庭位置。';
+
+  @override
+  String get map_setHome => '设置家';
+
+  @override
+  String get map_navigatingToWork => '正在导航到工作地点';
+
+  @override
+  String get map_workLocationNotSetLong => '未设置工作位置。请先保存一个工作位置。';
+
+  @override
+  String get map_setWork => '设置工作地点';
+
+  @override
+  String get map_pleaseSpecifyLocation => '请指定要导航到的位置';
+
+  @override
+  String get map_navigationStopped => '导航已停止';
+
+  @override
+  String get map_noActiveNavigation => '没有活动的导航可停止';
+
+  @override
+  String map_locationNotFound(String query) {
+    return '未找到位置\"$query\"';
+  }
+
+  @override
+  String map_couldNotFindLocation(String query) {
+    return '无法找到位置\"$query\"';
+  }
+
+  @override
+  String get map_whatWouldYouLikeToDo => '您想做什么？';
+
+  @override
+  String map_iHeard(String text) {
+    return '我听到：\"$text\"';
+  }
+
+  @override
+  String get map_pleaseChooseAction => '请选择一个操作：';
+
+  @override
+  String get map_searchForLocation => '搜索此位置';
+
+  @override
+  String get map_navigateToLocation => '导航到此位置';
+
+  @override
+  String get map_cancel => '取消';
+
+  @override
+  String get map_microphonePermissionRequired => '语音搜索需要麦克风权限';
+
+  @override
+  String get map_voiceSearchNotAvailable => '此设备不支持语音搜索';
+
+  @override
+  String get map_clear => '清除';
+
+  @override
+  String get accessibility_voiceSearchError => '语音搜索错误';
+
+  @override
+  String get accessibility_listening => '正在聆听...';
+
+  @override
+  String get map_roadIssue => '道路问题';
+
+  @override
+  String map_locationCoordinates(String coordinates) {
+    return '位置：$coordinates';
+  }
+
+  @override
+  String get map_home => '家';
+
+  @override
+  String get map_work => '工作';
+
+  @override
+  String map_roadIssueNearby(int count) {
+    return '附近有 $count 个道路问题';
+  }
+
+  @override
+  String get navigation_destination => '目的地';
+
+  @override
+  String get navigation_chooseTravelMode => '选择您的出行方式';
+
+  @override
+  String get navigation_drive => '驾车';
+
+  @override
+  String get navigation_walk => '步行';
+
+  @override
+  String get navigation_findingBestRoute => '正在寻找最佳路线...';
+
+  @override
+  String navigation_noRouteAvailable(String mode) {
+    return '$mode没有可用路线。请尝试其他方式。';
+  }
+
+  @override
+  String get navigation_retry => '重试';
+
+  @override
+  String get navigation_startNavigation => '开始导航';
+
+  @override
+  String navigation_viewSteps(int count) {
+    return '查看 $count 个步骤';
+  }
+
+  @override
+  String get navigation_firstSteps => '前几步：';
+
+  @override
+  String get navigation_travelTime => '行程时间';
+
+  @override
+  String get navigation_distance => '距离';
+
+  @override
+  String navigation_arriveBy(String time) {
+    return '预计 $time 到达';
+  }
+
+  @override
+  String get navigation_turnByTurnDirections => '逐向导航';
+
+  @override
+  String map_nearbyIssuesRadius(String radius) {
+    return '附近问题（$radius英里半径）';
+  }
+
+  @override
+  String map_miRadius(String radius) {
+    return '$radius 英里半径';
+  }
+
+  @override
+  String get profile_viewProfileSettings => '查看您的个人资料和设置';
+
+  @override
+  String get profile_adminDashboard => '管理员仪表板';
+
+  @override
+  String get profile_manageReportsUsers => '管理报告和用户';
+
+  @override
+  String get profile_adminDashboardFull => '完整管理员仪表板';
+
+  @override
+  String get admin_dashboard => '管理员仪表板';
+
+  @override
+  String get admin_quickStatistics => '快速统计';
+
+  @override
+  String get admin_reportStatus => '报告状态';
+
+  @override
+  String get admin_draft => '草稿';
+
+  @override
+  String get admin_submitted => '已提交';
+
+  @override
+  String get admin_reportSeverity => '报告严重程度';
+
+  @override
+  String get admin_critical => '严重';
+
+  @override
+  String get admin_high => '高';
+
+  @override
+  String get admin_userRoles => '用户角色';
+
+  @override
+  String get admin_admins => '管理员';
+
+  @override
+  String get admin_regularUsers => '普通用户';
+
+  @override
+  String get admin_searchReports => '搜索报告...';
+
+  @override
+  String get admin_all => '全部';
+
+  @override
+  String get admin_noReportsFound => '未找到报告';
+
+  @override
+  String get admin_noReportsYet => '暂无报告';
+
+  @override
+  String get admin_tryDifferentSearch => '尝试不同的搜索词';
+
+  @override
+  String get admin_untitledReport => '无标题报告';
+
+  @override
+  String get admin_delete => '删除';
+
+  @override
+  String get admin_noUsersFound => '未找到用户';
+
+  @override
+  String get admin_unknownUser => '未知用户';
+
+  @override
+  String get admin_noEmail => '无邮箱';
+
+  @override
+  String admin_lastUpdated(String date) {
+    return '最后更新：$date';
+  }
+
+  @override
+  String get admin_reportDetails => '报告详情';
+
+  @override
+  String get admin_untitled => '无标题';
+
+  @override
+  String get admin_description => '描述';
+
+  @override
+  String get admin_details => '详情';
+
+  @override
+  String get admin_status => '状态';
+
+  @override
+  String get admin_severity => '严重程度';
+
+  @override
+  String get admin_createdBy => '创建者';
+
+  @override
+  String get admin_unknown => '未知';
+
+  @override
+  String get admin_created => '创建时间';
+
+  @override
+  String get admin_location => '位置';
+
+  @override
+  String get admin_latitude => '纬度';
+
+  @override
+  String get admin_longitude => '经度';
+
+  @override
+  String get admin_userDetails => '用户详情';
+
+  @override
+  String get admin_username => '用户名';
+
+  @override
+  String get admin_email => '邮箱';
+
+  @override
+  String get admin_role => '角色';
+
+  @override
+  String get admin_reportsCount => '报告数量';
+
+  @override
+  String get admin_reputationScore => '声誉分数';
+
+  @override
+  String get admin_deleteReport => '删除报告';
+
+  @override
+  String get admin_deleteReportConfirm => '您确定要删除此报告吗？此操作无法撤销。';
+
+  @override
+  String get admin_reportDeletedSuccess => '报告删除成功';
+
+  @override
+  String admin_reportDeleteFailed(String error) {
+    return '删除报告失败：$error';
+  }
+
+  @override
+  String get admin_errorLoadingData => '加载数据错误';
+
+  @override
+  String get analytics_adminAnalytics => '管理员分析';
+
+  @override
+  String get analytics_overview => '概览';
+
+  @override
+  String get analytics_reports => '报告';
+
+  @override
+  String get analytics_users => '用户';
+
+  @override
+  String get analytics_keyMetrics => '关键指标';
+
+  @override
+  String get analytics_totalUsers => '总用户数';
+
+  @override
+  String get analytics_criticalIssues => '严重问题';
+
+  @override
+  String get analytics_todaysReports => '今日报告';
+
+  @override
+  String get analytics_reportsBySeverity => '按严重程度分类的报告';
+
+  @override
+  String get analytics_distributionSeverity => '问题严重程度级别分布';
+
+  @override
+  String get analytics_severityBreakdown => '严重程度细分';
+
+  @override
+  String get analytics_detailedCountSeverity => '按严重程度级别的详细计数';
+
+  @override
+  String get analytics_reportsByIssueType => '按问题类型分类的报告';
+
+  @override
+  String get analytics_mostCommonTypes => '最常见的问题类型及报告者';
+
+  @override
+  String analytics_reportedBy(String users) {
+    return '报告者：$users';
+  }
+
+  @override
+  String get analytics_reportsTrend => '报告趋势';
+
+  @override
+  String get analytics_activityOverTime => '随时间变化的活动';
+
+  @override
+  String get analytics_7days => '7天';
+
+  @override
+  String get analytics_14days => '14天';
+
+  @override
+  String get analytics_30days => '30天';
+
+  @override
+  String get analytics_90days => '90天';
+
+  @override
+  String get analytics_statusBreakdown => '状态细分';
+
+  @override
+  String get analytics_searchReports => '搜索报告...';
+
+  @override
+  String get analytics_all => '全部';
+
+  @override
+  String get analytics_draft => '草稿';
+
+  @override
+  String get analytics_submitted => '已提交';
+
+  @override
+  String get analytics_noReportsFound => '未找到报告';
+
+  @override
+  String get analytics_noReportsYet => '暂无报告';
+
+  @override
+  String get analytics_tryDifferentSearch => '尝试不同的搜索词';
+
+  @override
+  String get analytics_untitledReport => '无标题报告';
+
+  @override
+  String get analytics_delete => '删除';
+
+  @override
+  String get analytics_noUsersFound => '未找到用户';
+
+  @override
+  String get analytics_unknownUser => '未知用户';
+
+  @override
+  String get analytics_noEmail => '无邮箱';
+
+  @override
+  String analytics_lastUpdated(String date) {
+    return '最后更新：$date';
+  }
+
+  @override
+  String get analytics_reportDetails => '报告详情';
+
+  @override
+  String get analytics_untitled => '无标题';
+
+  @override
+  String get analytics_description => '描述';
+
+  @override
+  String get analytics_details => '详情';
+
+  @override
+  String get analytics_status => '状态';
+
+  @override
+  String get analytics_severity => '严重程度';
+
+  @override
+  String get analytics_createdBy => '创建者';
+
+  @override
+  String get analytics_unknown => '未知';
+
+  @override
+  String get analytics_created => '创建时间';
+
+  @override
+  String get analytics_location => '位置';
+
+  @override
+  String get analytics_latitude => '纬度';
+
+  @override
+  String get analytics_longitude => '经度';
+
+  @override
+  String get analytics_close => '关闭';
+
+  @override
+  String get analytics_userDetails => '用户详情';
+
+  @override
+  String get analytics_username => '用户名';
+
+  @override
+  String get analytics_email => '邮箱';
+
+  @override
+  String get analytics_role => '角色';
+
+  @override
+  String get analytics_deleteReport => '删除报告';
+
+  @override
+  String get analytics_deleteReportConfirm => '您确定要删除此报告吗？此操作无法撤销。';
+
+  @override
+  String get analytics_reportDeletedSuccess => '报告删除成功';
+
+  @override
+  String analytics_reportDeleteFailed(String error) {
+    return '删除报告失败：$error';
+  }
 }

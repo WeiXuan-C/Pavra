@@ -4116,5 +4116,740 @@
   "about_madeWith": "Made with ❤️ for safer roads",
   "@about_madeWith": {
     "description": "Made with love text"
+  },
+  "map_filter": "Filter",
+  "@map_filter": {
+    "description": "Filter button text"
+  },
+  "map_voiceSearch": "Voice Search",
+  "@map_voiceSearch": {
+    "description": "Voice search button tooltip"
+  },
+  "map_listening": "Listening...",
+  "@map_listening": {
+    "description": "Voice search listening state"
+  },
+  "map_edit": "Edit",
+  "@map_edit": {
+    "description": "Edit button text"
+  },
+  "map_navigate": "Navigate",
+  "@map_navigate": {
+    "description": "Navigate button text"
+  },
+  "map_planRouteWithStops": "Plan Route with Stops",
+  "@map_planRouteWithStops": {
+    "description": "Plan route with stops button"
+  },
+  "map_currentLocationNotAvailable": "Current location not available",
+  "@map_currentLocationNotAvailable": {
+    "description": "Current location not available message"
+  },
+  "map_homeLocationNotSet": "Home location not set",
+  "@map_homeLocationNotSet": {
+    "description": "Home location not set message"
+  },
+  "map_workLocationNotSet": "Work location not set",
+  "@map_workLocationNotSet": {
+    "description": "Work location not set message"
+  },
+  "map_navigatingToHome": "Navigating to Home",
+  "@map_navigatingToHome": {
+    "description": "Navigating to home message"
+  },
+  "map_homeLocationNotSetLong": "Home location not set. Please save a Home location first.",
+  "@map_homeLocationNotSetLong": {
+    "description": "Home location not set long message"
+  },
+  "map_setHome": "Set Home",
+  "@map_setHome": {
+    "description": "Set home button text"
+  },
+  "map_navigatingToWork": "Navigating to Work",
+  "@map_navigatingToWork": {
+    "description": "Navigating to work message"
+  },
+  "map_workLocationNotSetLong": "Work location not set. Please save a Work location first.",
+  "@map_workLocationNotSetLong": {
+    "description": "Work location not set long message"
+  },
+  "map_setWork": "Set Work",
+  "@map_setWork": {
+    "description": "Set work button text"
+  },
+  "map_pleaseSpecifyLocation": "Please specify a location to navigate to",
+  "@map_pleaseSpecifyLocation": {
+    "description": "Please specify location message"
+  },
+  "map_navigationStopped": "Navigation stopped",
+  "@map_navigationStopped": {
+    "description": "Navigation stopped message"
+  },
+  "map_noActiveNavigation": "No active navigation to stop",
+  "@map_noActiveNavigation": {
+    "description": "No active navigation message"
+  },
+  "map_locationNotFound": "Location \"{query}\" not found",
+  "@map_locationNotFound": {
+    "description": "Location not found message",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "map_couldNotFindLocation": "Could not find location \"{query}\"",
+  "@map_couldNotFindLocation": {
+    "description": "Could not find location message",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "map_whatWouldYouLikeToDo": "What would you like to do?",
+  "@map_whatWouldYouLikeToDo": {
+    "description": "Voice search action dialog title"
+  },
+  "map_iHeard": "I heard: \"{text}\"",
+  "@map_iHeard": {
+    "description": "Voice recognition result",
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "map_pleaseChooseAction": "Please choose an action:",
+  "@map_pleaseChooseAction": {
+    "description": "Choose action prompt"
+  },
+  "map_searchForLocation": "Search for this location",
+  "@map_searchForLocation": {
+    "description": "Search for location button"
+  },
+  "map_navigateToLocation": "Navigate to this location",
+  "@map_navigateToLocation": {
+    "description": "Navigate to location button"
+  },
+  "map_cancel": "Cancel",
+  "@map_cancel": {
+    "description": "Cancel button"
+  },
+  "map_microphonePermissionRequired": "Microphone permission is required for voice search",
+  "@map_microphonePermissionRequired": {
+    "description": "Microphone permission required message"
+  },
+  "map_voiceSearchNotAvailable": "Voice search is not available on this device",
+  "@map_voiceSearchNotAvailable": {
+    "description": "Voice search not available message"
+  },
+  "map_clear": "Clear",
+  "@map_clear": {
+    "description": "Clear button text"
+  },
+  "accessibility_voiceSearchError": "Voice search error",
+  "@accessibility_voiceSearchError": {
+    "description": "Voice search error message"
+  },
+  "accessibility_listening": "Listening...",
+  "@accessibility_listening": {
+    "description": "Voice search listening indicator"
+  },
+  "map_roadIssue": "Road Issue",
+  "@map_roadIssue": {
+    "description": "Default road issue title"
+  },
+  "map_locationCoordinates": "Location: {coordinates}",
+  "@map_locationCoordinates": {
+    "description": "Location coordinates label",
+    "placeholders": {
+      "coordinates": {
+        "type": "String"
+      }
+    }
+  },
+  "map_filter": "Filter",
+  "@map_filter": {
+    "description": "Filter button label"
+  },
+  "map_refresh": "Refresh",
+  "@map_refresh": {
+    "description": "Refresh button label"
+  },
+  "map_home": "Home",
+  "@map_home": {
+    "description": "Home location label"
+  },
+  "map_work": "Work",
+  "@map_work": {
+    "description": "Work location label"
+  },
+  "map_roadIssueNearby": "{count} {count, plural, =1{road issue} other{road issues}} nearby",
+  "@map_roadIssueNearby": {
+    "description": "Road issues nearby count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "navigation_destination": "Destination",
+  "@navigation_destination": {
+    "description": "Destination label"
+  },
+  "navigation_chooseTravelMode": "Choose your travel mode",
+  "@navigation_chooseTravelMode": {
+    "description": "Choose travel mode prompt"
+  },
+  "navigation_drive": "Drive",
+  "@navigation_drive": {
+    "description": "Drive travel mode"
+  },
+  "navigation_walk": "Walk",
+  "@navigation_walk": {
+    "description": "Walk travel mode"
+  },
+  "navigation_findingBestRoute": "Finding best route...",
+  "@navigation_findingBestRoute": {
+    "description": "Finding route loading message"
+  },
+  "navigation_noRouteAvailable": "No route available for {mode}. Try another mode.",
+  "@navigation_noRouteAvailable": {
+    "description": "No route available error",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "navigation_retry": "Retry",
+  "@navigation_retry": {
+    "description": "Retry button"
+  },
+  "navigation_startNavigation": "Start Navigation",
+  "@navigation_startNavigation": {
+    "description": "Start navigation button"
+  },
+  "navigation_viewSteps": "View {count} Steps",
+  "@navigation_viewSteps": {
+    "description": "View steps button",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "navigation_firstSteps": "First Steps:",
+  "@navigation_firstSteps": {
+    "description": "First steps label"
+  },
+  "navigation_travelTime": "Travel Time",
+  "@navigation_travelTime": {
+    "description": "Travel time label"
+  },
+  "navigation_distance": "Distance",
+  "@navigation_distance": {
+    "description": "Distance label"
+  },
+  "navigation_arriveBy": "Arrive by {time}",
+  "@navigation_arriveBy": {
+    "description": "Arrive by time",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "navigation_turnByTurnDirections": "Turn-by-Turn Directions",
+  "@navigation_turnByTurnDirections": {
+    "description": "Turn-by-turn directions title"
+  },
+  "map_nearbyIssuesRadius": "Nearby Issues ({radius} mi radius)",
+  "@map_nearbyIssuesRadius": {
+    "description": "Nearby issues with radius indicator",
+    "placeholders": {
+      "radius": {
+        "type": "String"
+      }
+    }
+  },
+  "map_miRadius": "{radius} mi radius",
+  "@map_miRadius": {
+    "description": "Miles radius label",
+    "placeholders": {
+      "radius": {
+        "type": "String"
+      }
+    }
+  },
+  "profile_viewProfileSettings": "View your profile and settings",
+  "@profile_viewProfileSettings": {
+    "description": "Main layout dropdown description"
+  },
+  "profile_adminDashboard": "Admin Dashboard",
+  "@profile_adminDashboard": {
+    "description": "Admin dashboard menu item"
+  },
+  "profile_manageReportsUsers": "Manage reports and users",
+  "@profile_manageReportsUsers": {
+    "description": "Admin dashboard description"
+  },
+  "profile_adminDashboardFull": "Whole Admin Dashboard",
+  "@profile_adminDashboardFull": {
+    "description": "Full admin dashboard reference"
+  },
+  "admin_dashboard": "Admin Dashboard",
+  "@admin_dashboard": {
+    "description": "Admin dashboard screen title"
+  },
+  "admin_overview": "Overview",
+  "@admin_overview": {
+    "description": "Overview tab label"
+  },
+  "admin_reports": "Reports",
+  "@admin_reports": {
+    "description": "Reports tab label"
+  },
+  "admin_users": "Users",
+  "@admin_users": {
+    "description": "Users tab label"
+  },
+  "admin_quickStatistics": "Quick Statistics",
+  "@admin_quickStatistics": {
+    "description": "Quick statistics section title"
+  },
+  "admin_totalReports": "Total Reports",
+  "@admin_totalReports": {
+    "description": "Total reports metric label"
+  },
+  "admin_totalUsers": "Total Users",
+  "@admin_totalUsers": {
+    "description": "Total users metric label"
+  },
+  "admin_reportStatus": "Report Status",
+  "@admin_reportStatus": {
+    "description": "Report status section title"
+  },
+  "admin_draft": "Draft",
+  "@admin_draft": {
+    "description": "Draft status label"
+  },
+  "admin_submitted": "Submitted",
+  "@admin_submitted": {
+    "description": "Submitted status label"
+  },
+  "admin_reportSeverity": "Report Severity",
+  "@admin_reportSeverity": {
+    "description": "Report severity section title"
+  },
+  "admin_critical": "Critical",
+  "@admin_critical": {
+    "description": "Critical severity label"
+  },
+  "admin_high": "High",
+  "@admin_high": {
+    "description": "High severity label"
+  },
+  "admin_userRoles": "User Roles",
+  "@admin_userRoles": {
+    "description": "User roles section title"
+  },
+  "admin_admins": "Admins",
+  "@admin_admins": {
+    "description": "Admins label"
+  },
+  "admin_regularUsers": "Regular Users",
+  "@admin_regularUsers": {
+    "description": "Regular users label"
+  },
+  "admin_searchReports": "Search reports...",
+  "@admin_searchReports": {
+    "description": "Search reports placeholder"
+  },
+  "admin_all": "All",
+  "@admin_all": {
+    "description": "All filter label"
+  },
+  "admin_noReportsFound": "No reports found",
+  "@admin_noReportsFound": {
+    "description": "No reports found message"
+  },
+  "admin_noReportsYet": "No reports yet",
+  "@admin_noReportsYet": {
+    "description": "No reports yet message"
+  },
+  "admin_tryDifferentSearch": "Try a different search term",
+  "@admin_tryDifferentSearch": {
+    "description": "Try different search hint"
+  },
+  "admin_untitledReport": "Untitled Report",
+  "@admin_untitledReport": {
+    "description": "Untitled report label"
+  },
+  "admin_delete": "Delete",
+  "@admin_delete": {
+    "description": "Delete action label"
+  },
+  "admin_noUsersFound": "No users found",
+  "@admin_noUsersFound": {
+    "description": "No users found message"
+  },
+  "admin_unknownUser": "Unknown User",
+  "@admin_unknownUser": {
+    "description": "Unknown user label"
+  },
+  "admin_noEmail": "No email",
+  "@admin_noEmail": {
+    "description": "No email label"
+  },
+  "admin_lastUpdated": "Last updated: {date}",
+  "@admin_lastUpdated": {
+    "description": "Last updated label with date",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "admin_reportDetails": "Report Details",
+  "@admin_reportDetails": {
+    "description": "Report details dialog title"
+  },
+  "admin_untitled": "Untitled",
+  "@admin_untitled": {
+    "description": "Untitled label"
+  },
+  "admin_description": "Description",
+  "@admin_description": {
+    "description": "Description label"
+  },
+  "admin_details": "Details",
+  "@admin_details": {
+    "description": "Details label"
+  },
+  "admin_status": "Status",
+  "@admin_status": {
+    "description": "Status label"
+  },
+  "admin_severity": "Severity",
+  "@admin_severity": {
+    "description": "Severity label"
+  },
+  "admin_createdBy": "Created By",
+  "@admin_createdBy": {
+    "description": "Created by label"
+  },
+  "admin_unknown": "Unknown",
+  "@admin_unknown": {
+    "description": "Unknown label"
+  },
+  "admin_created": "Created",
+  "@admin_created": {
+    "description": "Created label"
+  },
+  "admin_location": "Location",
+  "@admin_location": {
+    "description": "Location label"
+  },
+  "admin_latitude": "Latitude",
+  "@admin_latitude": {
+    "description": "Latitude label"
+  },
+  "admin_longitude": "Longitude",
+  "@admin_longitude": {
+    "description": "Longitude label"
+  },
+  "admin_userDetails": "User Details",
+  "@admin_userDetails": {
+    "description": "User details dialog title"
+  },
+  "admin_username": "Username",
+  "@admin_username": {
+    "description": "Username label"
+  },
+  "admin_email": "Email",
+  "@admin_email": {
+    "description": "Email label"
+  },
+  "admin_role": "Role",
+  "@admin_role": {
+    "description": "Role label"
+  },
+  "admin_reportsCount": "Reports Count",
+  "@admin_reportsCount": {
+    "description": "Reports count label"
+  },
+  "admin_reputationScore": "Reputation Score",
+  "@admin_reputationScore": {
+    "description": "Reputation score label"
+  },
+  "admin_deleteReport": "Delete Report",
+  "@admin_deleteReport": {
+    "description": "Delete report dialog title"
+  },
+  "admin_deleteReportConfirm": "Are you sure you want to delete this report? This action cannot be undone.",
+  "@admin_deleteReportConfirm": {
+    "description": "Delete report confirmation message"
+  },
+  "admin_reportDeletedSuccess": "Report deleted successfully",
+  "@admin_reportDeletedSuccess": {
+    "description": "Report deleted success message"
+  },
+  "admin_reportDeleteFailed": "Failed to delete report: {error}",
+  "@admin_reportDeleteFailed": {
+    "description": "Report delete failed message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "admin_errorLoadingData": "Error Loading Data",
+  "@admin_errorLoadingData": {
+    "description": "Error loading data title"
+  },
+  "analytics_adminAnalytics": "Admin Analytics",
+  "@analytics_adminAnalytics": {
+    "description": "Admin analytics screen title"
+  },
+  "analytics_overview": "Overview",
+  "@analytics_overview": {
+    "description": "Overview tab label"
+  },
+  "analytics_reports": "Reports",
+  "@analytics_reports": {
+    "description": "Reports tab label"
+  },
+  "analytics_users": "Users",
+  "@analytics_users": {
+    "description": "Users tab label"
+  },
+  "analytics_keyMetrics": "Key Metrics",
+  "@analytics_keyMetrics": {
+    "description": "Key metrics section title"
+  },
+  "analytics_totalReports": "Total Reports",
+  "@analytics_totalReports": {
+    "description": "Total reports metric"
+  },
+  "analytics_totalUsers": "Total Users",
+  "@analytics_totalUsers": {
+    "description": "Total users metric"
+  },
+  "analytics_criticalIssues": "Critical Issues",
+  "@analytics_criticalIssues": {
+    "description": "Critical issues metric"
+  },
+  "analytics_todaysReports": "Today's Reports",
+  "@analytics_todaysReports": {
+    "description": "Today's reports metric"
+  },
+  "analytics_reportsBySeverity": "Reports by Severity",
+  "@analytics_reportsBySeverity": {
+    "description": "Reports by severity chart title"
+  },
+  "analytics_distributionSeverity": "Distribution of issue severity levels",
+  "@analytics_distributionSeverity": {
+    "description": "Distribution of severity levels description"
+  },
+  "analytics_severityBreakdown": "Severity Breakdown",
+  "@analytics_severityBreakdown": {
+    "description": "Severity breakdown chart title"
+  },
+  "analytics_detailedCountSeverity": "Detailed count by severity level",
+  "@analytics_detailedCountSeverity": {
+    "description": "Detailed count by severity description"
+  },
+  "analytics_reportsByIssueType": "Reports by Issue Type",
+  "@analytics_reportsByIssueType": {
+    "description": "Reports by issue type chart title"
+  },
+  "analytics_mostCommonTypes": "Most common types of issues with reporters",
+  "@analytics_mostCommonTypes": {
+    "description": "Most common types description"
+  },
+  "analytics_reportedBy": "Reported by: {users}",
+  "@analytics_reportedBy": {
+    "description": "Reported by label with users",
+    "placeholders": {
+      "users": {
+        "type": "String"
+      }
+    }
+  },
+  "analytics_reportsTrend": "Reports Trend",
+  "@analytics_reportsTrend": {
+    "description": "Reports trend chart title"
+  },
+  "analytics_activityOverTime": "Activity over time",
+  "@analytics_activityOverTime": {
+    "description": "Activity over time description"
+  },
+  "analytics_7days": "7 Days",
+  "@analytics_7days": {
+    "description": "7 days filter label"
+  },
+  "analytics_14days": "14 Days",
+  "@analytics_14days": {
+    "description": "14 days filter label"
+  },
+  "analytics_30days": "30 Days",
+  "@analytics_30days": {
+    "description": "30 days filter label"
+  },
+  "analytics_90days": "90 Days",
+  "@analytics_90days": {
+    "description": "90 days filter label"
+  },
+  "analytics_statusBreakdown": "Status Breakdown",
+  "@analytics_statusBreakdown": {
+    "description": "Status breakdown section title"
+  },
+  "analytics_searchReports": "Search reports...",
+  "@analytics_searchReports": {
+    "description": "Search reports placeholder"
+  },
+  "analytics_all": "All",
+  "@analytics_all": {
+    "description": "All filter label"
+  },
+  "analytics_draft": "Draft",
+  "@analytics_draft": {
+    "description": "Draft filter label"
+  },
+  "analytics_submitted": "Submitted",
+  "@analytics_submitted": {
+    "description": "Submitted filter label"
+  },
+  "analytics_noReportsFound": "No reports found",
+  "@analytics_noReportsFound": {
+    "description": "No reports found message"
+  },
+  "analytics_noReportsYet": "No reports yet",
+  "@analytics_noReportsYet": {
+    "description": "No reports yet message"
+  },
+  "analytics_tryDifferentSearch": "Try a different search term",
+  "@analytics_tryDifferentSearch": {
+    "description": "Try different search hint"
+  },
+  "analytics_untitledReport": "Untitled Report",
+  "@analytics_untitledReport": {
+    "description": "Untitled report label"
+  },
+  "analytics_delete": "Delete",
+  "@analytics_delete": {
+    "description": "Delete action label"
+  },
+  "analytics_noUsersFound": "No users found",
+  "@analytics_noUsersFound": {
+    "description": "No users found message"
+  },
+  "analytics_unknownUser": "Unknown User",
+  "@analytics_unknownUser": {
+    "description": "Unknown user label"
+  },
+  "analytics_noEmail": "No email",
+  "@analytics_noEmail": {
+    "description": "No email label"
+  },
+  "analytics_lastUpdated": "Last updated: {date}",
+  "@analytics_lastUpdated": {
+    "description": "Last updated label",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "analytics_reportDetails": "Report Details",
+  "@analytics_reportDetails": {
+    "description": "Report details dialog title"
+  },
+  "analytics_untitled": "Untitled",
+  "@analytics_untitled": {
+    "description": "Untitled label"
+  },
+  "analytics_description": "Description",
+  "@analytics_description": {
+    "description": "Description label"
+  },
+  "analytics_details": "Details",
+  "@analytics_details": {
+    "description": "Details label"
+  },
+  "analytics_status": "Status",
+  "@analytics_status": {
+    "description": "Status label"
+  },
+  "analytics_severity": "Severity",
+  "@analytics_severity": {
+    "description": "Severity label"
+  },
+  "analytics_createdBy": "Created By",
+  "@analytics_createdBy": {
+    "description": "Created by label"
+  },
+  "analytics_unknown": "Unknown",
+  "@analytics_unknown": {
+    "description": "Unknown label"
+  },
+  "analytics_created": "Created",
+  "@analytics_created": {
+    "description": "Created label"
+  },
+  "analytics_location": "Location",
+  "@analytics_location": {
+    "description": "Location label"
+  },
+  "analytics_latitude": "Latitude",
+  "@analytics_latitude": {
+    "description": "Latitude label"
+  },
+  "analytics_longitude": "Longitude",
+  "@analytics_longitude": {
+    "description": "Longitude label"
+  },
+  "analytics_close": "Close",
+  "@analytics_close": {
+    "description": "Close button label"
+  },
+  "analytics_userDetails": "User Details",
+  "@analytics_userDetails": {
+    "description": "User details dialog title"
+  },
+  "analytics_username": "Username",
+  "@analytics_username": {
+    "description": "Username label"
+  },
+  "analytics_email": "Email",
+  "@analytics_email": {
+    "description": "Email label"
+  },
+  "analytics_role": "Role",
+  "@analytics_role": {
+    "description": "Role label"
+  },
+  "analytics_deleteReport": "Delete Report",
+  "@analytics_deleteReport": {
+    "description": "Delete report dialog title"
+  },
+  "analytics_deleteReportConfirm": "Are you sure you want to delete this report? This action cannot be undone.",
+  "@analytics_deleteReportConfirm": {
+    "description": "Delete report confirmation message"
+  },
+  "analytics_reportDeletedSuccess": "Report deleted successfully",
+  "@analytics_reportDeletedSuccess": {
+    "description": "Report deleted success message"
+  },
+  "analytics_reportDeleteFailed": "Failed to delete report: {error}",
+  "@analytics_reportDeleteFailed": {
+    "description": "Report delete failed message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   }
 }

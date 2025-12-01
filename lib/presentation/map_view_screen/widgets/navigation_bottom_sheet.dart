@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sizer/sizer.dart';
 import '../../../core/services/directions_service.dart';
+import '../../../l10n/app_localizations.dart';
 
 class NavigationBottomSheet extends StatefulWidget {
   final LatLng origin;
@@ -29,17 +30,17 @@ class _NavigationBottomSheetState extends State<NavigationBottomSheet> {
   final Map<String, DirectionsResult?> _cachedDirections = {};
   String? _error;
 
-  final List<Map<String, dynamic>> _travelModes = [
+  List<Map<String, dynamic>> get _travelModes => [
     {
       'mode': 'driving',
       'icon': Icons.directions_car,
-      'label': 'Drive',
+      'label': AppLocalizations.of(context).navigation_drive,
       'color': Colors.blue,
     },
     {
       'mode': 'walking',
       'icon': Icons.directions_walk,
-      'label': 'Walk',
+      'label': AppLocalizations.of(context).navigation_walk,
       'color': Colors.orange,
     },
   ];
@@ -76,7 +77,8 @@ class _NavigationBottomSheetState extends State<NavigationBottomSheet> {
         _selectedMode = mode;
         _isLoading = false;
         if (directions == null) {
-          _error = 'No route available for ${mode == 'driving' ? 'driving' : 'walking'}. Try another mode.';
+          final modeLabel = mode == 'driving' ? AppLocalizations.of(context).navigation_drive : AppLocalizations.of(context).navigation_walk;
+          _error = AppLocalizations.of(context).navigation_noRouteAvailable(modeLabel);
         }
       });
     }
@@ -130,7 +132,7 @@ class _NavigationBottomSheetState extends State<NavigationBottomSheet> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.destinationTitle ?? 'Destination',
+                        widget.destinationTitle ?? AppLocalizations.of(context).navigation_destination,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -138,7 +140,7 @@ class _NavigationBottomSheetState extends State<NavigationBottomSheet> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        'Choose your travel mode',
+                        AppLocalizations.of(context).navigation_chooseTravelMode,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                         ),
@@ -193,7 +195,7 @@ class _NavigationBottomSheetState extends State<NavigationBottomSheet> {
                   children: [
                     CircularProgressIndicator(),
                     SizedBox(height: 2.h),
-                    Text('Finding best route...'),
+                    Text(AppLocalizations.of(context).navigation_findingBestRoute),
                   ],
                 ),
               ),
@@ -210,7 +212,7 @@ class _NavigationBottomSheetState extends State<NavigationBottomSheet> {
                     SizedBox(height: 2.h),
                     ElevatedButton(
                       onPressed: () => _loadDirections(_selectedMode),
-                      child: Text('Retry'),
+                      child: Text(AppLocalizations.of(context).navigation_retry),
                     ),
                   ],
                 ),
@@ -238,7 +240,7 @@ class _NavigationBottomSheetState extends State<NavigationBottomSheet> {
                         },
                         icon: Icon(Icons.navigation, size: 24),
                         label: Text(
-                          'Start Navigation',
+                          AppLocalizations.of(context).navigation_startNavigation,
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         style: ElevatedButton.styleFrom(
@@ -258,7 +260,7 @@ class _NavigationBottomSheetState extends State<NavigationBottomSheet> {
                         _showFullDirections(context, _currentDirections!, theme);
                       },
                       icon: Icon(Icons.list),
-                      label: Text('View ${_currentDirections!.steps.length} Steps'),
+                      label: Text(AppLocalizations.of(context).navigation_viewSteps(_currentDirections!.steps.length)),
                       style: OutlinedButton.styleFrom(
                         minimumSize: Size(double.infinity, 6.h),
                         shape: RoundedRectangleBorder(
@@ -271,7 +273,7 @@ class _NavigationBottomSheetState extends State<NavigationBottomSheet> {
 
                     // Quick steps preview
                     Text(
-                      'First Steps:',
+                      AppLocalizations.of(context).navigation_firstSteps,
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -430,7 +432,7 @@ class _NavigationBottomSheetState extends State<NavigationBottomSheet> {
                     ),
                   ),
                   Text(
-                    'Travel Time',
+                    AppLocalizations.of(context).navigation_travelTime,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
@@ -452,7 +454,7 @@ class _NavigationBottomSheetState extends State<NavigationBottomSheet> {
                     ),
                   ),
                   Text(
-                    'Distance',
+                    AppLocalizations.of(context).navigation_distance,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
@@ -474,7 +476,7 @@ class _NavigationBottomSheetState extends State<NavigationBottomSheet> {
                 Icon(Icons.access_time, size: 16, color: theme.colorScheme.primary),
                 SizedBox(width: 1.w),
                 Text(
-                  'Arrive by $timeFormat',
+                  AppLocalizations.of(context).navigation_arriveBy(timeFormat),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.primary,
                     fontWeight: FontWeight.w600,
@@ -517,7 +519,7 @@ class _NavigationBottomSheetState extends State<NavigationBottomSheet> {
                   Icon(Icons.list, color: theme.colorScheme.primary),
                   SizedBox(width: 2.w),
                   Text(
-                    'Turn-by-Turn Directions',
+                    AppLocalizations.of(context).navigation_turnByTurnDirections,
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),

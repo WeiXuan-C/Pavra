@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Accessibility Utilities
 /// 
@@ -250,10 +251,12 @@ class AccessibilityUtils {
 
   /// Show visual indicator for voice search listening state
   static Widget buildVoiceSearchVisualIndicator({
+    required BuildContext context,
     required bool isListening,
     required bool hasError,
     required String transcription,
   }) {
+    final l10n = AppLocalizations.of(context);
     if (hasError) {
       return Container(
         padding: const EdgeInsets.all(8),
@@ -262,14 +265,14 @@ class AccessibilityUtils {
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.red, width: 2),
         ),
-        child: const Row(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.error, color: Colors.red, size: 20),
-            SizedBox(width: 8),
+            const Icon(Icons.error, color: Colors.red, size: 20),
+            const SizedBox(width: 8),
             Text(
-              'Voice search error',
-              style: TextStyle(
+              l10n.accessibility_voiceSearchError,
+              style: const TextStyle(
                 color: Colors.red,
                 fontWeight: FontWeight.bold,
               ),
@@ -300,7 +303,7 @@ class AccessibilityUtils {
             ),
             const SizedBox(width: 8),
             Text(
-              transcription.isEmpty ? 'Listening...' : transcription,
+              transcription.isEmpty ? l10n.accessibility_listening : transcription,
               style: const TextStyle(
                 color: Colors.green,
                 fontWeight: FontWeight.bold,

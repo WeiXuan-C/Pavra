@@ -270,6 +270,7 @@ class _VoiceSearchWidgetState extends State<VoiceSearchWidget>
             // Visual feedback for deaf users
             const SizedBox(height: 8),
             AccessibilityUtils.buildVoiceSearchVisualIndicator(
+              context: context,
               isListening: true,
               hasError: false,
               transcription: _transcription,
@@ -313,6 +314,7 @@ class _VoiceSearchWidgetState extends State<VoiceSearchWidget>
             // Visual feedback for deaf users
             const SizedBox(height: 8),
             AccessibilityUtils.buildVoiceSearchVisualIndicator(
+              context: context,
               isListening: false,
               hasError: true,
               transcription: '',
