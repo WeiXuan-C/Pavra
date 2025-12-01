@@ -55,6 +55,26 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA6TR3OKPNvhuFpRXvObP9t0O_Qthgqo2Y" />
+        
+        <!-- OneSignal 通知图标配置 -->
+        <meta-data
+            android:name="com.onesignal.NotificationOpened.DEFAULT"
+            android:value="DISABLE" />
+        
+        <!-- 小图标（状态栏显示） -->
+        <meta-data
+            android:name="com.onesignal.NotificationIcon"
+            android:resource="@drawable/ic_stat_onesignal_default" />
+        
+        <!-- 大图标（通知展开时显示） -->
+        <meta-data
+            android:name="com.onesignal.LargeIcon"
+            android:resource="@mipmap/ic_launcher" />
+        
+        <!-- 通知强调色（Android 5.0+）- 蓝色 -->
+        <meta-data
+            android:name="com.onesignal.NotificationAccentColor.DEFAULT"
+            android:value="FF2196F3" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

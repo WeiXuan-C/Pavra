@@ -98,6 +98,16 @@ serve(async (req) => {
       app_id: Deno.env.get('ONESIGNAL_APP_ID'),
       headings: { en: notification.title },
       contents: { en: notification.message },
+      
+      // Android 图标配置
+      small_icon: 'ic_stat_onesignal_default',
+      large_icon: 'ic_launcher',
+      android_accent_color: 'FF2196F3', // 蓝色，可以改成你的品牌色
+      
+      // iOS 配置
+      ios_badgeType: 'Increase',
+      ios_badgeCount: 1,
+      
       data: {
         notification_id: notificationId,
         type: notification.type,
