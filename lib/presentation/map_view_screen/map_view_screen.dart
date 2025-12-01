@@ -2128,7 +2128,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                                                 fontWeight: FontWeight.w700,
                                               ),
                                             ),
-                                            SizedBox(height: 0.2.h),
+                                            SizedBox(height: 0.1.h),
                                             Text(
                                               AppLocalizations.of(context).map_miRadius(_alertRadiusMiles.toStringAsFixed(1)),
                                               style: TextStyle(

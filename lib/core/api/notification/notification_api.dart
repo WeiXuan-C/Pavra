@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import '../../config/api_config.dart';
 import '../../supabase/database_service.dart';
 import '../../supabase/supabase_client.dart';
 
@@ -245,7 +242,6 @@ class NotificationApi {
         .single();
 
     final status = notification['status'] as String;
-    final oneSignalId = notification['onesignal_notification_id'] as String?;
     final createdBy = notification['created_by'] as String?;
 
     // 2. Verify user has permission to delete (must be creator)
@@ -267,15 +263,7 @@ class NotificationApi {
       );
     }
 
-    // 4. If scheduled, cancel the OneSignal notification
-    if (status == 'scheduled' && oneSignalId != null) {
-      try {
-        await _cancelScheduledNotificationViaServerpod(oneSignalId);
-      } catch (e) {
-        print('⚠️ Failed to cancel scheduled notification: $e');
-        // Continue with soft delete even if cancellation fails
-      }
-    }
+    // 4. 调度通知会由 pg_cron 自动处理，无需手动取消
 
     // 5. Perform soft delete
     await supabase
@@ -287,39 +275,17 @@ class NotificationApi {
         .eq('id', notificationId);
   }
 
-  /// 通过 Serverpod 取消已调度的通知
-  Future<void> _cancelScheduledNotificationViaServerpod(
-    String oneSignalNotificationId,
-  ) async {
-    final serverpodUrl = ApiConfig.serverpodUrl;
 
-    try {
-      final response = await http.post(
-        Uri.parse('$serverpodUrl/notification/cancelScheduledNotification'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'oneSignalNotificationId': oneSignalNotificationId,
-        }),
-      );
-
-      if (response.statusCode != 200) {
-        throw Exception('Serverpod API error: ${response.body}');
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
 
   /// 管理员硬删除通知（永久删除，谨慎使用）
   /// 
   /// This permanently deletes the notification and all associated user_notification records.
-  /// Requires admin permission check on the server side.
   /// Use with extreme caution - this action cannot be undone.
   Future<void> hardDeleteNotification({
     required String notificationId,
     required String userId,
   }) async {
-    // Verify user has permission before making the request
+    // Verify user has permission
     final hasPermission = await _canHardDeleteNotification(userId);
     if (!hasPermission) {
       throw Exception(
@@ -327,26 +293,11 @@ class NotificationApi {
       );
     }
 
-    // Call Serverpod endpoint to perform hard delete with permission check
-    final serverpodUrl = ApiConfig.serverpodUrl;
-
-    try {
-      final response = await http.post(
-        Uri.parse('$serverpodUrl/notification/hardDeleteNotification'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'notificationId': notificationId,
-          'userId': userId,
-        }),
-      );
-
-      if (response.statusCode != 200) {
-        final errorBody = jsonDecode(response.body) as Map<String, dynamic>;
-        throw Exception(errorBody['error'] ?? 'Failed to delete notification');
-      }
-    } catch (e) {
-      rethrow;
-    }
+    // 直接删除通知记录（会级联删除 user_notifications）
+    await supabase
+        .from('notifications')
+        .delete()
+        .eq('id', notificationId);
   }
 
   /// Check if user has permission to hard delete notifications
@@ -389,7 +340,12 @@ class NotificationApi {
     }
   }
 
-  /// 创建通知并通过 OneSignal 发送推送或通过 QStash 调度
+  /// 创建通知（简化版 - 直接写入 Supabase）
+  /// 
+  /// 通知会通过 Supabase Database Trigger 自动触发发送
+  /// - status='sent': 立即通过 Edge Function 发送
+  /// - status='scheduled': 通过 pg_cron 定时任务在指定时间发送
+  /// - status='draft': 不发送，仅保存
   Future<Map<String, dynamic>> createNotification({
     required String createdBy,
     required String title,
@@ -420,7 +376,7 @@ class NotificationApi {
 
     final now = DateTime.now();
 
-    // 1. 创建通知记录
+    // 直接创建通知记录，Supabase Trigger 会自动处理发送逻辑
     final result = await supabase
         .from('notifications')
         .insert({
@@ -444,113 +400,10 @@ class NotificationApi {
         .select()
         .single();
 
-    final notificationId = result['id'] as String;
-
-    // 2. 根据状态处理
-    if (status == 'sent') {
-      // 立即发送：调用 Serverpod endpoint 来发送推送
-      try {
-        await _triggerNotificationSend(notificationId);
-      } catch (e) {
-        print('⚠️ Failed to trigger notification send: $e');
-      }
-    } else if (status == 'scheduled' && scheduledAt != null) {
-      // 调度发送：调用 Serverpod endpoint 来通过 QStash 调度
-      try {
-        await _scheduleNotificationViaServerpod(
-          notificationId: notificationId,
-          scheduledAt: scheduledAt,
-        );
-      } catch (e) {
-        // 如果调度失败，更新状态为 failed
-        await supabase
-            .from('notifications')
-            .update({'status': 'failed'})
-            .eq('id', notificationId);
-      }
-    }
-    // status == 'draft' 不做任何操作
-
     return result;
   }
 
-  /// 触发通知发送（通过 Serverpod endpoint）
-  Future<void> _triggerNotificationSend(String notificationId) async {
-    final serverpodUrl = ApiConfig.serverpodUrl;
 
-    try {
-      final response = await http.post(
-        Uri.parse('$serverpodUrl/notification/handleNotificationCreated'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'notificationId': notificationId}),
-      );
-
-      if (response.statusCode != 200) {
-        throw Exception('Serverpod API error: ${response.body}');
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  /// 通过 Serverpod 调度通知（使用 QStash）
-  Future<void> _scheduleNotificationViaServerpod({
-    required String notificationId,
-    required DateTime scheduledAt,
-  }) async {
-    final serverpodUrl = ApiConfig.serverpodUrl;
-
-    try {
-      final response = await http.post(
-        Uri.parse('$serverpodUrl/notification/scheduleNotificationById'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'notificationId': notificationId,
-          'scheduledAt': scheduledAt.toIso8601String(),
-        }),
-      );
-
-      if (response.statusCode != 200) {
-        throw Exception('Serverpod API error: ${response.body}');
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  /// 🧪 测试：手动触发 scheduled notification 处理
-  ///
-  /// 用于本地开发测试，模拟 QStash webhook 的行为
-  ///
-  /// 使用方法：
-  /// 1. 创建一个 scheduled notification
-  /// 2. 复制 notification ID
-  /// 3. 调用此方法：await testProcessScheduledNotification('notification-id')
-  /// 4. 检查 Supabase 中的状态是否更新为 'sent'
-  Future<Map<String, dynamic>> testProcessScheduledNotification(
-    String notificationId,
-  ) async {
-    final serverpodUrl = ApiConfig.serverpodUrl;
-
-    try {
-      final response = await http.post(
-        Uri.parse(
-          '$serverpodUrl/notification/testProcessScheduledNotification',
-        ),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'notificationId': notificationId}),
-      );
-
-      if (response.statusCode != 200) {
-        throw Exception('Test failed: ${response.body}');
-      }
-
-      final result = jsonDecode(response.body) as Map<String, dynamic>;
-      return result;
-    } catch (e) {
-      rethrow;
-    }
-  }
 
   /// 更新通知（支持更新所有字段）
   Future<Map<String, dynamic>> updateNotification({
@@ -569,16 +422,14 @@ class NotificationApi {
     String? category,
     int? priority,
   }) async {
-    // 1. Fetch current notification to check status, creator, and get QStash message ID
+    // 1. Fetch current notification to check status and creator
     final currentNotification = await supabase
         .from('notifications')
-        .select('status, data, created_by')
+        .select('status, created_by')
         .eq('id', notificationId)
         .single();
 
     final currentStatus = currentNotification['status'] as String;
-    final currentData = currentNotification['data'] as Map<String, dynamic>?;
-    final qstashMessageId = currentData?['qstash_message_id'] as String?;
     final createdBy = currentNotification['created_by'] as String?;
 
     // 2. Verify user has permission to update (must be creator and draft status)
@@ -600,16 +451,8 @@ class NotificationApi {
       );
     }
 
-    // 4. If updating a scheduled notification, cancel the previous QStash job
-    if (currentStatus == 'scheduled' && qstashMessageId != null) {
-      try {
-        await _cancelQStashJob(qstashMessageId);
-        print('✓ Cancelled previous QStash job: $qstashMessageId');
-      } catch (e) {
-        print('⚠️ Failed to cancel previous QStash job: $e');
-        // Continue with update even if cancellation fails
-      }
-    }
+    // 4. 如果更新调度通知，旧的调度会被 pg_cron 自动处理
+    // 不需要手动取消，因为我们不再使用 QStash
 
     final updateData = <String, dynamic>{
       'title': title,
@@ -657,59 +500,13 @@ class NotificationApi {
         .select()
         .single();
 
-    // 4. Handle status transitions
-    // If status changed from draft to sent, trigger immediate send
-    if (status == 'sent' && currentStatus == 'draft') {
-      try {
-        await _triggerNotificationSend(notificationId);
-      } catch (e) {
-        print('⚠️ Failed to trigger notification send after update: $e');
-      }
-    }
-    // If status changed from draft to scheduled, schedule the notification
-    else if (status == 'scheduled' && currentStatus == 'draft' && scheduledAt != null) {
-      try {
-        await _scheduleNotificationViaServerpod(
-          notificationId: notificationId,
-          scheduledAt: scheduledAt,
-        );
-      } catch (e) {
-        print('⚠️ Failed to schedule notification after update: $e');
-      }
-    }
-    // If updating a scheduled notification with new scheduled time, reschedule
-    else if (currentStatus == 'scheduled' && status == 'scheduled' && scheduledAt != null) {
-      try {
-        await _scheduleNotificationViaServerpod(
-          notificationId: notificationId,
-          scheduledAt: scheduledAt,
-        );
-      } catch (e) {
-        print('⚠️ Failed to reschedule notification after update: $e');
-      }
-    }
+    // 4. 状态变更会由 Supabase Trigger 自动处理
+    // - draft -> sent: Trigger 会自动发送
+    // - draft -> scheduled: pg_cron 会在指定时间处理
+    // - scheduled -> sent: pg_cron 会自动更新并发送
 
     return result;
   }
 
-  /// Cancel a QStash scheduled job
-  Future<void> _cancelQStashJob(String qstashMessageId) async {
-    final serverpodUrl = ApiConfig.serverpodUrl;
 
-    try {
-      final response = await http.post(
-        Uri.parse('$serverpodUrl/notification/cancelQStashJob'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'qstashMessageId': qstashMessageId,
-        }),
-      );
-
-      if (response.statusCode != 200) {
-        throw Exception('Serverpod API error: ${response.body}');
-      }
-    } catch (e) {
-      rethrow;
-    }
-  }
 }
