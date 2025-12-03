@@ -32,7 +32,6 @@ To create a safer driving experience by leveraging AI technology and community c
 - **Community-Driven**: Crowdsourced data for comprehensive coverage
 - **AI-Powered**: State-of-the-art vision models for accurate detection
 - **Real-Time Alerts**: Instant notifications for nearby hazards
-- **Gamified Experience**: Earn rewards for contributing to road safety
 - **Open Platform**: Transparent and accessible to all users
 
 ---
@@ -49,8 +48,6 @@ To create a safer driving experience by leveraging AI technology and community c
 | **AI Image Model** | Google Gemini 2.0 Flash Exp (OpenRouter) | Advanced image analysis and description |
 | **Map & GPS** | Google Maps Flutter, Geolocator | Visualize reports and get user location |
 | **Push Notifications** | OneSignal | Send hazard and system alerts |
-| **Task Queue** | Upstash QStash | Background task scheduling |
-| **Cache Layer** | Upstash Redis | Temporary data and action logs |
 | **State Management** | Provider | Manage authentication, theme, locale, notifications |
 | **Version Control** | GitHub | Source management and collaboration |
 
@@ -74,8 +71,6 @@ To activate **Developer Mode**, go to **Profile → About Page**, then **tap the
 - 🤖 **AI-powered real-time damage detection** using NVIDIA Nemotron & Google Gemini models  
 - 📍 **GPS-based location tagging** with precise coordinates  
 - ☁️ **Cloud-synced reporting** via Supabase  
-- 🔊 **Severity-based voice alerts** for nearby hazards (Text-to-Speech)  
-- 🏅 **Gamified user engagement** with points, badges, reputation scores, trust levels, and leaderboards  
 - 🌗 **Dark/Light theme** with full internationalization (EN/ZH)  
 - 📶 **Offline queue management** - detections retry automatically when online  
 - 🎚️ **Adjustable sensitivity** (1-5 levels) for detection confidence  
@@ -95,15 +90,13 @@ To activate **Developer Mode**, go to **Profile → About Page**, then **tap the
 5. Voice alert triggers if hazards are nearby (severity-based)  
 6. User confirms and submits report  
 7. Report data and image stored in Supabase  
-8. Points, badges, and reputation score updated in user profile  
+8. Points and reputation score updated in user profile  
 9. Failed detections queued for retry when offline  
 
 ---
 
 ## 🚀 Deployment  
 - **Frontend:** Flutter 3.9.2+ (Android & iOS)  
-- **Backend:** Serverpod hosted on **Railway**  
-- **Cache & Queue:** Upstash Redis + QStash  
 - **Database & Storage:** Supabase  
 - **AI Service:** OpenRouter API (NVIDIA Nemotron Nano 12B V2 VL + Google Gemini 2.0 Flash Exp)  
 - **Push Notifications:** OneSignal  
