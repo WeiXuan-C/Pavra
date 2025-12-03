@@ -61,11 +61,6 @@
             android:name="com.onesignal.NotificationOpened.DEFAULT"
             android:value="DISABLE" />
         
-        <!-- 小图标（状态栏显示） -->
-        <meta-data
-            android:name="com.onesignal.NotificationIcon"
-            android:resource="@drawable/ic_stat_onesignal_default" />
-        
         <!-- 大图标（通知展开时显示） -->
         <meta-data
             android:name="com.onesignal.LargeIcon"
