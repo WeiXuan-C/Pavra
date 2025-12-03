@@ -4248,6 +4248,10 @@
   "@map_clear": {
     "description": "Clear button text"
   },
+  "map_tapForOptions": "Tap for options",
+  "@map_tapForOptions": {
+    "description": "Tap marker for options hint"
+  },
   "accessibility_voiceSearchError": "Voice search error",
   "@accessibility_voiceSearchError": {
     "description": "Voice search error message"

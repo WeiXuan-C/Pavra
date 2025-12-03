@@ -6080,6 +6080,12 @@ abstract class AppLocalizations {
   /// **'Clear'**
   String get map_clear;
 
+  /// Tap marker for options hint
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for options'**
+  String get map_tapForOptions;
+
   /// Voice search error message
   ///
   /// In en, this message translates to:

@@ -1249,11 +1249,6 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
 
   void _handleSearch(String query, LatLng? location, String? address) {
     if (location != null && _mapController != null) {
-      // Move camera to searched location
-      _mapController!.animateCamera(
-        CameraUpdate.newLatLngZoom(location, 15.0),
-      );
-      
       // Check if there are any issues near this location
       final nearbyIssues = _roadIssues.where((issue) {
         if (issue['latitude'] == null || issue['longitude'] == null) return false;
@@ -1278,15 +1273,24 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
             icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
             infoWindow: InfoWindow(
               title: query,
-              snippet: address ?? 'Tap for options',
+              snippet: address ?? AppLocalizations.of(context).map_tapForOptions,
             ),
             onTap: () => _showSearchResultActions(location, query, address, nearbyIssuesCount: nearbyIssues.length),
           ),
         );
       });
       
+      // Move camera to searched location after adding marker
+      _mapController!.animateCamera(
+        CameraUpdate.newLatLngZoom(location, 15.0),
+      );
+      
       // Show location card with directions option immediately after search
-      _showSearchResultActions(location, query, address, nearbyIssuesCount: nearbyIssues.length);
+      Future.delayed(Duration(milliseconds: 500), () {
+        if (mounted) {
+          _showSearchResultActions(location, query, address, nearbyIssuesCount: nearbyIssues.length);
+        }
+      });
     }
   }
 

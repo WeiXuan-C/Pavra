@@ -3197,6 +3197,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get map_clear => 'Clear';
 
   @override
+  String get map_tapForOptions => 'Tap for options';
+
+  @override
   String get accessibility_voiceSearchError => 'Voice search error';
 
   @override
