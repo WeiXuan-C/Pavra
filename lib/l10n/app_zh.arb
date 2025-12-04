@@ -4248,6 +4248,10 @@
   "@map_clear": {
     "description": "清除按钮文本"
   },
+  "map_tapForOptions": "点击查看选项",
+  "@map_tapForOptions": {
+    "description": "点击标记查看选项提示"
+  },
   "accessibility_voiceSearchError": "语音搜索错误",
   "@accessibility_voiceSearchError": {
     "description": "语音搜索错误消息"

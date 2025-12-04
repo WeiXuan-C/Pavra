@@ -346,29 +346,26 @@ class _MapSearchBarState extends State<MapSearchBar> {
             top: 7.h, // Position below the search bar
             left: 0,
             right: 0,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {}, // Absorb taps to prevent map interaction
-              child: Container(
-                constraints: BoxConstraints(
-                  maxHeight: 40.h, // Limit height to prevent overflow
-                ),
-                decoration: BoxDecoration(
-                  color: theme.cardColor,
-                  borderRadius: BorderRadius.circular(3.w),
-                  boxShadow: [
-                    BoxShadow(
-                      color: theme.colorScheme.shadow.withValues(alpha: 0.2),
-                      blurRadius: 12,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: SingleChildScrollView(
-                  physics: ClampingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: 40.h, // Limit height to prevent overflow
+              ),
+              decoration: BoxDecoration(
+                color: theme.cardColor,
+                borderRadius: BorderRadius.circular(3.w),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.shadow.withValues(alpha: 0.2),
+                    blurRadius: 12,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: SingleChildScrollView(
+                physics: ClampingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                       if (_searchSuggestions.isNotEmpty) ...[
                         Padding(
                           padding: EdgeInsets.all(3.w),
@@ -421,7 +418,6 @@ class _MapSearchBarState extends State<MapSearchBar> {
                 ),
               ),
             ),
-          ),
       ],
     );
   }

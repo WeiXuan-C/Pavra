@@ -3082,7 +3082,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get map_clear => '清除';
 
   @override
-  String get map_tapForOptions => 'Tap for options';
+  String get map_tapForOptions => '点击查看选项';
 
   @override
   String get accessibility_voiceSearchError => '语音搜索错误';
