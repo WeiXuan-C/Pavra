@@ -949,13 +949,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get severity_minor => '轻微';
 
   @override
-  String get severity_low => '低';
+  String get severity_low => '较低';
 
   @override
   String get severity_moderate => '中等';
 
   @override
-  String get severity_high => '高';
+  String get severity_high => '严重';
 
   @override
   String get severity_critical => '危急';
@@ -2591,31 +2591,31 @@ class AppLocalizationsZh extends AppLocalizations {
   String get route_walk => '步行';
 
   @override
-  String get map_searchPlaceholder => '搜索地点、地址...';
+  String get map_searchPlaceholder => '搜索地点、地址或问题...';
 
   @override
   String map_feetAway(int feet) {
-    return '$feet 英尺外';
+    return '$feet 英尺';
   }
 
   @override
   String map_milesAway(String miles) {
-    return '$miles 英里外';
+    return '$miles 英里';
   }
 
   @override
   String map_daysAgo(int days) {
-    return '$days 天前';
+    return '$days天前';
   }
 
   @override
   String map_hoursAgo(int hours) {
-    return '$hours 小时前';
+    return '$hours小时前';
   }
 
   @override
   String map_minutesAgo(int minutes) {
-    return '$minutes 分钟前';
+    return '$minutes分钟前';
   }
 
   @override

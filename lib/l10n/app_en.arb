@@ -593,10 +593,6 @@
       }
     }
   },
-  "map_refresh": "Refresh",
-  "@map_refresh": {
-    "description": "Refresh button tooltip"
-  },
   "map_currentLocation": "Current Location",
   "@map_currentLocation": {
     "description": "Current location button tooltip"
@@ -1261,26 +1257,6 @@
   "alerts_noSavedRoutes": "No saved routes. Add frequent routes to monitor for alerts.",
   "@alerts_noSavedRoutes": {
     "description": "Message when no routes are saved"
-  },
-  "severity_minor": "Minor",
-  "@severity_minor": {
-    "description": "Minor severity level"
-  },
-  "severity_low": "Low",
-  "@severity_low": {
-    "description": "Low severity level"
-  },
-  "severity_moderate": "Moderate",
-  "@severity_moderate": {
-    "description": "Moderate severity level"
-  },
-  "severity_high": "High",
-  "@severity_high": {
-    "description": "High severity level"
-  },
-  "severity_critical": "Critical",
-  "@severity_critical": {
-    "description": "Critical severity level"
   },
   "severity_minorDesc": "Minor inconvenience, no immediate danger",
   "@severity_minorDesc": {
@@ -3393,26 +3369,6 @@
   "@admin_title": {
     "description": "Admin panel screen title"
   },
-  "admin_overview": "Overview",
-  "@admin_overview": {
-    "description": "Overview tab"
-  },
-  "admin_reports": "Reports",
-  "@admin_reports": {
-    "description": "Reports tab"
-  },
-  "admin_users": "Users",
-  "@admin_users": {
-    "description": "Users tab"
-  },
-  "admin_totalReports": "Total Reports",
-  "@admin_totalReports": {
-    "description": "Total reports stat"
-  },
-  "admin_totalUsers": "Total Users",
-  "@admin_totalUsers": {
-    "description": "Total users stat"
-  },
   "admin_pendingReports": "Pending Reports",
   "@admin_pendingReports": {
     "description": "Pending reports stat"
@@ -3444,10 +3400,6 @@
   "analytics_title": "Analytics Dashboard",
   "@analytics_title": {
     "description": "Analytics dashboard screen title"
-  },
-  "analytics_totalReports": "Total Reports",
-  "@analytics_totalReports": {
-    "description": "Total reports metric"
   },
   "analytics_resolved": "Resolved",
   "@analytics_resolved": {
@@ -3662,59 +3614,6 @@
   "report_notInYourArea": "Not in your area",
   "@report_notInYourArea": {
     "description": "Warning message when report is not in user's area"
-  },
-  "map_searchPlaceholder": "Search places, addresses...",
-  "@map_searchPlaceholder": {
-    "description": "Search bar placeholder text in map screen"
-  },
-  "map_feetAway": "{feet} ft away",
-  "@map_feetAway": {
-    "description": "Distance in feet",
-    "placeholders": {
-      "feet": {
-        "type": "int"
-      }
-    }
-  },
-  "map_milesAway": "{miles} mi away",
-  "@map_milesAway": {
-    "description": "Distance in miles",
-    "placeholders": {
-      "miles": {
-        "type": "String"
-      }
-    }
-  },
-  "map_daysAgo": "{days} days ago",
-  "@map_daysAgo": {
-    "description": "Days ago timestamp",
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "map_hoursAgo": "{hours} hours ago",
-  "@map_hoursAgo": {
-    "description": "Hours ago timestamp",
-    "placeholders": {
-      "hours": {
-        "type": "int"
-      }
-    }
-  },
-  "map_minutesAgo": "{minutes} minutes ago",
-  "@map_minutesAgo": {
-    "description": "Minutes ago timestamp",
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "map_justNow": "Just now",
-  "@map_justNow": {
-    "description": "Just now timestamp"
   },
   "settings_helpAndFaq": "Help & FAQ",
   "@settings_helpAndFaq": {
@@ -4272,10 +4171,6 @@
         "type": "String"
       }
     }
-  },
-  "map_filter": "Filter",
-  "@map_filter": {
-    "description": "Filter button label"
   },
   "map_refresh": "Refresh",
   "@map_refresh": {
