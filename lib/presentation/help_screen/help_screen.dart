@@ -204,47 +204,6 @@ class _HelpScreenState extends State<HelpScreen> {
               ],
             ),
 
-            SizedBox(height: 3.h),
-
-            // Contact Support
-            Container(
-              padding: EdgeInsets.all(4.w),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(3.w),
-              ),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.support_agent,
-                    size: 48,
-                    color: theme.colorScheme.primary,
-                  ),
-                  SizedBox(height: 2.h),
-                  Text(
-                    l10n.help_stillNeedHelp,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 1.h),
-                  Text(
-                    l10n.help_contactSupport,
-                    style: theme.textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 2.h),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      // Open email or support form
-                    },
-                    icon: Icon(Icons.email),
-                    label: Text(l10n.help_contactSupportButton),
-                  ),
-                ],
-              ),
-            ),
-
             SizedBox(height: 2.h),
           ],
         ),
