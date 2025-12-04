@@ -593,10 +593,6 @@
       }
     }
   },
-  "map_refresh": "刷新",
-  "@map_refresh": {
-    "description": "刷新按钮提示"
-  },
   "map_currentLocation": "当前位置",
   "@map_currentLocation": {
     "description": "当前位置按钮提示"
@@ -3393,25 +3389,9 @@
   "@admin_title": {
     "description": "管理面板标题"
   },
-  "admin_overview": "概览",
-  "@admin_overview": {
-    "description": "概览标签"
-  },
-  "admin_reports": "报告",
-  "@admin_reports": {
-    "description": "报告标签"
-  },
-  "admin_users": "用户",
-  "@admin_users": {
-    "description": "用户标签"
-  },
   "admin_totalReports": "总报告数",
   "@admin_totalReports": {
     "description": "总报告数统计"
-  },
-  "admin_totalUsers": "总用户数",
-  "@admin_totalUsers": {
-    "description": "总用户数统计"
   },
   "admin_pendingReports": "待处理报告",
   "@admin_pendingReports": {
@@ -3559,26 +3539,6 @@
   "@map_justNow": {
     "description": "刚刚时间指示器"
   },
-  "severity_critical": "危急",
-  "@severity_critical": {
-    "description": "危急严重程度"
-  },
-  "severity_high": "高",
-  "@severity_high": {
-    "description": "高严重程度"
-  },
-  "severity_moderate": "中等",
-  "@severity_moderate": {
-    "description": "中等严重程度"
-  },
-  "severity_low": "低",
-  "@severity_low": {
-    "description": "低严重程度"
-  },
-  "severity_minor": "轻微",
-  "@severity_minor": {
-    "description": "轻微严重程度"
-  },
   "voice_search": "语音搜索",
   "@voice_search": {
     "description": "语音搜索工具提示"
@@ -3662,59 +3622,6 @@
   "report_notInYourArea": "不在您的区域内",
   "@report_notInYourArea": {
     "description": "报告不在用户区域内的警告消息"
-  },
-  "map_searchPlaceholder": "搜索地点、地址...",
-  "@map_searchPlaceholder": {
-    "description": "地图屏幕搜索栏占位符文本"
-  },
-  "map_feetAway": "{feet} 英尺外",
-  "@map_feetAway": {
-    "description": "以英尺为单位的距离",
-    "placeholders": {
-      "feet": {
-        "type": "int"
-      }
-    }
-  },
-  "map_milesAway": "{miles} 英里外",
-  "@map_milesAway": {
-    "description": "以英里为单位的距离",
-    "placeholders": {
-      "miles": {
-        "type": "String"
-      }
-    }
-  },
-  "map_daysAgo": "{days} 天前",
-  "@map_daysAgo": {
-    "description": "天前时间戳",
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "map_hoursAgo": "{hours} 小时前",
-  "@map_hoursAgo": {
-    "description": "小时前时间戳",
-    "placeholders": {
-      "hours": {
-        "type": "int"
-      }
-    }
-  },
-  "map_minutesAgo": "{minutes} 分钟前",
-  "@map_minutesAgo": {
-    "description": "分钟前时间戳",
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "map_justNow": "刚刚",
-  "@map_justNow": {
-    "description": "刚刚时间戳"
   },
   "settings_helpAndFaq": "帮助与常见问题",
   "@settings_helpAndFaq": {
@@ -4117,10 +4024,6 @@
   "@about_madeWith": {
     "description": "用爱制作文本"
   },
-  "map_filter": "筛选",
-  "@map_filter": {
-    "description": "筛选按钮文本"
-  },
   "map_voiceSearch": "语音搜索",
   "@map_voiceSearch": {
     "description": "语音搜索按钮提示"
@@ -4423,10 +4326,6 @@
   "@admin_quickStatistics": {
     "description": "快速统计部分标题"
   },
-  "admin_totalReports": "总报告数",
-  "@admin_totalReports": {
-    "description": "总报告数指标标签"
-  },
   "admin_totalUsers": "总用户数",
   "@admin_totalUsers": {
     "description": "总用户数指标标签"
@@ -4632,10 +4531,6 @@
   "analytics_keyMetrics": "关键指标",
   "@analytics_keyMetrics": {
     "description": "关键指标部分标题"
-  },
-  "analytics_totalReports": "总报告数",
-  "@analytics_totalReports": {
-    "description": "总报告数指标"
   },
   "analytics_totalUsers": "总用户数",
   "@analytics_totalUsers": {
