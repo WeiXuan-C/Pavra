@@ -450,9 +450,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get map_refresh => 'Refresh';
-
-  @override
   String get map_currentLocation => 'Current Location';
 
   @override
@@ -973,21 +970,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get alerts_noSavedRoutes =>
       'No saved routes. Add frequent routes to monitor for alerts.';
-
-  @override
-  String get severity_minor => 'MINOR';
-
-  @override
-  String get severity_low => 'LOW';
-
-  @override
-  String get severity_moderate => 'MODERATE';
-
-  @override
-  String get severity_high => 'HIGH';
-
-  @override
-  String get severity_critical => 'CRITICAL';
 
   @override
   String get severity_minorDesc => 'Minor inconvenience, no immediate danger';
@@ -2598,21 +2580,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get admin_title => 'Admin Panel';
 
   @override
-  String get admin_overview => 'Overview';
-
-  @override
-  String get admin_reports => 'Reports';
-
-  @override
-  String get admin_users => 'Users';
-
-  @override
-  String get admin_totalReports => 'Total Reports';
-
-  @override
-  String get admin_totalUsers => 'Total Users';
-
-  @override
   String get admin_pendingReports => 'Pending Reports';
 
   @override
@@ -2635,9 +2602,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get analytics_title => 'Analytics Dashboard';
-
-  @override
-  String get analytics_totalReports => 'Total Reports';
 
   @override
   String get analytics_resolved => 'Resolved';
@@ -2681,35 +2645,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get route_walk => 'Walk';
 
   @override
-  String get map_searchPlaceholder => 'Search places, addresses...';
+  String get map_searchPlaceholder => 'Search places, addresses, or issues...';
 
   @override
-  String map_feetAway(int feet) {
-    return '$feet ft away';
+  String map_feetAway(int distance) {
+    return '$distance ft away';
   }
 
   @override
-  String map_milesAway(String miles) {
-    return '$miles mi away';
+  String map_milesAway(String distance) {
+    return '$distance mi away';
   }
 
   @override
   String map_daysAgo(int days) {
-    return '$days days ago';
+    return '${days}d ago';
   }
 
   @override
   String map_hoursAgo(int hours) {
-    return '$hours hours ago';
+    return '${hours}h ago';
   }
 
   @override
   String map_minutesAgo(int minutes) {
-    return '$minutes minutes ago';
+    return '${minutes}m ago';
   }
 
   @override
   String get map_justNow => 'Just now';
+
+  @override
+  String get severity_critical => 'CRITICAL';
+
+  @override
+  String get severity_high => 'HIGH';
+
+  @override
+  String get severity_moderate => 'MODERATE';
+
+  @override
+  String get severity_low => 'LOW';
+
+  @override
+  String get severity_minor => 'MINOR';
 
   @override
   String get voice_search => 'Voice search';
@@ -3214,6 +3193,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get map_refresh => 'Refresh';
+
+  @override
   String get map_home => 'Home';
 
   @override
@@ -3304,7 +3286,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get admin_dashboard => 'Admin Dashboard';
 
   @override
+  String get admin_overview => 'Overview';
+
+  @override
+  String get admin_reports => 'Reports';
+
+  @override
+  String get admin_users => 'Users';
+
+  @override
   String get admin_quickStatistics => 'Quick Statistics';
+
+  @override
+  String get admin_totalReports => 'Total Reports';
+
+  @override
+  String get admin_totalUsers => 'Total Users';
 
   @override
   String get admin_reportStatus => 'Report Status';
@@ -3454,6 +3451,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get analytics_keyMetrics => 'Key Metrics';
+
+  @override
+  String get analytics_totalReports => 'Total Reports';
 
   @override
   String get analytics_totalUsers => 'Total Users';

@@ -950,12 +950,6 @@ abstract class AppLocalizations {
   /// **'Showing issues within {radius} miles'**
   String map_showingIssuesWithin(String radius);
 
-  /// Refresh button label
-  ///
-  /// In en, this message translates to:
-  /// **'Refresh'**
-  String get map_refresh;
-
   /// Current location button tooltip
   ///
   /// In en, this message translates to:
@@ -1945,36 +1939,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No saved routes. Add frequent routes to monitor for alerts.'**
   String get alerts_noSavedRoutes;
-
-  /// Minor severity level
-  ///
-  /// In en, this message translates to:
-  /// **'MINOR'**
-  String get severity_minor;
-
-  /// Low severity level
-  ///
-  /// In en, this message translates to:
-  /// **'LOW'**
-  String get severity_low;
-
-  /// Moderate severity level
-  ///
-  /// In en, this message translates to:
-  /// **'MODERATE'**
-  String get severity_moderate;
-
-  /// High severity level
-  ///
-  /// In en, this message translates to:
-  /// **'HIGH'**
-  String get severity_high;
-
-  /// Critical severity level
-  ///
-  /// In en, this message translates to:
-  /// **'CRITICAL'**
-  String get severity_critical;
 
   /// Minor severity description
   ///
@@ -4982,36 +4946,6 @@ abstract class AppLocalizations {
   /// **'Admin Panel'**
   String get admin_title;
 
-  /// Overview tab label
-  ///
-  /// In en, this message translates to:
-  /// **'Overview'**
-  String get admin_overview;
-
-  /// Reports tab label
-  ///
-  /// In en, this message translates to:
-  /// **'Reports'**
-  String get admin_reports;
-
-  /// Users tab label
-  ///
-  /// In en, this message translates to:
-  /// **'Users'**
-  String get admin_users;
-
-  /// Total reports metric label
-  ///
-  /// In en, this message translates to:
-  /// **'Total Reports'**
-  String get admin_totalReports;
-
-  /// Total users metric label
-  ///
-  /// In en, this message translates to:
-  /// **'Total Users'**
-  String get admin_totalUsers;
-
   /// Pending reports stat
   ///
   /// In en, this message translates to:
@@ -5059,12 +4993,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Analytics Dashboard'**
   String get analytics_title;
-
-  /// Total reports metric
-  ///
-  /// In en, this message translates to:
-  /// **'Total Reports'**
-  String get analytics_totalReports;
 
   /// Resolved reports metric
   ///
@@ -5144,47 +5072,77 @@ abstract class AppLocalizations {
   /// **'Walk'**
   String get route_walk;
 
-  /// Search bar placeholder text in map screen
+  /// Search bar placeholder text
   ///
   /// In en, this message translates to:
-  /// **'Search places, addresses...'**
+  /// **'Search places, addresses, or issues...'**
   String get map_searchPlaceholder;
 
   /// Distance in feet
   ///
   /// In en, this message translates to:
-  /// **'{feet} ft away'**
-  String map_feetAway(int feet);
+  /// **'{distance} ft away'**
+  String map_feetAway(int distance);
 
   /// Distance in miles
   ///
   /// In en, this message translates to:
-  /// **'{miles} mi away'**
-  String map_milesAway(String miles);
+  /// **'{distance} mi away'**
+  String map_milesAway(String distance);
 
-  /// Days ago timestamp
+  /// Days ago
   ///
   /// In en, this message translates to:
-  /// **'{days} days ago'**
+  /// **'{days}d ago'**
   String map_daysAgo(int days);
 
-  /// Hours ago timestamp
+  /// Hours ago
   ///
   /// In en, this message translates to:
-  /// **'{hours} hours ago'**
+  /// **'{hours}h ago'**
   String map_hoursAgo(int hours);
 
-  /// Minutes ago timestamp
+  /// Minutes ago
   ///
   /// In en, this message translates to:
-  /// **'{minutes} minutes ago'**
+  /// **'{minutes}m ago'**
   String map_minutesAgo(int minutes);
 
-  /// Just now timestamp
+  /// Just now time indicator
   ///
   /// In en, this message translates to:
   /// **'Just now'**
   String get map_justNow;
+
+  /// Critical severity level
+  ///
+  /// In en, this message translates to:
+  /// **'CRITICAL'**
+  String get severity_critical;
+
+  /// High severity level
+  ///
+  /// In en, this message translates to:
+  /// **'HIGH'**
+  String get severity_high;
+
+  /// Moderate severity level
+  ///
+  /// In en, this message translates to:
+  /// **'MODERATE'**
+  String get severity_moderate;
+
+  /// Low severity level
+  ///
+  /// In en, this message translates to:
+  /// **'LOW'**
+  String get severity_low;
+
+  /// Minor severity level
+  ///
+  /// In en, this message translates to:
+  /// **'MINOR'**
+  String get severity_minor;
 
   /// Voice search tooltip
   ///
@@ -5906,7 +5864,7 @@ abstract class AppLocalizations {
   /// **'Made with ❤️ for safer roads'**
   String get about_madeWith;
 
-  /// Filter button label
+  /// Filter button text
   ///
   /// In en, this message translates to:
   /// **'Filter'**
@@ -6110,6 +6068,12 @@ abstract class AppLocalizations {
   /// **'Location: {coordinates}'**
   String map_locationCoordinates(String coordinates);
 
+  /// Refresh button label
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get map_refresh;
+
   /// Home location label
   ///
   /// In en, this message translates to:
@@ -6254,11 +6218,41 @@ abstract class AppLocalizations {
   /// **'Admin Dashboard'**
   String get admin_dashboard;
 
+  /// Overview tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get admin_overview;
+
+  /// Reports tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get admin_reports;
+
+  /// Users tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get admin_users;
+
   /// Quick statistics section title
   ///
   /// In en, this message translates to:
   /// **'Quick Statistics'**
   String get admin_quickStatistics;
+
+  /// Total reports metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Reports'**
+  String get admin_totalReports;
+
+  /// Total users metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Users'**
+  String get admin_totalUsers;
 
   /// Report status section title
   ///
@@ -6547,6 +6541,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Key Metrics'**
   String get analytics_keyMetrics;
+
+  /// Total reports metric
+  ///
+  /// In en, this message translates to:
+  /// **'Total Reports'**
+  String get analytics_totalReports;
 
   /// Total users metric
   ///

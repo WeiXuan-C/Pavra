@@ -445,9 +445,6 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get map_refresh => '刷新';
-
-  @override
   String get map_currentLocation => '当前位置';
 
   @override
@@ -944,21 +941,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get alerts_noSavedRoutes => '没有保存的路线。添加常用路线以监控警报。';
-
-  @override
-  String get severity_minor => '轻微';
-
-  @override
-  String get severity_low => '较低';
-
-  @override
-  String get severity_moderate => '中等';
-
-  @override
-  String get severity_high => '严重';
-
-  @override
-  String get severity_critical => '危急';
 
   @override
   String get severity_minorDesc => '轻微不便，无即时危险';
@@ -2508,21 +2490,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get admin_title => '管理面板';
 
   @override
-  String get admin_overview => '概览';
-
-  @override
-  String get admin_reports => '报告';
-
-  @override
-  String get admin_users => '用户';
-
-  @override
-  String get admin_totalReports => '总报告数';
-
-  @override
-  String get admin_totalUsers => '总用户数';
-
-  @override
   String get admin_pendingReports => '待处理报告';
 
   @override
@@ -2545,9 +2512,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get analytics_title => '分析仪表板';
-
-  @override
-  String get analytics_totalReports => '总报告数';
 
   @override
   String get analytics_resolved => '已解决';
@@ -2594,13 +2558,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get map_searchPlaceholder => '搜索地点、地址或问题...';
 
   @override
-  String map_feetAway(int feet) {
-    return '$feet 英尺';
+  String map_feetAway(int distance) {
+    return '$distance 英尺';
   }
 
   @override
-  String map_milesAway(String miles) {
-    return '$miles 英里';
+  String map_milesAway(String distance) {
+    return '$distance 英里';
   }
 
   @override
@@ -2620,6 +2584,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get map_justNow => '刚刚';
+
+  @override
+  String get severity_critical => '危急';
+
+  @override
+  String get severity_high => '严重';
+
+  @override
+  String get severity_moderate => '中等';
+
+  @override
+  String get severity_low => '较低';
+
+  @override
+  String get severity_minor => '轻微';
 
   @override
   String get voice_search => '语音搜索';
@@ -3099,6 +3078,9 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get map_refresh => '刷新';
+
+  @override
   String get map_home => '家';
 
   @override
@@ -3183,7 +3165,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get admin_dashboard => '管理员仪表板';
 
   @override
+  String get admin_overview => '概览';
+
+  @override
+  String get admin_reports => '报告';
+
+  @override
+  String get admin_users => '用户';
+
+  @override
   String get admin_quickStatistics => '快速统计';
+
+  @override
+  String get admin_totalReports => '总报告数';
+
+  @override
+  String get admin_totalUsers => '总用户数';
 
   @override
   String get admin_reportStatus => '报告状态';
@@ -3332,6 +3329,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get analytics_keyMetrics => '关键指标';
+
+  @override
+  String get analytics_totalReports => '总报告数';
 
   @override
   String get analytics_totalUsers => '总用户数';
