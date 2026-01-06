@@ -257,7 +257,6 @@ class ReportIssueRemoteSource {
       // This requires the profiles table to have a location column
       // For now, return empty list - implement when location tracking is added
       
-      // TODO: Implement location-based user query
       // Example query:
       // SELECT user_id FROM user_locations
       // WHERE ST_DWithin(
