@@ -2981,7 +2981,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get about_title => 'About Pavra';
 
   @override
-  String get about_version => 'Version 1.1.0';
+  String get about_version => 'Version 2.0.0';
 
   @override
   String get about_tagline => 'AI-Powered Road Safety Platform';
@@ -3035,7 +3035,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get about_website => 'Website';
 
   @override
-  String get about_websiteUrl => 'pavra.vercel.app';
+  String get about_websiteUrl => 'Website URL';
 
   @override
   String get about_privacyPolicy => 'Privacy Policy';
@@ -3617,4 +3617,66 @@ class AppLocalizationsEn extends AppLocalizations {
   String analytics_reportDeleteFailed(String error) {
     return 'Failed to delete report: $error';
   }
+
+  @override
+  String get privacy_policy_title => 'Privacy Policy';
+
+  @override
+  String get privacy_policy_last_updated => 'Last Updated: January 9, 2026';
+
+  @override
+  String get terms_of_service_title => 'Terms of Service';
+
+  @override
+  String get terms_of_service_last_updated => 'Last Updated: January 9, 2026';
+
+  @override
+  String get profile_editUsername => 'Edit Username';
+
+  @override
+  String get profile_usernameHint => 'Enter your username';
+
+  @override
+  String get profile_usernameFormatHint =>
+      'Username can only contain lowercase letters, numbers, underscore (_), and dot (.). Must be 3-20 characters.';
+
+  @override
+  String get profile_suggestions => 'Suggestions';
+
+  @override
+  String get profile_saveChanges => 'Save Changes';
+
+  @override
+  String get profile_usernameEmpty => 'Username cannot be empty';
+
+  @override
+  String get profile_usernameFormat =>
+      'Username can only contain lowercase letters, numbers, underscore, and dot';
+
+  @override
+  String get profile_usernameMinLength =>
+      'Username must be at least 3 characters';
+
+  @override
+  String get profile_usernameMaxLength =>
+      'Username cannot exceed 20 characters';
+
+  @override
+  String get profile_usernameTaken => 'This username is already taken';
+
+  @override
+  String get profile_usernameVerifyError =>
+      'Failed to verify username availability';
+
+  @override
+  String get profile_usernameUpdated => 'Username updated successfully';
+
+  @override
+  String get profile_chooseAvatarSource => 'Choose Avatar Source';
+
+  @override
+  String get profile_gallery => 'Gallery';
+
+  @override
+  String get profile_avatarUpdated => 'Avatar updated successfully';
 }

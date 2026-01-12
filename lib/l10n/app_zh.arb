@@ -4750,5 +4750,81 @@
         "type": "String"
       }
     }
+  },
+  "privacy_policy_title": "隐私政策",
+  "@privacy_policy_title": {
+    "description": "隐私政策屏幕标题"
+  },
+  "privacy_policy_last_updated": "最后更新：2026年1月9日",
+  "@privacy_policy_last_updated": {
+    "description": "隐私政策最后更新日期"
+  },
+  "terms_of_service_title": "服务条款",
+  "@terms_of_service_title": {
+    "description": "服务条款屏幕标题"
+  },
+  "terms_of_service_last_updated": "最后更新：2026年1月9日",
+  "@terms_of_service_last_updated": {
+    "description": "服务条款最后更新日期"
+  },
+  "profile_editUsername": "编辑用户名",
+  "@profile_editUsername": {
+    "description": "编辑用户名对话框标题"
+  },
+  "profile_usernameHint": "输入您的用户名",
+  "@profile_usernameHint": {
+    "description": "用户名输入提示文本"
+  },
+  "profile_usernameFormatHint": "用户名只能包含小写字母、数字、下划线（_）和点（.）。长度必须为3-20个字符。",
+  "@profile_usernameFormatHint": {
+    "description": "用户名格式提示文本"
+  },
+  "profile_suggestions": "建议",
+  "@profile_suggestions": {
+    "description": "用户名建议部分标题"
+  },
+  "profile_saveChanges": "保存更改",
+  "@profile_saveChanges": {
+    "description": "保存更改按钮文本"
+  },
+  "profile_usernameEmpty": "用户名不能为空",
+  "@profile_usernameEmpty": {
+    "description": "用户名为空错误消息"
+  },
+  "profile_usernameFormat": "用户名只能包含小写字母、数字、下划线和点",
+  "@profile_usernameFormat": {
+    "description": "用户名格式错误消息"
+  },
+  "profile_usernameMinLength": "用户名至少需要3个字符",
+  "@profile_usernameMinLength": {
+    "description": "用户名最小长度错误消息"
+  },
+  "profile_usernameMaxLength": "用户名不能超过20个字符",
+  "@profile_usernameMaxLength": {
+    "description": "用户名最大长度错误消息"
+  },
+  "profile_usernameTaken": "此用户名已被占用",
+  "@profile_usernameTaken": {
+    "description": "用户名已被占用错误消息"
+  },
+  "profile_usernameVerifyError": "验证用户名可用性失败",
+  "@profile_usernameVerifyError": {
+    "description": "用户名验证错误消息"
+  },
+  "profile_usernameUpdated": "用户名更新成功",
+  "@profile_usernameUpdated": {
+    "description": "用户名更新成功消息"
+  },
+  "profile_chooseAvatarSource": "选择头像来源",
+  "@profile_chooseAvatarSource": {
+    "description": "选择头像来源对话框标题"
+  },
+  "profile_gallery": "相册",
+  "@profile_gallery": {
+    "description": "头像选择的相册选项"
+  },
+  "profile_avatarUpdated": "头像更新成功",
+  "@profile_avatarUpdated": {
+    "description": "头像更新成功消息"
   }
 }

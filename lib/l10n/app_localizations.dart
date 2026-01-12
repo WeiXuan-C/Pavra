@@ -5681,7 +5681,7 @@ abstract class AppLocalizations {
   /// App version
   ///
   /// In en, this message translates to:
-  /// **'Version 1.1.0'**
+  /// **'Version 2.0.0'**
   String get about_version;
 
   /// App tagline
@@ -5780,10 +5780,10 @@ abstract class AppLocalizations {
   /// **'Website'**
   String get about_website;
 
-  /// Website URL
+  /// Website URL (removed)
   ///
   /// In en, this message translates to:
-  /// **'pavra.vercel.app'**
+  /// **'Website URL'**
   String get about_websiteUrl;
 
   /// Privacy policy link
@@ -6853,6 +6853,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to delete report: {error}'**
   String analytics_reportDeleteFailed(String error);
+
+  /// Privacy policy screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacy_policy_title;
+
+  /// Privacy policy last updated date
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated: January 9, 2026'**
+  String get privacy_policy_last_updated;
+
+  /// Terms of service screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get terms_of_service_title;
+
+  /// Terms of service last updated date
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated: January 9, 2026'**
+  String get terms_of_service_last_updated;
+
+  /// Edit username dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Username'**
+  String get profile_editUsername;
+
+  /// Username input hint text
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your username'**
+  String get profile_usernameHint;
+
+  /// Username format hint text
+  ///
+  /// In en, this message translates to:
+  /// **'Username can only contain lowercase letters, numbers, underscore (_), and dot (.). Must be 3-20 characters.'**
+  String get profile_usernameFormatHint;
+
+  /// Username suggestions section title
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions'**
+  String get profile_suggestions;
+
+  /// Save changes button text
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get profile_saveChanges;
+
+  /// Username empty error message
+  ///
+  /// In en, this message translates to:
+  /// **'Username cannot be empty'**
+  String get profile_usernameEmpty;
+
+  /// Username format error message
+  ///
+  /// In en, this message translates to:
+  /// **'Username can only contain lowercase letters, numbers, underscore, and dot'**
+  String get profile_usernameFormat;
+
+  /// Username minimum length error message
+  ///
+  /// In en, this message translates to:
+  /// **'Username must be at least 3 characters'**
+  String get profile_usernameMinLength;
+
+  /// Username maximum length error message
+  ///
+  /// In en, this message translates to:
+  /// **'Username cannot exceed 20 characters'**
+  String get profile_usernameMaxLength;
+
+  /// Username taken error message
+  ///
+  /// In en, this message translates to:
+  /// **'This username is already taken'**
+  String get profile_usernameTaken;
+
+  /// Username verification error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to verify username availability'**
+  String get profile_usernameVerifyError;
+
+  /// Username updated success message
+  ///
+  /// In en, this message translates to:
+  /// **'Username updated successfully'**
+  String get profile_usernameUpdated;
+
+  /// Choose avatar source dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Avatar Source'**
+  String get profile_chooseAvatarSource;
+
+  /// Gallery option for avatar selection
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get profile_gallery;
+
+  /// Avatar updated success message
+  ///
+  /// In en, this message translates to:
+  /// **'Avatar updated successfully'**
+  String get profile_avatarUpdated;
 }
 
 class _AppLocalizationsDelegate

@@ -3892,7 +3892,7 @@
   "@about_title": {
     "description": "About screen title"
   },
-  "about_version": "Version 1.1.0",
+  "about_version": "Version 2.0.0",
   "@about_version": {
     "description": "App version"
   },
@@ -3960,9 +3960,9 @@
   "@about_website": {
     "description": "Website link title"
   },
-  "about_websiteUrl": "pavra.vercel.app",
+  "about_websiteUrl": "Website URL",
   "@about_websiteUrl": {
-    "description": "Website URL"
+    "description": "Website URL (removed)"
   },
   "about_privacyPolicy": "Privacy Policy",
   "@about_privacyPolicy": {
@@ -4750,5 +4750,81 @@
         "type": "String"
       }
     }
+  },
+  "privacy_policy_title": "Privacy Policy",
+  "@privacy_policy_title": {
+    "description": "Privacy policy screen title"
+  },
+  "privacy_policy_last_updated": "Last Updated: January 9, 2026",
+  "@privacy_policy_last_updated": {
+    "description": "Privacy policy last updated date"
+  },
+  "terms_of_service_title": "Terms of Service",
+  "@terms_of_service_title": {
+    "description": "Terms of service screen title"
+  },
+  "terms_of_service_last_updated": "Last Updated: January 9, 2026",
+  "@terms_of_service_last_updated": {
+    "description": "Terms of service last updated date"
+  },
+  "profile_editUsername": "Edit Username",
+  "@profile_editUsername": {
+    "description": "Edit username dialog title"
+  },
+  "profile_usernameHint": "Enter your username",
+  "@profile_usernameHint": {
+    "description": "Username input hint text"
+  },
+  "profile_usernameFormatHint": "Username can only contain lowercase letters, numbers, underscore (_), and dot (.). Must be 3-20 characters.",
+  "@profile_usernameFormatHint": {
+    "description": "Username format hint text"
+  },
+  "profile_suggestions": "Suggestions",
+  "@profile_suggestions": {
+    "description": "Username suggestions section title"
+  },
+  "profile_saveChanges": "Save Changes",
+  "@profile_saveChanges": {
+    "description": "Save changes button text"
+  },
+  "profile_usernameEmpty": "Username cannot be empty",
+  "@profile_usernameEmpty": {
+    "description": "Username empty error message"
+  },
+  "profile_usernameFormat": "Username can only contain lowercase letters, numbers, underscore, and dot",
+  "@profile_usernameFormat": {
+    "description": "Username format error message"
+  },
+  "profile_usernameMinLength": "Username must be at least 3 characters",
+  "@profile_usernameMinLength": {
+    "description": "Username minimum length error message"
+  },
+  "profile_usernameMaxLength": "Username cannot exceed 20 characters",
+  "@profile_usernameMaxLength": {
+    "description": "Username maximum length error message"
+  },
+  "profile_usernameTaken": "This username is already taken",
+  "@profile_usernameTaken": {
+    "description": "Username taken error message"
+  },
+  "profile_usernameVerifyError": "Failed to verify username availability",
+  "@profile_usernameVerifyError": {
+    "description": "Username verification error message"
+  },
+  "profile_usernameUpdated": "Username updated successfully",
+  "@profile_usernameUpdated": {
+    "description": "Username updated success message"
+  },
+  "profile_chooseAvatarSource": "Choose Avatar Source",
+  "@profile_chooseAvatarSource": {
+    "description": "Choose avatar source dialog title"
+  },
+  "profile_gallery": "Gallery",
+  "@profile_gallery": {
+    "description": "Gallery option for avatar selection"
+  },
+  "profile_avatarUpdated": "Avatar updated successfully",
+  "@profile_avatarUpdated": {
+    "description": "Avatar updated success message"
   }
 }

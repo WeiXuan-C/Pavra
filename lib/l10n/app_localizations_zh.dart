@@ -3491,4 +3491,62 @@ class AppLocalizationsZh extends AppLocalizations {
   String analytics_reportDeleteFailed(String error) {
     return '删除报告失败：$error';
   }
+
+  @override
+  String get privacy_policy_title => '隐私政策';
+
+  @override
+  String get privacy_policy_last_updated => '最后更新：2026年1月9日';
+
+  @override
+  String get terms_of_service_title => '服务条款';
+
+  @override
+  String get terms_of_service_last_updated => '最后更新：2026年1月9日';
+
+  @override
+  String get profile_editUsername => '编辑用户名';
+
+  @override
+  String get profile_usernameHint => '输入您的用户名';
+
+  @override
+  String get profile_usernameFormatHint =>
+      '用户名只能包含小写字母、数字、下划线（_）和点（.）。长度必须为3-20个字符。';
+
+  @override
+  String get profile_suggestions => '建议';
+
+  @override
+  String get profile_saveChanges => '保存更改';
+
+  @override
+  String get profile_usernameEmpty => '用户名不能为空';
+
+  @override
+  String get profile_usernameFormat => '用户名只能包含小写字母、数字、下划线和点';
+
+  @override
+  String get profile_usernameMinLength => '用户名至少需要3个字符';
+
+  @override
+  String get profile_usernameMaxLength => '用户名不能超过20个字符';
+
+  @override
+  String get profile_usernameTaken => '此用户名已被占用';
+
+  @override
+  String get profile_usernameVerifyError => '验证用户名可用性失败';
+
+  @override
+  String get profile_usernameUpdated => '用户名更新成功';
+
+  @override
+  String get profile_chooseAvatarSource => '选择头像来源';
+
+  @override
+  String get profile_gallery => '相册';
+
+  @override
+  String get profile_avatarUpdated => '头像更新成功';
 }

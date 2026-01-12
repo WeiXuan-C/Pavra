@@ -260,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               icon: const Icon(Icons.edit, size: 18),
                               onPressed: () =>
                                   _editUsername(authProvider, profile.username),
-                              tooltip: 'Edit username',
+                              tooltip: l10n.profile_editUsername,
                               padding: const EdgeInsets.all(4),
                               constraints: const BoxConstraints(
                                 minWidth: 32,
@@ -451,7 +451,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             await authProvider.updateProfile(username: newUsername);
             if (!mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Username updated successfully')),
+              SnackBar(content: Text(AppLocalizations.of(context).profile_usernameUpdated)),
             );
           } catch (e) {
             if (!mounted) return;
@@ -469,13 +469,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final source = await showDialog<ImageSource>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Choose Avatar Source'),
+        title: Text(AppLocalizations.of(context).profile_chooseAvatarSource),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
               leading: const Icon(Icons.photo_library),
-              title: const Text('Gallery'),
+              title: Text(AppLocalizations.of(context).profile_gallery),
               onTap: () => Navigator.pop(dialogContext, ImageSource.gallery),
             ),
             ListTile(
@@ -521,7 +521,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Avatar updated successfully')),
+        SnackBar(content: Text(AppLocalizations.of(context).profile_avatarUpdated)),
       );
     } catch (e) {
       if (!mounted) return;

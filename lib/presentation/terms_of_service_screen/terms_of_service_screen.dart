@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
 
 class TermsOfServiceScreen extends StatelessWidget {
@@ -10,10 +11,11 @@ class TermsOfServiceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: HeaderLayout(title: 'Terms of Service'),
+      appBar: HeaderLayout(title: l10n.terms_of_service_title),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(4.w),
         child: Column(
@@ -51,14 +53,14 @@ class TermsOfServiceScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Terms of Service',
+                          l10n.terms_of_service_title,
                           style: theme.textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         SizedBox(height: 0.5.h),
                         Text(
-                          'Last updated: January 2025',
+                          l10n.terms_of_service_last_updated,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
@@ -218,7 +220,6 @@ class TermsOfServiceScreen extends StatelessWidget {
               bulletPoints: [
                 'Email: pavra.noreply@gmail.com',
                 'Phone: +60 11-6520 0275',
-                'Website: pavra.vercel.app',
               ],
             ),
 
