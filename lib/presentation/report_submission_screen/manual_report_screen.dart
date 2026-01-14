@@ -21,6 +21,7 @@ import './widgets/ai_analysis_dialog.dart';
 import './widgets/description_input_widget.dart';
 import './widgets/issue_type_card.dart';
 import './widgets/location_input_widget.dart';
+import './widgets/location_map_picker.dart';
 import './widgets/manual_report_skeleton.dart';
 import './widgets/photo_gallery_widget.dart';
 import './widgets/severity_slider_widget.dart';
@@ -505,6 +506,36 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     );
 
     addressController.dispose();
+  }
+
+  /// Show map picker for location selection
+  Future<void> _showMapPicker() async {
+    final result = await Navigator.push<Map<String, dynamic>>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LocationMapPicker(
+          initialLatitude: _latitude,
+          initialLongitude: _longitude,
+          initialAddress: _address,
+        ),
+      ),
+    );
+
+    if (result != null && mounted) {
+      setState(() {
+        _latitude = result['latitude'] as double;
+        _longitude = result['longitude'] as double;
+        _address = result['address'] as String;
+        _locationController.text = _address;
+        _accuracy = null; // Map selection has no GPS accuracy
+      });
+
+      Fluttertoast.showToast(
+        msg: AppLocalizations.of(context).report_locationUpdated,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
+    }
   }
 
   /// Load draft data into form fields
@@ -1575,6 +1606,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
       isLoading: _isLoadingLocation,
       onRefreshLocation: _getCurrentLocation,
       onEditAddress: _showAddressEditDialog,
+      onSelectFromMap: _showMapPicker,
     );
   }
 

@@ -15,6 +15,7 @@ class LocationInputWidget extends StatelessWidget {
   final VoidCallback? onRefreshLocation;
   final ValueChanged<String>? onAddressChanged;
   final VoidCallback? onEditAddress;
+  final VoidCallback? onSelectFromMap;
 
   const LocationInputWidget({
     super.key,
@@ -26,6 +27,7 @@ class LocationInputWidget extends StatelessWidget {
     this.onRefreshLocation,
     this.onAddressChanged,
     this.onEditAddress,
+    this.onSelectFromMap,
   });
 
   @override
@@ -137,6 +139,26 @@ class LocationInputWidget extends StatelessWidget {
               ),
             ),
           ),
+
+          // Map picker button
+          if (onSelectFromMap != null) ...[
+            SizedBox(height: 2.h),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: onSelectFromMap,
+                icon: Icon(Icons.map, size: 20),
+                label: Text(l10n.report_selectFromMap),
+                style: OutlinedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 1.5.h),
+                  side: BorderSide(
+                    color: theme.colorScheme.primary,
+                    width: 1.5,
+                  ),
+                ),
+              ),
+            ),
+          ],
 
           SizedBox(height: 2.h),
 

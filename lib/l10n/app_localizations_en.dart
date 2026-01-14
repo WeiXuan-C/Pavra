@@ -1557,6 +1557,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'Enter a full address and we\'ll find the coordinates for you';
 
   @override
+  String get report_selectLocation => 'Select Location';
+
+  @override
+  String get report_selectFromMap => 'Select from Map';
+
+  @override
+  String get report_selectedLocation => 'Selected Location';
+
+  @override
+  String get report_loadingAddress => 'Loading address...';
+
+  @override
   String get report_filterByStatus => 'Filter by Status';
 
   @override

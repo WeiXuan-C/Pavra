@@ -3068,6 +3068,30 @@ abstract class AppLocalizations {
   /// **'Enter a full address and we\'ll find the coordinates for you'**
   String get report_addressSearchHint;
 
+  /// Select location screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Select Location'**
+  String get report_selectLocation;
+
+  /// Select from map button
+  ///
+  /// In en, this message translates to:
+  /// **'Select from Map'**
+  String get report_selectFromMap;
+
+  /// Selected location label
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Location'**
+  String get report_selectedLocation;
+
+  /// Loading address status
+  ///
+  /// In en, this message translates to:
+  /// **'Loading address...'**
+  String get report_loadingAddress;
+
   /// Filter by status label
   ///
   /// In en, this message translates to:

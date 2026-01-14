@@ -2016,6 +2016,22 @@
   "@report_addressSearchHint": {
     "description": "Address search hint message"
   },
+  "report_selectLocation": "Select Location",
+  "@report_selectLocation": {
+    "description": "Select location screen title"
+  },
+  "report_selectFromMap": "Select from Map",
+  "@report_selectFromMap": {
+    "description": "Select from map button"
+  },
+  "report_selectedLocation": "Selected Location",
+  "@report_selectedLocation": {
+    "description": "Selected location label"
+  },
+  "report_loadingAddress": "Loading address...",
+  "@report_loadingAddress": {
+    "description": "Loading address status"
+  },
   "report_filterByStatus": "Filter by Status",
   "@report_filterByStatus": {
     "description": "Filter by status label"

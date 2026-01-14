@@ -201,12 +201,13 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
     if (_currentPosition == null) return;
 
     try {
-      // Get all submitted and reviewed issues
+      // Get all submitted and reviewed issues with caching
       final issues = await _mapService.getNearbyIssues(
         latitude: _currentPosition!.latitude,
         longitude: _currentPosition!.longitude,
         radiusMiles: _alertRadiusMiles,
         status: 'submitted', // Primary status, will filter more in UI
+        forceRefresh: false, // Use cache when available
       );
 
       if (mounted) {
@@ -461,6 +462,17 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
   }
 
   void _showIssueDetails(Map<String, dynamic> issue) async {
+    // Load photos if not already loaded (lazy loading)
+    if (issue['photos_loaded'] != true) {
+      await _mapService.loadIssuePhotos(issue);
+      if (mounted) {
+        setState(() {}); // Refresh to show loaded photos
+      }
+    }
+
+    // Check if widget is still mounted before using context
+    if (!mounted) return;
+
     final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       isScrollControlled: true,
@@ -471,6 +483,9 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
         userLongitude: _currentPosition?.longitude,
       ),
     );
+
+    // Check mounted again after async operation
+    if (!mounted) return;
 
     // Handle directions action
     if (result != null && result['action'] == 'navigate') {
@@ -1224,6 +1239,9 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
     setState(() {
       _isLoading = true;
     });
+    
+    // Clear cache to force refresh
+    _mapService.clearCache();
     
     // Reload preferences first (in case radius changed)
     await _loadUserPreferences();

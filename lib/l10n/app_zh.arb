@@ -1960,6 +1960,22 @@
   "@report_addressSearchHint": {
     "description": "地址搜索提示消息"
   },
+  "report_selectLocation": "选择位置",
+  "@report_selectLocation": {
+    "description": "选择位置屏幕标题"
+  },
+  "report_selectFromMap": "从地图选择",
+  "@report_selectFromMap": {
+    "description": "从地图选择按钮"
+  },
+  "report_selectedLocation": "已选位置",
+  "@report_selectedLocation": {
+    "description": "已选位置标签"
+  },
+  "report_loadingAddress": "正在加载地址...",
+  "@report_loadingAddress": {
+    "description": "加载地址状态"
+  },
   "report_locationPermissionDeniedForever": "位置权限已永久拒绝。请在设置中启用。",
   "@report_locationPermissionDeniedForever": {
     "description": "位置权限永久拒绝消息"

@@ -1509,6 +1509,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get report_addressSearchHint => '输入完整地址，我们将为您找到坐标';
 
   @override
+  String get report_selectLocation => '选择位置';
+
+  @override
+  String get report_selectFromMap => '从地图选择';
+
+  @override
+  String get report_selectedLocation => '已选位置';
+
+  @override
+  String get report_loadingAddress => '正在加载地址...';
+
+  @override
   String get report_filterByStatus => '按状态筛选';
 
   @override
