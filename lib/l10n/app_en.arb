@@ -4826,5 +4826,229 @@
   "profile_avatarUpdated": "Avatar updated successfully",
   "@profile_avatarUpdated": {
     "description": "Avatar updated success message"
+  },
+  "multiStop_title": "Plan Multi-Stop Route",
+  "@multiStop_title": {
+    "description": "Multi-stop route planner screen title"
+  },
+  "multiStop_addWaypoint": "Add Waypoint",
+  "@multiStop_addWaypoint": {
+    "description": "Add waypoint button text"
+  },
+  "multiStop_chooseFromSaved": "Choose from saved locations",
+  "@multiStop_chooseFromSaved": {
+    "description": "Choose from saved locations button text"
+  },
+  "multiStop_optimizeRoute": "Optimize Route",
+  "@multiStop_optimizeRoute": {
+    "description": "Optimize route button text"
+  },
+  "multiStop_distance": "Distance",
+  "@multiStop_distance": {
+    "description": "Distance label in route info"
+  },
+  "multiStop_duration": "Duration",
+  "@multiStop_duration": {
+    "description": "Duration label in route info"
+  },
+  "multiStop_stops": "Stops",
+  "@multiStop_stops": {
+    "description": "Stops label in route info"
+  },
+  "multiStop_issues": "Issues",
+  "@multiStop_issues": {
+    "description": "Issues label in route info"
+  },
+  "multiStop_calculatingRoute": "Calculating route...",
+  "@multiStop_calculatingRoute": {
+    "description": "Calculating route status message"
+  },
+  "multiStop_optimizingRoute": "Optimizing route...",
+  "@multiStop_optimizingRoute": {
+    "description": "Optimizing route status message"
+  },
+  "multiStop_startNavigation": "Start Navigation",
+  "@multiStop_startNavigation": {
+    "description": "Start navigation button tooltip"
+  },
+  "multiStop_saveRoute": "Save Route",
+  "@multiStop_saveRoute": {
+    "description": "Save route button tooltip"
+  },
+  "multiStop_chooseSavedLocation": "Choose Saved Location",
+  "@multiStop_chooseSavedLocation": {
+    "description": "Choose saved location dialog title"
+  },
+  "navigation_steps": "Steps",
+  "@navigation_steps": {
+    "description": "Steps button text in navigation panel"
+  },
+  "navigation_end": "End",
+  "@navigation_end": {
+    "description": "End navigation button text"
+  },
+  "navigation_then": "Then",
+  "@navigation_then": {
+    "description": "Then prefix for next step instruction"
+  },
+  "map_searchFor": "Search for \"{query}\"",
+  "@map_searchFor": {
+    "description": "Search for location suggestion",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "multiStop_currentLocation": "Current Location",
+  "@multiStop_currentLocation": {
+    "description": "Current location label for route points"
+  },
+  "multiStop_start": "Start",
+  "@multiStop_start": {
+    "description": "Start point label"
+  },
+  "multiStop_destination": "Destination",
+  "@multiStop_destination": {
+    "description": "Destination point label"
+  },
+  "multiStop_waypoint": "Waypoint {number}",
+  "@multiStop_waypoint": {
+    "description": "Waypoint label with number",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "multiStop_close": "Close",
+  "@multiStop_close": {
+    "description": "Close button text"
+  },
+  "multiStop_ok": "OK",
+  "@multiStop_ok": {
+    "description": "OK button text"
+  },
+  "multiStop_routeOptimized": "Route Optimized!",
+  "@multiStop_routeOptimized": {
+    "description": "Route optimized dialog title"
+  },
+  "multiStop_routeOptimizedMessage": "Your route has been optimized for efficiency.",
+  "@multiStop_routeOptimizedMessage": {
+    "description": "Route optimized message"
+  },
+  "multiStop_originalDistance": "Original Distance",
+  "@multiStop_originalDistance": {
+    "description": "Original distance label"
+  },
+  "multiStop_optimizedDistance": "Optimized Distance",
+  "@multiStop_optimizedDistance": {
+    "description": "Optimized distance label"
+  },
+  "multiStop_distanceSavings": "Distance Savings",
+  "@multiStop_distanceSavings": {
+    "description": "Distance savings label"
+  },
+  "multiStop_waypointsReordered": "Waypoints have been reordered for optimal routing",
+  "@multiStop_waypointsReordered": {
+    "description": "Waypoints reordered info message"
+  },
+  "multiStop_saveRouteName": "Route Name",
+  "@multiStop_saveRouteName": {
+    "description": "Route name field label in save dialog"
+  },
+  "multiStop_saveRouteHint": "Enter a name for this route",
+  "@multiStop_saveRouteHint": {
+    "description": "Route name field hint"
+  },
+  "multiStop_routeSaved": "Route saved successfully",
+  "@multiStop_routeSaved": {
+    "description": "Route saved success message"
+  },
+  "multiStop_failedToSaveRoute": "Failed to save route",
+  "@multiStop_failedToSaveRoute": {
+    "description": "Failed to save route error message"
+  },
+  "multiStop_failedToCalculateRoute": "Failed to calculate route",
+  "@multiStop_failedToCalculateRoute": {
+    "description": "Failed to calculate route error message"
+  },
+  "multiStop_failedToOptimizeRoute": "Failed to optimize route. Original route maintained.",
+  "@multiStop_failedToOptimizeRoute": {
+    "description": "Failed to optimize route error message"
+  },
+  "multiStop_locationNotFound": "Location not found",
+  "@multiStop_locationNotFound": {
+    "description": "Location not found error message"
+  },
+  "multiStop_noSavedLocations": "No saved locations found",
+  "@multiStop_noSavedLocations": {
+    "description": "No saved locations message"
+  },
+  "multiStop_noLocationsMatch": "No locations match your search",
+  "@multiStop_noLocationsMatch": {
+    "description": "No locations match search message"
+  },
+  "multiStop_failedToLoadLocations": "Failed to load saved locations",
+  "@multiStop_failedToLoadLocations": {
+    "description": "Failed to load locations error message"
+  },
+  "multiStop_navigationStarted": "Navigation started",
+  "@multiStop_navigationStarted": {
+    "description": "Navigation started message"
+  },
+  "multiStop_navigationCancelled": "Navigation cancelled",
+  "@multiStop_navigationCancelled": {
+    "description": "Navigation cancelled message"
+  },
+  "multiStop_calculateRouteFirst": "Please calculate a route first",
+  "@multiStop_calculateRouteFirst": {
+    "description": "Calculate route first message"
+  },
+  "navigation_destinationReached": "Destination Reached",
+  "@navigation_destinationReached": {
+    "description": "Destination reached label"
+  },
+  "navigation_waypointNumber": "Waypoint {number}",
+  "@navigation_waypointNumber": {
+    "description": "Waypoint number label",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "navigation_stopsRemaining": "{count} {count, plural, =1{stop} other{stops}} remaining",
+  "@navigation_stopsRemaining": {
+    "description": "Stops remaining label",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "navigation_cancelNavigation": "Cancel Navigation",
+  "@navigation_cancelNavigation": {
+    "description": "Cancel navigation tooltip"
+  },
+  "navigation_nextWaypoint": "Next Waypoint",
+  "@navigation_nextWaypoint": {
+    "description": "Next waypoint button text"
+  },
+  "navigation_progress": "Progress",
+  "@navigation_progress": {
+    "description": "Progress label"
+  },
+  "navigation_stopsCompleted": "{current} of {total} stops completed",
+  "@navigation_stopsCompleted": {
+    "description": "Stops completed label",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
   }
 }

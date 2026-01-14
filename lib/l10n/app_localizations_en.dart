@@ -3679,4 +3679,171 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profile_avatarUpdated => 'Avatar updated successfully';
+
+  @override
+  String get multiStop_title => 'Plan Multi-Stop Route';
+
+  @override
+  String get multiStop_addWaypoint => 'Add Waypoint';
+
+  @override
+  String get multiStop_chooseFromSaved => 'Choose from saved locations';
+
+  @override
+  String get multiStop_optimizeRoute => 'Optimize Route';
+
+  @override
+  String get multiStop_distance => 'Distance';
+
+  @override
+  String get multiStop_duration => 'Duration';
+
+  @override
+  String get multiStop_stops => 'Stops';
+
+  @override
+  String get multiStop_issues => 'Issues';
+
+  @override
+  String get multiStop_calculatingRoute => 'Calculating route...';
+
+  @override
+  String get multiStop_optimizingRoute => 'Optimizing route...';
+
+  @override
+  String get multiStop_startNavigation => 'Start Navigation';
+
+  @override
+  String get multiStop_saveRoute => 'Save Route';
+
+  @override
+  String get multiStop_chooseSavedLocation => 'Choose Saved Location';
+
+  @override
+  String get navigation_steps => 'Steps';
+
+  @override
+  String get navigation_end => 'End';
+
+  @override
+  String get navigation_then => 'Then';
+
+  @override
+  String map_searchFor(String query) {
+    return 'Search for \"$query\"';
+  }
+
+  @override
+  String get multiStop_currentLocation => 'Current Location';
+
+  @override
+  String get multiStop_start => 'Start';
+
+  @override
+  String get multiStop_destination => 'Destination';
+
+  @override
+  String multiStop_waypoint(int number) {
+    return 'Waypoint $number';
+  }
+
+  @override
+  String get multiStop_close => 'Close';
+
+  @override
+  String get multiStop_ok => 'OK';
+
+  @override
+  String get multiStop_routeOptimized => 'Route Optimized!';
+
+  @override
+  String get multiStop_routeOptimizedMessage =>
+      'Your route has been optimized for efficiency.';
+
+  @override
+  String get multiStop_originalDistance => 'Original Distance';
+
+  @override
+  String get multiStop_optimizedDistance => 'Optimized Distance';
+
+  @override
+  String get multiStop_distanceSavings => 'Distance Savings';
+
+  @override
+  String get multiStop_waypointsReordered =>
+      'Waypoints have been reordered for optimal routing';
+
+  @override
+  String get multiStop_saveRouteName => 'Route Name';
+
+  @override
+  String get multiStop_saveRouteHint => 'Enter a name for this route';
+
+  @override
+  String get multiStop_routeSaved => 'Route saved successfully';
+
+  @override
+  String get multiStop_failedToSaveRoute => 'Failed to save route';
+
+  @override
+  String get multiStop_failedToCalculateRoute => 'Failed to calculate route';
+
+  @override
+  String get multiStop_failedToOptimizeRoute =>
+      'Failed to optimize route. Original route maintained.';
+
+  @override
+  String get multiStop_locationNotFound => 'Location not found';
+
+  @override
+  String get multiStop_noSavedLocations => 'No saved locations found';
+
+  @override
+  String get multiStop_noLocationsMatch => 'No locations match your search';
+
+  @override
+  String get multiStop_failedToLoadLocations =>
+      'Failed to load saved locations';
+
+  @override
+  String get multiStop_navigationStarted => 'Navigation started';
+
+  @override
+  String get multiStop_navigationCancelled => 'Navigation cancelled';
+
+  @override
+  String get multiStop_calculateRouteFirst => 'Please calculate a route first';
+
+  @override
+  String get navigation_destinationReached => 'Destination Reached';
+
+  @override
+  String navigation_waypointNumber(int number) {
+    return 'Waypoint $number';
+  }
+
+  @override
+  String navigation_stopsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'stops',
+      one: 'stop',
+    );
+    return '$count $_temp0 remaining';
+  }
+
+  @override
+  String get navigation_cancelNavigation => 'Cancel Navigation';
+
+  @override
+  String get navigation_nextWaypoint => 'Next Waypoint';
+
+  @override
+  String get navigation_progress => 'Progress';
+
+  @override
+  String navigation_stopsCompleted(int current, int total) {
+    return '$current of $total stops completed';
+  }
 }

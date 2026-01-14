@@ -3549,4 +3549,161 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get profile_avatarUpdated => '头像更新成功';
+
+  @override
+  String get multiStop_title => '规划多站点路线';
+
+  @override
+  String get multiStop_addWaypoint => '添加途经点';
+
+  @override
+  String get multiStop_chooseFromSaved => '从已保存位置选择';
+
+  @override
+  String get multiStop_optimizeRoute => '优化路线';
+
+  @override
+  String get multiStop_distance => '距离';
+
+  @override
+  String get multiStop_duration => '时长';
+
+  @override
+  String get multiStop_stops => '站点';
+
+  @override
+  String get multiStop_issues => '问题';
+
+  @override
+  String get multiStop_calculatingRoute => '正在计算路线...';
+
+  @override
+  String get multiStop_optimizingRoute => '正在优化路线...';
+
+  @override
+  String get multiStop_startNavigation => '开始导航';
+
+  @override
+  String get multiStop_saveRoute => '保存路线';
+
+  @override
+  String get multiStop_chooseSavedLocation => '选择已保存位置';
+
+  @override
+  String get navigation_steps => '步骤';
+
+  @override
+  String get navigation_end => '结束';
+
+  @override
+  String get navigation_then => '然后';
+
+  @override
+  String map_searchFor(String query) {
+    return '搜索 \"$query\"';
+  }
+
+  @override
+  String get multiStop_currentLocation => '当前位置';
+
+  @override
+  String get multiStop_start => '起点';
+
+  @override
+  String get multiStop_destination => '目的地';
+
+  @override
+  String multiStop_waypoint(int number) {
+    return '途经点 $number';
+  }
+
+  @override
+  String get multiStop_close => '关闭';
+
+  @override
+  String get multiStop_ok => '确定';
+
+  @override
+  String get multiStop_routeOptimized => '路线已优化！';
+
+  @override
+  String get multiStop_routeOptimizedMessage => '您的路线已优化以提高效率。';
+
+  @override
+  String get multiStop_originalDistance => '原始距离';
+
+  @override
+  String get multiStop_optimizedDistance => '优化后距离';
+
+  @override
+  String get multiStop_distanceSavings => '节省距离';
+
+  @override
+  String get multiStop_waypointsReordered => '途经点已重新排序以优化路线';
+
+  @override
+  String get multiStop_saveRouteName => '路线名称';
+
+  @override
+  String get multiStop_saveRouteHint => '输入此路线的名称';
+
+  @override
+  String get multiStop_routeSaved => '路线保存成功';
+
+  @override
+  String get multiStop_failedToSaveRoute => '保存路线失败';
+
+  @override
+  String get multiStop_failedToCalculateRoute => '计算路线失败';
+
+  @override
+  String get multiStop_failedToOptimizeRoute => '优化路线失败。保持原始路线。';
+
+  @override
+  String get multiStop_locationNotFound => '未找到位置';
+
+  @override
+  String get multiStop_noSavedLocations => '未找到已保存的位置';
+
+  @override
+  String get multiStop_noLocationsMatch => '没有位置匹配您的搜索';
+
+  @override
+  String get multiStop_failedToLoadLocations => '加载已保存位置失败';
+
+  @override
+  String get multiStop_navigationStarted => '导航已开始';
+
+  @override
+  String get multiStop_navigationCancelled => '导航已取消';
+
+  @override
+  String get multiStop_calculateRouteFirst => '请先计算路线';
+
+  @override
+  String get navigation_destinationReached => '已到达目的地';
+
+  @override
+  String navigation_waypointNumber(int number) {
+    return '途经点 $number';
+  }
+
+  @override
+  String navigation_stopsRemaining(int count) {
+    return '剩余 $count 个站点';
+  }
+
+  @override
+  String get navigation_cancelNavigation => '取消导航';
+
+  @override
+  String get navigation_nextWaypoint => '下一个途经点';
+
+  @override
+  String get navigation_progress => '进度';
+
+  @override
+  String navigation_stopsCompleted(int current, int total) {
+    return '已完成 $current/$total 个站点';
+  }
 }

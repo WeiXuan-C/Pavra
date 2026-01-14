@@ -6967,6 +6967,300 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Avatar updated successfully'**
   String get profile_avatarUpdated;
+
+  /// Multi-stop route planner screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Multi-Stop Route'**
+  String get multiStop_title;
+
+  /// Add waypoint button text
+  ///
+  /// In en, this message translates to:
+  /// **'Add Waypoint'**
+  String get multiStop_addWaypoint;
+
+  /// Choose from saved locations button text
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from saved locations'**
+  String get multiStop_chooseFromSaved;
+
+  /// Optimize route button text
+  ///
+  /// In en, this message translates to:
+  /// **'Optimize Route'**
+  String get multiStop_optimizeRoute;
+
+  /// Distance label in route info
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get multiStop_distance;
+
+  /// Duration label in route info
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get multiStop_duration;
+
+  /// Stops label in route info
+  ///
+  /// In en, this message translates to:
+  /// **'Stops'**
+  String get multiStop_stops;
+
+  /// Issues label in route info
+  ///
+  /// In en, this message translates to:
+  /// **'Issues'**
+  String get multiStop_issues;
+
+  /// Calculating route status message
+  ///
+  /// In en, this message translates to:
+  /// **'Calculating route...'**
+  String get multiStop_calculatingRoute;
+
+  /// Optimizing route status message
+  ///
+  /// In en, this message translates to:
+  /// **'Optimizing route...'**
+  String get multiStop_optimizingRoute;
+
+  /// Start navigation button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Start Navigation'**
+  String get multiStop_startNavigation;
+
+  /// Save route button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Save Route'**
+  String get multiStop_saveRoute;
+
+  /// Choose saved location dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Saved Location'**
+  String get multiStop_chooseSavedLocation;
+
+  /// Steps button text in navigation panel
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get navigation_steps;
+
+  /// End navigation button text
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get navigation_end;
+
+  /// Then prefix for next step instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Then'**
+  String get navigation_then;
+
+  /// Search for location suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Search for \"{query}\"'**
+  String map_searchFor(String query);
+
+  /// Current location label for route points
+  ///
+  /// In en, this message translates to:
+  /// **'Current Location'**
+  String get multiStop_currentLocation;
+
+  /// Start point label
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get multiStop_start;
+
+  /// Destination point label
+  ///
+  /// In en, this message translates to:
+  /// **'Destination'**
+  String get multiStop_destination;
+
+  /// Waypoint label with number
+  ///
+  /// In en, this message translates to:
+  /// **'Waypoint {number}'**
+  String multiStop_waypoint(int number);
+
+  /// Close button text
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get multiStop_close;
+
+  /// OK button text
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get multiStop_ok;
+
+  /// Route optimized dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Route Optimized!'**
+  String get multiStop_routeOptimized;
+
+  /// Route optimized message
+  ///
+  /// In en, this message translates to:
+  /// **'Your route has been optimized for efficiency.'**
+  String get multiStop_routeOptimizedMessage;
+
+  /// Original distance label
+  ///
+  /// In en, this message translates to:
+  /// **'Original Distance'**
+  String get multiStop_originalDistance;
+
+  /// Optimized distance label
+  ///
+  /// In en, this message translates to:
+  /// **'Optimized Distance'**
+  String get multiStop_optimizedDistance;
+
+  /// Distance savings label
+  ///
+  /// In en, this message translates to:
+  /// **'Distance Savings'**
+  String get multiStop_distanceSavings;
+
+  /// Waypoints reordered info message
+  ///
+  /// In en, this message translates to:
+  /// **'Waypoints have been reordered for optimal routing'**
+  String get multiStop_waypointsReordered;
+
+  /// Route name field label in save dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Route Name'**
+  String get multiStop_saveRouteName;
+
+  /// Route name field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name for this route'**
+  String get multiStop_saveRouteHint;
+
+  /// Route saved success message
+  ///
+  /// In en, this message translates to:
+  /// **'Route saved successfully'**
+  String get multiStop_routeSaved;
+
+  /// Failed to save route error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save route'**
+  String get multiStop_failedToSaveRoute;
+
+  /// Failed to calculate route error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to calculate route'**
+  String get multiStop_failedToCalculateRoute;
+
+  /// Failed to optimize route error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to optimize route. Original route maintained.'**
+  String get multiStop_failedToOptimizeRoute;
+
+  /// Location not found error message
+  ///
+  /// In en, this message translates to:
+  /// **'Location not found'**
+  String get multiStop_locationNotFound;
+
+  /// No saved locations message
+  ///
+  /// In en, this message translates to:
+  /// **'No saved locations found'**
+  String get multiStop_noSavedLocations;
+
+  /// No locations match search message
+  ///
+  /// In en, this message translates to:
+  /// **'No locations match your search'**
+  String get multiStop_noLocationsMatch;
+
+  /// Failed to load locations error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load saved locations'**
+  String get multiStop_failedToLoadLocations;
+
+  /// Navigation started message
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation started'**
+  String get multiStop_navigationStarted;
+
+  /// Navigation cancelled message
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation cancelled'**
+  String get multiStop_navigationCancelled;
+
+  /// Calculate route first message
+  ///
+  /// In en, this message translates to:
+  /// **'Please calculate a route first'**
+  String get multiStop_calculateRouteFirst;
+
+  /// Destination reached label
+  ///
+  /// In en, this message translates to:
+  /// **'Destination Reached'**
+  String get navigation_destinationReached;
+
+  /// Waypoint number label
+  ///
+  /// In en, this message translates to:
+  /// **'Waypoint {number}'**
+  String navigation_waypointNumber(int number);
+
+  /// Stops remaining label
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count, plural, =1{stop} other{stops}} remaining'**
+  String navigation_stopsRemaining(int count);
+
+  /// Cancel navigation tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Navigation'**
+  String get navigation_cancelNavigation;
+
+  /// Next waypoint button text
+  ///
+  /// In en, this message translates to:
+  /// **'Next Waypoint'**
+  String get navigation_nextWaypoint;
+
+  /// Progress label
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get navigation_progress;
+
+  /// Stops completed label
+  ///
+  /// In en, this message translates to:
+  /// **'{current} of {total} stops completed'**
+  String navigation_stopsCompleted(int current, int total);
 }
 
 class _AppLocalizationsDelegate

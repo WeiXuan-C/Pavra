@@ -4826,5 +4826,229 @@
   "profile_avatarUpdated": "头像更新成功",
   "@profile_avatarUpdated": {
     "description": "头像更新成功消息"
+  },
+  "multiStop_title": "规划多站点路线",
+  "@multiStop_title": {
+    "description": "多站点路线规划屏幕标题"
+  },
+  "multiStop_addWaypoint": "添加途经点",
+  "@multiStop_addWaypoint": {
+    "description": "添加途经点按钮文本"
+  },
+  "multiStop_chooseFromSaved": "从已保存位置选择",
+  "@multiStop_chooseFromSaved": {
+    "description": "从已保存位置选择按钮文本"
+  },
+  "multiStop_optimizeRoute": "优化路线",
+  "@multiStop_optimizeRoute": {
+    "description": "优化路线按钮文本"
+  },
+  "multiStop_distance": "距离",
+  "@multiStop_distance": {
+    "description": "路线信息中的距离标签"
+  },
+  "multiStop_duration": "时长",
+  "@multiStop_duration": {
+    "description": "路线信息中的时长标签"
+  },
+  "multiStop_stops": "站点",
+  "@multiStop_stops": {
+    "description": "路线信息中的站点标签"
+  },
+  "multiStop_issues": "问题",
+  "@multiStop_issues": {
+    "description": "路线信息中的问题标签"
+  },
+  "multiStop_calculatingRoute": "正在计算路线...",
+  "@multiStop_calculatingRoute": {
+    "description": "计算路线状态消息"
+  },
+  "multiStop_optimizingRoute": "正在优化路线...",
+  "@multiStop_optimizingRoute": {
+    "description": "优化路线状态消息"
+  },
+  "multiStop_startNavigation": "开始导航",
+  "@multiStop_startNavigation": {
+    "description": "开始导航按钮提示"
+  },
+  "multiStop_saveRoute": "保存路线",
+  "@multiStop_saveRoute": {
+    "description": "保存路线按钮提示"
+  },
+  "multiStop_chooseSavedLocation": "选择已保存位置",
+  "@multiStop_chooseSavedLocation": {
+    "description": "选择已保存位置对话框标题"
+  },
+  "navigation_steps": "步骤",
+  "@navigation_steps": {
+    "description": "导航面板中的步骤按钮文本"
+  },
+  "navigation_end": "结束",
+  "@navigation_end": {
+    "description": "结束导航按钮文本"
+  },
+  "navigation_then": "然后",
+  "@navigation_then": {
+    "description": "下一步指示的前缀"
+  },
+  "map_searchFor": "搜索 \"{query}\"",
+  "@map_searchFor": {
+    "description": "搜索位置建议",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "multiStop_currentLocation": "当前位置",
+  "@multiStop_currentLocation": {
+    "description": "路线点的当前位置标签"
+  },
+  "multiStop_start": "起点",
+  "@multiStop_start": {
+    "description": "起点标签"
+  },
+  "multiStop_destination": "目的地",
+  "@multiStop_destination": {
+    "description": "目的地标签"
+  },
+  "multiStop_waypoint": "途经点 {number}",
+  "@multiStop_waypoint": {
+    "description": "带编号的途经点标签",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "multiStop_close": "关闭",
+  "@multiStop_close": {
+    "description": "关闭按钮文本"
+  },
+  "multiStop_ok": "确定",
+  "@multiStop_ok": {
+    "description": "确定按钮文本"
+  },
+  "multiStop_routeOptimized": "路线已优化！",
+  "@multiStop_routeOptimized": {
+    "description": "路线优化对话框标题"
+  },
+  "multiStop_routeOptimizedMessage": "您的路线已优化以提高效率。",
+  "@multiStop_routeOptimizedMessage": {
+    "description": "路线优化消息"
+  },
+  "multiStop_originalDistance": "原始距离",
+  "@multiStop_originalDistance": {
+    "description": "原始距离标签"
+  },
+  "multiStop_optimizedDistance": "优化后距离",
+  "@multiStop_optimizedDistance": {
+    "description": "优化后距离标签"
+  },
+  "multiStop_distanceSavings": "节省距离",
+  "@multiStop_distanceSavings": {
+    "description": "节省距离标签"
+  },
+  "multiStop_waypointsReordered": "途经点已重新排序以优化路线",
+  "@multiStop_waypointsReordered": {
+    "description": "途经点重新排序信息消息"
+  },
+  "multiStop_saveRouteName": "路线名称",
+  "@multiStop_saveRouteName": {
+    "description": "保存对话框中的路线名称字段标签"
+  },
+  "multiStop_saveRouteHint": "输入此路线的名称",
+  "@multiStop_saveRouteHint": {
+    "description": "路线名称字段提示"
+  },
+  "multiStop_routeSaved": "路线保存成功",
+  "@multiStop_routeSaved": {
+    "description": "路线保存成功消息"
+  },
+  "multiStop_failedToSaveRoute": "保存路线失败",
+  "@multiStop_failedToSaveRoute": {
+    "description": "保存路线失败错误消息"
+  },
+  "multiStop_failedToCalculateRoute": "计算路线失败",
+  "@multiStop_failedToCalculateRoute": {
+    "description": "计算路线失败错误消息"
+  },
+  "multiStop_failedToOptimizeRoute": "优化路线失败。保持原始路线。",
+  "@multiStop_failedToOptimizeRoute": {
+    "description": "优化路线失败错误消息"
+  },
+  "multiStop_locationNotFound": "未找到位置",
+  "@multiStop_locationNotFound": {
+    "description": "未找到位置错误消息"
+  },
+  "multiStop_noSavedLocations": "未找到已保存的位置",
+  "@multiStop_noSavedLocations": {
+    "description": "无已保存位置消息"
+  },
+  "multiStop_noLocationsMatch": "没有位置匹配您的搜索",
+  "@multiStop_noLocationsMatch": {
+    "description": "无位置匹配搜索消息"
+  },
+  "multiStop_failedToLoadLocations": "加载已保存位置失败",
+  "@multiStop_failedToLoadLocations": {
+    "description": "加载位置失败错误消息"
+  },
+  "multiStop_navigationStarted": "导航已开始",
+  "@multiStop_navigationStarted": {
+    "description": "导航开始消息"
+  },
+  "multiStop_navigationCancelled": "导航已取消",
+  "@multiStop_navigationCancelled": {
+    "description": "导航取消消息"
+  },
+  "multiStop_calculateRouteFirst": "请先计算路线",
+  "@multiStop_calculateRouteFirst": {
+    "description": "先计算路线消息"
+  },
+  "navigation_destinationReached": "已到达目的地",
+  "@navigation_destinationReached": {
+    "description": "到达目的地标签"
+  },
+  "navigation_waypointNumber": "途经点 {number}",
+  "@navigation_waypointNumber": {
+    "description": "途经点编号标签",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "navigation_stopsRemaining": "剩余 {count} 个站点",
+  "@navigation_stopsRemaining": {
+    "description": "剩余站点标签",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "navigation_cancelNavigation": "取消导航",
+  "@navigation_cancelNavigation": {
+    "description": "取消导航提示"
+  },
+  "navigation_nextWaypoint": "下一个途经点",
+  "@navigation_nextWaypoint": {
+    "description": "下一个途经点按钮文本"
+  },
+  "navigation_progress": "进度",
+  "@navigation_progress": {
+    "description": "进度标签"
+  },
+  "navigation_stopsCompleted": "已完成 {current}/{total} 个站点",
+  "@navigation_stopsCompleted": {
+    "description": "已完成站点标签",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
   }
 }

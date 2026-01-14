@@ -389,7 +389,7 @@ class _MapSearchBarState extends State<MapSearchBar> {
                               size: 20,
                             ),
                             title: Text(
-                              'Search for "${_searchController.text}"',
+                              AppLocalizations.of(context).map_searchFor(_searchController.text),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.primary,
                                 fontWeight: FontWeight.w500,

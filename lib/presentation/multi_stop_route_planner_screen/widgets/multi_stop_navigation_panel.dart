@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../../../core/services/multi_stop_navigation_service.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Navigation panel for multi-stop routes
 /// Displays current waypoint, remaining stops, and progress
@@ -38,7 +39,7 @@ class MultiStopNavigationPanel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Progress bar
-          _buildProgressBar(theme),
+          _buildProgressBar(context, theme),
           
           SizedBox(height: 2.h),
           
@@ -74,15 +75,15 @@ class MultiStopNavigationPanel extends StatelessWidget {
                   children: [
                     Text(
                       navigationService.isComplete
-                          ? 'Destination Reached'
-                          : 'Waypoint ${navigationService.currentWaypointIndex + 1}',
+                          ? AppLocalizations.of(context).navigation_destinationReached
+                          : AppLocalizations.of(context).navigation_waypointNumber(navigationService.currentWaypointIndex + 1),
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 0.5.h),
                     Text(
-                      '${navigationService.remainingStops} ${navigationService.remainingStops == 1 ? 'stop' : 'stops'} remaining',
+                      AppLocalizations.of(context).navigation_stopsRemaining(navigationService.remainingStops),
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
@@ -95,7 +96,7 @@ class MultiStopNavigationPanel extends StatelessWidget {
               IconButton(
                 icon: Icon(Icons.close),
                 onPressed: onCancel,
-                tooltip: 'Cancel Navigation',
+                tooltip: AppLocalizations.of(context).navigation_cancelNavigation,
               ),
             ],
           ),
@@ -139,7 +140,7 @@ class MultiStopNavigationPanel extends StatelessWidget {
                 navigationService.advanceToNextWaypoint();
               },
               icon: Icon(Icons.arrow_forward),
-              label: Text('Next Waypoint'),
+              label: Text(AppLocalizations.of(context).navigation_nextWaypoint),
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(double.infinity, 48),
                 backgroundColor: theme.colorScheme.primary,
@@ -150,7 +151,7 @@ class MultiStopNavigationPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressBar(ThemeData theme) {
+  Widget _buildProgressBar(BuildContext context, ThemeData theme) {
     final progress = navigationService.progress;
     final totalStops = navigationService.allStops.length;
     final currentStop = navigationService.currentWaypointIndex;
@@ -162,13 +163,13 @@ class MultiStopNavigationPanel extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Progress',
+              AppLocalizations.of(context).navigation_progress,
               style: theme.textTheme.labelMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
-              '$currentStop / $totalStops stops',
+              AppLocalizations.of(context).navigation_stopsCompleted(currentStop, totalStops),
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
