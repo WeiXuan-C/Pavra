@@ -265,6 +265,71 @@ class UserApi {
     }
   }
 
+  // ========== LOCATION TRACKING ==========
+
+  /// Update user's current location
+  /// 
+  /// Updates current_latitude, current_longitude, and location_updated_at
+  /// in the profiles table.
+  /// 
+  /// Does not throw on failure - logs error instead to prevent
+  /// disrupting location tracking.
+  Future<void> updateCurrentLocation({
+    required String userId,
+    required double latitude,
+    required double longitude,
+  }) async {
+    try {
+      await _db.update(
+        table: _tableName,
+        data: {
+          'current_latitude': latitude,
+          'current_longitude': longitude,
+          'location_updated_at': DateTime.now().toIso8601String(),
+        },
+        matchColumn: 'id',
+        matchValue: userId,
+      );
+
+      developer.log(
+        'Location updated: ($latitude, $longitude)',
+        name: 'UserApi',
+        time: DateTime.now(),
+      );
+    } catch (e, stackTrace) {
+      developer.log(
+        'Failed to update location',
+        name: 'UserApi',
+        error: e,
+        stackTrace: stackTrace,
+        level: 1000, // ERROR level
+        time: DateTime.now(),
+      );
+      // Don't throw - location update failures shouldn't disrupt app
+    }
+  }
+
+  /// Enable/disable location tracking for user
+  /// 
+  /// Updates the location_tracking_enabled flag in the profiles table.
+  Future<void> setLocationTrackingEnabled({
+    required String userId,
+    required bool enabled,
+  }) async {
+    await _db.update(
+      table: _tableName,
+      data: {'location_tracking_enabled': enabled},
+      matchColumn: 'id',
+      matchValue: userId,
+    );
+
+    developer.log(
+      'Location tracking ${enabled ? 'enabled' : 'disabled'} for user $userId',
+      name: 'UserApi',
+      time: DateTime.now(),
+    );
+  }
+
   // ========== DELETE ==========
 
   /// 删除用户 profile

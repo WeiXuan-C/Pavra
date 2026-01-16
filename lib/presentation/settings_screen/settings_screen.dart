@@ -4,6 +4,7 @@ import '../../data/repositories/user_repository.dart';
 import '../layouts/header_layout.dart';
 import 'widgets/theme_settings_card.dart';
 import 'widgets/notification_settings_card.dart';
+import 'widgets/location_tracking_settings_card.dart';
 import 'widgets/app_info_card.dart';
 
 /// Settings Screen
@@ -38,6 +39,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
             // Notification Settings
             const NotificationSettingsCard(),
+            const SizedBox(height: 16),
+
+            // Location Tracking Settings
+            const LocationTrackingSettingsCard(),
             const SizedBox(height: 16),
 
             // App Info & Authority Request

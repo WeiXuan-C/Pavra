@@ -24,13 +24,11 @@ RETURNS TABLE (
   distance_miles DOUBLE PRECISION,
   photo_url TEXT
 )
-LANGUAGE plpgsql
+LANGUAGE sql
 STABLE
 SECURITY DEFINER
 SET search_path = public, pg_temp
-AS $$
-BEGIN
-  RETURN QUERY
+AS '
   SELECT 
     ri.id,
     ri.title,
@@ -42,7 +40,6 @@ BEGIN
     ri.longitude,
     ri.status,
     ri.created_at,
-    -- Calculate distance in miles using Haversine formula
     (
       3958.8 * acos(
         LEAST(1.0, GREATEST(-1.0,
@@ -54,7 +51,6 @@ BEGIN
         ))
       )
     ) AS distance_miles,
-    -- Get primary photo or first photo
     (
       SELECT ip.photo_url 
       FROM public.issue_photos ip 
@@ -69,12 +65,10 @@ BEGIN
     AND ri.is_deleted = FALSE
     AND ri.latitude IS NOT NULL
     AND ri.longitude IS NOT NULL
-    -- Bounding box filter for performance (approximate)
     AND ri.latitude BETWEEN (user_lat - (radius_meters / 111320.0)) 
                         AND (user_lat + (radius_meters / 111320.0))
     AND ri.longitude BETWEEN (user_lng - (radius_meters / (111320.0 * GREATEST(cos(radians(user_lat)), 0.001)))) 
                          AND (user_lng + (radius_meters / (111320.0 * GREATEST(cos(radians(user_lat)), 0.001))))
-    -- Precise distance filter using Haversine
     AND (
       3958.8 * acos(
         LEAST(1.0, GREATEST(-1.0,
@@ -85,10 +79,9 @@ BEGIN
           sin(radians(ri.latitude))
         ))
       )
-    ) <= (radius_meters / 1609.34) -- Convert meters to miles
-  ORDER BY distance_miles ASC;
-END;
-$$;
+    ) <= (radius_meters / 1609.34)
+  ORDER BY distance_miles ASC
+';
 
 -- Grant execute permission to authenticated users
 GRANT EXECUTE ON FUNCTION public.get_nearby_issues(DOUBLE PRECISION, DOUBLE PRECISION, DOUBLE PRECISION, TEXT) TO authenticated;

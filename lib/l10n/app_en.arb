@@ -4855,5 +4855,85 @@
         "type": "String"
       }
     }
+  },
+  "settings_locationTracking": "Location Tracking",
+  "@settings_locationTracking": {
+    "description": "Location tracking settings section title"
+  },
+  "settings_locationTrackingDesc": "Enable real-time location tracking for proximity alerts",
+  "@settings_locationTrackingDesc": {
+    "description": "Location tracking settings description"
+  },
+  "settings_locationTrackingEnabled": "Location tracking is active",
+  "@settings_locationTrackingEnabled": {
+    "description": "Location tracking enabled status"
+  },
+  "settings_locationTrackingDisabled": "Location tracking is inactive",
+  "@settings_locationTrackingDisabled": {
+    "description": "Location tracking disabled status"
+  },
+  "settings_locationTrackingStatus": "Status",
+  "@settings_locationTrackingStatus": {
+    "description": "Location tracking status label"
+  },
+  "settings_locationTrackingLastUpdate": "Last Update",
+  "@settings_locationTrackingLastUpdate": {
+    "description": "Last location update time label"
+  },
+  "settings_locationTrackingNearbyIssues": "Nearby Issues Monitored",
+  "@settings_locationTrackingNearbyIssues": {
+    "description": "Number of nearby issues being monitored label"
+  },
+  "settings_locationTrackingPermissionTitle": "Location Permission Required",
+  "@settings_locationTrackingPermissionTitle": {
+    "description": "Location permission dialog title"
+  },
+  "settings_locationTrackingPermissionMessage": "Pavra needs access to your location to:\n\n• Alert you about nearby road hazards\n• Monitor critical issues within 5km\n• Update your location every 100m or 60 seconds\n\nYour location is only shared when tracking is enabled and you can disable it anytime.",
+  "@settings_locationTrackingPermissionMessage": {
+    "description": "Location permission explanation message"
+  },
+  "settings_locationTrackingEnableError": "Failed to enable location tracking: {error}",
+  "@settings_locationTrackingEnableError": {
+    "description": "Error message when enabling location tracking fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_locationTrackingDisableError": "Failed to disable location tracking: {error}",
+  "@settings_locationTrackingDisableError": {
+    "description": "Error message when disabling location tracking fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_locationTrackingNever": "Never",
+  "@settings_locationTrackingNever": {
+    "description": "Never updated text for location tracking"
+  },
+  "settings_locationTrackingJustNow": "Just now",
+  "@settings_locationTrackingJustNow": {
+    "description": "Just now text for recent location update"
+  },
+  "settings_locationTrackingMinutesAgo": "{minutes}m ago",
+  "@settings_locationTrackingMinutesAgo": {
+    "description": "Minutes ago text for location update",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "settings_locationTrackingHoursAgo": "{hours}h ago",
+  "@settings_locationTrackingHoursAgo": {
+    "description": "Hours ago text for location update",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
   }
 }

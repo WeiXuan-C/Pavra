@@ -1,5 +1,20 @@
 {
   "zh": [
-    "map_tapForOptions"
+    "map_tapForOptions",
+    "settings_locationTracking",
+    "settings_locationTrackingDesc",
+    "settings_locationTrackingEnabled",
+    "settings_locationTrackingDisabled",
+    "settings_locationTrackingStatus",
+    "settings_locationTrackingLastUpdate",
+    "settings_locationTrackingNearbyIssues",
+    "settings_locationTrackingPermissionTitle",
+    "settings_locationTrackingPermissionMessage",
+    "settings_locationTrackingEnableError",
+    "settings_locationTrackingDisableError",
+    "settings_locationTrackingNever",
+    "settings_locationTrackingJustNow",
+    "settings_locationTrackingMinutesAgo",
+    "settings_locationTrackingHoursAgo"
   ]
 }

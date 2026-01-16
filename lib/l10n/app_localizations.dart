@@ -6853,6 +6853,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to delete report: {error}'**
   String analytics_reportDeleteFailed(String error);
+
+  /// Location tracking settings section title
+  ///
+  /// In en, this message translates to:
+  /// **'Location Tracking'**
+  String get settings_locationTracking;
+
+  /// Location tracking settings description
+  ///
+  /// In en, this message translates to:
+  /// **'Enable real-time location tracking for proximity alerts'**
+  String get settings_locationTrackingDesc;
+
+  /// Location tracking enabled status
+  ///
+  /// In en, this message translates to:
+  /// **'Location tracking is active'**
+  String get settings_locationTrackingEnabled;
+
+  /// Location tracking disabled status
+  ///
+  /// In en, this message translates to:
+  /// **'Location tracking is inactive'**
+  String get settings_locationTrackingDisabled;
+
+  /// Location tracking status label
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get settings_locationTrackingStatus;
+
+  /// Last location update time label
+  ///
+  /// In en, this message translates to:
+  /// **'Last Update'**
+  String get settings_locationTrackingLastUpdate;
+
+  /// Number of nearby issues being monitored label
+  ///
+  /// In en, this message translates to:
+  /// **'Nearby Issues Monitored'**
+  String get settings_locationTrackingNearbyIssues;
+
+  /// Location permission dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Location Permission Required'**
+  String get settings_locationTrackingPermissionTitle;
+
+  /// Location permission explanation message
+  ///
+  /// In en, this message translates to:
+  /// **'Pavra needs access to your location to:\n\n• Alert you about nearby road hazards\n• Monitor critical issues within 5km\n• Update your location every 100m or 60 seconds\n\nYour location is only shared when tracking is enabled and you can disable it anytime.'**
+  String get settings_locationTrackingPermissionMessage;
+
+  /// Error message when enabling location tracking fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to enable location tracking: {error}'**
+  String settings_locationTrackingEnableError(String error);
+
+  /// Error message when disabling location tracking fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to disable location tracking: {error}'**
+  String settings_locationTrackingDisableError(String error);
+
+  /// Never updated text for location tracking
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get settings_locationTrackingNever;
+
+  /// Just now text for recent location update
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get settings_locationTrackingJustNow;
+
+  /// Minutes ago text for location update
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m ago'**
+  String settings_locationTrackingMinutesAgo(int minutes);
+
+  /// Hours ago text for location update
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h ago'**
+  String settings_locationTrackingHoursAgo(int hours);
 }
 
 class _AppLocalizationsDelegate

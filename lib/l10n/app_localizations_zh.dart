@@ -3491,4 +3491,61 @@ class AppLocalizationsZh extends AppLocalizations {
   String analytics_reportDeleteFailed(String error) {
     return '删除报告失败：$error';
   }
+
+  @override
+  String get settings_locationTracking => 'Location Tracking';
+
+  @override
+  String get settings_locationTrackingDesc =>
+      'Enable real-time location tracking for proximity alerts';
+
+  @override
+  String get settings_locationTrackingEnabled => 'Location tracking is active';
+
+  @override
+  String get settings_locationTrackingDisabled =>
+      'Location tracking is inactive';
+
+  @override
+  String get settings_locationTrackingStatus => 'Status';
+
+  @override
+  String get settings_locationTrackingLastUpdate => 'Last Update';
+
+  @override
+  String get settings_locationTrackingNearbyIssues => 'Nearby Issues Monitored';
+
+  @override
+  String get settings_locationTrackingPermissionTitle =>
+      'Location Permission Required';
+
+  @override
+  String get settings_locationTrackingPermissionMessage =>
+      'Pavra needs access to your location to:\n\n• Alert you about nearby road hazards\n• Monitor critical issues within 5km\n• Update your location every 100m or 60 seconds\n\nYour location is only shared when tracking is enabled and you can disable it anytime.';
+
+  @override
+  String settings_locationTrackingEnableError(String error) {
+    return 'Failed to enable location tracking: $error';
+  }
+
+  @override
+  String settings_locationTrackingDisableError(String error) {
+    return 'Failed to disable location tracking: $error';
+  }
+
+  @override
+  String get settings_locationTrackingNever => 'Never';
+
+  @override
+  String get settings_locationTrackingJustNow => 'Just now';
+
+  @override
+  String settings_locationTrackingMinutesAgo(int minutes) {
+    return '${minutes}m ago';
+  }
+
+  @override
+  String settings_locationTrackingHoursAgo(int hours) {
+    return '${hours}h ago';
+  }
 }
