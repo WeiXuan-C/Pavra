@@ -64,7 +64,7 @@ class AiService {
           'X-Title': 'Pavra App',
         },
         body: jsonEncode({
-          'model': model ?? 'nvidia/nemotron-nano-12b-v2-vl:free',
+          'model': model ?? 'google/gemma-3-4b-it:free',
           'messages': [
             {'role': 'user', 'content': prompt},
           ],
@@ -124,7 +124,7 @@ class AiService {
           'X-Title': 'Pavra App',
         },
         body: jsonEncode({
-          'model': model ?? 'nvidia/nemotron-nano-12b-v2-vl:free',
+          'model': model ?? 'google/gemma-3-4b-it:free',
           'messages': messages,
           'max_tokens': maxTokens ?? 1000,
           'temperature': temperature ?? 0.7,
@@ -227,7 +227,7 @@ class AiService {
               'X-Title': 'Pavra App',
             },
             body: jsonEncode({
-              'model': 'nvidia/nemotron-nano-12b-v2-vl:free',
+              'model': 'google/gemma-3-4b-it:free',
               'messages': [
                 {
                   'role': 'user',
@@ -329,7 +329,7 @@ Confidence levels:
           'X-Title': 'Pavra App',
         },
         body: jsonEncode({
-          'model': 'nvidia/nemotron-nano-12b-v2-vl:free',
+          'model': 'google/gemma-3-4b-it:free',
           'messages': [
             {
               'role': 'user',
