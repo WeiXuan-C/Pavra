@@ -95,7 +95,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
         if (currentLocation != null) {
           _routePoints.add(RoutePoint(
             location: currentLocation,
-            address: 'Current Location',
+            address: AppLocalizations.of(context).multiStop_currentLocation,
             type: RoutePointType.start,
           ));
         } else {
@@ -134,7 +134,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
       // Add start point
       _routePoints.add(RoutePoint(
         location: savedRoute.start,
-        address: 'Start',
+        address: AppLocalizations.of(context).multiStop_start,
         type: RoutePointType.start,
       ));
       
@@ -150,7 +150,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
       // Add destination
       _routePoints.add(RoutePoint(
         location: savedRoute.destination,
-        address: 'Destination',
+        address: AppLocalizations.of(context).multiStop_destination,
         type: RoutePointType.destination,
       ));
       
@@ -451,7 +451,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
       if (mounted) {
         FeedbackUtils.showError(
           context,
-          'Failed to calculate route',
+          AppLocalizations.of(context).multiStop_failedToCalculateRoute,
         );
       }
     } finally {
@@ -658,7 +658,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
 
         FeedbackUtils.showError(
           context,
-          'Failed to optimize route. Original route maintained.',
+          AppLocalizations.of(context).multiStop_failedToOptimizeRoute,
           duration: const Duration(seconds: 4),
         );
       }
@@ -679,7 +679,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
           children: [
             Icon(Icons.check_circle, color: Colors.green, size: 28),
             SizedBox(width: 2.w),
-            Text('Route Optimized!'),
+            Text(AppLocalizations.of(context).multiStop_routeOptimized),
           ],
         ),
         content: Column(
@@ -687,24 +687,24 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Your route has been optimized for efficiency.',
+              AppLocalizations.of(context).multiStop_routeOptimizedMessage,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             SizedBox(height: 2.h),
             _buildOptimizationMetric(
-              'Original Distance',
+              AppLocalizations.of(context).multiStop_originalDistance,
               '${(result.originalDistance / 1000).toStringAsFixed(2)} km',
               Icons.straighten,
             ),
             SizedBox(height: 1.h),
             _buildOptimizationMetric(
-              'Optimized Distance',
+              AppLocalizations.of(context).multiStop_optimizedDistance,
               '${(result.optimizedDistance / 1000).toStringAsFixed(2)} km',
               Icons.straighten,
             ),
             SizedBox(height: 1.h),
             _buildOptimizationMetric(
-              'Distance Savings',
+              AppLocalizations.of(context).multiStop_distanceSavings,
               '${result.savingsPercent.toStringAsFixed(1)}%',
               Icons.trending_down,
               color: Colors.green,
@@ -736,7 +736,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
+            child: Text(AppLocalizations.of(context).multiStop_ok),
           ),
         ],
       ),
@@ -780,12 +780,12 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Save Route'),
+        title: Text(AppLocalizations.of(context).multiStop_saveRoute),
         content: TextField(
           controller: nameController,
           decoration: InputDecoration(
-            labelText: 'Route Name',
-            hintText: 'Enter a name for this route',
+            labelText: AppLocalizations.of(context).multiStop_saveRouteName,
+            hintText: AppLocalizations.of(context).multiStop_saveRouteHint,
           ),
           autofocus: true,
         ),
@@ -821,7 +821,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
         if (mounted) {
           FeedbackUtils.showSuccess(
             context,
-            'Route saved successfully',
+            AppLocalizations.of(context).multiStop_routeSaved,
           );
         }
       } catch (e) {
@@ -829,7 +829,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
         if (mounted) {
           FeedbackUtils.showError(
             context,
-            'Failed to save route',
+            AppLocalizations.of(context).multiStop_failedToSaveRoute,
           );
         }
       }
@@ -850,7 +850,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
     
     FeedbackUtils.showSuccess(
       context,
-      'Navigation started',
+      AppLocalizations.of(context).multiStop_navigationStarted,
       duration: const Duration(seconds: 2),
     );
   }
@@ -861,7 +861,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
     
     FeedbackUtils.showInfo(
       context,
-      'Navigation cancelled',
+      AppLocalizations.of(context).multiStop_navigationCancelled,
       duration: const Duration(seconds: 2),
     );
   }
@@ -972,7 +972,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Plan Multi-Stop Route'),
+        title: Text(AppLocalizations.of(context).multiStop_title),
         actions: [
           if (_currentRoute != null && !_navigationService.isNavigating)
             Semantics(
@@ -984,7 +984,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
                   await AccessibilityUtils.buttonPressed();
                   _startNavigation();
                 },
-                tooltip: 'Start Navigation',
+                tooltip: AppLocalizations.of(context).multiStop_startNavigation,
               ),
             ),
           if (_currentRoute != null && !_navigationService.isNavigating)
@@ -997,7 +997,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
                   await AccessibilityUtils.buttonPressed();
                   _saveRoute();
                 },
-                tooltip: 'Save Route',
+                tooltip: AppLocalizations.of(context).multiStop_saveRoute,
               ),
             ),
         ],
@@ -1067,7 +1067,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
                                   ),
                                 ),
                                 Text(
-                                  'Distance',
+                                  AppLocalizations.of(context).multiStop_distance,
                                   style: theme.textTheme.bodySmall,
                                 ),
                               ],
@@ -1083,7 +1083,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
                                   ),
                                 ),
                                 Text(
-                                  'Duration',
+                                  AppLocalizations.of(context).multiStop_duration,
                                   style: theme.textTheme.bodySmall,
                                 ),
                               ],
@@ -1099,7 +1099,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
                                   ),
                                 ),
                                 Text(
-                                  'Stops',
+                                  AppLocalizations.of(context).multiStop_stops,
                                   style: theme.textTheme.bodySmall,
                                 ),
                               ],
@@ -1146,7 +1146,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
                                   Icon(Icons.warning_amber_rounded, size: 16, color: theme.colorScheme.primary),
                                   SizedBox(width: 1.w),
                                   Text(
-                                    'Issues',
+                                    AppLocalizations.of(context).multiStop_issues,
                                     style: theme.textTheme.labelMedium?.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -1180,7 +1180,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
                               CircularProgressIndicator(),
                               SizedBox(height: 2.h),
                               Text(
-                                _isOptimizing ? 'Optimizing route...' : 'Calculating route...',
+                                _isOptimizing ? AppLocalizations.of(context).multiStop_optimizingRoute : AppLocalizations.of(context).multiStop_calculatingRoute,
                                 style: theme.textTheme.titleMedium,
                               ),
                             ],
@@ -1275,7 +1275,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
                                 _addWaypoint();
                               },
                               icon: Icon(Icons.add_location_alt, size: 20),
-                              label: Text('Add Waypoint'),
+                              label: Text(AppLocalizations.of(context).multiStop_addWaypoint),
                               style: OutlinedButton.styleFrom(
                                 minimumSize: Size(double.infinity, 48),
                               ),
@@ -1299,7 +1299,7 @@ class _MultiStopRoutePlannerScreenState extends State<MultiStopRoutePlannerScree
                                 await AccessibilityUtils.optimizationComplete();
                               },
                               icon: Icon(Icons.route, size: 20),
-                              label: Text('Optimize Route'),
+                              label: Text(AppLocalizations.of(context).multiStop_optimizeRoute),
                               style: ElevatedButton.styleFrom(
                                 minimumSize: Size(double.infinity, 48),
                                 backgroundColor: theme.colorScheme.secondary,
@@ -1593,7 +1593,7 @@ class _RoutePointSearchFieldState extends State<RoutePointSearchField> {
       if (mounted) {
         FeedbackUtils.showError(
           context,
-          'Location not found',
+          AppLocalizations.of(context).multiStop_locationNotFound,
           duration: const Duration(seconds: 2),
         );
       }
@@ -1609,7 +1609,7 @@ class _RoutePointSearchFieldState extends State<RoutePointSearchField> {
       if (savedLocations.isEmpty) {
         FeedbackUtils.showInfo(
           context,
-          'No saved locations found',
+          AppLocalizations.of(context).multiStop_noSavedLocations,
           duration: const Duration(seconds: 2),
         );
         return;
@@ -1634,7 +1634,7 @@ class _RoutePointSearchFieldState extends State<RoutePointSearchField> {
       if (mounted) {
         FeedbackUtils.showError(
           context,
-          'Failed to load saved locations',
+          AppLocalizations.of(context).multiStop_failedToLoadLocations,
           duration: const Duration(seconds: 2),
         );
       }
@@ -1684,7 +1684,7 @@ class _RoutePointSearchFieldState extends State<RoutePointSearchField> {
         TextButton.icon(
           onPressed: _showSavedLocationsDialog,
           icon: Icon(Icons.star, size: 16),
-          label: Text('Choose from saved locations'),
+          label: Text(AppLocalizations.of(context).multiStop_chooseFromSaved),
           style: TextButton.styleFrom(
             padding: EdgeInsets.symmetric(horizontal: 2.w),
             minimumSize: Size(0, 32),
@@ -1776,7 +1776,7 @@ class _SavedLocationsDialogState extends State<_SavedLocationsDialog> {
                   SizedBox(width: 2.w),
                   Expanded(
                     child: Text(
-                      'Choose Saved Location',
+                      AppLocalizations.of(context).multiStop_chooseSavedLocation,
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -1827,8 +1827,8 @@ class _SavedLocationsDialogState extends State<_SavedLocationsDialog> {
                         padding: EdgeInsets.all(4.w),
                         child: Text(
                           _searchController.text.isEmpty
-                              ? 'No saved locations'
-                              : 'No locations match your search',
+                              ? AppLocalizations.of(context).multiStop_noSavedLocations
+                              : AppLocalizations.of(context).multiStop_noLocationsMatch,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           ),

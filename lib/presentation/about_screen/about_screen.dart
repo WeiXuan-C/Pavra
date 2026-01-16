@@ -132,14 +132,6 @@ class AboutScreen extends StatelessWidget {
                 children: [
                   _buildLinkTile(
                     context,
-                    icon: Icons.language,
-                    title: l10n.about_website,
-                    subtitle: l10n.about_websiteUrl,
-                    onTap: () => _launchURL('https://pavra.vercel.app'),
-                  ),
-                  Divider(height: 1),
-                  _buildLinkTile(
-                    context,
                     icon: Icons.privacy_tip,
                     title: l10n.about_privacyPolicy,
                     subtitle: l10n.about_privacyPolicyDesc,

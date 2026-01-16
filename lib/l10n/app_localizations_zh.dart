@@ -445,9 +445,6 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get map_refresh => '刷新';
-
-  @override
   String get map_currentLocation => '当前位置';
 
   @override
@@ -944,21 +941,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get alerts_noSavedRoutes => '没有保存的路线。添加常用路线以监控警报。';
-
-  @override
-  String get severity_minor => '轻微';
-
-  @override
-  String get severity_low => '低';
-
-  @override
-  String get severity_moderate => '中等';
-
-  @override
-  String get severity_high => '高';
-
-  @override
-  String get severity_critical => '危急';
 
   @override
   String get severity_minorDesc => '轻微不便，无即时危险';
@@ -1525,6 +1507,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get report_addressSearchHint => '输入完整地址，我们将为您找到坐标';
+
+  @override
+  String get report_selectLocation => '选择位置';
+
+  @override
+  String get report_selectFromMap => '从地图选择';
+
+  @override
+  String get report_selectedLocation => '已选位置';
+
+  @override
+  String get report_loadingAddress => '正在加载地址...';
 
   @override
   String get report_filterByStatus => '按状态筛选';
@@ -2508,21 +2502,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get admin_title => '管理面板';
 
   @override
-  String get admin_overview => '概览';
-
-  @override
-  String get admin_reports => '报告';
-
-  @override
-  String get admin_users => '用户';
-
-  @override
-  String get admin_totalReports => '总报告数';
-
-  @override
-  String get admin_totalUsers => '总用户数';
-
-  @override
   String get admin_pendingReports => '待处理报告';
 
   @override
@@ -2545,9 +2524,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get analytics_title => '分析仪表板';
-
-  @override
-  String get analytics_totalReports => '总报告数';
 
   @override
   String get analytics_resolved => '已解决';
@@ -2591,35 +2567,50 @@ class AppLocalizationsZh extends AppLocalizations {
   String get route_walk => '步行';
 
   @override
-  String get map_searchPlaceholder => '搜索地点、地址...';
+  String get map_searchPlaceholder => '搜索地点、地址或问题...';
 
   @override
-  String map_feetAway(int feet) {
-    return '$feet 英尺外';
+  String map_feetAway(int distance) {
+    return '$distance 英尺';
   }
 
   @override
-  String map_milesAway(String miles) {
-    return '$miles 英里外';
+  String map_milesAway(String distance) {
+    return '$distance 英里';
   }
 
   @override
   String map_daysAgo(int days) {
-    return '$days 天前';
+    return '$days天前';
   }
 
   @override
   String map_hoursAgo(int hours) {
-    return '$hours 小时前';
+    return '$hours小时前';
   }
 
   @override
   String map_minutesAgo(int minutes) {
-    return '$minutes 分钟前';
+    return '$minutes分钟前';
   }
 
   @override
   String get map_justNow => '刚刚';
+
+  @override
+  String get severity_critical => '危急';
+
+  @override
+  String get severity_high => '严重';
+
+  @override
+  String get severity_moderate => '中等';
+
+  @override
+  String get severity_low => '较低';
+
+  @override
+  String get severity_minor => '轻微';
 
   @override
   String get voice_search => '语音搜索';
@@ -3082,7 +3073,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get map_clear => '清除';
 
   @override
-  String get map_tapForOptions => 'Tap for options';
+  String get map_tapForOptions => '点击查看选项';
 
   @override
   String get accessibility_voiceSearchError => '语音搜索错误';
@@ -3097,6 +3088,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String map_locationCoordinates(String coordinates) {
     return '位置：$coordinates';
   }
+
+  @override
+  String get map_refresh => '刷新';
 
   @override
   String get map_home => '家';
@@ -3183,7 +3177,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get admin_dashboard => '管理员仪表板';
 
   @override
+  String get admin_overview => '概览';
+
+  @override
+  String get admin_reports => '报告';
+
+  @override
+  String get admin_users => '用户';
+
+  @override
   String get admin_quickStatistics => '快速统计';
+
+  @override
+  String get admin_totalReports => '总报告数';
+
+  @override
+  String get admin_totalUsers => '总用户数';
 
   @override
   String get admin_reportStatus => '报告状态';
@@ -3332,6 +3341,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get analytics_keyMetrics => '关键指标';
+
+  @override
+  String get analytics_totalReports => '总报告数';
 
   @override
   String get analytics_totalUsers => '总用户数';
@@ -3493,59 +3505,271 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get settings_locationTracking => 'Location Tracking';
+  String get settings_locationTracking => '位置追踪';
 
   @override
-  String get settings_locationTrackingDesc =>
-      'Enable real-time location tracking for proximity alerts';
+  String get settings_locationTrackingDesc => '启用实时位置追踪以获取附近警报';
 
   @override
-  String get settings_locationTrackingEnabled => 'Location tracking is active';
+  String get settings_locationTrackingEnabled => '位置追踪已启用';
 
   @override
-  String get settings_locationTrackingDisabled =>
-      'Location tracking is inactive';
+  String get settings_locationTrackingDisabled => '位置追踪已停用';
 
   @override
-  String get settings_locationTrackingStatus => 'Status';
+  String get settings_locationTrackingStatus => '状态';
 
   @override
-  String get settings_locationTrackingLastUpdate => 'Last Update';
+  String get settings_locationTrackingLastUpdate => '最后更新';
 
   @override
-  String get settings_locationTrackingNearbyIssues => 'Nearby Issues Monitored';
+  String get settings_locationTrackingNearbyIssues => '监控的附近问题';
 
   @override
-  String get settings_locationTrackingPermissionTitle =>
-      'Location Permission Required';
+  String get settings_locationTrackingPermissionTitle => '需要位置权限';
 
   @override
   String get settings_locationTrackingPermissionMessage =>
-      'Pavra needs access to your location to:\n\n• Alert you about nearby road hazards\n• Monitor critical issues within 5km\n• Update your location every 100m or 60 seconds\n\nYour location is only shared when tracking is enabled and you can disable it anytime.';
+      'Pavra 需要访问您的位置以：\n\n• 提醒您附近的道路危险\n• 监控5公里内的严重问题\n• 每100米或60秒更新您的位置\n\n您的位置仅在启用追踪时共享，您可以随时禁用。';
 
   @override
   String settings_locationTrackingEnableError(String error) {
-    return 'Failed to enable location tracking: $error';
+    return '启用位置追踪失败：$error';
   }
 
   @override
   String settings_locationTrackingDisableError(String error) {
-    return 'Failed to disable location tracking: $error';
+    return '停用位置追踪失败：$error';
   }
 
   @override
-  String get settings_locationTrackingNever => 'Never';
+  String get settings_locationTrackingNever => '从未';
 
   @override
-  String get settings_locationTrackingJustNow => 'Just now';
+  String get settings_locationTrackingJustNow => '刚刚';
 
   @override
   String settings_locationTrackingMinutesAgo(int minutes) {
-    return '${minutes}m ago';
+    return '$minutes分钟前';
   }
 
   @override
   String settings_locationTrackingHoursAgo(int hours) {
-    return '${hours}h ago';
+    return '$hours小时前';
+  }
+
+  @override
+  String get privacy_policy_title => '隐私政策';
+
+  @override
+  String get privacy_policy_last_updated => '最后更新：2026年1月9日';
+
+  @override
+  String get terms_of_service_title => '服务条款';
+
+  @override
+  String get terms_of_service_last_updated => '最后更新：2026年1月9日';
+
+  @override
+  String get profile_editUsername => '编辑用户名';
+
+  @override
+  String get profile_usernameHint => '输入您的用户名';
+
+  @override
+  String get profile_usernameFormatHint =>
+      '用户名只能包含小写字母、数字、下划线（_）和点（.）。长度必须为3-20个字符。';
+
+  @override
+  String get profile_suggestions => '建议';
+
+  @override
+  String get profile_saveChanges => '保存更改';
+
+  @override
+  String get profile_usernameEmpty => '用户名不能为空';
+
+  @override
+  String get profile_usernameFormat => '用户名只能包含小写字母、数字、下划线和点';
+
+  @override
+  String get profile_usernameMinLength => '用户名至少需要3个字符';
+
+  @override
+  String get profile_usernameMaxLength => '用户名不能超过20个字符';
+
+  @override
+  String get profile_usernameTaken => '此用户名已被占用';
+
+  @override
+  String get profile_usernameVerifyError => '验证用户名可用性失败';
+
+  @override
+  String get profile_usernameUpdated => '用户名更新成功';
+
+  @override
+  String get profile_chooseAvatarSource => '选择头像来源';
+
+  @override
+  String get profile_gallery => '相册';
+
+  @override
+  String get profile_avatarUpdated => '头像更新成功';
+
+  @override
+  String get multiStop_title => '规划多站点路线';
+
+  @override
+  String get multiStop_addWaypoint => '添加途经点';
+
+  @override
+  String get multiStop_chooseFromSaved => '从已保存位置选择';
+
+  @override
+  String get multiStop_optimizeRoute => '优化路线';
+
+  @override
+  String get multiStop_distance => '距离';
+
+  @override
+  String get multiStop_duration => '时长';
+
+  @override
+  String get multiStop_stops => '站点';
+
+  @override
+  String get multiStop_issues => '问题';
+
+  @override
+  String get multiStop_calculatingRoute => '正在计算路线...';
+
+  @override
+  String get multiStop_optimizingRoute => '正在优化路线...';
+
+  @override
+  String get multiStop_startNavigation => '开始导航';
+
+  @override
+  String get multiStop_saveRoute => '保存路线';
+
+  @override
+  String get multiStop_chooseSavedLocation => '选择已保存位置';
+
+  @override
+  String get navigation_steps => '步骤';
+
+  @override
+  String get navigation_end => '结束';
+
+  @override
+  String get navigation_then => '然后';
+
+  @override
+  String map_searchFor(String query) {
+    return '搜索 \"$query\"';
+  }
+
+  @override
+  String get multiStop_currentLocation => '当前位置';
+
+  @override
+  String get multiStop_start => '起点';
+
+  @override
+  String get multiStop_destination => '目的地';
+
+  @override
+  String multiStop_waypoint(int number) {
+    return '途经点 $number';
+  }
+
+  @override
+  String get multiStop_close => '关闭';
+
+  @override
+  String get multiStop_ok => '确定';
+
+  @override
+  String get multiStop_routeOptimized => '路线已优化！';
+
+  @override
+  String get multiStop_routeOptimizedMessage => '您的路线已优化以提高效率。';
+
+  @override
+  String get multiStop_originalDistance => '原始距离';
+
+  @override
+  String get multiStop_optimizedDistance => '优化后距离';
+
+  @override
+  String get multiStop_distanceSavings => '节省距离';
+
+  @override
+  String get multiStop_waypointsReordered => '途经点已重新排序以优化路线';
+
+  @override
+  String get multiStop_saveRouteName => '路线名称';
+
+  @override
+  String get multiStop_saveRouteHint => '输入此路线的名称';
+
+  @override
+  String get multiStop_routeSaved => '路线保存成功';
+
+  @override
+  String get multiStop_failedToSaveRoute => '保存路线失败';
+
+  @override
+  String get multiStop_failedToCalculateRoute => '计算路线失败';
+
+  @override
+  String get multiStop_failedToOptimizeRoute => '优化路线失败。保持原始路线。';
+
+  @override
+  String get multiStop_locationNotFound => '未找到位置';
+
+  @override
+  String get multiStop_noSavedLocations => '未找到已保存的位置';
+
+  @override
+  String get multiStop_noLocationsMatch => '没有位置匹配您的搜索';
+
+  @override
+  String get multiStop_failedToLoadLocations => '加载已保存位置失败';
+
+  @override
+  String get multiStop_navigationStarted => '导航已开始';
+
+  @override
+  String get multiStop_navigationCancelled => '导航已取消';
+
+  @override
+  String get multiStop_calculateRouteFirst => '请先计算路线';
+
+  @override
+  String get navigation_destinationReached => '已到达目的地';
+
+  @override
+  String navigation_waypointNumber(int number) {
+    return '途经点 $number';
+  }
+
+  @override
+  String navigation_stopsRemaining(int count) {
+    return '剩余 $count 个站点';
+  }
+
+  @override
+  String get navigation_cancelNavigation => '取消导航';
+
+  @override
+  String get navigation_nextWaypoint => '下一个途经点';
+
+  @override
+  String get navigation_progress => '进度';
+
+  @override
+  String navigation_stopsCompleted(int current, int total) {
+    return '已完成 $current/$total 个站点';
   }
 }

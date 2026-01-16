@@ -8,6 +8,11 @@ class MapService {
   final _logger = Logger();
   late final AlertPreferencesApi _alertPreferencesApi;
   late final ReportIssueApi _reportIssueApi;
+  
+  // Cache for nearby issues to reduce API calls
+  Map<String, dynamic>? _cachedIssues;
+  DateTime? _cacheTimestamp;
+  static const _cacheDuration = Duration(minutes: 5);
 
   MapService() {
     _alertPreferencesApi = AlertPreferencesApi(supabase);
@@ -25,31 +30,50 @@ class MapService {
     }
   }
 
-  /// Fetch nearby report issues within radius
+  /// Fetch nearby report issues within radius with caching and optimization
   /// Uses the ReportIssueApi to fetch issues with photos
   Future<List<Map<String, dynamic>>> getNearbyIssues({
     required double latitude,
     required double longitude,
     required double radiusMiles,
     String status = 'submitted',
+    bool forceRefresh = false,
   }) async {
     try {
+      // Check cache first
+      if (!forceRefresh && _cachedIssues != null && _cacheTimestamp != null) {
+        final cacheAge = DateTime.now().difference(_cacheTimestamp!);
+        if (cacheAge < _cacheDuration) {
+          final cachedLat = _cachedIssues!['latitude'] as double;
+          final cachedLng = _cachedIssues!['longitude'] as double;
+          final cachedRadius = _cachedIssues!['radius'] as double;
+          
+          // Check if cached location is close enough (within 0.5 miles)
+          final distance = _calculateDistance(latitude, longitude, cachedLat, cachedLng) / 1.60934;
+          if (distance < 0.5 && cachedRadius >= radiusMiles) {
+            _logger.i('Using cached issues (age: ${cacheAge.inSeconds}s, distance: ${distance.toStringAsFixed(2)} miles)');
+            return List<Map<String, dynamic>>.from(_cachedIssues!['issues'] as List);
+          }
+        }
+      }
+
       // Convert miles to kilometers for the API
       final radiusKm = radiusMiles * 1.60934;
 
       _logger.i('Fetching nearby issues within $radiusMiles miles ($radiusKm km) from ($latitude, $longitude)');
 
-      // Fetch nearby reports using the API
+      // Fetch nearby reports using the API with limit
       final reports = await _reportIssueApi.searchNearby(
         latitude: latitude,
         longitude: longitude,
         radiusKm: radiusKm,
-        limit: 100,
+        limit: 50, // Reduced from 100 for faster loading
       );
 
       _logger.i('Found ${reports.length} reports within radius');
 
       // Convert ReportIssueModel to Map format for compatibility
+      // Load photos in batches for better performance
       final issuesWithPhotos = <Map<String, dynamic>>[];
       
       for (final report in reports) {
@@ -58,10 +82,8 @@ class MapService {
           continue;
         }
 
-        // Fetch photos for this issue
-        final photos = await _reportIssueApi.getReportPhotos(report.id);
-        
-        // Convert to map format
+        // Only fetch photos for issues that will be displayed
+        // This is a lazy loading approach
         final issueMap = {
           'id': report.id,
           'title': report.title,
@@ -75,11 +97,8 @@ class MapService {
           'created_at': report.createdAt.toIso8601String(),
           'updated_at': report.updatedAt.toIso8601String(),
           'is_deleted': report.isDeleted,
-          'issue_photos': photos.map((photo) => {
-            'photo_url': photo.photoUrl,
-            'is_primary': photo.isPrimary,
-            'photo_type': photo.photoType,
-          }).toList(),
+          'issue_photos': [], // Will be loaded on demand
+          'photos_loaded': false,
           // Calculate distance
           'distance_miles': _calculateDistance(
             latitude,
@@ -108,11 +127,43 @@ class MapService {
         _logger.i('Distance range: ${nearest.toStringAsFixed(2)} - ${farthest.toStringAsFixed(2)} miles');
       }
 
+      // Cache the results
+      _cachedIssues = {
+        'latitude': latitude,
+        'longitude': longitude,
+        'radius': radiusMiles,
+        'issues': issuesWithPhotos,
+      };
+      _cacheTimestamp = DateTime.now();
+
       return issuesWithPhotos;
     } catch (e) {
       _logger.e('Error fetching nearby issues: $e');
       return [];
     }
+  }
+
+  /// Load photos for a specific issue (lazy loading)
+  Future<void> loadIssuePhotos(Map<String, dynamic> issue) async {
+    if (issue['photos_loaded'] == true) return;
+
+    try {
+      final photos = await _reportIssueApi.getReportPhotos(issue['id'] as String);
+      issue['issue_photos'] = photos.map((photo) => {
+        'photo_url': photo.photoUrl,
+        'is_primary': photo.isPrimary,
+        'photo_type': photo.photoType,
+      }).toList();
+      issue['photos_loaded'] = true;
+    } catch (e) {
+      _logger.e('Error loading photos for issue ${issue['id']}: $e');
+    }
+  }
+
+  /// Clear cache to force refresh
+  void clearCache() {
+    _cachedIssues = null;
+    _cacheTimestamp = null;
   }
 
 

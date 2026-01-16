@@ -12,8 +12,6 @@ import '../../data/repositories/alert_preferences_repository.dart';
 import '../../data/repositories/saved_route_repository.dart';
 import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
-import './widgets/alert_card_widget.dart';
-import './widgets/alert_toggle_widget.dart';
 import './widgets/empty_routes_widget.dart';
 import './widgets/mini_map_widget.dart';
 import './widgets/radius_slider_widget.dart';
@@ -34,89 +32,15 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
   late AlertPreferencesRepository _preferencesRepository;
   
   double _alertRadius = 5.0;
-  bool _roadDamageEnabled = true;
-  bool _constructionEnabled = true;
-  bool _weatherEnabled = false;
-  bool _trafficEnabled = true;
-  bool _isRefreshing = false;
   bool _isLoadingRoutes = true;
   bool _isLoadingPreferences = true;
   
   List<SavedRouteModel> _savedRoutes = [];
 
-  // Mock data for safety alerts
-  final List<Map<String, dynamic>> _alerts = [
-    {
-      "id": 1,
-      "severity": "Critical",
-      "hazardType": "Road Damage",
-      "location": "Main Street & 5th Avenue intersection",
-      "distance": "0.3 miles",
-      "timeReported": "2 hours ago",
-      "photo":
-          "https://images.pexels.com/photos/416978/pexels-photo-416978.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      "description":
-          "Large pothole causing vehicle damage. Multiple reports of tire punctures. Road surface severely compromised with debris scattered.",
-      "alternateRoute": "Use Oak Street parallel route",
-      "isExpanded": false,
-    },
-    {
-      "id": 2,
-      "severity": "High",
-      "hazardType": "Construction Zones",
-      "location": "Highway 101 Northbound, Mile Marker 45",
-      "distance": "1.2 miles",
-      "timeReported": "4 hours ago",
-      "photo":
-          "https://images.pexels.com/photos/162539/architecture-building-construction-work-162539.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      "description":
-          "Lane closure for bridge repair work. Single lane traffic with 15-minute delays expected during peak hours.",
-      "alternateRoute": "Exit at Maple Ave, rejoin at Pine St",
-      "isExpanded": false,
-    },
-    {
-      "id": 3,
-      "severity": "Medium",
-      "hazardType": "Weather Hazards",
-      "location": "Mountain View Road, Sections 12-18",
-      "distance": "2.8 miles",
-      "timeReported": "1 hour ago",
-      "description":
-          "Fog reducing visibility to less than 100 feet. Wet road conditions from recent rainfall creating slippery surfaces.",
-      "alternateRoute": "Valley Route via Sunset Boulevard",
-      "isExpanded": false,
-    },
-    {
-      "id": 4,
-      "severity": "High",
-      "hazardType": "Traffic Incidents",
-      "location": "Interstate 95 Southbound, Exit 23",
-      "distance": "3.5 miles",
-      "timeReported": "30 minutes ago",
-      "photo":
-          "https://images.pexels.com/photos/13861/IMG_3496bfree.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      "description":
-          "Multi-vehicle accident blocking two right lanes. Emergency services on scene. Expect significant delays.",
-      "alternateRoute": "Use Route 1 coastal highway",
-      "isExpanded": false,
-    },
-    {
-      "id": 5,
-      "severity": "Medium",
-      "hazardType": "Road Damage",
-      "location": "Cedar Avenue near Shopping Center",
-      "distance": "4.1 miles",
-      "timeReported": "6 hours ago",
-      "description":
-          "Uneven road surface and loose gravel. Recent utility work left road in poor condition affecting vehicle alignment.",
-      "isExpanded": false,
-    },
-  ];
-
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -154,10 +78,6 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
       if (mounted) {
         setState(() {
           _alertRadius = preferences.alertRadiusMiles;
-          _roadDamageEnabled = preferences.roadDamageEnabled;
-          _constructionEnabled = preferences.constructionZonesEnabled;
-          _weatherEnabled = preferences.weatherHazardsEnabled;
-          _trafficEnabled = preferences.trafficIncidentsEnabled;
           _isLoadingPreferences = false;
         });
       }
@@ -200,54 +120,7 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
     super.dispose();
   }
 
-  Future<void> _refreshAlerts() async {
-    setState(() => _isRefreshing = true);
 
-    // Simulate network delay
-    await Future.delayed(const Duration(seconds: 2));
-
-    setState(() => _isRefreshing = false);
-
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context).alerts_updated),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-      );
-    }
-  }
-
-  void _toggleAlertExpansion(int alertId) {
-    setState(() {
-      final alertIndex = _alerts.indexWhere((alert) => alert['id'] == alertId);
-      if (alertIndex != -1) {
-        _alerts[alertIndex]['isExpanded'] =
-            !(_alerts[alertIndex]['isExpanded'] as bool);
-      }
-    });
-  }
-
-  void _dismissAlert(int alertId) {
-    setState(() {
-      _alerts.removeWhere((alert) => alert['id'] == alertId);
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context).alerts_acknowledged),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        action: SnackBarAction(
-          label: AppLocalizations.of(context).alerts_undo,
-          onPressed: () {
-            // In a real app, restore the dismissed alert
-          },
-        ),
-      ),
-    );
-  }
 
   Future<void> _toggleRouteMonitoring(String routeId, bool isMonitoring) async {
     try {
@@ -388,22 +261,7 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
     }
   }
 
-  List<Map<String, dynamic>> get _filteredAlerts {
-    return _alerts.where((alert) {
-      final hazardType = (alert['hazardType'] as String).toLowerCase();
 
-      if (hazardType.contains('road damage') && !_roadDamageEnabled) {
-        return false;
-      }
-      if (hazardType.contains('construction') && !_constructionEnabled) {
-        return false;
-      }
-      if (hazardType.contains('weather') && !_weatherEnabled) return false;
-      if (hazardType.contains('traffic') && !_trafficEnabled) return false;
-
-      return true;
-    }).toList();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -417,7 +275,6 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(text: l10n.alerts_activeAlerts),
             Tab(text: l10n.alerts_settings),
             Tab(text: l10n.alerts_routes),
           ],
@@ -426,25 +283,6 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          // Active Alerts Tab
-          RefreshIndicator(
-            onRefresh: _refreshAlerts,
-            child: _filteredAlerts.isEmpty
-                ? _buildEmptyAlertsState()
-                : ListView.builder(
-                    padding: EdgeInsets.symmetric(vertical: 2.h),
-                    itemCount: _filteredAlerts.length,
-                    itemBuilder: (context, index) {
-                      final alert = _filteredAlerts[index];
-                      return AlertCardWidget(
-                        alert: alert,
-                        onTap: () => _toggleAlertExpansion(alert['id'] as int),
-                        onDismiss: () => _dismissAlert(alert['id'] as int),
-                      );
-                    },
-                  ),
-          ),
-
           // Settings Tab
           _isLoadingPreferences
               ? const Center(child: CircularProgressIndicator())
@@ -453,76 +291,6 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-                  child: Text(
-                    l10n.alerts_alertTypes,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                AlertToggleWidget(
-                  title: l10n.alerts_roadDamage,
-                  iconName: 'construction',
-                  isEnabled: _roadDamageEnabled,
-                  onChanged: (value) async {
-                    setState(() => _roadDamageEnabled = value);
-                    try {
-                      await _preferencesRepository.updateAlertTypes(
-                        roadDamageEnabled: value,
-                      );
-                    } catch (e) {
-                      debugPrint('Error updating alert type: $e');
-                    }
-                  },
-                ),
-                AlertToggleWidget(
-                  title: l10n.alerts_constructionZones,
-                  iconName: 'engineering',
-                  isEnabled: _constructionEnabled,
-                  onChanged: (value) async {
-                    setState(() => _constructionEnabled = value);
-                    try {
-                      await _preferencesRepository.updateAlertTypes(
-                        constructionZonesEnabled: value,
-                      );
-                    } catch (e) {
-                      debugPrint('Error updating alert type: $e');
-                    }
-                  },
-                ),
-                AlertToggleWidget(
-                  title: l10n.alerts_weatherHazards,
-                  iconName: 'cloud',
-                  isEnabled: _weatherEnabled,
-                  onChanged: (value) async {
-                    setState(() => _weatherEnabled = value);
-                    try {
-                      await _preferencesRepository.updateAlertTypes(
-                        weatherHazardsEnabled: value,
-                      );
-                    } catch (e) {
-                      debugPrint('Error updating alert type: $e');
-                    }
-                  },
-                ),
-                AlertToggleWidget(
-                  title: l10n.alerts_trafficIncidents,
-                  iconName: 'traffic',
-                  isEnabled: _trafficEnabled,
-                  onChanged: (value) async {
-                    setState(() => _trafficEnabled = value);
-                    try {
-                      await _preferencesRepository.updateAlertTypes(
-                        trafficIncidentsEnabled: value,
-                      );
-                    } catch (e) {
-                      debugPrint('Error updating alert type: $e');
-                    }
-                  },
-                ),
-                SizedBox(height: 2.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
                   child: Text(
@@ -670,63 +438,5 @@ class _SafetyAlertsScreenState extends State<SafetyAlertsScreen>
     );
   }
 
-  Widget _buildEmptyAlertsState() {
-    final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
 
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(8.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withAlpha(26),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.shield_outlined,
-                color: theme.colorScheme.primary,
-                size: 60,
-              ),
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              l10n.alerts_allClear,
-              style: theme.textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.primary,
-              ),
-            ),
-            SizedBox(height: 2.h),
-            Text(
-              l10n.alerts_noAlertsMessage,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurface.withAlpha(179),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 4.h),
-            ElevatedButton.icon(
-              onPressed: _refreshAlerts,
-              icon: _isRefreshing
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Icon(Icons.refresh, size: 20),
-              label: Text(
-                _isRefreshing
-                    ? l10n.alerts_checking
-                    : l10n.alerts_checkForUpdates,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

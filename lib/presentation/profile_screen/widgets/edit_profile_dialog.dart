@@ -54,7 +54,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     // Validate format first
     if (username.isEmpty) {
       setState(() {
-        _errorMessage = 'Username cannot be empty';
+        _errorMessage = AppLocalizations.of(context).profile_usernameEmpty;
         _isAvailable = false;
       });
       return;
@@ -64,7 +64,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     final validFormat = RegExp(r'^[a-z0-9_.]+$');
     if (!validFormat.hasMatch(username)) {
       setState(() {
-        _errorMessage = 'Only lowercase letters, numbers, _ and . allowed';
+        _errorMessage = AppLocalizations.of(context).profile_usernameFormat;
         _isAvailable = false;
       });
       return;
@@ -73,7 +73,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     // Check length
     if (username.length < 3) {
       setState(() {
-        _errorMessage = 'Username must be at least 3 characters';
+        _errorMessage = AppLocalizations.of(context).profile_usernameMinLength;
         _isAvailable = false;
       });
       return;
@@ -81,7 +81,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
 
     if (username.length > 20) {
       setState(() {
-        _errorMessage = 'Username must be less than 20 characters';
+        _errorMessage = AppLocalizations.of(context).profile_usernameMaxLength;
         _isAvailable = false;
       });
       return;
@@ -121,7 +121,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
         _isChecking = false;
 
         if (!isAvailable) {
-          _errorMessage = 'Username already taken';
+          _errorMessage = AppLocalizations.of(context).profile_usernameTaken;
           _generateSuggestions(username);
         }
       });
@@ -131,7 +131,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
       debugPrint('Error checking username availability: $e');
       setState(() {
         _isChecking = false;
-        _errorMessage = 'Could not verify username';
+        _errorMessage = AppLocalizations.of(context).profile_usernameVerifyError;
         _isAvailable = false;
       });
     }
@@ -156,7 +156,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
         _hasChanges && _isAvailable && !_isChecking && _errorMessage == null;
 
     return AlertDialog(
-      title: const Text('Edit Username'),
+      title: Text(l10n.profile_editUsername),
       content: SizedBox(
         width: double.maxFinite,
         child: SingleChildScrollView(
@@ -167,8 +167,8 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
               TextField(
                 controller: _controller,
                 decoration: InputDecoration(
-                  labelText: 'Username',
-                  hintText: 'Enter username',
+                  labelText: l10n.profile_username,
+                  hintText: l10n.profile_usernameHint,
                   border: const OutlineInputBorder(),
                   suffixIcon: _isChecking
                       ? const Padding(
@@ -191,7 +191,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Only lowercase letters, numbers, _ and .',
+                l10n.profile_usernameFormatHint,
                 style: Theme.of(
                   context,
                 ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
@@ -199,7 +199,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
               if (_suggestions.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 Text(
-                  'Suggestions:',
+                  l10n.profile_suggestions,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 const SizedBox(height: 8),
@@ -230,7 +230,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                   Navigator.pop(context);
                 }
               : null,
-          child: const Text('Save Changes'),
+          child: Text(l10n.profile_saveChanges),
         ),
       ],
     );

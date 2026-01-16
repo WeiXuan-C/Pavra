@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import '../../l10n/app_localizations.dart';
 import '../layouts/header_layout.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
@@ -10,10 +11,11 @@ class PrivacyPolicyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: HeaderLayout(title: 'Privacy Policy'),
+      appBar: HeaderLayout(title: l10n.privacy_policy_title),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(4.w),
         child: Column(
@@ -51,14 +53,14 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Privacy Policy',
+                          l10n.privacy_policy_title,
                           style: theme.textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         SizedBox(height: 0.5.h),
                         Text(
-                          'Last updated: January 2025',
+                          l10n.privacy_policy_last_updated,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
@@ -177,7 +179,6 @@ class PrivacyPolicyScreen extends StatelessWidget {
               bulletPoints: [
                 'Email: pavra.noreply@gmail.com',
                 'Phone: +60 11-6520 0275',
-                'Website: pavra.vercel.app',
               ],
             ),
 

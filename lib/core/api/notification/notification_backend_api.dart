@@ -5,8 +5,8 @@ import 'package:logger/logger.dart';
 
 /// Backend API client for notification operations
 ///
-/// Communicates with Serverpod backend for sending push notifications
-/// and scheduling notifications
+/// Currently simplified to work directly with Supabase
+/// without intermediate backend server
 class NotificationBackendApi {
   final _logger = Logger();
 

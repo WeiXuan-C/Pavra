@@ -593,10 +593,6 @@
       }
     }
   },
-  "map_refresh": "刷新",
-  "@map_refresh": {
-    "description": "刷新按钮提示"
-  },
   "map_currentLocation": "当前位置",
   "@map_currentLocation": {
     "description": "当前位置按钮提示"
@@ -1963,6 +1959,22 @@
   "report_addressSearchHint": "输入完整地址，我们将为您找到坐标",
   "@report_addressSearchHint": {
     "description": "地址搜索提示消息"
+  },
+  "report_selectLocation": "选择位置",
+  "@report_selectLocation": {
+    "description": "选择位置屏幕标题"
+  },
+  "report_selectFromMap": "从地图选择",
+  "@report_selectFromMap": {
+    "description": "从地图选择按钮"
+  },
+  "report_selectedLocation": "已选位置",
+  "@report_selectedLocation": {
+    "description": "已选位置标签"
+  },
+  "report_loadingAddress": "正在加载地址...",
+  "@report_loadingAddress": {
+    "description": "加载地址状态"
   },
   "report_locationPermissionDeniedForever": "位置权限已永久拒绝。请在设置中启用。",
   "@report_locationPermissionDeniedForever": {
@@ -3393,25 +3405,9 @@
   "@admin_title": {
     "description": "管理面板标题"
   },
-  "admin_overview": "概览",
-  "@admin_overview": {
-    "description": "概览标签"
-  },
-  "admin_reports": "报告",
-  "@admin_reports": {
-    "description": "报告标签"
-  },
-  "admin_users": "用户",
-  "@admin_users": {
-    "description": "用户标签"
-  },
   "admin_totalReports": "总报告数",
   "@admin_totalReports": {
     "description": "总报告数统计"
-  },
-  "admin_totalUsers": "总用户数",
-  "@admin_totalUsers": {
-    "description": "总用户数统计"
   },
   "admin_pendingReports": "待处理报告",
   "@admin_pendingReports": {
@@ -3559,26 +3555,6 @@
   "@map_justNow": {
     "description": "刚刚时间指示器"
   },
-  "severity_critical": "危急",
-  "@severity_critical": {
-    "description": "危急严重程度"
-  },
-  "severity_high": "高",
-  "@severity_high": {
-    "description": "高严重程度"
-  },
-  "severity_moderate": "中等",
-  "@severity_moderate": {
-    "description": "中等严重程度"
-  },
-  "severity_low": "低",
-  "@severity_low": {
-    "description": "低严重程度"
-  },
-  "severity_minor": "轻微",
-  "@severity_minor": {
-    "description": "轻微严重程度"
-  },
   "voice_search": "语音搜索",
   "@voice_search": {
     "description": "语音搜索工具提示"
@@ -3662,59 +3638,6 @@
   "report_notInYourArea": "不在您的区域内",
   "@report_notInYourArea": {
     "description": "报告不在用户区域内的警告消息"
-  },
-  "map_searchPlaceholder": "搜索地点、地址...",
-  "@map_searchPlaceholder": {
-    "description": "地图屏幕搜索栏占位符文本"
-  },
-  "map_feetAway": "{feet} 英尺外",
-  "@map_feetAway": {
-    "description": "以英尺为单位的距离",
-    "placeholders": {
-      "feet": {
-        "type": "int"
-      }
-    }
-  },
-  "map_milesAway": "{miles} 英里外",
-  "@map_milesAway": {
-    "description": "以英里为单位的距离",
-    "placeholders": {
-      "miles": {
-        "type": "String"
-      }
-    }
-  },
-  "map_daysAgo": "{days} 天前",
-  "@map_daysAgo": {
-    "description": "天前时间戳",
-    "placeholders": {
-      "days": {
-        "type": "int"
-      }
-    }
-  },
-  "map_hoursAgo": "{hours} 小时前",
-  "@map_hoursAgo": {
-    "description": "小时前时间戳",
-    "placeholders": {
-      "hours": {
-        "type": "int"
-      }
-    }
-  },
-  "map_minutesAgo": "{minutes} 分钟前",
-  "@map_minutesAgo": {
-    "description": "分钟前时间戳",
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "map_justNow": "刚刚",
-  "@map_justNow": {
-    "description": "刚刚时间戳"
   },
   "settings_helpAndFaq": "帮助与常见问题",
   "@settings_helpAndFaq": {
@@ -4117,10 +4040,6 @@
   "@about_madeWith": {
     "description": "用爱制作文本"
   },
-  "map_filter": "筛选",
-  "@map_filter": {
-    "description": "筛选按钮文本"
-  },
   "map_voiceSearch": "语音搜索",
   "@map_voiceSearch": {
     "description": "语音搜索按钮提示"
@@ -4247,6 +4166,10 @@
   "map_clear": "清除",
   "@map_clear": {
     "description": "清除按钮文本"
+  },
+  "map_tapForOptions": "点击查看选项",
+  "@map_tapForOptions": {
+    "description": "点击标记查看选项提示"
   },
   "accessibility_voiceSearchError": "语音搜索错误",
   "@accessibility_voiceSearchError": {
@@ -4418,10 +4341,6 @@
   "admin_quickStatistics": "快速统计",
   "@admin_quickStatistics": {
     "description": "快速统计部分标题"
-  },
-  "admin_totalReports": "总报告数",
-  "@admin_totalReports": {
-    "description": "总报告数指标标签"
   },
   "admin_totalUsers": "总用户数",
   "@admin_totalUsers": {
@@ -4628,10 +4547,6 @@
   "analytics_keyMetrics": "关键指标",
   "@analytics_keyMetrics": {
     "description": "关键指标部分标题"
-  },
-  "analytics_totalReports": "总报告数",
-  "@analytics_totalReports": {
-    "description": "总报告数指标"
   },
   "analytics_totalUsers": "总用户数",
   "@analytics_totalUsers": {
@@ -4849,6 +4764,386 @@
     "placeholders": {
       "error": {
         "type": "String"
+      }
+    }
+  },
+  "privacy_policy_title": "隐私政策",
+  "@privacy_policy_title": {
+    "description": "隐私政策屏幕标题"
+  },
+  "privacy_policy_last_updated": "最后更新：2026年1月9日",
+  "@privacy_policy_last_updated": {
+    "description": "隐私政策最后更新日期"
+  },
+  "terms_of_service_title": "服务条款",
+  "@terms_of_service_title": {
+    "description": "服务条款屏幕标题"
+  },
+  "terms_of_service_last_updated": "最后更新：2026年1月9日",
+  "@terms_of_service_last_updated": {
+    "description": "服务条款最后更新日期"
+  },
+  "profile_editUsername": "编辑用户名",
+  "@profile_editUsername": {
+    "description": "编辑用户名对话框标题"
+  },
+  "profile_usernameHint": "输入您的用户名",
+  "@profile_usernameHint": {
+    "description": "用户名输入提示文本"
+  },
+  "profile_usernameFormatHint": "用户名只能包含小写字母、数字、下划线（_）和点（.）。长度必须为3-20个字符。",
+  "@profile_usernameFormatHint": {
+    "description": "用户名格式提示文本"
+  },
+  "profile_suggestions": "建议",
+  "@profile_suggestions": {
+    "description": "用户名建议部分标题"
+  },
+  "profile_saveChanges": "保存更改",
+  "@profile_saveChanges": {
+    "description": "保存更改按钮文本"
+  },
+  "profile_usernameEmpty": "用户名不能为空",
+  "@profile_usernameEmpty": {
+    "description": "用户名为空错误消息"
+  },
+  "profile_usernameFormat": "用户名只能包含小写字母、数字、下划线和点",
+  "@profile_usernameFormat": {
+    "description": "用户名格式错误消息"
+  },
+  "profile_usernameMinLength": "用户名至少需要3个字符",
+  "@profile_usernameMinLength": {
+    "description": "用户名最小长度错误消息"
+  },
+  "profile_usernameMaxLength": "用户名不能超过20个字符",
+  "@profile_usernameMaxLength": {
+    "description": "用户名最大长度错误消息"
+  },
+  "profile_usernameTaken": "此用户名已被占用",
+  "@profile_usernameTaken": {
+    "description": "用户名已被占用错误消息"
+  },
+  "profile_usernameVerifyError": "验证用户名可用性失败",
+  "@profile_usernameVerifyError": {
+    "description": "用户名验证错误消息"
+  },
+  "profile_usernameUpdated": "用户名更新成功",
+  "@profile_usernameUpdated": {
+    "description": "用户名更新成功消息"
+  },
+  "profile_chooseAvatarSource": "选择头像来源",
+  "@profile_chooseAvatarSource": {
+    "description": "选择头像来源对话框标题"
+  },
+  "profile_gallery": "相册",
+  "@profile_gallery": {
+    "description": "头像选择的相册选项"
+  },
+  "profile_avatarUpdated": "头像更新成功",
+  "@profile_avatarUpdated": {
+    "description": "头像更新成功消息"
+  },
+  "multiStop_title": "规划多站点路线",
+  "@multiStop_title": {
+    "description": "多站点路线规划屏幕标题"
+  },
+  "multiStop_addWaypoint": "添加途经点",
+  "@multiStop_addWaypoint": {
+    "description": "添加途经点按钮文本"
+  },
+  "multiStop_chooseFromSaved": "从已保存位置选择",
+  "@multiStop_chooseFromSaved": {
+    "description": "从已保存位置选择按钮文本"
+  },
+  "multiStop_optimizeRoute": "优化路线",
+  "@multiStop_optimizeRoute": {
+    "description": "优化路线按钮文本"
+  },
+  "multiStop_distance": "距离",
+  "@multiStop_distance": {
+    "description": "路线信息中的距离标签"
+  },
+  "multiStop_duration": "时长",
+  "@multiStop_duration": {
+    "description": "路线信息中的时长标签"
+  },
+  "multiStop_stops": "站点",
+  "@multiStop_stops": {
+    "description": "路线信息中的站点标签"
+  },
+  "multiStop_issues": "问题",
+  "@multiStop_issues": {
+    "description": "路线信息中的问题标签"
+  },
+  "multiStop_calculatingRoute": "正在计算路线...",
+  "@multiStop_calculatingRoute": {
+    "description": "计算路线状态消息"
+  },
+  "multiStop_optimizingRoute": "正在优化路线...",
+  "@multiStop_optimizingRoute": {
+    "description": "优化路线状态消息"
+  },
+  "multiStop_startNavigation": "开始导航",
+  "@multiStop_startNavigation": {
+    "description": "开始导航按钮提示"
+  },
+  "multiStop_saveRoute": "保存路线",
+  "@multiStop_saveRoute": {
+    "description": "保存路线按钮提示"
+  },
+  "multiStop_chooseSavedLocation": "选择已保存位置",
+  "@multiStop_chooseSavedLocation": {
+    "description": "选择已保存位置对话框标题"
+  },
+  "navigation_steps": "步骤",
+  "@navigation_steps": {
+    "description": "导航面板中的步骤按钮文本"
+  },
+  "navigation_end": "结束",
+  "@navigation_end": {
+    "description": "结束导航按钮文本"
+  },
+  "navigation_then": "然后",
+  "@navigation_then": {
+    "description": "下一步指示的前缀"
+  },
+  "map_searchFor": "搜索 \"{query}\"",
+  "@map_searchFor": {
+    "description": "搜索位置建议",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "multiStop_currentLocation": "当前位置",
+  "@multiStop_currentLocation": {
+    "description": "路线点的当前位置标签"
+  },
+  "multiStop_start": "起点",
+  "@multiStop_start": {
+    "description": "起点标签"
+  },
+  "multiStop_destination": "目的地",
+  "@multiStop_destination": {
+    "description": "目的地标签"
+  },
+  "multiStop_waypoint": "途经点 {number}",
+  "@multiStop_waypoint": {
+    "description": "带编号的途经点标签",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "multiStop_close": "关闭",
+  "@multiStop_close": {
+    "description": "关闭按钮文本"
+  },
+  "multiStop_ok": "确定",
+  "@multiStop_ok": {
+    "description": "确定按钮文本"
+  },
+  "multiStop_routeOptimized": "路线已优化！",
+  "@multiStop_routeOptimized": {
+    "description": "路线优化对话框标题"
+  },
+  "multiStop_routeOptimizedMessage": "您的路线已优化以提高效率。",
+  "@multiStop_routeOptimizedMessage": {
+    "description": "路线优化消息"
+  },
+  "multiStop_originalDistance": "原始距离",
+  "@multiStop_originalDistance": {
+    "description": "原始距离标签"
+  },
+  "multiStop_optimizedDistance": "优化后距离",
+  "@multiStop_optimizedDistance": {
+    "description": "优化后距离标签"
+  },
+  "multiStop_distanceSavings": "节省距离",
+  "@multiStop_distanceSavings": {
+    "description": "节省距离标签"
+  },
+  "multiStop_waypointsReordered": "途经点已重新排序以优化路线",
+  "@multiStop_waypointsReordered": {
+    "description": "途经点重新排序信息消息"
+  },
+  "multiStop_saveRouteName": "路线名称",
+  "@multiStop_saveRouteName": {
+    "description": "保存对话框中的路线名称字段标签"
+  },
+  "multiStop_saveRouteHint": "输入此路线的名称",
+  "@multiStop_saveRouteHint": {
+    "description": "路线名称字段提示"
+  },
+  "multiStop_routeSaved": "路线保存成功",
+  "@multiStop_routeSaved": {
+    "description": "路线保存成功消息"
+  },
+  "multiStop_failedToSaveRoute": "保存路线失败",
+  "@multiStop_failedToSaveRoute": {
+    "description": "保存路线失败错误消息"
+  },
+  "multiStop_failedToCalculateRoute": "计算路线失败",
+  "@multiStop_failedToCalculateRoute": {
+    "description": "计算路线失败错误消息"
+  },
+  "multiStop_failedToOptimizeRoute": "优化路线失败。保持原始路线。",
+  "@multiStop_failedToOptimizeRoute": {
+    "description": "优化路线失败错误消息"
+  },
+  "multiStop_locationNotFound": "未找到位置",
+  "@multiStop_locationNotFound": {
+    "description": "未找到位置错误消息"
+  },
+  "multiStop_noSavedLocations": "未找到已保存的位置",
+  "@multiStop_noSavedLocations": {
+    "description": "无已保存位置消息"
+  },
+  "multiStop_noLocationsMatch": "没有位置匹配您的搜索",
+  "@multiStop_noLocationsMatch": {
+    "description": "无位置匹配搜索消息"
+  },
+  "multiStop_failedToLoadLocations": "加载已保存位置失败",
+  "@multiStop_failedToLoadLocations": {
+    "description": "加载位置失败错误消息"
+  },
+  "multiStop_navigationStarted": "导航已开始",
+  "@multiStop_navigationStarted": {
+    "description": "导航开始消息"
+  },
+  "multiStop_navigationCancelled": "导航已取消",
+  "@multiStop_navigationCancelled": {
+    "description": "导航取消消息"
+  },
+  "multiStop_calculateRouteFirst": "请先计算路线",
+  "@multiStop_calculateRouteFirst": {
+    "description": "先计算路线消息"
+  },
+  "navigation_destinationReached": "已到达目的地",
+  "@navigation_destinationReached": {
+    "description": "到达目的地标签"
+  },
+  "navigation_waypointNumber": "途经点 {number}",
+  "@navigation_waypointNumber": {
+    "description": "途经点编号标签",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "navigation_stopsRemaining": "剩余 {count} 个站点",
+  "@navigation_stopsRemaining": {
+    "description": "剩余站点标签",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "navigation_cancelNavigation": "取消导航",
+  "@navigation_cancelNavigation": {
+    "description": "取消导航提示"
+  },
+  "navigation_nextWaypoint": "下一个途经点",
+  "@navigation_nextWaypoint": {
+    "description": "下一个途经点按钮文本"
+  },
+  "navigation_progress": "进度",
+  "@navigation_progress": {
+    "description": "进度标签"
+  },
+  "navigation_stopsCompleted": "已完成 {current}/{total} 个站点",
+  "@navigation_stopsCompleted": {
+    "description": "已完成站点标签",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "settings_locationTracking": "位置追踪",
+  "@settings_locationTracking": {
+    "description": "位置追踪设置部分标题"
+  },
+  "settings_locationTrackingDesc": "启用实时位置追踪以获取附近警报",
+  "@settings_locationTrackingDesc": {
+    "description": "位置追踪设置描述"
+  },
+  "settings_locationTrackingEnabled": "位置追踪已启用",
+  "@settings_locationTrackingEnabled": {
+    "description": "位置追踪已启用状态"
+  },
+  "settings_locationTrackingDisabled": "位置追踪已停用",
+  "@settings_locationTrackingDisabled": {
+    "description": "位置追踪已停用状态"
+  },
+  "settings_locationTrackingStatus": "状态",
+  "@settings_locationTrackingStatus": {
+    "description": "位置追踪状态标签"
+  },
+  "settings_locationTrackingLastUpdate": "最后更新",
+  "@settings_locationTrackingLastUpdate": {
+    "description": "最后位置更新时间标签"
+  },
+  "settings_locationTrackingNearbyIssues": "监控的附近问题",
+  "@settings_locationTrackingNearbyIssues": {
+    "description": "正在监控的附近问题数量标签"
+  },
+  "settings_locationTrackingPermissionTitle": "需要位置权限",
+  "@settings_locationTrackingPermissionTitle": {
+    "description": "位置权限对话框标题"
+  },
+  "settings_locationTrackingPermissionMessage": "Pavra 需要访问您的位置以：\n\n• 提醒您附近的道路危险\n• 监控5公里内的严重问题\n• 每100米或60秒更新您的位置\n\n您的位置仅在启用追踪时共享，您可以随时禁用。",
+  "@settings_locationTrackingPermissionMessage": {
+    "description": "位置权限说明消息"
+  },
+  "settings_locationTrackingEnableError": "启用位置追踪失败：{error}",
+  "@settings_locationTrackingEnableError": {
+    "description": "启用位置追踪失败时的错误消息",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_locationTrackingDisableError": "停用位置追踪失败：{error}",
+  "@settings_locationTrackingDisableError": {
+    "description": "停用位置追踪失败时的错误消息",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settings_locationTrackingNever": "从未",
+  "@settings_locationTrackingNever": {
+    "description": "位置追踪从未更新文本"
+  },
+  "settings_locationTrackingJustNow": "刚刚",
+  "@settings_locationTrackingJustNow": {
+    "description": "最近位置更新的刚刚文本"
+  },
+  "settings_locationTrackingMinutesAgo": "{minutes}分钟前",
+  "@settings_locationTrackingMinutesAgo": {
+    "description": "位置更新的分钟前文本",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "settings_locationTrackingHoursAgo": "{hours}小时前",
+  "@settings_locationTrackingHoursAgo": {
+    "description": "位置更新的小时前文本",
+    "placeholders": {
+      "hours": {
+        "type": "int"
       }
     }
   }

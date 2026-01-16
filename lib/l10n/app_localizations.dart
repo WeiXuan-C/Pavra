@@ -950,12 +950,6 @@ abstract class AppLocalizations {
   /// **'Showing issues within {radius} miles'**
   String map_showingIssuesWithin(String radius);
 
-  /// Refresh button label
-  ///
-  /// In en, this message translates to:
-  /// **'Refresh'**
-  String get map_refresh;
-
   /// Current location button tooltip
   ///
   /// In en, this message translates to:
@@ -1945,36 +1939,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No saved routes. Add frequent routes to monitor for alerts.'**
   String get alerts_noSavedRoutes;
-
-  /// Minor severity level
-  ///
-  /// In en, this message translates to:
-  /// **'MINOR'**
-  String get severity_minor;
-
-  /// Low severity level
-  ///
-  /// In en, this message translates to:
-  /// **'LOW'**
-  String get severity_low;
-
-  /// Moderate severity level
-  ///
-  /// In en, this message translates to:
-  /// **'MODERATE'**
-  String get severity_moderate;
-
-  /// High severity level
-  ///
-  /// In en, this message translates to:
-  /// **'HIGH'**
-  String get severity_high;
-
-  /// Critical severity level
-  ///
-  /// In en, this message translates to:
-  /// **'CRITICAL'**
-  String get severity_critical;
 
   /// Minor severity description
   ///
@@ -3103,6 +3067,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter a full address and we\'ll find the coordinates for you'**
   String get report_addressSearchHint;
+
+  /// Select location screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Select Location'**
+  String get report_selectLocation;
+
+  /// Select from map button
+  ///
+  /// In en, this message translates to:
+  /// **'Select from Map'**
+  String get report_selectFromMap;
+
+  /// Selected location label
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Location'**
+  String get report_selectedLocation;
+
+  /// Loading address status
+  ///
+  /// In en, this message translates to:
+  /// **'Loading address...'**
+  String get report_loadingAddress;
 
   /// Filter by status label
   ///
@@ -4982,36 +4970,6 @@ abstract class AppLocalizations {
   /// **'Admin Panel'**
   String get admin_title;
 
-  /// Overview tab label
-  ///
-  /// In en, this message translates to:
-  /// **'Overview'**
-  String get admin_overview;
-
-  /// Reports tab label
-  ///
-  /// In en, this message translates to:
-  /// **'Reports'**
-  String get admin_reports;
-
-  /// Users tab label
-  ///
-  /// In en, this message translates to:
-  /// **'Users'**
-  String get admin_users;
-
-  /// Total reports metric label
-  ///
-  /// In en, this message translates to:
-  /// **'Total Reports'**
-  String get admin_totalReports;
-
-  /// Total users metric label
-  ///
-  /// In en, this message translates to:
-  /// **'Total Users'**
-  String get admin_totalUsers;
-
   /// Pending reports stat
   ///
   /// In en, this message translates to:
@@ -5059,12 +5017,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Analytics Dashboard'**
   String get analytics_title;
-
-  /// Total reports metric
-  ///
-  /// In en, this message translates to:
-  /// **'Total Reports'**
-  String get analytics_totalReports;
 
   /// Resolved reports metric
   ///
@@ -5144,47 +5096,77 @@ abstract class AppLocalizations {
   /// **'Walk'**
   String get route_walk;
 
-  /// Search bar placeholder text in map screen
+  /// Search bar placeholder text
   ///
   /// In en, this message translates to:
-  /// **'Search places, addresses...'**
+  /// **'Search places, addresses, or issues...'**
   String get map_searchPlaceholder;
 
   /// Distance in feet
   ///
   /// In en, this message translates to:
-  /// **'{feet} ft away'**
-  String map_feetAway(int feet);
+  /// **'{distance} ft away'**
+  String map_feetAway(int distance);
 
   /// Distance in miles
   ///
   /// In en, this message translates to:
-  /// **'{miles} mi away'**
-  String map_milesAway(String miles);
+  /// **'{distance} mi away'**
+  String map_milesAway(String distance);
 
-  /// Days ago timestamp
+  /// Days ago
   ///
   /// In en, this message translates to:
-  /// **'{days} days ago'**
+  /// **'{days}d ago'**
   String map_daysAgo(int days);
 
-  /// Hours ago timestamp
+  /// Hours ago
   ///
   /// In en, this message translates to:
-  /// **'{hours} hours ago'**
+  /// **'{hours}h ago'**
   String map_hoursAgo(int hours);
 
-  /// Minutes ago timestamp
+  /// Minutes ago
   ///
   /// In en, this message translates to:
-  /// **'{minutes} minutes ago'**
+  /// **'{minutes}m ago'**
   String map_minutesAgo(int minutes);
 
-  /// Just now timestamp
+  /// Just now time indicator
   ///
   /// In en, this message translates to:
   /// **'Just now'**
   String get map_justNow;
+
+  /// Critical severity level
+  ///
+  /// In en, this message translates to:
+  /// **'CRITICAL'**
+  String get severity_critical;
+
+  /// High severity level
+  ///
+  /// In en, this message translates to:
+  /// **'HIGH'**
+  String get severity_high;
+
+  /// Moderate severity level
+  ///
+  /// In en, this message translates to:
+  /// **'MODERATE'**
+  String get severity_moderate;
+
+  /// Low severity level
+  ///
+  /// In en, this message translates to:
+  /// **'LOW'**
+  String get severity_low;
+
+  /// Minor severity level
+  ///
+  /// In en, this message translates to:
+  /// **'MINOR'**
+  String get severity_minor;
 
   /// Voice search tooltip
   ///
@@ -5723,7 +5705,7 @@ abstract class AppLocalizations {
   /// App version
   ///
   /// In en, this message translates to:
-  /// **'Version 1.1.0'**
+  /// **'Version 2.0.0'**
   String get about_version;
 
   /// App tagline
@@ -5822,10 +5804,10 @@ abstract class AppLocalizations {
   /// **'Website'**
   String get about_website;
 
-  /// Website URL
+  /// Website URL (removed)
   ///
   /// In en, this message translates to:
-  /// **'pavra.vercel.app'**
+  /// **'Website URL'**
   String get about_websiteUrl;
 
   /// Privacy policy link
@@ -5906,7 +5888,7 @@ abstract class AppLocalizations {
   /// **'Made with ❤️ for safer roads'**
   String get about_madeWith;
 
-  /// Filter button label
+  /// Filter button text
   ///
   /// In en, this message translates to:
   /// **'Filter'**
@@ -6110,6 +6092,12 @@ abstract class AppLocalizations {
   /// **'Location: {coordinates}'**
   String map_locationCoordinates(String coordinates);
 
+  /// Refresh button label
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get map_refresh;
+
   /// Home location label
   ///
   /// In en, this message translates to:
@@ -6254,11 +6242,41 @@ abstract class AppLocalizations {
   /// **'Admin Dashboard'**
   String get admin_dashboard;
 
+  /// Overview tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get admin_overview;
+
+  /// Reports tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get admin_reports;
+
+  /// Users tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get admin_users;
+
   /// Quick statistics section title
   ///
   /// In en, this message translates to:
   /// **'Quick Statistics'**
   String get admin_quickStatistics;
+
+  /// Total reports metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Reports'**
+  String get admin_totalReports;
+
+  /// Total users metric label
+  ///
+  /// In en, this message translates to:
+  /// **'Total Users'**
+  String get admin_totalUsers;
 
   /// Report status section title
   ///
@@ -6547,6 +6565,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Key Metrics'**
   String get analytics_keyMetrics;
+
+  /// Total reports metric
+  ///
+  /// In en, this message translates to:
+  /// **'Total Reports'**
+  String get analytics_totalReports;
 
   /// Total users metric
   ///
@@ -6943,6 +6967,414 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{hours}h ago'**
   String settings_locationTrackingHoursAgo(int hours);
+
+  /// Privacy policy screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacy_policy_title;
+
+  /// Privacy policy last updated date
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated: January 9, 2026'**
+  String get privacy_policy_last_updated;
+
+  /// Terms of service screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get terms_of_service_title;
+
+  /// Terms of service last updated date
+  ///
+  /// In en, this message translates to:
+  /// **'Last Updated: January 9, 2026'**
+  String get terms_of_service_last_updated;
+
+  /// Edit username dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Username'**
+  String get profile_editUsername;
+
+  /// Username input hint text
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your username'**
+  String get profile_usernameHint;
+
+  /// Username format hint text
+  ///
+  /// In en, this message translates to:
+  /// **'Username can only contain lowercase letters, numbers, underscore (_), and dot (.). Must be 3-20 characters.'**
+  String get profile_usernameFormatHint;
+
+  /// Username suggestions section title
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions'**
+  String get profile_suggestions;
+
+  /// Save changes button text
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get profile_saveChanges;
+
+  /// Username empty error message
+  ///
+  /// In en, this message translates to:
+  /// **'Username cannot be empty'**
+  String get profile_usernameEmpty;
+
+  /// Username format error message
+  ///
+  /// In en, this message translates to:
+  /// **'Username can only contain lowercase letters, numbers, underscore, and dot'**
+  String get profile_usernameFormat;
+
+  /// Username minimum length error message
+  ///
+  /// In en, this message translates to:
+  /// **'Username must be at least 3 characters'**
+  String get profile_usernameMinLength;
+
+  /// Username maximum length error message
+  ///
+  /// In en, this message translates to:
+  /// **'Username cannot exceed 20 characters'**
+  String get profile_usernameMaxLength;
+
+  /// Username taken error message
+  ///
+  /// In en, this message translates to:
+  /// **'This username is already taken'**
+  String get profile_usernameTaken;
+
+  /// Username verification error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to verify username availability'**
+  String get profile_usernameVerifyError;
+
+  /// Username updated success message
+  ///
+  /// In en, this message translates to:
+  /// **'Username updated successfully'**
+  String get profile_usernameUpdated;
+
+  /// Choose avatar source dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Avatar Source'**
+  String get profile_chooseAvatarSource;
+
+  /// Gallery option for avatar selection
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get profile_gallery;
+
+  /// Avatar updated success message
+  ///
+  /// In en, this message translates to:
+  /// **'Avatar updated successfully'**
+  String get profile_avatarUpdated;
+
+  /// Multi-stop route planner screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Multi-Stop Route'**
+  String get multiStop_title;
+
+  /// Add waypoint button text
+  ///
+  /// In en, this message translates to:
+  /// **'Add Waypoint'**
+  String get multiStop_addWaypoint;
+
+  /// Choose from saved locations button text
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from saved locations'**
+  String get multiStop_chooseFromSaved;
+
+  /// Optimize route button text
+  ///
+  /// In en, this message translates to:
+  /// **'Optimize Route'**
+  String get multiStop_optimizeRoute;
+
+  /// Distance label in route info
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get multiStop_distance;
+
+  /// Duration label in route info
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get multiStop_duration;
+
+  /// Stops label in route info
+  ///
+  /// In en, this message translates to:
+  /// **'Stops'**
+  String get multiStop_stops;
+
+  /// Issues label in route info
+  ///
+  /// In en, this message translates to:
+  /// **'Issues'**
+  String get multiStop_issues;
+
+  /// Calculating route status message
+  ///
+  /// In en, this message translates to:
+  /// **'Calculating route...'**
+  String get multiStop_calculatingRoute;
+
+  /// Optimizing route status message
+  ///
+  /// In en, this message translates to:
+  /// **'Optimizing route...'**
+  String get multiStop_optimizingRoute;
+
+  /// Start navigation button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Start Navigation'**
+  String get multiStop_startNavigation;
+
+  /// Save route button tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Save Route'**
+  String get multiStop_saveRoute;
+
+  /// Choose saved location dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Saved Location'**
+  String get multiStop_chooseSavedLocation;
+
+  /// Steps button text in navigation panel
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get navigation_steps;
+
+  /// End navigation button text
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get navigation_end;
+
+  /// Then prefix for next step instruction
+  ///
+  /// In en, this message translates to:
+  /// **'Then'**
+  String get navigation_then;
+
+  /// Search for location suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Search for \"{query}\"'**
+  String map_searchFor(String query);
+
+  /// Current location label for route points
+  ///
+  /// In en, this message translates to:
+  /// **'Current Location'**
+  String get multiStop_currentLocation;
+
+  /// Start point label
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get multiStop_start;
+
+  /// Destination point label
+  ///
+  /// In en, this message translates to:
+  /// **'Destination'**
+  String get multiStop_destination;
+
+  /// Waypoint label with number
+  ///
+  /// In en, this message translates to:
+  /// **'Waypoint {number}'**
+  String multiStop_waypoint(int number);
+
+  /// Close button text
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get multiStop_close;
+
+  /// OK button text
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get multiStop_ok;
+
+  /// Route optimized dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Route Optimized!'**
+  String get multiStop_routeOptimized;
+
+  /// Route optimized message
+  ///
+  /// In en, this message translates to:
+  /// **'Your route has been optimized for efficiency.'**
+  String get multiStop_routeOptimizedMessage;
+
+  /// Original distance label
+  ///
+  /// In en, this message translates to:
+  /// **'Original Distance'**
+  String get multiStop_originalDistance;
+
+  /// Optimized distance label
+  ///
+  /// In en, this message translates to:
+  /// **'Optimized Distance'**
+  String get multiStop_optimizedDistance;
+
+  /// Distance savings label
+  ///
+  /// In en, this message translates to:
+  /// **'Distance Savings'**
+  String get multiStop_distanceSavings;
+
+  /// Waypoints reordered info message
+  ///
+  /// In en, this message translates to:
+  /// **'Waypoints have been reordered for optimal routing'**
+  String get multiStop_waypointsReordered;
+
+  /// Route name field label in save dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Route Name'**
+  String get multiStop_saveRouteName;
+
+  /// Route name field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a name for this route'**
+  String get multiStop_saveRouteHint;
+
+  /// Route saved success message
+  ///
+  /// In en, this message translates to:
+  /// **'Route saved successfully'**
+  String get multiStop_routeSaved;
+
+  /// Failed to save route error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save route'**
+  String get multiStop_failedToSaveRoute;
+
+  /// Failed to calculate route error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to calculate route'**
+  String get multiStop_failedToCalculateRoute;
+
+  /// Failed to optimize route error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to optimize route. Original route maintained.'**
+  String get multiStop_failedToOptimizeRoute;
+
+  /// Location not found error message
+  ///
+  /// In en, this message translates to:
+  /// **'Location not found'**
+  String get multiStop_locationNotFound;
+
+  /// No saved locations message
+  ///
+  /// In en, this message translates to:
+  /// **'No saved locations found'**
+  String get multiStop_noSavedLocations;
+
+  /// No locations match search message
+  ///
+  /// In en, this message translates to:
+  /// **'No locations match your search'**
+  String get multiStop_noLocationsMatch;
+
+  /// Failed to load locations error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load saved locations'**
+  String get multiStop_failedToLoadLocations;
+
+  /// Navigation started message
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation started'**
+  String get multiStop_navigationStarted;
+
+  /// Navigation cancelled message
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation cancelled'**
+  String get multiStop_navigationCancelled;
+
+  /// Calculate route first message
+  ///
+  /// In en, this message translates to:
+  /// **'Please calculate a route first'**
+  String get multiStop_calculateRouteFirst;
+
+  /// Destination reached label
+  ///
+  /// In en, this message translates to:
+  /// **'Destination Reached'**
+  String get navigation_destinationReached;
+
+  /// Waypoint number label
+  ///
+  /// In en, this message translates to:
+  /// **'Waypoint {number}'**
+  String navigation_waypointNumber(int number);
+
+  /// Stops remaining label
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count, plural, =1{stop} other{stops}} remaining'**
+  String navigation_stopsRemaining(int count);
+
+  /// Cancel navigation tooltip
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Navigation'**
+  String get navigation_cancelNavigation;
+
+  /// Next waypoint button text
+  ///
+  /// In en, this message translates to:
+  /// **'Next Waypoint'**
+  String get navigation_nextWaypoint;
+
+  /// Progress label
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get navigation_progress;
+
+  /// Stops completed label
+  ///
+  /// In en, this message translates to:
+  /// **'{current} of {total} stops completed'**
+  String navigation_stopsCompleted(int current, int total);
 }
 
 class _AppLocalizationsDelegate

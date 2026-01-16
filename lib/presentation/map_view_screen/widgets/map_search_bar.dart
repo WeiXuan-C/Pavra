@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../core/app_export.dart';
 import '../../../core/services/saved_location_service.dart';
 import '../../../data/models/saved_location_model.dart';
+import '../../../data/models/saved_route_model.dart';
 import '../../../l10n/app_localizations.dart';
 
 class MapSearchBar extends StatefulWidget {
@@ -14,6 +15,8 @@ class MapSearchBar extends StatefulWidget {
   final List<Map<String, dynamic>> issues;
   final int activeFilterCount;
   final SavedLocationService? savedLocationService;
+  final List<SavedRouteModel>? savedRoutes;
+  final Function(SavedRouteModel)? onRouteSelected;
 
   const MapSearchBar({
     super.key,
@@ -22,6 +25,8 @@ class MapSearchBar extends StatefulWidget {
     this.issues = const [],
     this.activeFilterCount = 0,
     this.savedLocationService,
+    this.savedRoutes,
+    this.onRouteSelected,
   });
 
   @override
@@ -99,14 +104,37 @@ class _MapSearchBarState extends State<MapSearchBar> {
     final queryLower = query.toLowerCase();
     final suggestions = <Map<String, dynamic>>[];
 
-    // Search through saved locations first (prioritized)
+    // Search through saved routes first (highest priority)
+    if (widget.savedRoutes != null) {
+      final matchingSavedRoutes = widget.savedRoutes!.where((route) {
+        final name = route.name.toLowerCase();
+        final fromLocation = route.fromLocationName.toLowerCase();
+        final toLocation = route.toLocationName.toLowerCase();
+        
+        return name.contains(queryLower) || 
+               fromLocation.contains(queryLower) || 
+               toLocation.contains(queryLower);
+      }).take(2).toList();
+
+      for (final route in matchingSavedRoutes) {
+        suggestions.add({
+          'type': 'saved_route',
+          'title': route.name,
+          'subtitle': '${route.fromLocationName} → ${route.toLocationName}',
+          'route': route,
+          'icon': 'route',
+        });
+      }
+    }
+
+    // Search through saved locations (second priority)
     if (widget.savedLocationService != null) {
       final matchingSavedLocations = widget.savedLocationService!.searchSavedLocations(
         query,
         _savedLocations,
       );
 
-      for (final location in matchingSavedLocations.take(3)) {
+      for (final location in matchingSavedLocations.take(3 - suggestions.length)) {
         suggestions.add({
           'type': 'saved_location',
           'title': location.label,
@@ -147,6 +175,27 @@ class _MapSearchBarState extends State<MapSearchBar> {
   }
 
   void _selectSuggestion(Map<String, dynamic> suggestion) {
+    final type = suggestion['type'] as String;
+    
+    // Handle saved route selection
+    if (type == 'saved_route') {
+      final route = suggestion['route'] as SavedRouteModel;
+      _searchController.clear();
+      _focusNode.unfocus();
+      
+      setState(() {
+        _isSearching = false;
+        _searchSuggestions.clear();
+      });
+      
+      // Call the route selected callback
+      if (widget.onRouteSelected != null) {
+        widget.onRouteSelected!(route);
+      }
+      return;
+    }
+    
+    // Handle location/issue selection
     final title = suggestion['title'] as String;
     final subtitle = suggestion['subtitle'] as String?;
     _searchController.text = title;
@@ -297,29 +346,26 @@ class _MapSearchBarState extends State<MapSearchBar> {
             top: 7.h, // Position below the search bar
             left: 0,
             right: 0,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {}, // Absorb taps to prevent map interaction
-              child: Container(
-                constraints: BoxConstraints(
-                  maxHeight: 40.h, // Limit height to prevent overflow
-                ),
-                decoration: BoxDecoration(
-                  color: theme.cardColor,
-                  borderRadius: BorderRadius.circular(3.w),
-                  boxShadow: [
-                    BoxShadow(
-                      color: theme.colorScheme.shadow.withValues(alpha: 0.2),
-                      blurRadius: 12,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: SingleChildScrollView(
-                  physics: ClampingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: 40.h, // Limit height to prevent overflow
+              ),
+              decoration: BoxDecoration(
+                color: theme.cardColor,
+                borderRadius: BorderRadius.circular(3.w),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.shadow.withValues(alpha: 0.2),
+                    blurRadius: 12,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: SingleChildScrollView(
+                physics: ClampingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                       if (_searchSuggestions.isNotEmpty) ...[
                         Padding(
                           padding: EdgeInsets.all(3.w),
@@ -343,7 +389,7 @@ class _MapSearchBarState extends State<MapSearchBar> {
                               size: 20,
                             ),
                             title: Text(
-                              'Search for "${_searchController.text}"',
+                              AppLocalizations.of(context).map_searchFor(_searchController.text),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.primary,
                                 fontWeight: FontWeight.w500,
@@ -372,7 +418,6 @@ class _MapSearchBarState extends State<MapSearchBar> {
                 ),
               ),
             ),
-          ),
       ],
     );
   }
@@ -381,36 +426,56 @@ class _MapSearchBarState extends State<MapSearchBar> {
     final theme = Theme.of(context);
     final type = suggestion['type'] as String;
     final isSavedLocation = type == 'saved_location';
+    final isSavedRoute = type == 'saved_route';
+
+    IconData? trailingIcon;
+    Color? trailingIconColor;
+    
+    if (isSavedRoute) {
+      trailingIcon = Icons.directions;
+      trailingIconColor = theme.colorScheme.primary;
+    } else if (isSavedLocation) {
+      trailingIcon = Icons.star;
+      trailingIconColor = theme.colorScheme.primary;
+    }
 
     return ListTile(
-      leading: isSavedLocation
+      leading: isSavedRoute
           ? CustomIconWidget(
-              iconName: suggestion['icon'] as String? ?? 'place',
-              color: theme.colorScheme.primary,
+              iconName: 'route',
+              color: theme.colorScheme.secondary,
               size: 20,
             )
-          : CustomIconWidget(
-              iconName: 'warning',
-              color: theme.colorScheme.error,
-              size: 20,
-            ),
+          : isSavedLocation
+              ? CustomIconWidget(
+                  iconName: suggestion['icon'] as String? ?? 'place',
+                  color: theme.colorScheme.primary,
+                  size: 20,
+                )
+              : CustomIconWidget(
+                  iconName: 'warning',
+                  color: theme.colorScheme.error,
+                  size: 20,
+                ),
       title: Row(
         children: [
           Expanded(
             child: Text(
               suggestion['title'] as String,
-              style: theme.textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: isSavedRoute ? FontWeight.w600 : FontWeight.normal,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          if (isSavedLocation)
+          if (trailingIcon != null)
             Padding(
               padding: EdgeInsets.only(left: 2.w),
               child: Icon(
-                Icons.star,
+                trailingIcon,
                 size: 16,
-                color: theme.colorScheme.primary,
+                color: trailingIconColor,
               ),
             ),
         ],
@@ -418,7 +483,7 @@ class _MapSearchBarState extends State<MapSearchBar> {
       subtitle: Text(
         suggestion['subtitle'] as String,
         style: theme.textTheme.bodySmall,
-        maxLines: 1,
+        maxLines: isSavedRoute ? 2 : 1,
         overflow: TextOverflow.ellipsis,
       ),
       trailing: Icon(

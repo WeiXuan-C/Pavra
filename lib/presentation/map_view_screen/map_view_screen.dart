@@ -18,6 +18,7 @@ import '../../core/services/notification_helper_service.dart';
 import '../../core/utils/icon_mapper.dart';
 import '../../core/utils/accessibility_utils.dart';
 import '../../data/models/saved_location_model.dart';
+import '../../data/models/saved_route_model.dart';
 import '../../data/repositories/saved_route_repository.dart';
 import '../../l10n/app_localizations.dart';
 import './widgets/issue_detail_bottom_sheet.dart';
@@ -58,6 +59,10 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
   SavedLocationModel? _homeLocation;
   SavedLocationModel? _workLocation;
   List<SavedLocationModel> _savedLocations = [];
+  
+  // Saved routes for quick directions
+  List<SavedRouteModel> _savedRoutes = [];
+  late final SavedRouteRepository _savedRouteRepository;
 
   // Filter state - matching database schema
   Map<String, bool> _filters = {
@@ -86,8 +91,8 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
     WidgetsBinding.instance.addObserver(this);
     final notificationHelper = NotificationHelperService(NotificationApi());
     final api = SavedRouteApi(supabase, notificationHelper);
-    final repository = SavedRouteRepository(api);
-    _savedLocationService = SavedLocationService(repository);
+    _savedRouteRepository = SavedRouteRepository(api);
+    _savedLocationService = SavedLocationService(_savedRouteRepository);
     _initializeMap();
   }
 
@@ -106,6 +111,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
     
     await _loadUserPreferences();
     await _loadSavedLocations(); // Reload saved locations
+    await _loadSavedRoutes(); // Reload saved routes
     
     // Only reload issues if radius changed
     if (_alertRadiusMiles != previousRadius) {
@@ -134,6 +140,7 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
     await _getCurrentLocation();
     await _loadUserPreferences();
     await _loadSavedLocations();
+    await _loadSavedRoutes();
     await _loadNearbyIssues();
     _createMarkers();
     if (mounted) {
@@ -177,16 +184,30 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
     }
   }
 
+  Future<void> _loadSavedRoutes() async {
+    try {
+      final routes = await _savedRouteRepository.getSavedRoutes();
+      if (mounted) {
+        setState(() {
+          _savedRoutes = routes.where((route) => !route.isDeleted).toList();
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading saved routes: $e');
+    }
+  }
+
   Future<void> _loadNearbyIssues() async {
     if (_currentPosition == null) return;
 
     try {
-      // Get all submitted and reviewed issues
+      // Get all submitted and reviewed issues with caching
       final issues = await _mapService.getNearbyIssues(
         latitude: _currentPosition!.latitude,
         longitude: _currentPosition!.longitude,
         radiusMiles: _alertRadiusMiles,
         status: 'submitted', // Primary status, will filter more in UI
+        forceRefresh: false, // Use cache when available
       );
 
       if (mounted) {
@@ -441,6 +462,17 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
   }
 
   void _showIssueDetails(Map<String, dynamic> issue) async {
+    // Load photos if not already loaded (lazy loading)
+    if (issue['photos_loaded'] != true) {
+      await _mapService.loadIssuePhotos(issue);
+      if (mounted) {
+        setState(() {}); // Refresh to show loaded photos
+      }
+    }
+
+    // Check if widget is still mounted before using context
+    if (!mounted) return;
+
     final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       isScrollControlled: true,
@@ -451,6 +483,9 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
         userLongitude: _currentPosition?.longitude,
       ),
     );
+
+    // Check mounted again after async operation
+    if (!mounted) return;
 
     // Handle directions action
     if (result != null && result['action'] == 'navigate') {
@@ -1205,6 +1240,9 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
       _isLoading = true;
     });
     
+    // Clear cache to force refresh
+    _mapService.clearCache();
+    
     // Reload preferences first (in case radius changed)
     await _loadUserPreferences();
     await _loadNearbyIssues();
@@ -1245,6 +1283,210 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
     setState(() {
       _showTraffic = !_showTraffic;
     });
+  }
+
+  void _handleSavedRouteSelection(SavedRouteModel route) {
+    if (_currentPosition == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).map_currentLocationNotAvailable)),
+      );
+      return;
+    }
+
+    // Show route options bottom sheet
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: EdgeInsets.all(4.w),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(5.w)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Handle bar
+            Center(
+              child: Container(
+                width: 12.w,
+                height: 0.5.h,
+                margin: EdgeInsets.only(bottom: 2.h),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).dividerColor,
+                  borderRadius: BorderRadius.circular(2.w),
+                ),
+              ),
+            ),
+            
+            // Route info
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(3.w),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(2.w),
+                  ),
+                  child: Icon(
+                    Icons.route,
+                    color: Theme.of(context).colorScheme.secondary,
+                    size: 28,
+                  ),
+                ),
+                SizedBox(width: 3.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        route.name,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 0.5.h),
+                      Row(
+                        children: [
+                          Icon(Icons.location_on, size: 14, color: Colors.green),
+                          SizedBox(width: 1.w),
+                          Expanded(
+                            child: Text(
+                              route.fromLocationName,
+                              style: Theme.of(context).textTheme.bodySmall,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.flag, size: 14, color: Colors.red),
+                          SizedBox(width: 1.w),
+                          Expanded(
+                            child: Text(
+                              route.toLocationName,
+                              style: Theme.of(context).textTheme.bodySmall,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            
+            SizedBox(height: 3.h),
+            
+            // Action buttons
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                final origin = LatLng(_currentPosition!.latitude, _currentPosition!.longitude);
+                final destination = LatLng(route.toLatitude, route.toLongitude);
+                
+                // Show navigation bottom sheet
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  isDismissible: true,
+                  builder: (context) => NavigationBottomSheet(
+                    origin: origin,
+                    destination: destination,
+                    destinationTitle: route.toLocationName,
+                    onDirectionsReceived: (directions, travelMode) {
+                      _startNavigation(directions, travelMode);
+                    },
+                  ),
+                );
+              },
+              icon: Icon(Icons.directions, size: 20),
+              label: Text('Start Navigation'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.infinity, 48),
+              ),
+            ),
+            
+            SizedBox(height: 1.h),
+            
+            // Show route on map button
+            OutlinedButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                _showRouteOnMap(route);
+              },
+              icon: Icon(Icons.map, size: 18),
+              label: Text('Show Route on Map'),
+              style: OutlinedButton.styleFrom(
+                minimumSize: Size(double.infinity, 48),
+              ),
+            ),
+            
+            SizedBox(height: 2.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showRouteOnMap(SavedRouteModel route) {
+    if (_mapController == null) return;
+
+    // Add markers for start and end points
+    setState(() {
+      _markers.removeWhere((marker) => 
+        marker.markerId.value == 'route_start' || 
+        marker.markerId.value == 'route_end'
+      );
+      
+      _markers.add(
+        Marker(
+          markerId: MarkerId('route_start'),
+          position: LatLng(route.fromLatitude, route.fromLongitude),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          infoWindow: InfoWindow(
+            title: route.fromLocationName,
+            snippet: 'Start',
+          ),
+        ),
+      );
+      
+      _markers.add(
+        Marker(
+          markerId: MarkerId('route_end'),
+          position: LatLng(route.toLatitude, route.toLongitude),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          infoWindow: InfoWindow(
+            title: route.toLocationName,
+            snippet: 'Destination',
+          ),
+        ),
+      );
+    });
+
+    // Fit camera to show both markers
+    final bounds = LatLngBounds(
+      southwest: LatLng(
+        route.fromLatitude < route.toLatitude ? route.fromLatitude : route.toLatitude,
+        route.fromLongitude < route.toLongitude ? route.fromLongitude : route.toLongitude,
+      ),
+      northeast: LatLng(
+        route.fromLatitude > route.toLatitude ? route.fromLatitude : route.toLatitude,
+        route.fromLongitude > route.toLongitude ? route.fromLongitude : route.toLongitude,
+      ),
+    );
+    
+    _mapController!.animateCamera(
+      CameraUpdate.newLatLngBounds(bounds, 100),
+    );
   }
 
   void _handleSearch(String query, LatLng? location, String? address) {
@@ -1582,6 +1824,8 @@ class _MapViewScreenState extends State<MapViewScreen> with WidgetsBindingObserv
                                   onFilterTap: _showFilterBottomSheet,
                                   activeFilterCount: _getActiveFilterCount(),
                                   savedLocationService: _savedLocationService,
+                                  savedRoutes: _savedRoutes,
+                                  onRouteSelected: _handleSavedRouteSelection,
                                 ),
                               ),
                               SizedBox(width: 2.w),

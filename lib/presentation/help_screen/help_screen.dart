@@ -15,11 +15,80 @@ class HelpScreen extends StatefulWidget {
 
 class _HelpScreenState extends State<HelpScreen> {
   String? _expandedCategory;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    setState(() {
+      _searchQuery = _searchController.text.toLowerCase();
+    });
+  }
+
+  List<FAQItem> _getAllFAQs(AppLocalizations l10n) {
+    return [
+      // Getting Started
+      FAQItem(question: l10n.help_q1, answer: l10n.help_a1, category: l10n.help_gettingStarted),
+      FAQItem(question: l10n.help_q2, answer: l10n.help_a2, category: l10n.help_gettingStarted),
+      FAQItem(question: l10n.help_q3, answer: l10n.help_a3, category: l10n.help_gettingStarted),
+      
+      // Map Navigation
+      FAQItem(question: l10n.help_q4, answer: l10n.help_a4, category: l10n.help_mapNavigation),
+      FAQItem(question: l10n.help_q5, answer: l10n.help_a5, category: l10n.help_mapNavigation),
+      FAQItem(question: l10n.help_q6, answer: l10n.help_a6, category: l10n.help_mapNavigation),
+      FAQItem(question: l10n.help_q7, answer: l10n.help_a7, category: l10n.help_mapNavigation),
+      
+      // AI Detection
+      FAQItem(question: l10n.help_q8, answer: l10n.help_a8, category: l10n.help_aiDetection),
+      FAQItem(question: l10n.help_q9, answer: l10n.help_a9, category: l10n.help_aiDetection),
+      FAQItem(question: l10n.help_q10, answer: l10n.help_a10, category: l10n.help_aiDetection),
+      FAQItem(question: l10n.help_q11, answer: l10n.help_a11, category: l10n.help_aiDetection),
+      
+      // Reports & Issues
+      FAQItem(question: l10n.help_q12, answer: l10n.help_a12, category: l10n.help_reportsIssues),
+      FAQItem(question: l10n.help_q13, answer: l10n.help_a13, category: l10n.help_reportsIssues),
+      FAQItem(question: l10n.help_q14, answer: l10n.help_a14, category: l10n.help_reportsIssues),
+      FAQItem(question: l10n.help_q15, answer: l10n.help_a15, category: l10n.help_reportsIssues),
+      
+      // Safety Alerts
+      FAQItem(question: l10n.help_q16, answer: l10n.help_a16, category: l10n.help_safetyAlerts),
+      FAQItem(question: l10n.help_q17, answer: l10n.help_a17, category: l10n.help_safetyAlerts),
+      FAQItem(question: l10n.help_q18, answer: l10n.help_a18, category: l10n.help_safetyAlerts),
+      
+      // Account & Privacy
+      FAQItem(question: l10n.help_q19, answer: l10n.help_a19, category: l10n.help_accountPrivacy),
+      FAQItem(question: l10n.help_q20, answer: l10n.help_a20, category: l10n.help_accountPrivacy),
+      FAQItem(question: l10n.help_q21, answer: l10n.help_a21, category: l10n.help_accountPrivacy),
+    ];
+  }
+
+  List<FAQItem> _getFilteredFAQs(AppLocalizations l10n) {
+    if (_searchQuery.isEmpty) return [];
+    
+    final allFAQs = _getAllFAQs(l10n);
+    return allFAQs.where((faq) {
+      return faq.question.toLowerCase().contains(_searchQuery) ||
+             faq.answer.toLowerCase().contains(_searchQuery) ||
+             faq.category.toLowerCase().contains(_searchQuery);
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context);
+    final filteredFAQs = _getFilteredFAQs(l10n);
 
     return Scaffold(
       appBar: HeaderLayout(title: l10n.help_title),
@@ -30,9 +99,18 @@ class _HelpScreenState extends State<HelpScreen> {
           children: [
             // Search bar
             TextField(
+              controller: _searchController,
               decoration: InputDecoration(
                 hintText: l10n.help_searchPlaceholder,
                 prefixIcon: Icon(Icons.search),
+                suffixIcon: _searchQuery.isNotEmpty
+                    ? IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed: () {
+                          _searchController.clear();
+                        },
+                      )
+                    : null,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(3.w),
                 ),
@@ -43,7 +121,68 @@ class _HelpScreenState extends State<HelpScreen> {
 
             SizedBox(height: 3.h),
 
-            // Quick Links
+            // Show search results if searching
+            if (_searchQuery.isNotEmpty) ...[
+              Text(
+                'Search Results (${filteredFAQs.length})',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 2.h),
+              if (filteredFAQs.isEmpty)
+                Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(4.w),
+                    child: Column(
+                      children: [
+                        Icon(Icons.search_off, size: 48, color: Colors.grey),
+                        SizedBox(height: 2.h),
+                        Text(
+                          'No results found',
+                          style: theme.textTheme.titleMedium,
+                        ),
+                        SizedBox(height: 1.h),
+                        Text(
+                          'Try different keywords or browse categories below',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.grey[600],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else
+                ...filteredFAQs.map((faq) => Card(
+                  margin: EdgeInsets.only(bottom: 1.h),
+                  child: ExpansionTile(
+                    title: Text(faq.question),
+                    subtitle: Text(
+                      faq.category,
+                      style: TextStyle(
+                        color: theme.colorScheme.primary,
+                        fontSize: 12,
+                      ),
+                    ),
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(4.w),
+                        child: Text(
+                          faq.answer,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+              SizedBox(height: 3.h),
+            ],
+
+            // Quick Links (always show)
             Text(
               l10n.help_quickLinks,
               style: theme.textTheme.titleLarge?.copyWith(
@@ -56,194 +195,156 @@ class _HelpScreenState extends State<HelpScreen> {
               icon: Icons.map,
               title: l10n.help_mapGuideTitle,
               subtitle: l10n.help_mapGuideSubtitle,
-              onTap: () => _showGuide(context, 'map'),
+              onTap: () => _showDetailedGuide(context, 'map', l10n),
             ),
             SizedBox(height: 1.h),
             _buildQuickLinkCard(
               icon: Icons.camera_alt,
               title: l10n.help_aiGuideTitle,
               subtitle: l10n.help_aiGuideSubtitle,
-              onTap: () => _showGuide(context, 'detection'),
+              onTap: () => _showDetailedGuide(context, 'ai', l10n),
             ),
             SizedBox(height: 1.h),
             _buildQuickLinkCard(
               icon: Icons.report,
               title: l10n.help_reportGuideTitle,
               subtitle: l10n.help_reportGuideSubtitle,
-              onTap: () => _showGuide(context, 'report'),
+              onTap: () => _showDetailedGuide(context, 'report', l10n),
             ),
 
-            SizedBox(height: 3.h),
+            // Only show FAQ categories if not searching
+            if (_searchQuery.isEmpty) ...[
+              SizedBox(height: 3.h),
 
-            // FAQ Categories
-            Text(
-              l10n.help_faqTitle,
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+              // FAQ Categories
+              Text(
+                l10n.help_faqTitle,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 2.h),
+              SizedBox(height: 2.h),
 
-            _buildFAQCategory(
-              l10n.help_gettingStarted,
-              [
-                FAQItem(
-                  question: l10n.help_q1,
-                  answer: l10n.help_a1,
-                ),
-                FAQItem(
-                  question: l10n.help_q2,
-                  answer: l10n.help_a2,
-                ),
-                FAQItem(
-                  question: l10n.help_q3,
-                  answer: l10n.help_a3,
-                ),
-              ],
-            ),
-
-            _buildFAQCategory(
-              l10n.help_mapNavigation,
-              [
-                FAQItem(
-                  question: l10n.help_q4,
-                  answer: l10n.help_a4,
-                ),
-                FAQItem(
-                  question: l10n.help_q5,
-                  answer: l10n.help_a5,
-                ),
-                FAQItem(
-                  question: l10n.help_q6,
-                  answer: l10n.help_a6,
-                ),
-                FAQItem(
-                  question: l10n.help_q7,
-                  answer: l10n.help_a7,
-                ),
-              ],
-            ),
-
-            _buildFAQCategory(
-              l10n.help_aiDetection,
-              [
-                FAQItem(
-                  question: l10n.help_q8,
-                  answer: l10n.help_a8,
-                ),
-                FAQItem(
-                  question: l10n.help_q9,
-                  answer: l10n.help_a9,
-                ),
-                FAQItem(
-                  question: l10n.help_q10,
-                  answer: l10n.help_a10,
-                ),
-                FAQItem(
-                  question: l10n.help_q11,
-                  answer: l10n.help_a11,
-                ),
-              ],
-            ),
-
-            _buildFAQCategory(
-              l10n.help_reportsIssues,
-              [
-                FAQItem(
-                  question: l10n.help_q12,
-                  answer: l10n.help_a12,
-                ),
-                FAQItem(
-                  question: l10n.help_q13,
-                  answer: l10n.help_a13,
-                ),
-                FAQItem(
-                  question: l10n.help_q14,
-                  answer: l10n.help_a14,
-                ),
-                FAQItem(
-                  question: l10n.help_q15,
-                  answer: l10n.help_a15,
-                ),
-              ],
-            ),
-
-            _buildFAQCategory(
-              l10n.help_safetyAlerts,
-              [
-                FAQItem(
-                  question: l10n.help_q16,
-                  answer: l10n.help_a16,
-                ),
-                FAQItem(
-                  question: l10n.help_q17,
-                  answer: l10n.help_a17,
-                ),
-                FAQItem(
-                  question: l10n.help_q18,
-                  answer: l10n.help_a18,
-                ),
-              ],
-            ),
-
-            _buildFAQCategory(
-              l10n.help_accountPrivacy,
-              [
-                FAQItem(
-                  question: l10n.help_q19,
-                  answer: l10n.help_a19,
-                ),
-                FAQItem(
-                  question: l10n.help_q20,
-                  answer: l10n.help_a20,
-                ),
-                FAQItem(
-                  question: l10n.help_q21,
-                  answer: l10n.help_a21,
-                ),
-              ],
-            ),
-
-            SizedBox(height: 3.h),
-
-            // Contact Support
-            Container(
-              padding: EdgeInsets.all(4.w),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(3.w),
-              ),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.support_agent,
-                    size: 48,
-                    color: theme.colorScheme.primary,
+              _buildFAQCategory(
+                l10n.help_gettingStarted,
+                [
+                  FAQItem(
+                    question: l10n.help_q1,
+                    answer: l10n.help_a1,
                   ),
-                  SizedBox(height: 2.h),
-                  Text(
-                    l10n.help_stillNeedHelp,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  FAQItem(
+                    question: l10n.help_q2,
+                    answer: l10n.help_a2,
                   ),
-                  SizedBox(height: 1.h),
-                  Text(
-                    l10n.help_contactSupport,
-                    style: theme.textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 2.h),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      // Open email or support form
-                    },
-                    icon: Icon(Icons.email),
-                    label: Text(l10n.help_contactSupportButton),
+                  FAQItem(
+                    question: l10n.help_q3,
+                    answer: l10n.help_a3,
                   ),
                 ],
               ),
-            ),
+
+              _buildFAQCategory(
+                l10n.help_mapNavigation,
+                [
+                  FAQItem(
+                    question: l10n.help_q4,
+                    answer: l10n.help_a4,
+                  ),
+                  FAQItem(
+                    question: l10n.help_q5,
+                    answer: l10n.help_a5,
+                  ),
+                  FAQItem(
+                    question: l10n.help_q6,
+                    answer: l10n.help_a6,
+                  ),
+                  FAQItem(
+                    question: l10n.help_q7,
+                    answer: l10n.help_a7,
+                  ),
+                ],
+              ),
+
+              _buildFAQCategory(
+                l10n.help_aiDetection,
+                [
+                  FAQItem(
+                    question: l10n.help_q8,
+                    answer: l10n.help_a8,
+                  ),
+                  FAQItem(
+                    question: l10n.help_q9,
+                    answer: l10n.help_a9,
+                  ),
+                  FAQItem(
+                    question: l10n.help_q10,
+                    answer: l10n.help_a10,
+                  ),
+                  FAQItem(
+                    question: l10n.help_q11,
+                    answer: l10n.help_a11,
+                  ),
+                ],
+              ),
+
+              _buildFAQCategory(
+                l10n.help_reportsIssues,
+                [
+                  FAQItem(
+                    question: l10n.help_q12,
+                    answer: l10n.help_a12,
+                  ),
+                  FAQItem(
+                    question: l10n.help_q13,
+                    answer: l10n.help_a13,
+                  ),
+                  FAQItem(
+                    question: l10n.help_q14,
+                    answer: l10n.help_a14,
+                  ),
+                  FAQItem(
+                    question: l10n.help_q15,
+                    answer: l10n.help_a15,
+                  ),
+                ],
+              ),
+
+              _buildFAQCategory(
+                l10n.help_safetyAlerts,
+                [
+                  FAQItem(
+                    question: l10n.help_q16,
+                    answer: l10n.help_a16,
+                  ),
+                  FAQItem(
+                    question: l10n.help_q17,
+                    answer: l10n.help_a17,
+                  ),
+                  FAQItem(
+                    question: l10n.help_q18,
+                    answer: l10n.help_a18,
+                  ),
+                ],
+              ),
+
+              _buildFAQCategory(
+                l10n.help_accountPrivacy,
+                [
+                  FAQItem(
+                    question: l10n.help_q19,
+                    answer: l10n.help_a19,
+                  ),
+                  FAQItem(
+                    question: l10n.help_q20,
+                    answer: l10n.help_a20,
+                  ),
+                  FAQItem(
+                    question: l10n.help_q21,
+                    answer: l10n.help_a21,
+                  ),
+                ],
+              ),
+            ],
 
             SizedBox(height: 2.h),
           ],
@@ -334,14 +435,78 @@ class _HelpScreenState extends State<HelpScreen> {
     );
   }
 
-  void _showGuide(BuildContext context, String guideType) {
-    final l10n = AppLocalizations.of(context);
-    // Show detailed guide in a dialog or new screen
+  void _showDetailedGuide(BuildContext context, String guideType, AppLocalizations l10n) {
+    String title;
+    List<String> steps;
+    
+    switch (guideType) {
+      case 'map':
+        title = l10n.help_mapGuideTitle;
+        steps = [
+          '1. Open the Map tab from the bottom navigation',
+          '2. Use pinch gestures to zoom in/out on the map',
+          '3. Drag to pan around and explore different areas',
+          '4. Tap on colored markers to view issue details',
+          '5. Use the search bar to find specific locations',
+          '6. Tap the filter button to customize what issues you see',
+          '7. Select "Directions" in issue details for navigation',
+          '8. Use the current location button to center on your position',
+        ];
+        break;
+      case 'ai':
+        title = l10n.help_aiGuideTitle;
+        steps = [
+          '1. Open the Camera tab from the bottom navigation',
+          '2. Point your camera at the road issue',
+          '3. Ensure good lighting and clear view of the problem',
+          '4. Tap "Start Detection" to begin AI scanning',
+          '5. Hold the device steady while AI analyzes the scene',
+          '6. Review the AI detection results and confidence level',
+          '7. Tap "Capture Image" if you want to save the detection',
+          '8. Submit the report or make manual adjustments if needed',
+        ];
+        break;
+      case 'report':
+        title = l10n.help_reportGuideTitle;
+        steps = [
+          '1. Go to the Report tab from the bottom navigation',
+          '2. Choose your reporting method:',
+          '   • AI Smart Detection: Use camera for automatic detection',
+          '   • Manual Report: Fill out the form manually',
+          '   • Gallery Selection: Choose existing photos for AI analysis',
+          '3. Select the appropriate issue type (pothole, crack, etc.)',
+          '4. Add a detailed description of the problem',
+          '5. Take or add photos from multiple angles',
+          '6. Verify or adjust the location information',
+          '7. Set the severity level based on the impact',
+          '8. Review all information and submit the report',
+        ];
+        break;
+      default:
+        title = l10n.help_guide;
+        steps = ['Guide content will be available soon.'];
+    }
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(l10n.help_guide),
-        content: Text(l10n.help_guideContent(guideType)),
+        title: Text(title),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: steps.map((step) => Padding(
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: Text(
+                  step,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              )).toList(),
+            ),
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -356,9 +521,11 @@ class _HelpScreenState extends State<HelpScreen> {
 class FAQItem {
   final String question;
   final String answer;
+  final String category;
 
   FAQItem({
     required this.question,
     required this.answer,
+    this.category = '',
   });
 }

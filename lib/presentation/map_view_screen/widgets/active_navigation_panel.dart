@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../../../core/services/directions_service.dart';
+import '../../../l10n/app_localizations.dart';
 
 class ActiveNavigationPanel extends StatelessWidget {
   final DirectionsResult directions;
@@ -176,7 +177,7 @@ class ActiveNavigationPanel extends StatelessWidget {
                   SizedBox(width: 2.w),
                   Expanded(
                     child: Text(
-                      'Then ${nextStep.instruction}',
+                      '${AppLocalizations.of(context).navigation_then} ${nextStep.instruction}',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
@@ -197,7 +198,7 @@ class ActiveNavigationPanel extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: onViewSteps,
                     icon: Icon(Icons.list, size: 18),
-                    label: Text('Steps'),
+                    label: Text(AppLocalizations.of(context).navigation_steps),
                     style: OutlinedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 1.5.h),
                     ),
@@ -208,7 +209,7 @@ class ActiveNavigationPanel extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: onEnd,
                     icon: Icon(Icons.close, size: 18),
-                    label: Text('End'),
+                    label: Text(AppLocalizations.of(context).navigation_end),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,

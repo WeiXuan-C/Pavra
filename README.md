@@ -2,9 +2,9 @@
 **Slogan:** *The Smarter Roads, The Safer Journeys.*  
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WeiXuan-C/Pavra)
-![Flutter](https://img.shields.io/badge/Flutter-3.9.2+-02569B?logo=flutter&logoColor=white)
+![Flutter](https://img.shields.io/badge/Flutter-3.35.7+-02569B?logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-3.9.2+-0175C2?logo=dart&logoColor=white)
-![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS-blue)
+![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web%20%7C%20Desktop-blue)
 ![AI](https://img.shields.io/badge/AI-NVIDIA%20%7C%20Gemini-orange)
 
 ---
@@ -96,7 +96,7 @@ To activate **Developer Mode**, go to **Profile → About Page**, then **tap the
 ---
 
 ## 🚀 Deployment  
-- **Frontend:** Flutter 3.9.2+ (Android & iOS)  
+- **Frontend:** Flutter 3.35.7+ (Android, iOS, Web & Desktop)  
 - **Database & Storage:** Supabase  
 - **AI Service:** OpenRouter API (NVIDIA Nemotron Nano 12B V2 VL + Google Gemini 2.0 Flash Exp)  
 - **Push Notifications:** OneSignal  

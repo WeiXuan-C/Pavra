@@ -450,9 +450,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get map_refresh => 'Refresh';
-
-  @override
   String get map_currentLocation => 'Current Location';
 
   @override
@@ -973,21 +970,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get alerts_noSavedRoutes =>
       'No saved routes. Add frequent routes to monitor for alerts.';
-
-  @override
-  String get severity_minor => 'MINOR';
-
-  @override
-  String get severity_low => 'LOW';
-
-  @override
-  String get severity_moderate => 'MODERATE';
-
-  @override
-  String get severity_high => 'HIGH';
-
-  @override
-  String get severity_critical => 'CRITICAL';
 
   @override
   String get severity_minorDesc => 'Minor inconvenience, no immediate danger';
@@ -1573,6 +1555,18 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get report_addressSearchHint =>
       'Enter a full address and we\'ll find the coordinates for you';
+
+  @override
+  String get report_selectLocation => 'Select Location';
+
+  @override
+  String get report_selectFromMap => 'Select from Map';
+
+  @override
+  String get report_selectedLocation => 'Selected Location';
+
+  @override
+  String get report_loadingAddress => 'Loading address...';
 
   @override
   String get report_filterByStatus => 'Filter by Status';
@@ -2598,21 +2592,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get admin_title => 'Admin Panel';
 
   @override
-  String get admin_overview => 'Overview';
-
-  @override
-  String get admin_reports => 'Reports';
-
-  @override
-  String get admin_users => 'Users';
-
-  @override
-  String get admin_totalReports => 'Total Reports';
-
-  @override
-  String get admin_totalUsers => 'Total Users';
-
-  @override
   String get admin_pendingReports => 'Pending Reports';
 
   @override
@@ -2635,9 +2614,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get analytics_title => 'Analytics Dashboard';
-
-  @override
-  String get analytics_totalReports => 'Total Reports';
 
   @override
   String get analytics_resolved => 'Resolved';
@@ -2681,35 +2657,50 @@ class AppLocalizationsEn extends AppLocalizations {
   String get route_walk => 'Walk';
 
   @override
-  String get map_searchPlaceholder => 'Search places, addresses...';
+  String get map_searchPlaceholder => 'Search places, addresses, or issues...';
 
   @override
-  String map_feetAway(int feet) {
-    return '$feet ft away';
+  String map_feetAway(int distance) {
+    return '$distance ft away';
   }
 
   @override
-  String map_milesAway(String miles) {
-    return '$miles mi away';
+  String map_milesAway(String distance) {
+    return '$distance mi away';
   }
 
   @override
   String map_daysAgo(int days) {
-    return '$days days ago';
+    return '${days}d ago';
   }
 
   @override
   String map_hoursAgo(int hours) {
-    return '$hours hours ago';
+    return '${hours}h ago';
   }
 
   @override
   String map_minutesAgo(int minutes) {
-    return '$minutes minutes ago';
+    return '${minutes}m ago';
   }
 
   @override
   String get map_justNow => 'Just now';
+
+  @override
+  String get severity_critical => 'CRITICAL';
+
+  @override
+  String get severity_high => 'HIGH';
+
+  @override
+  String get severity_moderate => 'MODERATE';
+
+  @override
+  String get severity_low => 'LOW';
+
+  @override
+  String get severity_minor => 'MINOR';
 
   @override
   String get voice_search => 'Voice search';
@@ -3002,7 +2993,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get about_title => 'About Pavra';
 
   @override
-  String get about_version => 'Version 1.1.0';
+  String get about_version => 'Version 2.0.0';
 
   @override
   String get about_tagline => 'AI-Powered Road Safety Platform';
@@ -3056,7 +3047,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get about_website => 'Website';
 
   @override
-  String get about_websiteUrl => 'pavra.vercel.app';
+  String get about_websiteUrl => 'Website URL';
 
   @override
   String get about_privacyPolicy => 'Privacy Policy';
@@ -3214,6 +3205,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get map_refresh => 'Refresh';
+
+  @override
   String get map_home => 'Home';
 
   @override
@@ -3304,7 +3298,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get admin_dashboard => 'Admin Dashboard';
 
   @override
+  String get admin_overview => 'Overview';
+
+  @override
+  String get admin_reports => 'Reports';
+
+  @override
+  String get admin_users => 'Users';
+
+  @override
   String get admin_quickStatistics => 'Quick Statistics';
+
+  @override
+  String get admin_totalReports => 'Total Reports';
+
+  @override
+  String get admin_totalUsers => 'Total Users';
 
   @override
   String get admin_reportStatus => 'Report Status';
@@ -3454,6 +3463,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get analytics_keyMetrics => 'Key Metrics';
+
+  @override
+  String get analytics_totalReports => 'Total Reports';
 
   @override
   String get analytics_totalUsers => 'Total Users';
@@ -3673,5 +3685,234 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String settings_locationTrackingHoursAgo(int hours) {
     return '${hours}h ago';
+  }
+
+  @override
+  String get privacy_policy_title => 'Privacy Policy';
+
+  @override
+  String get privacy_policy_last_updated => 'Last Updated: January 9, 2026';
+
+  @override
+  String get terms_of_service_title => 'Terms of Service';
+
+  @override
+  String get terms_of_service_last_updated => 'Last Updated: January 9, 2026';
+
+  @override
+  String get profile_editUsername => 'Edit Username';
+
+  @override
+  String get profile_usernameHint => 'Enter your username';
+
+  @override
+  String get profile_usernameFormatHint =>
+      'Username can only contain lowercase letters, numbers, underscore (_), and dot (.). Must be 3-20 characters.';
+
+  @override
+  String get profile_suggestions => 'Suggestions';
+
+  @override
+  String get profile_saveChanges => 'Save Changes';
+
+  @override
+  String get profile_usernameEmpty => 'Username cannot be empty';
+
+  @override
+  String get profile_usernameFormat =>
+      'Username can only contain lowercase letters, numbers, underscore, and dot';
+
+  @override
+  String get profile_usernameMinLength =>
+      'Username must be at least 3 characters';
+
+  @override
+  String get profile_usernameMaxLength =>
+      'Username cannot exceed 20 characters';
+
+  @override
+  String get profile_usernameTaken => 'This username is already taken';
+
+  @override
+  String get profile_usernameVerifyError =>
+      'Failed to verify username availability';
+
+  @override
+  String get profile_usernameUpdated => 'Username updated successfully';
+
+  @override
+  String get profile_chooseAvatarSource => 'Choose Avatar Source';
+
+  @override
+  String get profile_gallery => 'Gallery';
+
+  @override
+  String get profile_avatarUpdated => 'Avatar updated successfully';
+
+  @override
+  String get multiStop_title => 'Plan Multi-Stop Route';
+
+  @override
+  String get multiStop_addWaypoint => 'Add Waypoint';
+
+  @override
+  String get multiStop_chooseFromSaved => 'Choose from saved locations';
+
+  @override
+  String get multiStop_optimizeRoute => 'Optimize Route';
+
+  @override
+  String get multiStop_distance => 'Distance';
+
+  @override
+  String get multiStop_duration => 'Duration';
+
+  @override
+  String get multiStop_stops => 'Stops';
+
+  @override
+  String get multiStop_issues => 'Issues';
+
+  @override
+  String get multiStop_calculatingRoute => 'Calculating route...';
+
+  @override
+  String get multiStop_optimizingRoute => 'Optimizing route...';
+
+  @override
+  String get multiStop_startNavigation => 'Start Navigation';
+
+  @override
+  String get multiStop_saveRoute => 'Save Route';
+
+  @override
+  String get multiStop_chooseSavedLocation => 'Choose Saved Location';
+
+  @override
+  String get navigation_steps => 'Steps';
+
+  @override
+  String get navigation_end => 'End';
+
+  @override
+  String get navigation_then => 'Then';
+
+  @override
+  String map_searchFor(String query) {
+    return 'Search for \"$query\"';
+  }
+
+  @override
+  String get multiStop_currentLocation => 'Current Location';
+
+  @override
+  String get multiStop_start => 'Start';
+
+  @override
+  String get multiStop_destination => 'Destination';
+
+  @override
+  String multiStop_waypoint(int number) {
+    return 'Waypoint $number';
+  }
+
+  @override
+  String get multiStop_close => 'Close';
+
+  @override
+  String get multiStop_ok => 'OK';
+
+  @override
+  String get multiStop_routeOptimized => 'Route Optimized!';
+
+  @override
+  String get multiStop_routeOptimizedMessage =>
+      'Your route has been optimized for efficiency.';
+
+  @override
+  String get multiStop_originalDistance => 'Original Distance';
+
+  @override
+  String get multiStop_optimizedDistance => 'Optimized Distance';
+
+  @override
+  String get multiStop_distanceSavings => 'Distance Savings';
+
+  @override
+  String get multiStop_waypointsReordered =>
+      'Waypoints have been reordered for optimal routing';
+
+  @override
+  String get multiStop_saveRouteName => 'Route Name';
+
+  @override
+  String get multiStop_saveRouteHint => 'Enter a name for this route';
+
+  @override
+  String get multiStop_routeSaved => 'Route saved successfully';
+
+  @override
+  String get multiStop_failedToSaveRoute => 'Failed to save route';
+
+  @override
+  String get multiStop_failedToCalculateRoute => 'Failed to calculate route';
+
+  @override
+  String get multiStop_failedToOptimizeRoute =>
+      'Failed to optimize route. Original route maintained.';
+
+  @override
+  String get multiStop_locationNotFound => 'Location not found';
+
+  @override
+  String get multiStop_noSavedLocations => 'No saved locations found';
+
+  @override
+  String get multiStop_noLocationsMatch => 'No locations match your search';
+
+  @override
+  String get multiStop_failedToLoadLocations =>
+      'Failed to load saved locations';
+
+  @override
+  String get multiStop_navigationStarted => 'Navigation started';
+
+  @override
+  String get multiStop_navigationCancelled => 'Navigation cancelled';
+
+  @override
+  String get multiStop_calculateRouteFirst => 'Please calculate a route first';
+
+  @override
+  String get navigation_destinationReached => 'Destination Reached';
+
+  @override
+  String navigation_waypointNumber(int number) {
+    return 'Waypoint $number';
+  }
+
+  @override
+  String navigation_stopsRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'stops',
+      one: 'stop',
+    );
+    return '$count $_temp0 remaining';
+  }
+
+  @override
+  String get navigation_cancelNavigation => 'Cancel Navigation';
+
+  @override
+  String get navigation_nextWaypoint => 'Next Waypoint';
+
+  @override
+  String get navigation_progress => 'Progress';
+
+  @override
+  String navigation_stopsCompleted(int current, int total) {
+    return '$current of $total stops completed';
   }
 }
