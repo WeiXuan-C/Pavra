@@ -69,7 +69,7 @@ Pavra is designed as a **front-end–centric application** without a traditional
 | Push Notifications | OneSignal + Firebase | Hazard alerts |
 | Voice Search | Speech-to-Text API | Hands-free navigation |
 | State Management | Provider | App-wide state |
-| Internationalization | Flutter i18n | EN / ZH support |
+| Internationalization | Flutter i10n | EN / ZH support |
 | Version Control | GitHub | Source management |
 
 ---
