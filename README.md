@@ -128,6 +128,9 @@ Pavra demonstrates how vision AI, real-time location services, and cloud platfor
 
 By empowering drivers to contribute to hazard detection, Pavra shifts road safety from reactive response to proactive prevention.
 
+**Please fill in the feedback form here:**  
+🔗 https://docs.google.com/forms/d/e/1FAIpQLScducuwUb_UX4cGW4x5HVGZMgEJ7ZynZdCzcfgMyrhK-kbNOA/viewform?usp=publish-editor
+
 ---
 
 **Made with ❤️ by the Pavra Team**  
