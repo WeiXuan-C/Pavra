@@ -51,6 +51,8 @@ Users capture road images using their mobile devices, while the system automatic
 - Light and Dark mode  
 - Multi-language support (English / Chinese)  
 - User statistics and reputation scoring  
+- Multiple issue type support with dynamic category management  
+- Reviewer attribution — reports track who reviewed and acted on each submission  
 
 ---
 
@@ -64,6 +66,33 @@ Users capture road images using their mobile devices, while the system automatic
 7. Report is stored and displayed on the map  
 8. Nearby users receive hazard alerts  
 9. Users near the location can vote to confirm accuracy  
+10. Authority users review submissions and are recorded as the responsible reviewer  
+
+---
+
+## 🛣️ Supported Issue Types
+
+### AI-Detected Types
+The AI model classifies road images into one of 8 categories:
+
+| Type | Description |
+|------|-------------|
+| Road Crack | Visible cracks or fractures on the road surface |
+| Pothole | Holes or cavities formed in the road |
+| Uneven Surface | Bumps, dips, or irregular road surfaces |
+| Flood | Water accumulation blocking or covering the road |
+| Accident | Vehicle collisions or accident scenes |
+| Debris | Fallen objects, rubble, or scattered materials |
+| Obstacle | Objects blocking or partially obstructing the road |
+| Normal | No road hazard detected |
+
+### User-Reported Issue Types
+Beyond AI detection, issue categories are managed dynamically through the database, allowing administrators to add, edit, or remove types as needed. Each type has a name, description, and icon for display on the map and in reports.
+
+---
+
+## 👤 Reviewer Attribution
+Each submitted report tracks **who reviewed it**. When an authority user verifies or flags a report, their identity is recorded alongside a timestamp and optional comment. This reviewer information is visible in the authority management interface, providing full accountability for every review action.
 
 ---
 
