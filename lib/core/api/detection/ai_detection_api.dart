@@ -15,8 +15,8 @@ class AiDetectionApi {
   AiDetectionApi({
     http.Client? client,
     NotificationHelperService? notificationHelper,
-  })  : _client = client ?? http.Client(),
-        _notificationHelper = notificationHelper;
+  }) : _client = client ?? http.Client(),
+       _notificationHelper = notificationHelper;
 
   /// Detect road damage from image using OpenRouter vision model
   ///
@@ -75,19 +75,19 @@ class AiDetectionApi {
               'content': [
                 {
                   'type': 'text',
-                  'text': 'Analyze this road image for damage or issues. Location: $latitude, $longitude',
+                  'text':
+                      'Analyze this road image for damage or issues. Location: $latitude, $longitude',
                 },
                 {
                   'type': 'image_url',
-                  'image_url': {
-                    'url': 'data:image/jpeg;base64,$imageBase64',
-                  },
+                  'image_url': {'url': 'data:image/jpeg;base64,$imageBase64'},
                 },
               ],
             },
           ],
           'temperature': 0.3, // Lower temperature for more consistent results
           'max_tokens': 500,
+          'reasoning': DetectionApiConstants.noReasoning,
         };
 
         developer.log(
@@ -123,158 +123,181 @@ class AiDetectionApi {
 
         // Handle response
         if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body) as Map<String, dynamic>;
+          final responseData =
+              jsonDecode(response.body) as Map<String, dynamic>;
 
-        // Extract AI response from OpenRouter format
-        final choices = responseData['choices'] as List<dynamic>?;
-        if (choices == null || choices.isEmpty) {
-          throw DetectionException.invalidResponse(
-            'No choices in OpenRouter response',
-          );
-        }
-
-        final message = choices[0]['message'] as Map<String, dynamic>?;
-        if (message == null) {
-          throw DetectionException.invalidResponse(
-            'No message in OpenRouter response',
-          );
-        }
-
-        final content = message['content'] as String?;
-        if (content == null || content.isEmpty) {
-          throw DetectionException.invalidResponse(
-            'Empty content in OpenRouter response',
-          );
-        }
-
-        developer.log(
-          'AI response: $content',
-          name: 'AiDetectionApi',
-        );
-
-        // Parse JSON from AI response
-        Map<String, dynamic> detectionData;
-        try {
-          detectionData = _extractJsonFromResponse(content);
-          
-          developer.log(
-            'Successfully parsed JSON: ${detectionData.keys.join(", ")}',
-            name: 'AiDetectionApi',
-          );
-          
-          // Validate required fields
-          if (!detectionData.containsKey('issue_detected') ||
-              !detectionData.containsKey('type') ||
-              !detectionData.containsKey('severity') ||
-              !detectionData.containsKey('confidence')) {
-            throw FormatException('Missing required fields in AI response');
-          }
-        } catch (e) {
-          developer.log(
-            'Failed to parse AI response as JSON: $e\nRaw content: $content',
-            name: 'AiDetectionApi',
-            error: e,
-          );
-          
-          // Fallback: Return a "normal" detection to avoid blocking the user
-          developer.log(
-            'Using fallback normal detection due to parse error',
-            name: 'AiDetectionApi',
-          );
-          
-          detectionData = {
-            'issue_detected': false,
-            'type': 'normal',
-            'severity': 1,
-            'confidence': 0.5,
-            'description': 'Unable to analyze image properly. Please try again.',
-            'suggested_action': 'Retake photo with better lighting and angle',
-          };
-        }
-
-        // Add metadata to detection
-        detectionData['id'] = '${userId}_${timestamp.millisecondsSinceEpoch}';
-        detectionData['created_at'] = timestamp.toIso8601String();
-        detectionData['latitude'] = latitude;
-        detectionData['longitude'] = longitude;
-        detectionData['image_url'] = ''; // Image URL would be set by backend if storing
-
-        developer.log(
-          'Detection successful: ${detectionData['type']}',
-          name: 'AiDetectionApi',
-        );
-
-        // Parse detection model
-        final detection = DetectionModel.fromJson(detectionData);
-
-        // Trigger notification for critical or high severity detections
-        // Requirements: 5.1, 5.2, 5.3, 5.4, 13.2
-        try {
-          if (_notificationHelper != null && detection.severity >= 4) {
-            // Severity 4-5 is high/critical
-            final severityLabel = detection.severity == 5 ? 'critical' : 'high';
-            
-            await _notificationHelper.notifyCriticalDetection(
-              userId: userId,
-              detectionId: detection.id,
-              issueType: detection.type.value,
-              severity: severityLabel,
-              latitude: latitude,
-              longitude: longitude,
-              confidence: detection.confidence,
+          // Extract AI response from OpenRouter format
+          final choices = responseData['choices'] as List<dynamic>?;
+          if (choices == null || choices.isEmpty) {
+            throw DetectionException.invalidResponse(
+              'No choices in OpenRouter response',
             );
           }
-        } catch (e, stackTrace) {
-          // Log error but don't throw - notification failures shouldn't disrupt detection
+
+          final message = choices[0]['message'] as Map<String, dynamic>?;
+          if (message == null) {
+            throw DetectionException.invalidResponse(
+              'No message in OpenRouter response',
+            );
+          }
+
+          final content = message['content'] as String?;
+          if (content == null || content.isEmpty) {
+            throw DetectionException.invalidResponse(
+              'Empty content in OpenRouter response',
+            );
+          }
+
+          developer.log('AI response: $content', name: 'AiDetectionApi');
+
+          // Parse JSON from AI response
+          Map<String, dynamic> detectionData;
+          try {
+            detectionData = _extractJsonFromResponse(content);
+
+            developer.log(
+              'Successfully parsed JSON: ${detectionData.keys.join(", ")}',
+              name: 'AiDetectionApi',
+            );
+
+            // Validate required fields
+            if (!detectionData.containsKey('issue_detected') ||
+                !detectionData.containsKey('type') ||
+                !detectionData.containsKey('severity') ||
+                !detectionData.containsKey('confidence')) {
+              throw FormatException('Missing required fields in AI response');
+            }
+          } catch (e) {
+            developer.log(
+              'Failed to parse AI response as JSON: $e\nRaw content: $content',
+              name: 'AiDetectionApi',
+              error: e,
+            );
+
+            // Fallback: Return a "normal" detection to avoid blocking the user
+            developer.log(
+              'Using fallback normal detection due to parse error',
+              name: 'AiDetectionApi',
+            );
+
+            detectionData = {
+              'issue_detected': false,
+              'type': 'normal',
+              'severity': 1,
+              'confidence': 0.5,
+              'description':
+                  'Unable to analyze image properly. Please try again.',
+              'suggested_action': 'Retake photo with better lighting and angle',
+            };
+          }
+
+          // Add metadata to detection
+          detectionData['id'] = '${userId}_${timestamp.millisecondsSinceEpoch}';
+          detectionData['created_at'] = timestamp.toIso8601String();
+          detectionData['latitude'] = latitude;
+          detectionData['longitude'] = longitude;
+          detectionData['image_url'] =
+              ''; // Image URL would be set by backend if storing
+
           developer.log(
-            'Failed to send critical detection notification',
+            'Detection successful: ${detectionData['type']}',
             name: 'AiDetectionApi',
-            error: e,
-            stackTrace: stackTrace,
           );
-        }
+
+          // Parse detection model
+          final detection = DetectionModel.fromJson(detectionData);
+
+          // Trigger notification for critical or high severity detections
+          // Requirements: 5.1, 5.2, 5.3, 5.4, 13.2
+          try {
+            if (_notificationHelper != null && detection.severity >= 4) {
+              // Severity 4-5 is high/critical
+              final severityLabel = detection.severity == 5
+                  ? 'critical'
+                  : 'high';
+
+              await _notificationHelper.notifyCriticalDetection(
+                userId: userId,
+                detectionId: detection.id,
+                issueType: detection.type.value,
+                severity: severityLabel,
+                latitude: latitude,
+                longitude: longitude,
+                confidence: detection.confidence,
+              );
+            }
+          } catch (e, stackTrace) {
+            // Log error but don't throw - notification failures shouldn't disrupt detection
+            developer.log(
+              'Failed to send critical detection notification',
+              name: 'AiDetectionApi',
+              error: e,
+              stackTrace: stackTrace,
+            );
+          }
 
           return detection;
         } else if (response.statusCode == 429) {
           // Rate limit exceeded - rotate key and retry
           attempts++;
-          
+
           developer.log(
             'Rate limit hit (429), rotating to next API key (attempt $attempts/$maxAttempts)',
             name: 'AiDetectionApi',
           );
-          
+
           if (attempts >= maxAttempts) {
             throw DetectionException.api(
               'Rate limit exceeded on all ${DetectionApiConstants.availableKeyCount} API keys. Please try again later.',
             );
           }
-          
+
           // Rotate to next key and retry
           DetectionApiConstants.rotateApiKey();
           continue;
         } else if (response.statusCode == 401) {
           // Unauthorized - invalid API key, try next one
           attempts++;
-          
+
           developer.log(
             'Invalid API key (401), rotating to next key (attempt $attempts/$maxAttempts)',
             name: 'AiDetectionApi',
           );
-          
+
           if (attempts >= maxAttempts) {
             throw DetectionException.api(
               'All API keys are invalid. Please check your OpenRouter configuration.',
             );
           }
-          
+
           // Rotate to next key and retry
+          DetectionApiConstants.rotateApiKey();
+          continue;
+        } else if (response.statusCode == 404) {
+          // OpenRouter can temporarily return 404 while a free provider is
+          // being routed. Retry with the next configured key before exposing
+          // the failure to the user.
+          attempts++;
+
+          developer.log(
+            'OpenRouter returned 404 for ${DetectionApiConstants.imageModel}; '
+            'retrying with the next API key (attempt $attempts/$maxAttempts)',
+            name: 'AiDetectionApi',
+          );
+
+          if (attempts >= maxAttempts) {
+            throw DetectionException.api(
+              'The AI service is temporarily unavailable. Please try again in a moment.',
+            );
+          }
+
           DetectionApiConstants.rotateApiKey();
           continue;
         } else if (response.statusCode == 400) {
           // Bad request - validation error (don't retry)
           final errorData = jsonDecode(response.body) as Map<String, dynamic>;
-          final errorMessage = errorData['error']?['message'] ?? 'Invalid request';
+          final errorMessage =
+              errorData['error']?['message'] ?? 'Invalid request';
 
           developer.log(
             'Validation error: $errorMessage',
@@ -362,12 +385,12 @@ class AiDetectionApi {
   /// Handles various formats: plain JSON, markdown code blocks, text with JSON
   Map<String, dynamic> _extractJsonFromResponse(String content) {
     String jsonStr = content.trim();
-    
+
     developer.log(
       'Extracting JSON from response (length: ${jsonStr.length})',
       name: 'AiDetectionApi',
     );
-    
+
     // Remove markdown code blocks
     if (jsonStr.contains('```json')) {
       final parts = jsonStr.split('```json');
@@ -380,28 +403,28 @@ class AiDetectionApi {
         jsonStr = parts[1].split('```')[0].trim();
       }
     }
-    
+
     // Find JSON object boundaries
     final jsonStart = jsonStr.indexOf('{');
     final jsonEnd = jsonStr.lastIndexOf('}');
-    
+
     if (jsonStart == -1 || jsonEnd == -1 || jsonStart >= jsonEnd) {
       throw FormatException('No valid JSON object found in response');
     }
-    
+
     jsonStr = jsonStr.substring(jsonStart, jsonEnd + 1);
-    
+
     developer.log(
       'Extracted JSON string: ${jsonStr.substring(0, jsonStr.length > 200 ? 200 : jsonStr.length)}...',
       name: 'AiDetectionApi',
     );
-    
+
     // Parse JSON
     final parsed = jsonDecode(jsonStr);
     if (parsed is! Map<String, dynamic>) {
       throw FormatException('Parsed JSON is not an object');
     }
-    
+
     return parsed;
   }
 

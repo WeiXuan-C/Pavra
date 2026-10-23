@@ -53,6 +53,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/releases/
 
 # Serverpod passwords (contains sensitive credentials)
 **/config/passwords.yaml
@@ -67,3 +68,9 @@ ios/Runner/GoogleService-Info.plist
 *.db
 *.sqlite
 *.sqlite3
+
+# Supabase CLI cache
+supabase/.temp/
+
+# Downloaded GIS source files are reproducible but too large for this app repo.
+data/gis/raw/

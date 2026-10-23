@@ -1,0 +1,2 @@
+state_code,local_authority_name,local_authority_type,township_name,boundary_geojson_path,boundary_source_name,boundary_source_url,boundary_reviewed_at,default_authority_name,default_authority_type,issue_type_slug,routing_priority,approved_by,approval_reference
+SG,Example Municipal Council,municipal_council,Example Township,reviewed/SG/example-township.geojson,Example Council GIS,https://example.gov.my/gis,2026-10-22,Example Council,local_council,pothole,10,Data owner name,Approval ticket or email reference

@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../api/detection/detection_api_constants.dart';
+
 /// Service for interacting with OpenRouter AI directly
 class AiService {
   static const String _openRouterUrl =
@@ -64,12 +66,13 @@ class AiService {
           'X-Title': 'Pavra App',
         },
         body: jsonEncode({
-          'model': model ?? 'google/gemma-3-4b-it:free',
+          'model': model ?? DetectionApiConstants.imageModel,
           'messages': [
             {'role': 'user', 'content': prompt},
           ],
           'max_tokens': maxTokens ?? 1000,
           'temperature': temperature ?? 0.7,
+          'reasoning': DetectionApiConstants.noReasoning,
         }),
       );
 
@@ -124,10 +127,11 @@ class AiService {
           'X-Title': 'Pavra App',
         },
         body: jsonEncode({
-          'model': model ?? 'google/gemma-3-4b-it:free',
+          'model': model ?? DetectionApiConstants.imageModel,
           'messages': messages,
           'max_tokens': maxTokens ?? 1000,
           'temperature': temperature ?? 0.7,
+          'reasoning': DetectionApiConstants.noReasoning,
         }),
       );
 
@@ -227,12 +231,17 @@ class AiService {
               'X-Title': 'Pavra App',
             },
             body: jsonEncode({
-              'model': 'google/gemma-3-4b-it:free',
+              'model': DetectionApiConstants.imageModel,
               'messages': [
+                {'role': 'system', 'content': prompt},
                 {
                   'role': 'user',
                   'content': [
-                    {'type': 'text', 'text': prompt},
+                    {
+                      'type': 'text',
+                      'text':
+                          'Analyze the attached image and return the JSON described in the system instructions.',
+                    },
                     {
                       'type': 'image_url',
                       'image_url': {'url': imageUrl},
@@ -242,6 +251,7 @@ class AiService {
               ],
               'max_tokens': 500,
               'temperature': 0.3,
+              'reasoning': DetectionApiConstants.noReasoning,
             }),
           )
           .timeout(
@@ -254,7 +264,7 @@ class AiService {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         final aiResponse = _extractMessage(data);
-        return _parseImageAnalysisResponse(aiResponse);
+        return _parseImageAnalysisResponse(aiResponse, availableIssueTypes);
       } else if (response.statusCode == 429 || response.statusCode == 401) {
         throw _RateLimitException(response.statusCode, response.body);
       } else {
@@ -274,13 +284,18 @@ class AiService {
     final issueTypesSection =
         availableIssueTypes != null && availableIssueTypes.isNotEmpty
         ? '''
-IMPORTANT: You MUST select issue types ONLY from this list:
+IMPORTANT: You MUST choose issue types ONLY from this exact list:
 ${availableIssueTypes.map((type) => '- $type').join('\n')}
 
-Select 1-3 most relevant types from the above list that match what you see in the image.
+Rules for issueTypes:
+- Copy the selected names exactly as written above, character for character.
+- Do NOT translate, reword, abbreviate, or invent names.
+- Never output generic labels such as "road surface", "road damage", "infrastructure", "road", or "other" unless that exact text appears in the list.
+- Select 1-3 types that best match the photo.
+- If none of the listed types match, return an empty array: "issueTypes": [].
 '''
         : '''
-Issue types can include: pothole, broken streetlight, damaged road, graffiti, illegal dumping, broken sidewalk, damaged signage, flooding, fallen tree, damaged fence, etc.
+If no fixed issue type list is available, use short specific labels (e.g. pothole, road crack, flooding, illegal dumping). Never use the generic label "road surface".
 ''';
 
     final basePrompt =
@@ -329,7 +344,7 @@ Confidence levels:
           'X-Title': 'Pavra App',
         },
         body: jsonEncode({
-          'model': 'google/gemma-3-4b-it:free',
+          'model': DetectionApiConstants.imageModel,
           'messages': [
             {
               'role': 'user',
@@ -339,6 +354,7 @@ Confidence levels:
           ],
           'max_tokens': 200,
           'temperature': 0.3,
+          'reasoning': DetectionApiConstants.noReasoning,
         }),
       );
 
@@ -357,7 +373,10 @@ Confidence levels:
   }
 
   /// Parse AI response into structured data
-  Map<String, dynamic> _parseImageAnalysisResponse(String aiResponse) {
+  Map<String, dynamic> _parseImageAnalysisResponse(
+    String aiResponse,
+    List<String>? availableIssueTypes,
+  ) {
     try {
       // Try to extract JSON from the response
       final jsonMatch = RegExp(r'\{[\s\S]*\}').firstMatch(aiResponse);
@@ -365,13 +384,16 @@ Confidence levels:
         final jsonStr = jsonMatch.group(0)!;
         final parsed = jsonDecode(jsonStr) as Map<String, dynamic>;
 
+        final suggestedTypes =
+            (parsed['issueTypes'] as List?)
+                ?.map((e) => e.toString().trim())
+                .where((e) => e.isNotEmpty)
+                .toList() ??
+            <String>[];
+
         return {
           'description': parsed['description'] as String? ?? '',
-          'issueTypes':
-              (parsed['issueTypes'] as List?)
-                  ?.map((e) => e.toString())
-                  .toList() ??
-              [],
+          'issueTypes': _filterIssueTypes(suggestedTypes, availableIssueTypes),
           'severity': parsed['severity'] as String? ?? 'moderate',
           'confidence': parsed['confidence'] as String? ?? 'medium',
         };
@@ -393,6 +415,32 @@ Confidence levels:
         'confidence': 'low',
       };
     }
+  }
+
+  /// Keep only names that exactly match an available issue type.
+  /// This prevents generic model labels (e.g. "road surface") from being
+  /// mapped to an unrelated issue type by the UI.
+  List<String> _filterIssueTypes(
+    List<String> suggestedTypes,
+    List<String>? availableIssueTypes,
+  ) {
+    if (availableIssueTypes == null || availableIssueTypes.isEmpty) {
+      return suggestedTypes;
+    }
+
+    final canonicalByName = <String, String>{
+      for (final name in availableIssueTypes)
+        if (name.trim().isNotEmpty) name.trim().toLowerCase(): name.trim(),
+    };
+
+    final result = <String>[];
+    for (final suggested in suggestedTypes) {
+      final canonical = canonicalByName[suggested.toLowerCase()];
+      if (canonical != null && !result.contains(canonical)) {
+        result.add(canonical);
+      }
+    }
+    return result;
   }
 }
 

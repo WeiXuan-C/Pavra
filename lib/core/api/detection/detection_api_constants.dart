@@ -18,7 +18,7 @@ class DetectionApiConstants {
   /// Load all available API keys from environment
   static List<String> _loadApiKeys() {
     if (_cachedKeys != null) return _cachedKeys!;
-    
+
     final keys = <String>[];
     for (int i = 1; i <= 20; i++) {
       final key = dotenv.env['OPEN_ROUTER_KEY_$i'];
@@ -26,14 +26,14 @@ class DetectionApiConstants {
         keys.add(key);
       }
     }
-    
+
     if (keys.isEmpty) {
       throw Exception(
         'No OpenRouter API keys found in environment variables. '
         'Please add OPEN_ROUTER_KEY_1 (or more) to your .env file.',
       );
     }
-    
+
     _cachedKeys = keys;
     return keys;
   }
@@ -57,13 +57,24 @@ class DetectionApiConstants {
 
   /// Get OpenRouter image model
   static String get imageModel {
-    final model = dotenv.env['OPEN_ROUTER_IMAGE_MODEL'];
+    // OPEN_ROUTER_DETECTION_MODEL is the project setting. Keep the old name
+    // as a fallback so existing local setups do not break.
+    final model =
+        dotenv.env['OPEN_ROUTER_DETECTION_MODEL'] ??
+        dotenv.env['OPEN_ROUTER_IMAGE_MODEL'];
     if (model == null || model.isEmpty) {
-      // Default to Google Gemini 2.0 Flash free vision model
-      return 'google/gemini-2.0-flash-exp:free';
+      // A currently available OpenRouter model that accepts image input.
+      return 'nvidia/nemotron-3.5-super-vl:free';
     }
     return model;
   }
+
+  /// Disable reasoning tokens so the model answers as fast as possible.
+  /// See https://openrouter.ai/docs/use-cases/reasoning-tokens
+  static const Map<String, dynamic> noReasoning = {
+    'enabled': false,
+    'exclude': true,
+  };
 
   /// Request timeout duration (reduced for better UX)
   static const Duration requestTimeout = Duration(seconds: 30);
@@ -86,7 +97,7 @@ class DetectionApiConstants {
   /// System prompt for road damage detection
   static String getSystemPrompt(int sensitivity) {
     final confidenceThreshold = _getConfidenceThreshold(sensitivity);
-    
+
     return '''You are an AI road damage detection system. Analyze the provided road image and detect any issues.
 
 Detection Types:
@@ -98,6 +109,9 @@ Detection Types:
 - debris: Objects or materials blocking the road
 - obstacle: Physical barriers or obstructions
 - normal: No issues detected
+
+Use EXACTLY one of the type values above. Do not output "road surface",
+"road damage", or any other invented label. If nothing matches, use "normal".
 
 Severity Scale (1-5):
 1 = Minor issue, no immediate action needed

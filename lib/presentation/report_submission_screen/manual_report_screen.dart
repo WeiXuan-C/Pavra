@@ -77,21 +77,21 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
     debugPrint('Description: ${detection.description}');
     debugPrint('Has captured photo: ${capturedPhoto != null}');
     debugPrint('Has image URL: ${imageUrl != null}');
-    
+
     // Set description
     setState(() {
       _descriptionController.text = detection.description;
       _severity = detection.severity.toDouble();
     });
-    
+
     // Upload captured photo if available (from live camera detection)
     if (capturedPhoto != null && mounted) {
       try {
         debugPrint('Uploading AI detection photo from camera...');
-        
+
         // Read file bytes
         final bytes = await capturedPhoto.readAsBytes();
-        
+
         // Determine MIME type
         String? mimeType;
         if (capturedPhoto.name.toLowerCase().endsWith('.jpg') ||
@@ -102,7 +102,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
         } else if (capturedPhoto.name.toLowerCase().endsWith('.webp')) {
           mimeType = 'image/webp';
         }
-        
+
         // Upload to storage
         await provider.uploadPhoto(
           fileName: capturedPhoto.name,
@@ -111,7 +111,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
           photoType: 'main',
           isPrimary: true,
         );
-        
+
         debugPrint('AI detection photo uploaded successfully');
       } catch (e) {
         debugPrint('Error uploading AI detection photo: $e');
@@ -124,12 +124,12 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
           );
         }
       }
-    } 
+    }
     // Use existing image URL if available (from detection history)
     else if (imageUrl != null && imageUrl.isNotEmpty && mounted) {
       try {
         debugPrint('Loading existing photo from detection history: $imageUrl');
-        
+
         // Add the existing photo URL directly to the provider
         // This avoids re-uploading the same image
         await provider.addPhotoFromUrl(
@@ -137,7 +137,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
           photoType: 'main',
           isPrimary: true,
         );
-        
+
         debugPrint('Existing photo loaded successfully');
       } catch (e) {
         debugPrint('Error loading existing photo: $e');
@@ -151,7 +151,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
         }
       }
     }
-    
+
     // Set location if provided
     if (latitude != null && longitude != null) {
       setState(() {
@@ -159,14 +159,14 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
         _longitude = longitude;
         _isLoadingLocation = true;
       });
-      
+
       try {
         // Get address from coordinates
         final addressData = await _locationService.getAddressFromCoordinates(
           latitude,
           longitude,
         );
-        
+
         if (mounted) {
           setState(() {
             _address = addressData['fullAddress'] ?? '';
@@ -186,60 +186,80 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
       // Fallback to current location
       await _getCurrentLocation();
     }
-    
+
     debugPrint('=== AI detection data loaded ===');
   }
 
   /// Auto-select issue type based on AI detection
   void _autoSelectIssueTypeFromAI(ManualReportProvider provider) {
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
     if (args == null || args['fromAiDetection'] != true) return;
-    
+
     final detectionData = args['detectionData'] as DetectionModel?;
     if (detectionData == null) return;
-    
-    // Map detection type to issue type name
-    String issueTypeName = '';
+
+    // Map detection type to candidate issue type names
+    final List<String> candidateNames;
     switch (detectionData.type) {
       case DetectionType.pothole:
-        issueTypeName = 'pothole';
+        candidateNames = ['pothole'];
         break;
       case DetectionType.roadCrack:
-        issueTypeName = 'road crack';
+        candidateNames = ['road crack', 'road_crack', 'crack'];
         break;
       case DetectionType.unevenSurface:
-        issueTypeName = 'uneven surface';
+        candidateNames = ['uneven surface', 'uneven_surface'];
         break;
       case DetectionType.flood:
-        issueTypeName = 'flooding';
+        candidateNames = ['flooding', 'flood'];
         break;
       case DetectionType.accident:
-        issueTypeName = 'accident';
+        candidateNames = ['accident'];
         break;
       case DetectionType.debris:
-        issueTypeName = 'debris';
+        candidateNames = ['debris'];
         break;
       case DetectionType.obstacle:
-        issueTypeName = 'obstacle';
+        candidateNames = ['obstacle', 'obstruction'];
         break;
       case DetectionType.normal:
         return; // Don't select anything for normal
     }
-    
-    // Find matching issue type
-    final matchingType = provider.availableIssueTypes.firstWhere(
-      (type) => type.name.toLowerCase().contains(issueTypeName.toLowerCase()),
-      orElse: () => provider.availableIssueTypes.first,
-    );
-    
-    if (!_selectedIssueTypeIds.contains(matchingType.id)) {
+
+    // Find an exact match first, then a safe partial match.
+    // Never fall back to the first issue type: that silently selects an
+    // unrelated type such as "Road surface" whenever the names differ.
+    String? matchedId;
+    for (final candidate in candidateNames) {
+      for (final type in provider.availableIssueTypes) {
+        if (type.name.toLowerCase() == candidate) {
+          matchedId = type.id;
+          break;
+        }
+      }
+      if (matchedId != null) break;
+    }
+    if (matchedId == null) {
+      for (final candidate in candidateNames) {
+        for (final type in provider.availableIssueTypes) {
+          if (type.name.toLowerCase().contains(candidate)) {
+            matchedId = type.id;
+            break;
+          }
+        }
+        if (matchedId != null) break;
+      }
+    }
+
+    if (matchedId != null && !_selectedIssueTypeIds.contains(matchedId)) {
       setState(() {
-        _selectedIssueTypeIds.add(matchingType.id);
+        _selectedIssueTypeIds.add(matchedId!);
         _isIssueTypeSectionExpanded = true; // Expand to show selection
       });
-      
-      debugPrint('Auto-selected issue type: ${matchingType.name} (${matchingType.id})');
+
+      debugPrint('Auto-selected issue type: $matchedId');
     }
   }
 
@@ -861,31 +881,46 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
       });
     }
 
-    // Match AI suggested issue type names to IDs and select them
+    // Match AI suggested issue type names to IDs and select them.
+    // Only exact (or safe partial) matches are accepted. Never fall back to
+    // the first issue type, otherwise unrelated labels like "road surface"
+    // get auto-selected.
     if (issueTypeNames.isNotEmpty) {
       final matchedIds = <String>[];
 
       for (final typeName in issueTypeNames) {
-        // Find matching issue type by name (case-insensitive)
-        final matchingType = provider.availableIssueTypes.firstWhere(
-          (type) => type.name.toLowerCase() == typeName.toLowerCase(),
-          orElse: () => provider.availableIssueTypes.firstWhere(
-            (type) => type.name.toLowerCase().contains(typeName.toLowerCase()),
-            orElse: () => provider.availableIssueTypes.first,
-          ),
-        );
+        final normalizedName = typeName.trim().toLowerCase();
+        if (normalizedName.isEmpty) continue;
 
-        if (!matchedIds.contains(matchingType.id)) {
-          matchedIds.add(matchingType.id);
+        String? matchedId;
+        for (final type in provider.availableIssueTypes) {
+          if (type.name.toLowerCase() == normalizedName) {
+            matchedId = type.id;
+            break;
+          }
+        }
+        if (matchedId == null) {
+          for (final type in provider.availableIssueTypes) {
+            if (type.name.toLowerCase().contains(normalizedName)) {
+              matchedId = type.id;
+              break;
+            }
+          }
+        }
+
+        if (matchedId != null && !matchedIds.contains(matchedId)) {
+          matchedIds.add(matchedId);
         }
       }
 
-      setState(() {
-        _selectedIssueTypeIds.clear();
-        _selectedIssueTypeIds.addAll(matchedIds);
-        // Expand the issue type section so user can see the selection
-        _isIssueTypeSectionExpanded = true;
-      });
+      if (matchedIds.isNotEmpty) {
+        setState(() {
+          _selectedIssueTypeIds.clear();
+          _selectedIssueTypeIds.addAll(matchedIds);
+          // Expand the issue type section so user can see the selection
+          _isIssueTypeSectionExpanded = true;
+        });
+      }
 
       debugPrint('=== AI Issue Types Applied ===');
       debugPrint('AI suggested names: $issueTypeNames');
@@ -1276,26 +1311,29 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
 
                 // Load AI detection data first (only once, before draft)
                 if (!_isDraftLoaded) {
-                  final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+                  final args =
+                      ModalRoute.of(context)?.settings.arguments
+                          as Map<String, dynamic>?;
                   if (args != null && args['fromAiDetection'] == true) {
                     WidgetsBinding.instance.addPostFrameCallback((_) async {
-                      final detectionData = args['detectionData'] as DetectionModel?;
+                      final detectionData =
+                          args['detectionData'] as DetectionModel?;
                       final latitude = args['latitude'] as double?;
                       final longitude = args['longitude'] as double?;
                       final capturedPhoto = args['capturedPhoto'] as XFile?;
                       final imageUrl = args['imageUrl'] as String?;
-                      
+
                       if (detectionData != null) {
                         await _loadAiDetectionData(
-                          detectionData, 
-                          latitude, 
+                          detectionData,
+                          latitude,
                           longitude,
                           provider,
                           capturedPhoto: capturedPhoto,
                           imageUrl: imageUrl,
                         );
                       }
-                      
+
                       setState(() {
                         _isDraftLoaded = true;
                       });
@@ -1310,7 +1348,7 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
                     });
                   }
                 }
-                
+
                 // Load draft data into form fields (only once)
                 if (!_isDraftLoaded && provider.draftReport != null) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -1320,9 +1358,10 @@ class _ManualReportScreenState extends State<ManualReportScreen> {
                     });
                   });
                 }
-                
+
                 // Auto-select issue type from AI detection (only once)
-                if (!_isDraftLoaded && provider.availableIssueTypes.isNotEmpty) {
+                if (!_isDraftLoaded &&
+                    provider.availableIssueTypes.isNotEmpty) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     _autoSelectIssueTypeFromAI(provider);
                   });
