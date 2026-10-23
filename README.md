@@ -1,7 +1,6 @@
 # Pavra
 **Slogan:** *The Smarter Roads, The Safer Journeys.*
-
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/WeiXuan-C/Pavra)  
+  
 ![Flutter](https://img.shields.io/badge/Flutter-3.35.7+-02569B?logo=flutter&logoColor=white)  
 ![Dart](https://img.shields.io/badge/Dart-3.9.2+-0175C2?logo=dart&logoColor=white)  
 ![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web%20%7C%20Desktop-blue)  
@@ -13,8 +12,6 @@
 - [Overview](#-overview)
 - [Problem Statement](#-problem-statement)
 - [Solution](#-solution)
-- [System Architecture](#-system-architecture)
-- [Tech Stack](#-tech-stack)
 - [Key Features](#-key-features)
 - [Workflow Overview](#-workflow-overview)
 - [Roles & Access Levels](#-roles--access-levels)
@@ -40,37 +37,6 @@ As a result, many road issues are only addressed after accidents occur.
 Pavra introduces a **software-based, AI-driven, and community-powered solution** that enables everyday drivers to actively contribute to road safety.
 
 Users capture road images using their mobile devices, while the system automatically detects damage, assesses severity, tags locations, and notifies nearby users in real time.
-
----
-
-## 🏗️ System Architecture
-Pavra is designed as a **front-end–centric application** without a traditional custom backend server.
-
-- Authentication, database, and file storage are handled by **Supabase**
-- AI inference is performed via **external AI APIs**
-- Push notifications are delivered using **OneSignal integrated with Firebase**
-- The architecture prioritizes performance, scalability, and real-time interaction
-
----
-
-## 🧠 Tech Stack
-
-| Layer | Technology | Purpose |
-|------|-----------|---------|
-| Frontend | Flutter (Dart) | Cross-platform application |
-| Architecture | Frontend-centric (Serverless-style) | No custom backend server |
-| Authentication | Supabase Auth (Email OTP) | Passwordless login |
-| Database | Supabase (PostgreSQL) | Stores users, reports, and metadata |
-| Storage | Supabase Storage | Stores road images and evidence |
-| AI Model | Google Gemma 3 4B (Vision-Language) | Road damage detection |
-| AI Inference | External AI API | Model execution |
-| Maps & Navigation | Google Maps Platform | Maps and routing |
-| Geolocation | Geolocator | Real-time location |
-| Push Notifications | OneSignal + Firebase | Hazard alerts |
-| Voice Search | Speech-to-Text API | Hands-free navigation |
-| State Management | Provider | App-wide state |
-| Internationalization | Flutter i10n | EN / ZH support |
-| Version Control | GitHub | Source management |
 
 ---
 
